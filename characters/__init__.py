@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 logic_path = __path__
 
 
-class Minion:
+class Character:
     name = 'NO NAME SET'
 
     slay = []
@@ -78,40 +78,40 @@ class Minion:
 
 
 class Registry(object):
-    minions = OrderedDict()
+    characters = OrderedDict()
 
     def __getitem__(self, item):
-        minion = self.minions.get(item)
-        if not minion:
-            class NewMinion(Minion):
+        character = self.characters.get(item)
+        if not character:
+            class NewCharacter(Character):
                 name = item
-            minion = NewMinion
-            # print(f'Creating Generic Minion for {item}')
-        return minion
+            character = NewCharacter
+            # print(f'Creating Generic Character for {item}')
+        return character
 
     def __getattr__(self, item):
-        return getattr(self.minions, item)
+        return getattr(self.characters, item)
 
     def __contains__(self, item):
-        return item in self.minions
+        return item in self.characters
 
-    def register(self, name, minion):
-        assert name not in self.minions, 'Minion is already registered.'
-        self.minions[name] = minion
-        print(f'Registered {name} - {minion}')
+    def register(self, name, character):
+        assert name not in self.characters, 'Character is already registered.'
+        self.characters[name] = character
+        print(f'Registered {name} - {character}')
 
     def unregister(self, name):
-        self.minions.pop(name, None)
+        self.characters.pop(name, None)
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
             try:
-                minion = __import__(name, globals(), locals(), ['PingPost'], 1)
-                self.register(name, minion.MinionType)
+                character = __import__(name, globals(), locals(), ['PingPost'], 1)
+                self.register(name, character.CharacterType)
             except ImportError:
                 pass
             except Exception as exc:
-                logger.exception('Error loading minion: {}'.format(name))
+                logger.exception('Error loading characters: {}'.format(name))
 
 
 registry = Registry()

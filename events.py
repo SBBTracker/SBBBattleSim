@@ -1,6 +1,6 @@
 class SSBBSEvent:
-    def __init__(self, minion):
-        self.minion = minion
+    def __init__(self, character):
+        self.character = character
     '''Base SSBBS Event'''
 
 

@@ -3,49 +3,49 @@ from treasures import registry as treasure_registry
 
 
 class Player:
-    def __init__(self, minions, treasures, hero, hand):
+    def __init__(self, characters, treasures, hero, hand):
         self.player_num = None
-        self.minions = OrderedDict({i: None for i in range(1, 8)})
+        self.characters = OrderedDict({i: None for i in range(1, 8)})
 
-        for slot, minion in minions.items():
-            minion.position = slot
-            minion.owner = self
-            self.minions[slot] = minion
+        for slot, character in characters.items():
+            character.position = slot
+            character.owner = self
+            self.characters[slot] = character
 
         self.treasures = {treasure: treasure_registry[treasure] for treasure in treasures}
         self._attack_slot = 1
         # self.hero = hero
-        # self.hand = OrderedDict({i: minion for i, minion in enumerate(hand)})
+        # self.hand = OrderedDict({i: characters for i, characters in enumerate(hand)})
         # self.graveyard = []
 
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
-        return f'{self.minions}'
+        return f'{self.characters}'
 
     @property
     def front(self):
-        return dict(list(self.minions.items())[:4])
+        return dict(list(self.characters.items())[:4])
 
     @property
     def back(self):
-        return dict(list(self.minions.items())[4:])
+        return dict(list(self.characters.items())[4:])
 
     @property
-    def attack_minion(self):
+    def attack_character(self):
         for _ in range(7):
-            minion = self.minions[self._attack_slot]
-            if minion is not None:
-                if minion.attack > 0:
+            character = self.characters[self._attack_slot]
+            if character is not None:
+                if character.attack > 0:
                     break
             self._attack_slot += 1
 
-        return self.minions.get(self._attack_slot)
+        return self.characters.get(self._attack_slot)
 
     def resolve_board(self):
         # Remove all bonus'
-        for i, m in self.minions.items():
+        for i, m in self.characters.items():
             if m is None:
                 continue
 
@@ -64,11 +64,11 @@ class Player:
                 buff_slots = range(1, 8)
 
             for i in buff_slots:
-                buffed_minion = self.minions[i]
-                if buffed_minion:
-                    buffed_minion.buff_funcs.extend(m.buffs)
+                buffed_character = self.characters[i]
+                if buffed_character:
+                    buffed_character.buff_funcs.extend(m.buffs)
 
-        for i, m in self.minions.items():
+        for i, m in self.characters.items():
             if m is None:
                 continue
             for buff in m.buff_funcs:
@@ -79,71 +79,68 @@ class Player:
         #TODO Add treasure effects
 
 
-    def summon(self, slot, *minions):
+    def summon(self, slot, *characters):
         # TODO How do things summon
-        summoned_minions = []
+        summoned_characters = []
         front_row_check = slot <= 4
 
-        # print(f'Minions to Summon {minions}')
+        # print(f'Characters to Summon {characters}')
 
-        for minion in minions:
+        for character in characters:
             #Fill current slot
-            # print(f'Current Slot {self.minions[slot] is None}')
-            if self.minions[slot] is None:
-                self.minions[slot] = minion
-                minion.position = slot
-                summoned_minions.append((slot, minion))
+            # print(f'Current Slot {self.characters[slot] is None}')
+            if self.characters[slot] is None:
+                self.characters[slot] = character
+                character.position = slot
+                summoned_characters.append((slot, character))
                 continue
 
             #Right row adjacent
-            right_row_avaiable_slot = next((i for i in range(slot, 4 if front_row_check else 7) if self.minions[i] is None), None)
+            right_row_avaiable_slot = next((i for i in range(slot, 4 if front_row_check else 7) if self.characters[i] is None), None)
             # print(f'Right Row Adjacent {right_row_avaiable_slot}')
             if right_row_avaiable_slot:
-                self.minions[right_row_avaiable_slot] = minion
-                minion.position = right_row_avaiable_slot
-                summoned_minions.append((right_row_avaiable_slot, minion))
+                self.characters[right_row_avaiable_slot] = character
+                character.position = right_row_avaiable_slot
+                summoned_characters.append((right_row_avaiable_slot, character))
                 continue
 
             #Left row adjacent
-            left_row_available_slot = next((i for i in range(slot, 1 if front_row_check else 4, -1) if self.minions[i] is None), None)
+            left_row_available_slot = next((i for i in range(slot, 1 if front_row_check else 4, -1) if self.characters[i] is None), None)
             # print(f'Left Row Adjacent {left_row_available_slot}')
             if left_row_available_slot:
-                self.minions[left_row_available_slot] = minion
-                minion.position = left_row_available_slot
-                summoned_minions.append((left_row_available_slot, minion))
+                self.characters[left_row_available_slot] = character
+                character.position = left_row_available_slot
+                summoned_characters.append((left_row_available_slot, character))
                 continue
 
             #Right diagonal adjacent
             right_adjacenties = {0: 4, 1: 5, 2: 6, 4: 2, 5: 2, 6: 3}
             right_diagonal_adjacent_avaialable_slot = right_adjacenties.get(slot)
             # print(f'Right Diagonal Row Adjacent {right_diagonal_adjacent_avaialable_slot}')
-            if self.minions.get(right_diagonal_adjacent_avaialable_slot, '') is None:
-                self.minions[right_diagonal_adjacent_avaialable_slot] = minion
-                minion.position = right_diagonal_adjacent_avaialable_slot
-                summoned_minions.append((right_diagonal_adjacent_avaialable_slot, minion))
+            if self.characters.get(right_diagonal_adjacent_avaialable_slot, '') is None:
+                self.characters[right_diagonal_adjacent_avaialable_slot] = character
+                character.position = right_diagonal_adjacent_avaialable_slot
+                summoned_characters.append((right_diagonal_adjacent_avaialable_slot, character))
                 continue
 
             #Left diagonal adjacent
             left_adjacenties = {v: k for k, v in reversed(list(right_adjacenties.items()))}
             left_diagonal_adjacent_avaialable_slot = left_adjacenties.get(slot)
             # print(f'Left Diagonal Row Adjacent {left_diagonal_adjacent_avaialable_slot}')
-            if self.minions.get(left_diagonal_adjacent_avaialable_slot, '') is None:
-                self.minions[left_diagonal_adjacent_avaialable_slot] = minion
-                minion.position = left_diagonal_adjacent_avaialable_slot
-                summoned_minions.append((left_diagonal_adjacent_avaialable_slot, minion))
+            if self.characters.get(left_diagonal_adjacent_avaialable_slot, '') is None:
+                self.characters[left_diagonal_adjacent_avaialable_slot] = character
+                character.position = left_diagonal_adjacent_avaialable_slot
+                summoned_characters.append((left_diagonal_adjacent_avaialable_slot, character))
                 continue
 
-            any_available_slot = next((i for i, m in self.minions.items() if m is None), None)
+            any_available_slot = next((i for i, m in self.characters.items() if m is None), None)
             if any_available_slot:
-                self.minions[any_available_slot] = minion
-                minion.position = any_available_slot
-                summoned_minions.append((any_available_slot, minion))
+                self.characters[any_available_slot] = character
+                character.position = any_available_slot
+                summoned_characters.append((any_available_slot, character))
                 continue
 
 
         # TODO Summong Portal
 
-        # for (i, m) in summoned_minions:
-        #     print(f'Summoned {m} in {i} slot')
-
-        return summoned_minions
+        return summoned_characters

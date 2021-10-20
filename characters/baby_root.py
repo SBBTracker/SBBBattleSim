@@ -1,9 +1,9 @@
 from events import BuffsEvent
-from minion import Minion
+from characters import Character
 
 
 
-class MinionType(Minion):
+class CharacterType(Character):
     name = 'Baby Root'
     support = True
 
@@ -11,7 +11,7 @@ class MinionType(Minion):
         def __call__(self, **kwargs):
             buff_target = kwargs['buff_target']
             buff_target.health_bonus += 3
-            # print(f'{self.minion} buffed {buff_target} with +3 health')
+            # print(f'{self.characters} buffed {buff_target} with +3 health')
 
     buffs = [
         BabyRootBuff,

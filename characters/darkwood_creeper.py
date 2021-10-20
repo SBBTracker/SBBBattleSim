@@ -1,11 +1,11 @@
-from minion import Minion
+from characters import Character
 
 
 class BuffEvent(object):
     pass
 
 
-class MinionType(Minion):
+class CharacterType(Character):
     name = 'Darkwood Creeper'
 
     class DarkwoodCreeperOnDamage(BuffEvent):

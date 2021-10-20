@@ -29,17 +29,17 @@ def fight(board, attacker, defender, turn=0):
         defender.resolve_board()
 
         # Get Attacker
-        attack_minion = attacker.attack_minion
-        if attack_minion is not None:
+        attack_character = attacker.attack_character
+        if attack_character is not None:
 
             # Get valid defending
             valid_defenders = defender.front
-            if getattr(attack_minion, 'flying', False) and next((True for m in defender.back.values() if m is not None), False):
+            if getattr(attack_character, 'flying', False) and next((True for m in defender.back.values() if m is not None), False):
                 valid_defenders = defender.back
             slot = random.choice(list({i for i, m in valid_defenders.items() if m is not None}))
-            defender_minion = defender.minions[slot]
+            defender_character = defender.characters[slot]
 
-            event_kwargs = dict(board=board, attacker=attacker, defender=defender, attack_minion=attack_minion, defender_minion=defender_minion)
+            event_kwargs = dict(board=board, attacker=attacker, defender=defender, attack_character=attack_character, defend_character=defender_character)
 
             attack(**event_kwargs) #Run the attack
 
@@ -63,15 +63,15 @@ def fight(board, attacker, defender, turn=0):
         raise e
 
 
-def attack(attack_minion, defend_minion, **event_kwargs):
-    print(f'{attacker_minion} is attacking {defender_minion}')
+def attack(attack_character, defend_character, **event_kwargs):
+    print(f'{attack_character} is attacking {defend_character}')
 
     # TODO On Attack Trigger
 
-    if not getattr(attack_minion, 'ranged', False):
-        attack.damage(defend_minion.attack, damaged_by=defend_minion, **event_kwargs)
+    if not getattr(attack_character, 'ranged', False):
+        attack.damage(defend_character.attack, damaged_by=defend_character, **event_kwargs)
 
-    defender_died = defend_minion.damage(attack_minion.attack, damaged_by=attack_minion, **event_kwargs)
+    defender_died = defend_character.damage(attack_character.attack, damaged_by=attack_character, **event_kwargs)
 
     if defender_died:
-        attack_minion.slay_event(**event_kwargs)
+        attack_character.slay_event(**event_kwargs)

@@ -14,14 +14,14 @@ class Board:
 
     def winner(self):
 
-        player_one_no_minions = next((False for m in self.player_one.minions.values() if m is not None), True)
-        player_two_no_minions = next((False for m in self.player_one.minions.values() if m is not None), True)
+        player_one_no_characters = next((False for c in self.player_one.characters.values() if c is not None), True)
+        player_two_no_characters = next((False for c in self.player_one.characters.values() if m is not None), True)
 
-        if player_one_no_minions and player_two_no_minions:
+        if player_one_no_characters and player_two_no_characters:
             return 3
-        elif player_one_no_minions:
+        elif player_one_no_characters:
             return 2
-        elif player_two_no_minions:
+        elif player_two_no_characters:
             return 1
 
     def __repr__(self):
