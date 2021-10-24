@@ -1,16 +1,14 @@
-from sbbbattlesim.events import SlayEvent
 from sbbbattlesim.characters import Character
+from sbbbattlesim.events import Slay
 
 
 class CharacterType(Character):
     name = 'Brave Princess'
 
-    class BravePrincessSlay(SlayEvent):
+    class BravePrincessSlay(Slay):
         def __call__(self, **kwargs):
             pass
 
-    slay = [
+    events = (
         BravePrincessSlay,
-    ]
-
-
+    )

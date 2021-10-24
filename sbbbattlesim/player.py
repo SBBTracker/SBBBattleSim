@@ -1,9 +1,18 @@
+import logging
 from collections import OrderedDict
-from sbbbattlesim import treasure_registry, utils
+
+from sbbbattlesim.treasures import registry as treasure_registry
+from sbbbattlesim.heros import registry as hero_registry
+from sbbbattlesim import utils
+from sbbbattlesim.events import EventManager, Death, Support
+
+logger = logging.getLogger(__name__)
 
 
-class Player:
+class Player(EventManager):
     def __init__(self, characters, treasures, hero, hand):
+        super().__init__()
+
         self.id = None
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
@@ -12,11 +21,22 @@ class Player:
             character.owner = self
             self.characters[slot] = character
 
-        self.treasures = {treasure: treasure_registry[treasure] for treasure in treasures}
         self._attack_slot = 1
-        # self.hero = hero
         # self.hand = OrderedDict({i: characters for i, characters in enumerate(hand)})
         self.graveyard = []
+
+        self.treasures = {}
+        for tres in treasures:
+            treasure = treasure_registry[tres]
+            if treasure is not None:
+                self.treasures[treasure.id] = treasure
+
+            for evt in tres.events:
+                self.register(evt)
+
+        self.hero = hero_registry[hero]
+        for evt in self.hero.events:
+            self.register(evt)
 
     def __str__(self):
         return self.__repr__()
@@ -39,6 +59,9 @@ class Player:
             if character is not None:
                 if character.attack > 0:
                     break
+
+            if self._attack_slot == 7:
+                self._attack_slot = 0
             self._attack_slot += 1
 
         return self.characters.get(self._attack_slot)
@@ -55,7 +78,8 @@ class Player:
             # This does talk about buffs, but it is for buffs that can only be changed by board state
             buff_targets = []
             if getattr(char, 'support', False):
-                buff_targets = utils.get_support_targets(position=char.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures)
+                buff_targets = utils.get_support_targets(position=char.position,
+                                                         horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures)
             elif getattr(char, 'aura', False):
                 buff_targets = self.characters.keys()
 
@@ -64,70 +88,43 @@ class Player:
             for buff_target in buff_targets:
                 char.buff(target_character=buff_target)
 
-        #TODO Add treasure effects
+                # On Support Event Trigger
+                self(Support, support_target=buff_target)
 
+    def resolve_damage(self, **kwargs):
+        action_taken = False
 
-    def summon(self, slot, *characters):
+        # Resolve Character Deaths
+        for pos, char in self.characters.items():
+            if char is None:
+                continue
+
+            if char.dead:
+                char('Death', **kwargs)
+                action_taken = True
+
+                self.graveyard.append(char)
+                self.characters[pos] = None
+
+                logger.info(f'{char} died')
+
+        return action_taken
+
+    def summon(self, pos, *characters):
         # TODO How do things summon
         summoned_characters = []
-        front_row_check = slot <= 4
+        front_row_check = pos <= 4
 
         # print(f'Characters to Summon {characters}')
+        spawn_order = utils.get_spawn_positions(pos)
+        for char in characters:
+            pos = next((pos for pos in spawn_order if self.characters.get(pos) is None), None)
+            if pos is None:
+                break
 
-        for character in characters:
-            #Fill current slot
-            # print(f'Current Slot {self.characters[slot] is None}')
-            if self.characters[slot] is None:
-                self.characters[slot] = character
-                character.position = slot
-                summoned_characters.append((slot, character))
-                continue
-
-            #Right row adjacent
-            right_row_avaiable_slot = next((i for i in range(slot, 4 if front_row_check else 7) if self.characters[i] is None), None)
-            # print(f'Right Row Adjacent {right_row_avaiable_slot}')
-            if right_row_avaiable_slot:
-                self.characters[right_row_avaiable_slot] = character
-                character.position = right_row_avaiable_slot
-                summoned_characters.append((right_row_avaiable_slot, character))
-                continue
-
-            #Left row adjacent
-            left_row_available_slot = next((i for i in range(slot, 1 if front_row_check else 4, -1) if self.characters[i] is None), None)
-            # print(f'Left Row Adjacent {left_row_available_slot}')
-            if left_row_available_slot:
-                self.characters[left_row_available_slot] = character
-                character.position = left_row_available_slot
-                summoned_characters.append((left_row_available_slot, character))
-                continue
-
-            #Right diagonal adjacent
-            right_adjacenties = {0: 4, 1: 5, 2: 6, 4: 2, 5: 2, 6: 3}
-            right_diagonal_adjacent_avaialable_slot = right_adjacenties.get(slot)
-            # print(f'Right Diagonal Row Adjacent {right_diagonal_adjacent_avaialable_slot}')
-            if self.characters.get(right_diagonal_adjacent_avaialable_slot, '') is None:
-                self.characters[right_diagonal_adjacent_avaialable_slot] = character
-                character.position = right_diagonal_adjacent_avaialable_slot
-                summoned_characters.append((right_diagonal_adjacent_avaialable_slot, character))
-                continue
-
-            #Left diagonal adjacent
-            left_adjacenties = {v: k for k, v in reversed(list(right_adjacenties.items()))}
-            left_diagonal_adjacent_avaialable_slot = left_adjacenties.get(slot)
-            # print(f'Left Diagonal Row Adjacent {left_diagonal_adjacent_avaialable_slot}')
-            if self.characters.get(left_diagonal_adjacent_avaialable_slot, '') is None:
-                self.characters[left_diagonal_adjacent_avaialable_slot] = character
-                character.position = left_diagonal_adjacent_avaialable_slot
-                summoned_characters.append((left_diagonal_adjacent_avaialable_slot, character))
-                continue
-
-            any_available_slot = next((i for i, m in self.characters.items() if m is None), None)
-            if any_available_slot:
-                self.characters[any_available_slot] = character
-                character.position = any_available_slot
-                summoned_characters.append((any_available_slot, character))
-                continue
-
+            self.characters[pos] = char
+            summoned_characters.append(char)
+            logger.info(f'Spawning {char} in {pos} position')
 
         # TODO Summong Portal
 

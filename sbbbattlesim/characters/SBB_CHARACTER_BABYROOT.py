@@ -1,6 +1,4 @@
-from sbbbattlesim.events import BuffsEvent
 from sbbbattlesim.characters import Character
-
 
 
 class CharacterType(Character):

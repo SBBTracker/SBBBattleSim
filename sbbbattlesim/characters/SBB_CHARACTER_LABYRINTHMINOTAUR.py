@@ -1,10 +1,6 @@
 from sbbbattlesim.characters import Character
 
 
-class BuffEvent(object):
-    pass
-
-
 class CharacterType(Character):
     name = 'Labyrinth Minotaur'
     aura = True

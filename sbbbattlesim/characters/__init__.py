@@ -1,14 +1,15 @@
-import collections
 import logging
 import pkgutil
 from collections import OrderedDict
+
+from sbbbattlesim.events import EventManager
 
 logger = logging.getLogger(__name__)
 
 logic_path = __path__
 
 
-class Character:
+class Character(EventManager):
     name = 'NO NAME SET'
 
     events = ()
@@ -16,14 +17,17 @@ class Character:
     aura = False
     support = False
 
-    def __init__(self, attack, health,  golden=False, position=None, keywords=[], tribes=[]):
+    def __init__(self, attack, health, golden=False, position=None, keywords=[], tribes=[]):
+        super().__init__()
+
         self.base_attack = attack
         self.base_health = health
-
         self.attack_bonus = 0
         self.health_bonus = 0
         self.damage = 0
         self.slay_counter = 0
+        self.dead = False
+
         self.position = position
         self.golden = golden
 
@@ -31,8 +35,6 @@ class Character:
         self.tribes = tribes
 
         self.owner = None
-
-        self._events = collections.defaultdict(list)
 
         for evt in self.events:
             self.register(evt(self))
@@ -43,23 +45,8 @@ class Character:
     def __repr__(self):
         return f'{self.name} ({self.attack}/{self.health})'
 
-    def register(self, event):
-        for event_base in event.__bases__:
-            self._events[event_base].append(event)
-            print(f'Registered {event_base} - {event}')
-
-    def unregister(self, event):
-        self._events.pop(event, None)
-
-    def __call__(self, event, **kwargs):
-        for evt in sorted(self._events.get(event, ()), key=lambda x: x.priority):
-            evt(**kwargs)
-
     def buff(self, target_character):
         raise NotImplementedError(self.name)
-
-    def dead(self):
-        return self.damage > self.health
 
     @property
     def attack(self):
@@ -68,6 +55,13 @@ class Character:
     @property
     def health(self):
         return self.base_health + self.health_bonus - self.damage
+
+    @health.setter
+    def health(self, value):
+        self.damage = self.base_health + self.health_bonus - value
+        if self.damage > self.base_health + self.health_bonus:
+            logger.info(f'{self} is marked for death')
+            self.dead = True
 
 
 class Registry(object):
@@ -81,8 +75,13 @@ class Registry(object):
         if not character:
             class NewCharacter(Character):
                 name = item
+
             character = NewCharacter
             # print(f'Creating Generic Character for {item}')
+
+        # Set the id for reference
+        character.id = item
+
         return character
 
     def __getattr__(self, item):
@@ -94,7 +93,7 @@ class Registry(object):
     def register(self, name, character):
         assert name not in self.characters, 'Character is already registered.'
         self.characters[name] = character
-        print(f'Registered {name} - {character}')
+        logger.debug(f'Registered {name} - {character}')
 
     def unregister(self, name):
         self.characters.pop(name, None)
@@ -104,7 +103,7 @@ class Registry(object):
             try:
                 character = __import__(name, globals(), locals(), ['CharacterType'], 1)
                 self.register(name, character.CharacterType)
-            except ImportError:
+            except ImportError as e:
                 pass
             except Exception as exc:
                 logger.exception('Error loading characters: {}'.format(name))

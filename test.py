@@ -1,3 +1,4 @@
+import logging
 import random
 
 from sbbbattlesim import Player, Board, character_registry, keywords, tribes
@@ -5,8 +6,8 @@ from sbbbattlesim import Player, Board, character_registry, keywords, tribes
 
 def random_character():
     return random.choice(list(character_registry.characters.values()))(
-        attack=random.randint(0, 10),
-        health=random.randint(1, 20),
+        attack=random.randint(1, 5),
+        health=random.randint(1, 5),
         golden=bool(random.getrandbits(1)),
         keywords=[random.choice(keywords) for i in range(random.randint(0, 2))],
         tribes=[random.choice(tribes) for i in range(random.randint(0, 2))]
@@ -14,18 +15,17 @@ def random_character():
 
 
 def generate_player(char_num=5, treasures=2):
-    mad_mim = character_registry['SBB_CHARACTER_MADMADAMMIM']
-
     return Player(
-        characters=[random_character() for _ in range(5)],
+        characters=[random_character() for _ in range(char_num)],
         treasures=[],
-        hero=[],
+        hero=None,
         hand=[]
     )
 
 
 if __name__ == '__main__':
-    board = Board(p1=generate_player(), p2=generate_player())
+    char_num = 3
+    board = Board(p1=generate_player(char_num), p2=generate_player(char_num))
     powp, ptwp, t, rt = board.simulate(k=1)
 
     print(f'Outcomes'
@@ -34,7 +34,3 @@ if __name__ == '__main__':
           f'\n\tTies {t}')
 
     print(f'Runtime {rt}')
-
-
-
-

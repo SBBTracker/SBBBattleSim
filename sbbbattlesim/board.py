@@ -28,8 +28,6 @@ class Board:
             attacking, defending = random.sample((self.p1, self.p2), 2)
             random_attacker = True
 
-        print(attacking, defending)
-
         endings = []
         for _ in range(k):
             try:
