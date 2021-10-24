@@ -1,7 +1,6 @@
-import pkgutil
 import logging
+import pkgutil
 from collections import OrderedDict
-
 
 logger = logging.getLogger(__name__)
 
@@ -10,13 +9,24 @@ logic_path = __path__
 
 class Treasure:
     name = ''
+    events = ()
 
 
 class Registry(object):
     treasures = OrderedDict()
 
     def __getitem__(self, item):
-        return self.treasures.get(item, lambda: None)()
+        treasure = self.treasures.get(item)
+
+        if treasure is None:
+            class NewTreasure(Treasure):
+                name = item
+
+            treasure = NewTreasure
+
+        treasure.id = item
+
+        return treasure
 
     def __getattr__(self, item):
         return getattr(self.treasures, item)
@@ -24,10 +34,11 @@ class Registry(object):
     def __contains__(self, item):
         return item in self.treasures
 
-    def register(self, name, integration):
+    def register(self, name, treasure):
         assert name not in self.treasures, 'Integration is already registered.'
-        integration.name = name
-        self.treasures[name] = integration
+        treasure.name = name
+        self.treasures[name] = treasure
+        logger.debug(f'Registered {name} - {treasure}')
 
     def unregister(self, name):
         self.treasures.pop(name, None)
@@ -35,9 +46,8 @@ class Registry(object):
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
             try:
-                treasure = __import__(name, globals(), locals(), ['PingPost'], 1)
-                if self.is_valid(name, treasure):
-                    self.register(name, treasure.PingPost)
+                treasure = __import__(name, globals(), locals(), ['TreasureType'], 1)
+                self.register(name, treasure.TreasureType)
             except ImportError:
                 pass
             except Exception as exc:
@@ -45,3 +55,4 @@ class Registry(object):
 
 
 registry = Registry()
+registry.autoregister()

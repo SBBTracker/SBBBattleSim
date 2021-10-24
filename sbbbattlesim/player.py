@@ -1,0 +1,131 @@
+import logging
+from collections import OrderedDict
+
+from sbbbattlesim.treasures import registry as treasure_registry
+from sbbbattlesim.heros import registry as hero_registry
+from sbbbattlesim import utils
+from sbbbattlesim.events import EventManager, Death, Support
+
+logger = logging.getLogger(__name__)
+
+
+class Player(EventManager):
+    def __init__(self, characters, treasures, hero, hand):
+        super().__init__()
+
+        self.id = None
+        self.characters = OrderedDict({i: None for i in range(1, 8)})
+
+        for slot, character in enumerate(characters, 1):
+            character.position = slot
+            character.owner = self
+            self.characters[slot] = character
+
+        self._attack_slot = 1
+        # self.hand = OrderedDict({i: characters for i, characters in enumerate(hand)})
+        self.graveyard = []
+
+        self.treasures = {}
+        for tres in treasures:
+            treasure = treasure_registry[tres]
+            if treasure is not None:
+                self.treasures[treasure.id] = treasure
+
+            for evt in tres.events:
+                self.register(evt)
+
+        self.hero = hero_registry[hero]
+        for evt in self.hero.events:
+            self.register(evt)
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return f'{self.characters}'
+
+    @property
+    def front(self):
+        return dict(list(self.characters.items())[:4])
+
+    @property
+    def back(self):
+        return dict(list(self.characters.items())[4:])
+
+    @property
+    def attack_character(self):
+        for _ in range(7):
+            character = self.characters[self._attack_slot]
+            if character is not None:
+                if character.attack > 0:
+                    break
+
+            if self._attack_slot == 7:
+                self._attack_slot = 0
+            self._attack_slot += 1
+
+        return self.characters.get(self._attack_slot)
+
+    def resolve_board(self):
+        # Remove all bonus'
+        for pos, char in self.characters.items():
+            if char is None:
+                continue
+
+            char.attack_bonus, char.health_bonus = 0, 0
+
+            # Support & Aura Targeting
+            # This does talk about buffs, but it is for buffs that can only be changed by board state
+            buff_targets = []
+            if getattr(char, 'support', False):
+                buff_targets = utils.get_support_targets(position=char.position,
+                                                         horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures)
+            elif getattr(char, 'aura', False):
+                buff_targets = self.characters.keys()
+
+            buff_targets = [self.characters[buff_pos] for buff_pos in buff_targets if self.characters.get(buff_pos)]
+
+            for buff_target in buff_targets:
+                char.buff(target_character=buff_target)
+
+                # On Support Event Trigger
+                self(Support, support_target=buff_target)
+
+    def resolve_damage(self, **kwargs):
+        action_taken = False
+
+        # Resolve Character Deaths
+        for pos, char in self.characters.items():
+            if char is None:
+                continue
+
+            if char.dead:
+                char('Death', **kwargs)
+                action_taken = True
+
+                self.graveyard.append(char)
+                self.characters[pos] = None
+
+                logger.info(f'{char} died')
+
+        return action_taken
+
+    def summon(self, pos, *characters):
+        # TODO How do things summon
+        summoned_characters = []
+        front_row_check = pos <= 4
+
+        # print(f'Characters to Summon {characters}')
+        spawn_order = utils.get_spawn_positions(pos)
+        for char in characters:
+            pos = next((pos for pos in spawn_order if self.characters.get(pos) is None), None)
+            if pos is None:
+                break
+
+            self.characters[pos] = char
+            summoned_characters.append(char)
+            logger.info(f'Spawning {char} in {pos} position')
+
+        # TODO Summong Portal
+
+        return summoned_characters
