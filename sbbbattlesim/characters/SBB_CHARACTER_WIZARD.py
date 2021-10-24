@@ -1,4 +1,4 @@
-from characters import Character
+from sbbbattlesim.characters import Character
 
 
 class CharacterType(Character):

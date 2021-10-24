@@ -35,9 +35,7 @@ class Registry(object):
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
             try:
-                treasure = __import__(name, globals(), locals(), ['PingPost'], 1)
-                if self.is_valid(name, treasure):
-                    self.register(name, treasure.PingPost)
+                treasure = __import__(name, globals(), locals(), ['TreasureType'], 1)
             except ImportError:
                 pass
             except Exception as exc:
@@ -45,3 +43,4 @@ class Registry(object):
 
 
 registry = Registry()
+registry.autoregister()

@@ -1,7 +1,7 @@
+import collections
 import logging
 import pkgutil
 from collections import OrderedDict
-from copy import copy
 
 logger = logging.getLogger(__name__)
 
@@ -11,39 +11,31 @@ logic_path = __path__
 class Character:
     name = 'NO NAME SET'
 
-    slay = []
-    buffs = []
-    death = []
-    on_damage = []
+    events = ()
 
-    def __init__(self, attack, health, position=None, *tribes):
-        self.attack_bonus = 0
-        self.health_bonus = 0
+    aura = False
+    support = False
+
+    def __init__(self, attack, health,  golden=False, position=None, keywords=[], tribes=[]):
         self.base_attack = attack
         self.base_health = health
-        self._damage = 0
+
+        self.attack_bonus = 0
+        self.health_bonus = 0
+        self.damage = 0
         self.slay_counter = 0
         self.position = position
+        self.golden = golden
 
+        self.keywords = keywords
         self.tribes = tribes
-
-        self.slay_funcs = []
-        self.buff_funcs = []
-        self.death_funcs = []
-        self.damage_funcs = []
 
         self.owner = None
 
-        for slay in self.slay:
-            self.slay_funcs.append(slay(self))
+        self._events = collections.defaultdict(list)
 
-        for death in self.death:
-            self.death_funcs.append(death(self))
-
-        for damage_func in self.on_damage:
-            self.damage_funcs.append(damage_func(self))
-
-        self.buffs = [buff(self) for buff in self.buffs]
+        for evt in self.events:
+            self.register(evt(self))
 
     def __str__(self):
         return self.__repr__()
@@ -51,22 +43,23 @@ class Character:
     def __repr__(self):
         return f'{self.name} ({self.attack}/{self.health})'
 
-    def damage_event(self, value, **kwargs):
-        self._damage += value
+    def register(self, event):
+        for event_base in event.__bases__:
+            self._events[event_base].append(event)
+            print(f'Registered {event_base} - {event}')
 
-        if self._damage > self.health:
-            del self
-            return True
+    def unregister(self, event):
+        self._events.pop(event, None)
 
-        for damage_func in self.damage_funcs:
-            damage_func(damage_target=self, **kwargs)
+    def __call__(self, event, **kwargs):
+        for evt in sorted(self._events.get(event, ()), key=lambda x: x.priority):
+            evt(**kwargs)
 
-        return False
+    def buff(self, target_character):
+        raise NotImplementedError(self.name)
 
-    def slay_event(self, slayed, **kwargs):
-        for slay in self.slay_funcs:
-            slay(slayed=slayed, **kwargs)
-
+    def dead(self):
+        return self.damage > self.health
 
     @property
     def attack(self):
@@ -82,6 +75,9 @@ class Registry(object):
 
     def __getitem__(self, item):
         character = self.characters.get(item)
+        if not character:
+            character = {char.name: char for char in self.characters.values()}.get(item)
+
         if not character:
             class NewCharacter(Character):
                 name = item
@@ -106,12 +102,16 @@ class Registry(object):
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
             try:
-                character = __import__(name, globals(), locals(), ['PingPost'], 1)
+                character = __import__(name, globals(), locals(), ['CharacterType'], 1)
                 self.register(name, character.CharacterType)
             except ImportError:
                 pass
             except Exception as exc:
                 logger.exception('Error loading characters: {}'.format(name))
 
+    def items(self):
+        return {i.display_name: i for i in self.characters.values()}.items()
+
 
 registry = Registry()
+registry.autoregister()

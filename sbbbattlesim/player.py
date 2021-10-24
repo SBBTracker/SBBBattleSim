@@ -1,13 +1,13 @@
 from collections import OrderedDict
-from treasures import registry as treasure_registry
+from sbbbattlesim import treasure_registry, utils
 
 
 class Player:
     def __init__(self, characters, treasures, hero, hand):
-        self.player_num = None
+        self.id = None
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
-        for slot, character in characters.items():
+        for slot, character in enumerate(characters, 1):
             character.position = slot
             character.owner = self
             self.characters[slot] = character
@@ -16,7 +16,7 @@ class Player:
         self._attack_slot = 1
         # self.hero = hero
         # self.hand = OrderedDict({i: characters for i, characters in enumerate(hand)})
-        # self.graveyard = []
+        self.graveyard = []
 
     def __str__(self):
         return self.__repr__()
@@ -45,36 +45,24 @@ class Player:
 
     def resolve_board(self):
         # Remove all bonus'
-        for i, m in self.characters.items():
-            if m is None:
+        for pos, char in self.characters.items():
+            if char is None:
                 continue
 
-            m.attack_bonus, m.health_bonus = 0, 0
-            m.buff_funcs = []
+            char.attack_bonus, char.health_bonus = 0, 0
 
-            # Support Targeting
-            buff_slots = []
-            if getattr(m, 'support', False):
-                if self.treasures.get('horn_of_olympus'):
-                    buff_slots = [1, 2, 3, 4]
-                elif 5 <= m.position <= 7:
-                    buff_slots = {5: [1, 2], 6: [2, 3], 7: [3, 4]}[i]
+            # Support & Aura Targeting
+            # This does talk about buffs, but it is for buffs that can only be changed by board state
+            buff_targets = []
+            if getattr(char, 'support', False):
+                buff_targets = utils.get_support_targets(position=char.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures)
+            elif getattr(char, 'aura', False):
+                buff_targets = self.characters.keys()
 
-            elif getattr(m, 'aura', False):
-                buff_slots = range(1, 8)
+            buff_targets = [self.characters[buff_pos] for buff_pos in buff_targets if self.characters.get(buff_pos)]
 
-            for i in buff_slots:
-                buffed_character = self.characters[i]
-                if buffed_character:
-                    buffed_character.buff_funcs.extend(m.buffs)
-
-        for i, m in self.characters.items():
-            if m is None:
-                continue
-            for buff in m.buff_funcs:
-                buff(buff_target=m)
-
-            # TODO Add On Buff Trigger
+            for buff_target in buff_targets:
+                char.buff(target_character=buff_target)
 
         #TODO Add treasure effects
 
