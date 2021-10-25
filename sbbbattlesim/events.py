@@ -58,6 +58,8 @@ class DamagedAndSurvived(SSBBSEvent):
 
 
 class EventManager:
+    # TODO Make a temp register option for effects that trigger but are temporary
+    # Alternaitvely figure out a good way to temporarily apply slay to something
     def __init__(self):
         self._events = collections.defaultdict(list)
 

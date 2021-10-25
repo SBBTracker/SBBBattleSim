@@ -4,7 +4,7 @@ from collections import OrderedDict
 from sbbbattlesim.treasures import registry as treasure_registry
 from sbbbattlesim.heros import registry as hero_registry
 from sbbbattlesim import utils
-from sbbbattlesim.events import EventManager, Death, Support
+from sbbbattlesim.events import EventManager
 
 logger = logging.getLogger(__name__)
 
@@ -89,10 +89,15 @@ class Player(EventManager):
                 char.buff(target_character=buff_target)
 
                 # On Support Event Trigger
-                self(Support, support_target=buff_target)
+                self('Support', support_target=buff_target)
+
+        # TODO Handle Treasure Buff Triggers
+        # TODO Add Temporary Event Stuff
 
     def resolve_damage(self, **kwargs):
         action_taken = False
+
+        # TODO Remove all characters before death triggers
 
         # Resolve Character Deaths
         for pos, char in self.characters.items():
@@ -111,13 +116,10 @@ class Player(EventManager):
         return action_taken
 
     def summon(self, pos, *characters):
-        # TODO How do things summon
         summoned_characters = []
-        front_row_check = pos <= 4
-
-        # print(f'Characters to Summon {characters}')
         spawn_order = utils.get_spawn_positions(pos)
         for char in characters:
+            # TODO This could be better
             pos = next((pos for pos in spawn_order if self.characters.get(pos) is None), None)
             if pos is None:
                 break
@@ -129,3 +131,5 @@ class Player(EventManager):
         # TODO Summong Portal
 
         return summoned_characters
+
+    # TODO Calculate Damage
