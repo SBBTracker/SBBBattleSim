@@ -4,6 +4,8 @@ from sbbbattlesim.events import Death
 
 class CharacterType(Character):
     # You will have to make a commit to change this name
+    # PUFF PUFF VARIABLE
+    # Store all puff puff buff puffs for puffing buffs on a puff puff
     name = 'PUFF MOTHER FUCKING PUFF'
 
     class PuffPuffDeath(Death):
