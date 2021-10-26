@@ -90,7 +90,8 @@ class Player(EventManager):
                 char.buff(target_character=buff_target)
 
                 # On Support Event Trigger
-                self('Support', support_target=buff_target)
+                # Maybe this only needs to trigger once
+                # self('Support', support_target=buff_target)
 
         # TODO Handle Treasure Buff Triggers
         # TODO Add Temporary Event Stuff

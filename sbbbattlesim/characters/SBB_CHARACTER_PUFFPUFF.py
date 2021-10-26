@@ -1,12 +1,12 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import Slay
+from sbbbattlesim.events import Death
 
 
 class CharacterType(Character):
     # You will have to make a commit to change this name
     name = 'PUFF MOTHER FUCKING PUFF'
 
-    class PuffPuffDeath(Slay):
+    class PuffPuffDeath(Death):
         def __call__(self, **kwargs):
             for char in self.character.owner.characters.values():
                 if char is not None:
