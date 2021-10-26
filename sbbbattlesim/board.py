@@ -2,7 +2,8 @@ import random
 import time
 import traceback
 from copy import deepcopy
-
+from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.player import Player
 from sbbbattlesim.combat import fight
 
 
@@ -11,8 +12,46 @@ class Board:
         self.p1 = p1
         self.p2 = p2
 
-        self.p1.id = True
-        self.p2.id = False
+    @classmethod
+    def from_json(cls, data):
+        assert isinstance(data, dict)
+        p1id, p2id = list(data)
+        p1data, p2data = data[p1id], data[p2id]
+
+        def get_player(pdat):
+            characters = {}
+            for slot, char_data in pdat['characters'].items():
+                char_cls = character_registry[char_data['id']]
+                characters[int(slot)] = char_cls(
+                    attack=char_data['attack'],
+                    health=char_data['health'],
+                    golden=char_data['golden'],
+                    keywords=char_data['keywords'],
+                    tribes=char_data['tribes'],
+                )
+
+            hand = []
+            for char_data in pdat['hand']:
+                char_cls = character_registry[char_data['id']]
+                hand.append(char_cls(
+                    attack=char_data['attack'],
+                    health=char_data['health'],
+                    golden=char_data['golden'],
+                    keywords=char_data['keywords'],
+                    tribes=char_data['tribes'],
+                ))
+
+            return Player(
+                characters=characters,
+                treasures=pdat['treasures'],
+                hero=pdat['hero'],
+                hand=hand
+            )
+
+        p1, p2 = get_player(p1data), get_player(p2data)
+        p1.id, p2.id = p1id, p2id
+
+        return cls(p1=p1, p2=p2)
 
     def simulate(self, k=1):
         start = time.time()

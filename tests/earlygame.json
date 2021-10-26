@@ -1,0 +1,138 @@
+{
+	"PLAYERONEIDHERE": {
+		"characters": {
+			"1": {
+				"id": "SBB_CHARACTER_QUESTINGPRINCESS",
+				"attack": 13,
+				"health": 11,
+				"golden": true,
+				"keywords": [
+					"slay"
+				],
+				"tribes": [
+					"good",
+					"princess"
+				]
+			},
+			"2": {
+				"id": "SBB_CHARACTER_MONSTAR",
+				"attack": 15,
+				"health": 11,
+				"golden": false,
+				"keywords": [
+					"slay"
+				],
+				"tribes": [
+					"good",
+					"princess",
+					"monster"
+				]
+			},
+			"4": {
+				"id": "SBB_CHARACTER_PRINCESSPEEP",
+				"attack": 5,
+				"health": 5,
+				"golden": false,
+				"keywords": [
+					"last breath"
+				],
+				"tribes": [
+					"good",
+					"princess"
+				]
+			},
+			"5": {
+				"id": "SBB_CHARACTER_GOODWITCHOFTHENORTH",
+				"attack": 6,
+				"health": 7,
+				"golden": false,
+				"keywords": [
+					"support"
+				],
+				"tribes": [
+					"good",
+					"princess"
+				]
+			}
+		},
+		"treasures": [
+			"SBB_TREASURE_FOUNTAINOFYOUTH"
+		],
+		"hand": [],
+		"hero": ""
+	},
+	"PLAYERTWOIDHERE": {
+		"characters": {
+			"1": {
+				"id": "SBB_CHARACTER_PUFFPUFF",
+				"attack": 6,
+				"health": 6,
+				"golden": false,
+				"keywords": [
+					"last breath"
+				],
+				"tribes": [
+					"puff puff",
+					"good"
+				]
+			},
+			"2": {
+				"id": "SBB_CHARACTER_PUFFPUFF",
+				"attack": 6,
+				"health": 6,
+				"golden": false,
+				"keywords": [
+					"last breath"
+				],
+				"tribes": [
+					"puff puff",
+					"good"
+				]
+			},
+			"3": {
+				"id": "SBB_CHARACTER_PUFFPUFF",
+				"attack": 6,
+				"health": 6,
+				"golden": false,
+				"keywords": [
+					"last breath"
+				],
+				"tribes": [
+					"puff puff",
+					"good"
+				]
+			},
+			"4": {
+				"id": "SBB_CHARACTER_PUFFPUFF",
+				"attack": 6,
+				"health": 6,
+				"golden": false,
+				"keywords": [
+					"last breath"
+				],
+				"tribes": [
+					"puff puff",
+					"good"
+				]
+			},
+			"5": {
+				"id": "SBB_CHARACTER_MADMADAMMIM",
+				"attack": 0,
+				"health": 3,
+				"golden": false,
+				"keywords": [
+					"support"
+				],
+				"tribes": [
+					"evil",
+					"mage"
+				]
+			}
+		},
+		"treasures": [
+			"SBB_TREASURE_CROWNOFATLAS"
+		],
+		"hand": [],
+		"hero": ""
+	}
+}

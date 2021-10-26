@@ -16,3 +16,8 @@ def get_spawn_positions(position):
     }
 
     return spawn_order.get(position, ())
+
+
+# DO NOT DO THIS
+# TODO Summon random character with conditions
+# DO NOT DO THIS

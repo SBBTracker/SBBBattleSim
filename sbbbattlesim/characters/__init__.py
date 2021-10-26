@@ -3,13 +3,14 @@ import pkgutil
 from collections import OrderedDict
 
 from sbbbattlesim.events import EventManager
+from sbbbattlesim.sbbbsobj import SBBBSObject
 
 logger = logging.getLogger(__name__)
 
 logic_path = __path__
 
 
-class Character(EventManager):
+class Character(SBBBSObject):
     name = 'NO NAME SET'
 
     events = ()
@@ -17,7 +18,7 @@ class Character(EventManager):
     aura = False
     support = False
 
-    def __init__(self, attack, health, golden=False, position=None, keywords=[], tribes=[]):
+    def __init__(self, attack, health, golden=False, keywords=[], tribes=[]):
         super().__init__()
 
         self.base_attack = attack
@@ -28,7 +29,7 @@ class Character(EventManager):
         self.slay_counter = 0
         self.dead = False
 
-        self.position = position
+        self.position = None
         self.golden = golden
 
         self.keywords = keywords
@@ -43,7 +44,7 @@ class Character(EventManager):
         return self.__repr__()
 
     def __repr__(self):
-        return f'{self.name} ({self.attack}/{self.health})'
+        return f'''{self.name} ({self.attack}/{self.health})'''
 
     def buff(self, target_character):
         raise NotImplementedError(self.name)
@@ -59,7 +60,7 @@ class Character(EventManager):
     @health.setter
     def health(self, value):
         self.damage = self.base_health + self.health_bonus - value
-        if self.damage > self.base_health + self.health_bonus:
+        if self.damage >= self.base_health + self.health_bonus:
             logger.info(f'{self} is marked for death')
             self.dead = True
 

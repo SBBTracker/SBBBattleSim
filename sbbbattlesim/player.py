@@ -16,13 +16,13 @@ class Player(EventManager):
         self.id = None
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
-        for slot, character in enumerate(characters, 1):
+        for slot, character in characters.items():
             character.position = slot
             character.owner = self
             self.characters[slot] = character
 
         self._attack_slot = 1
-        # self.hand = OrderedDict({i: characters for i, characters in enumerate(hand)})
+        self.hand = hand
         self.graveyard = []
 
         self.treasures = {}
@@ -31,7 +31,7 @@ class Player(EventManager):
             if treasure is not None:
                 self.treasures[treasure.id] = treasure
 
-            for evt in tres.events:
+            for evt in treasure.events:
                 self.register(evt)
 
         self.hero = hero_registry[hero]
@@ -42,7 +42,7 @@ class Player(EventManager):
         return self.__repr__()
 
     def __repr__(self):
-        return f'{self.characters}'
+        return f'{self.id} {", ".join([char.__repr__() for char in self.characters.values()])}'
 
     @property
     def front(self):
@@ -73,6 +73,7 @@ class Player(EventManager):
                 continue
 
             char.attack_bonus, char.health_bonus = 0, 0
+            char.clear_temp()
 
             # Support & Aura Targeting
             # This does talk about buffs, but it is for buffs that can only be changed by board state
@@ -100,18 +101,23 @@ class Player(EventManager):
         # TODO Remove all characters before death triggers
 
         # Resolve Character Deaths
+        dead_characters = []
+
         for pos, char in self.characters.items():
             if char is None:
                 continue
 
             if char.dead:
-                char('Death', **kwargs)
+                dead_characters.append(char)
                 action_taken = True
 
                 self.graveyard.append(char)
                 self.characters[pos] = None
 
                 logger.info(f'{char} died')
+
+        for char in dead_characters:
+            char('Death', **kwargs)
 
         return action_taken
 

@@ -2,14 +2,15 @@ import logging
 import pkgutil
 from collections import OrderedDict
 
+from sbbbattlesim.sbbbsobj import SBBBSObject
+
 logger = logging.getLogger(__name__)
 
 logic_path = __path__
 
 
-class Treasure:
-    name = ''
-    events = ()
+class Treasure(SBBBSObject):
+    pass
 
 
 class Registry(object):

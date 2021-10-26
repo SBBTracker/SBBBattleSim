@@ -3,15 +3,15 @@ import pkgutil
 from collections import OrderedDict
 
 from sbbbattlesim.events import EventManager
+from sbbbattlesim.sbbbsobj import SBBBSObject
 
 logger = logging.getLogger(__name__)
 
 logic_path = __path__
 
 
-class Hero(EventManager):
-    name = ''
-    events = ()
+class Hero(SBBBSObject):
+    pass
 
 
 class Registry(object):
