@@ -1,11 +1,12 @@
 {
 	"PLAYERONEIDHERE": {
-		"characters": {
-			"1": {
+		"characters": [
+			{
 				"id": "SBB_CHARACTER_QUESTINGPRINCESS",
 				"attack": 13,
 				"health": 11,
 				"golden": true,
+				"position": 1,
 				"keywords": [
 					"slay"
 				],
@@ -14,11 +15,12 @@
 					"princess"
 				]
 			},
-			"2": {
+			{
 				"id": "SBB_CHARACTER_MONSTAR",
 				"attack": 15,
 				"health": 11,
 				"golden": false,
+				"position": 2,
 				"keywords": [
 					"slay"
 				],
@@ -28,11 +30,12 @@
 					"monster"
 				]
 			},
-			"4": {
+			{
 				"id": "SBB_CHARACTER_PRINCESSPEEP",
 				"attack": 5,
 				"health": 5,
 				"golden": false,
+				"position": 4,
 				"keywords": [
 					"last breath"
 				],
@@ -41,11 +44,12 @@
 					"princess"
 				]
 			},
-			"5": {
+			{
 				"id": "SBB_CHARACTER_GOODWITCHOFTHENORTH",
 				"attack": 6,
 				"health": 7,
 				"golden": false,
+				"position": 5,
 				"keywords": [
 					"support"
 				],
@@ -54,7 +58,7 @@
 					"princess"
 				]
 			}
-		},
+		],
 		"treasures": [
 			"SBB_TREASURE_FOUNTAINOFYOUTH"
 		],
@@ -62,12 +66,13 @@
 		"hero": ""
 	},
 	"PLAYERTWOIDHERE": {
-		"characters": {
-			"1": {
+		"characters": [
+			{
 				"id": "SBB_CHARACTER_PUFFPUFF",
 				"attack": 6,
 				"health": 6,
 				"golden": false,
+				"position": 1,
 				"keywords": [
 					"last breath"
 				],
@@ -76,11 +81,12 @@
 					"good"
 				]
 			},
-			"2": {
+			{
 				"id": "SBB_CHARACTER_PUFFPUFF",
 				"attack": 6,
 				"health": 6,
 				"golden": false,
+				"position": 2,
 				"keywords": [
 					"last breath"
 				],
@@ -89,11 +95,12 @@
 					"good"
 				]
 			},
-			"3": {
+			{
 				"id": "SBB_CHARACTER_PUFFPUFF",
 				"attack": 6,
 				"health": 6,
 				"golden": false,
+				"position": 3,
 				"keywords": [
 					"last breath"
 				],
@@ -102,11 +109,12 @@
 					"good"
 				]
 			},
-			"4": {
+			{
 				"id": "SBB_CHARACTER_PUFFPUFF",
 				"attack": 6,
 				"health": 6,
 				"golden": false,
+				"position": 4,
 				"keywords": [
 					"last breath"
 				],
@@ -115,11 +123,12 @@
 					"good"
 				]
 			},
-			"5": {
+			{
 				"id": "SBB_CHARACTER_MADMADAMMIM",
 				"attack": 0,
 				"health": 3,
 				"golden": false,
+				"position": 5,
 				"keywords": [
 					"support"
 				],
@@ -128,7 +137,7 @@
 					"mage"
 				]
 			}
-		},
+		],
 		"treasures": [
 			"SBB_TREASURE_CROWNOFATLAS"
 		],

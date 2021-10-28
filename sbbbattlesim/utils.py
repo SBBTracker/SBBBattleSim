@@ -1,7 +1,20 @@
 def get_support_targets(position, horn=False):
     if horn:
         return [1, 2, 3, 4]
-    return {5: [1, 2], 6: [2, 3], 7: [3, 4]}.get(position, [])
+    return {
+        5: (1, 2),
+        6: (2, 3),
+        7: (3, 4)
+    }.get(position, ())
+
+
+def get_behind_targets(position):
+    return {
+        1: (5,),
+        2: (5, 6),
+        3: (6, 7),
+        4: (7)
+    }.get(position, ())
 
 
 def get_spawn_positions(position):

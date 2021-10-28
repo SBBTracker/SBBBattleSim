@@ -2,7 +2,6 @@ import random
 import time
 import traceback
 from copy import deepcopy
-from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.player import Player
 from sbbbattlesim.combat import fight
 
@@ -19,33 +18,11 @@ class Board:
         p1data, p2data = data[p1id], data[p2id]
 
         def get_player(pdat):
-            characters = {}
-            for slot, char_data in pdat['characters'].items():
-                char_cls = character_registry[char_data['id']]
-                characters[int(slot)] = char_cls(
-                    attack=char_data['attack'],
-                    health=char_data['health'],
-                    golden=char_data['golden'],
-                    keywords=char_data['keywords'],
-                    tribes=char_data['tribes'],
-                )
-
-            hand = []
-            for char_data in pdat['hand']:
-                char_cls = character_registry[char_data['id']]
-                hand.append(char_cls(
-                    attack=char_data['attack'],
-                    health=char_data['health'],
-                    golden=char_data['golden'],
-                    keywords=char_data['keywords'],
-                    tribes=char_data['tribes'],
-                ))
-
             return Player(
-                characters=characters,
+                characters=pdat['characters'],
                 treasures=pdat['treasures'],
                 hero=pdat['hero'],
-                hand=hand
+                hand=pdat['hand']
             )
 
         p1, p2 = get_player(p1data), get_player(p2data)

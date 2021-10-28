@@ -3,6 +3,7 @@ from sbbbattlesim.events import EventManager
 
 class SBBBSObject(EventManager):
     name = ''
+    id = ''
     aura = False
     events = ()
 

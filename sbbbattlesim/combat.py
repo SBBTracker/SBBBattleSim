@@ -60,22 +60,22 @@ def attack(attack_character, defend_character, attacker, defender, **kwargs):
     logger.info(f'{attack_character} -> {defend_character}')
 
     # Attack Event
-    attack_character('Attack', **kwargs)
+    attack_character('OnAttack', **kwargs)
 
     # Defend Event
-    defend_character('Defend', **kwargs)
+    defend_character('OnDefend', **kwargs)
 
     if 'ranged' not in attack_character.keywords:
-        attack_character.health -= defend_character.attack
-    defend_character.health -= attack_character.attack
+        attack_character.damage += defend_character.attack
+    defend_character.damage += attack_character.attack
 
     # SLAY TRIGGER
     if defend_character.dead:
-        attack_character('Slay', **kwargs)
+        attack_character('OnAttackAndKill', **kwargs)
 
     # SURVIVED ATTACK TRIGGER
     else:
-        defend_character('DamagedAndSurvived', **kwargs)
+        defend_character('OnDamagedAndSurvived', **kwargs)
 
     resolve_damage(attacker=attacker, defender=defender, **kwargs)
     resolve_damage(attacker=defender, defender=attacker, **kwargs)

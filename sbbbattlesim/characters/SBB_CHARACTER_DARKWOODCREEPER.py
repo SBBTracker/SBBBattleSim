@@ -1,10 +1,12 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import DamagedAndSurvived
+from sbbbattlesim.events import OnDamagedAndSurvived
 
 
-class DarkwoodCreeperOnDamage(DamagedAndSurvived):
+class DarkwoodCreeperOnDamage(OnDamagedAndSurvived):
     def __call__(self, **kwargs):
-        self.character.attack += 2 if self.character.golden else 1
+        attack_buff = 2 if self.character.golden else 1
+        self.character.attack += attack_buff
+        return 'OnBuff', {'attack_buff': attack_buff}
 
 
 class CharacterType(Character):

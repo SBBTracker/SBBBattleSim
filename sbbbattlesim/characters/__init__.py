@@ -1,8 +1,6 @@
 import logging
 import pkgutil
 from collections import OrderedDict
-
-from sbbbattlesim.events import EventManager
 from sbbbattlesim.sbbbsobj import SBBBSObject
 
 logger = logging.getLogger(__name__)
@@ -11,43 +9,33 @@ logic_path = __path__
 
 
 class Character(SBBBSObject):
-    name = 'NO NAME SET'
-
-    events = ()
-
-    aura = False
     support = False
 
-    def __init__(self, attack, health, golden=False, keywords=[], tribes=[]):
+    def __init__(self, owner, position, attack, health, golden, keywords, tribes):
         super().__init__()
+        self.owner = owner
 
+        self.position = position
         self.base_attack = attack
         self.base_health = health
-        self.attack_bonus = 0
-        self.health_bonus = 0
-        self.damage = 0
-        self.slay_counter = 0
-        self.dead = False
-
-        self.position = None
         self.golden = golden
-
         self.keywords = keywords
         self.tribes = tribes
 
-        self.owner = None
+        self.attack_bonus = 0
+        self.health_bonus = 0
+        self._damage = 0
+        self.slay_counter = 0
+        self.dead = False
 
         for evt in self.events:
-            self.register(evt(self))
+            self.register(evt)
 
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
         return f'''{self.name} ({self.attack}/{self.health})'''
-
-    def buff(self, target_character):
-        raise NotImplementedError(self.name)
 
     @property
     def attack(self):
@@ -57,10 +45,14 @@ class Character(SBBBSObject):
     def health(self):
         return self.base_health + self.health_bonus - self.damage
 
-    @health.setter
-    def health(self, value):
-        self.damage = self.base_health + self.health_bonus - value
-        if self.damage >= self.base_health + self.health_bonus:
+    @property
+    def damage(self):
+        return self._damage
+
+    @damage.setter
+    def damage(self, value):
+        self._damage += value
+        if self.health <= 0:
             logger.info(f'{self} is marked for death')
             self.dead = True
 

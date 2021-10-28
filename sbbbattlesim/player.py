@@ -3,6 +3,7 @@ from collections import OrderedDict
 
 from sbbbattlesim.treasures import registry as treasure_registry
 from sbbbattlesim.heros import registry as hero_registry
+from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim import utils
 from sbbbattlesim.events import EventManager
 
@@ -12,17 +13,25 @@ logger = logging.getLogger(__name__)
 class Player(EventManager):
     def __init__(self, characters, treasures, hero, hand):
         super().__init__()
-
-        self.id = None
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
-        for slot, character in characters.items():
-            character.position = slot
-            character.owner = self
-            self.characters[slot] = character
+        def make_character(char_data):
+            return character_registry[char_data['id']](
+                owner=self,
+                position=char_data.get('position'),
+                attack=char_data['attack'],
+                health=char_data['health'],
+                golden=char_data['golden'],
+                keywords=char_data['keywords'],
+                tribes=char_data['tribes'],
+            )
+
+        for char_data in characters:
+            char = make_character(char_data)
+            self.characters[char.position] = char
 
         self._attack_slot = 1
-        self.hand = hand
+        self.hand = [make_character(char_data) for char_data in hand]
         self.graveyard = []
 
         self.treasures = {}
@@ -118,7 +127,7 @@ class Player(EventManager):
                 logger.info(f'{char} died')
 
         for char in dead_characters:
-            char('Death', **kwargs)
+            char('OnDeath', **kwargs)
 
         return action_taken
 
