@@ -1,5 +1,6 @@
 import collections
 import logging
+import inspect
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class OnDeath(SSBBSEvent):
     def __call__(self, *args, **kwargs):
         return self.handle(*args, **kwargs) or ('OnLastBreath', [], {})
 
-    def handle(self, dead_thing, *args, **kwargs):
+    def handle(self, manager, dead_thing, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -65,7 +66,8 @@ class EventManager:
         self._events = collections.defaultdict(list)
 
     def register(self, event, temp=False):
-        event_base = event.__class__.__base__.__name__
+        #event_base = event.__class__.__base__.__name__
+        event_base = inspect.getmro(event)[1].__name__
         event = event(manager=self)
         if temp:
             self._temp[event_base].append(event)
@@ -84,9 +86,11 @@ class EventManager:
 
         reactions = []
         for evt in sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: x.priority):
-            reaction = evt(**kwargs)
+            logger.info(evt)
+            reaction = evt(manager=self, **kwargs)
             if reaction:
                 reactions.append(reaction)
 
         for (react, evt_args, evt_kwargs) in reactions:
-            self(react, *evt_args, **evt_kwargs, **kwargs)
+            total_kwargs = {**evt_kwargs, **kwargs}
+            self(react, **total_kwargs)

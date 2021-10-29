@@ -9,8 +9,10 @@ class CharacterType(Character):
     class WretchedMummyDeath(OnDeath):
         def handle(self, dead_thing, *args, **kwargs):
             damage = 8 if self.manager.golden else 4
-            for char in kwargs['defender'].characters.values():
-                char.damage += damage
+            for char in self.manager.owner.opponent.characters.values():
+                if char is not None:
+                    char.damage += damage
+
             return 'OnLastBreath', [], {'damage_done': damage}
 
     events = (

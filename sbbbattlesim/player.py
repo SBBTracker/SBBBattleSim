@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 class Player(EventManager):
     def __init__(self, characters, treasures, hero, hand):
         super().__init__()
+        self.opponent = None
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
         def make_character(char_data):
@@ -38,7 +39,7 @@ class Player(EventManager):
         for tres in treasures:
             treasure = treasure_registry[tres]
             if treasure is not None:
-                self.treasures[treasure.id] = treasure
+                self.treasures[treasure.id] = treasure()
 
             for evt in treasure.events:
                 self.register(evt)
@@ -102,7 +103,12 @@ class Player(EventManager):
                 # Maybe this only needs to trigger once
                 # self('Support', support_target=buff_target)
 
-        # TODO Handle Treasure Buff Triggers
+        for treasure in self.treasures.values():
+            if treasure.aura:
+                for pos, char in self.characters.items():
+                    if char is not None:
+                        treasure.buff(char)
+
         # TODO Add Temporary Event Stuff
 
     def resolve_damage(self, **kwargs):
@@ -127,7 +133,8 @@ class Player(EventManager):
                 logger.info(f'{char} died')
 
         for char in dead_characters:
-            char('OnDeath', **kwargs)
+            char('OnDeath', dead_thing=char, **kwargs)
+            logger.info(f'ONDEATH COMPLETED HERE!!!!!!!!!')
 
         return action_taken
 

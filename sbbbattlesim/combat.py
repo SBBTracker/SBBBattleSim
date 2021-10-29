@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 @lru_cache(maxsize=512)
 def fight(attacker, defender, turn=0, **kwargs):
+
     logger.info(f'Attacker {attacker}')
     logger.info(f'Defender {defender}')
 
