@@ -68,7 +68,7 @@ class EventManager:
     def register(self, event, temp=False):
         #event_base = event.__class__.__base__.__name__
         event_base = inspect.getmro(event)[1].__name__
-        event = event()
+        event = event(manager=self)
         if temp:
             self._temp[event_base].append(event)
         else:

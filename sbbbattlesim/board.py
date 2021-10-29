@@ -54,11 +54,7 @@ class Board:
                 if random_attacker:
                     attacking, defending = defending, attacking
 
-                _attacking = deepcopy(attacking)
-                _defending = deepcopy(defending)
-                _attacking.opponent = _defending
-                _defending.opponent = _attacking
-                endings.append(fight(_attacking, _defending))
+                endings.append(fight(deepcopy(attacking), deepcopy(defending)))
             except:
                 traceback.print_exc()
 
