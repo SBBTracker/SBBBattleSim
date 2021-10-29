@@ -28,7 +28,7 @@ class OnDeath(SSBBSEvent):
     def __call__(self, *args, **kwargs):
         return self.handle(*args, **kwargs) or ('OnLastBreath', [], {})
 
-    def handle(self, manager, dead_thing, *args, **kwargs):
+    def handle(self, dead_thing, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -68,7 +68,7 @@ class EventManager:
     def register(self, event, temp=False):
         #event_base = event.__class__.__base__.__name__
         event_base = inspect.getmro(event)[1].__name__
-        event = event(manager=self)
+        event = event()
         if temp:
             self._temp[event_base].append(event)
         else:
@@ -87,7 +87,7 @@ class EventManager:
         reactions = []
         for evt in sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: x.priority):
             logger.info(evt)
-            reaction = evt(manager=self, **kwargs)
+            reaction = evt(**kwargs)
             if reaction:
                 reactions.append(reaction)
 
