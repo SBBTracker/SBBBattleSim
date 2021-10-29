@@ -25,6 +25,7 @@ class Player(EventManager):
                 golden=char_data['golden'],
                 keywords=char_data['keywords'],
                 tribes=char_data['tribes'],
+                cost=char_data['cost']
             )
 
         for char_data in characters:
@@ -41,12 +42,8 @@ class Player(EventManager):
             if treasure is not None:
                 self.treasures[treasure.id] = treasure()
 
-            for evt in treasure.events:
-                self.register(evt)
-
         self.hero = hero_registry[hero]
-        for evt in self.hero.events:
-            self.register(evt)
+
 
     def __str__(self):
         return self.__repr__()
@@ -154,5 +151,15 @@ class Player(EventManager):
         # TODO Summong Portal
 
         return summoned_characters
+
+    def valid_characters(self, _lambda=lambda char : char is not None and not char.dead):
+        """
+        Return a list of valid characters based on an optional lambda that is passed in.
+        You probably do not need to pass in a lambda, so the default behavior is "return all characters that exist and
+        are not dead" effectively filtering out empty board slots.
+        """
+
+        return [char for char in self.characters.values() if _lambda(char)]
+
 
     # TODO Calculate Damage

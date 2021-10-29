@@ -7,12 +7,18 @@ sys.setrecursionlimit(500)
 
 logger = logging.getLogger(__name__)
 
+def fight_initialization(attacker, defender, **kwargs):
+    attacker.opponent = defender
+    defender.opponent = attacker
+
+    ### TODO test who's events trigger in which order
+    attacker('OnFightStart', **kwargs)
+    defender('OnFightStart', **kwargs)
+
+    fight(attacker, defender, **kwargs)
 
 @lru_cache(maxsize=512)
 def fight(attacker, defender, turn=0, **kwargs):
-    if turn == 0:
-        attacker.opponent = defender
-        defender.opponent = attacker
 
     attacker.resolve_board()
     defender.resolve_board()

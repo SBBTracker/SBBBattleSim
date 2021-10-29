@@ -2,16 +2,18 @@
 	"PLAYERONEIDHERE": {
 		"characters": [
 			{
-				"id": "SBB_CHARACTER_BLACKCAT",
-				"attack": 1,
-				"health": 1,
-				"golden": false,
+				"id": "SBB_CHARACTER_ROBINWOOD",
+				"attack": 7,
+				"health": 15,
+				"golden": true,
 				"position": 1,
-				"keywords": [],
-				"cost": 2,
+				"keywords": [
+                  "ranged"
+                ],
+				"cost": 6,
  				"tribes": [
-					"evil",
-					"animal"
+					"good",
+					"treant"
 				]
 			}
 		],
@@ -25,7 +27,7 @@
 		"characters": [
 			{
 				"id": "SBB_CHARACTER_MONSTAR",
-				"attack": 1,
+				"attack": 31,
 				"health": 60,
 				"golden": false,
 				"position": 1,

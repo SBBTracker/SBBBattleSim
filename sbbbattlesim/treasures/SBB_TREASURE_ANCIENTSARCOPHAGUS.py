@@ -10,19 +10,11 @@ class AncientSarcophagusOnDeath(OnDeath):
         itr = 1 # TODO this may be useful when dealing with mimic
 
         for _ in range(itr):
-            valid_targets = []
-            for idx in self.manager.owner.opponent.characters:
-                char = self.manager.owner.opponent.characters[idx]
-                logger.info(f'One such character is {char}')
-                if char is not None and not char.dead:
-                    valid_targets.append(char)
+            valid_targets = self.manager.owner.opponent.valid_characters()
 
             if valid_targets:
                 target = random.choice(valid_targets)
-                logger.info(f'My target is {target} in position {target.position}')
                 target.damage += 3
-                logger.info(f'My target was {target} in position {target.position}')
-                logger.info(f'my targets are {self.manager.owner.opponent.characters.values()}')
 
 
 class TreasureType(Treasure):

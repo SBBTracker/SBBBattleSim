@@ -58,6 +58,8 @@ class OnAttackAndKill(SSBBSEvent):
 class OnSlay(SSBBSEvent):
     '''A character has triggered a slay'''
 
+class OnFightStart(SSBBSEvent):
+    '''A combat has begun'''
 
 
 class EventManager:
@@ -81,7 +83,7 @@ class EventManager:
     def clear_temp(self):
         self._temp = collections.defaultdict(list)
 
-    def __call__(self, event, **kwargs):
+    def __call__(self, event, *args, **kwargs):
         logger.debug(f'{self} triggered event {event}')
 
         reactions = []
@@ -92,5 +94,4 @@ class EventManager:
                 reactions.append(reaction)
 
         for (react, evt_args, evt_kwargs) in reactions:
-            total_kwargs = {**evt_kwargs, **kwargs}
-            self(react, **total_kwargs)
+            self(react, *evt_args, *args, **evt_kwargs, **kwargs)

@@ -11,7 +11,7 @@ logic_path = __path__
 class Character(SBBBSObject):
     support = False
 
-    def __init__(self, owner, position, attack, health, golden, keywords, tribes):
+    def __init__(self, owner, position, attack, health, golden, keywords, tribes, cost):
         super().__init__()
         self.owner = owner
 
@@ -21,15 +21,13 @@ class Character(SBBBSObject):
         self.golden = golden
         self.keywords = keywords
         self.tribes = tribes
+        self.cost = cost
 
         self.attack_bonus = 0
         self.health_bonus = 0
         self._damage = 0
         self.slay_counter = 0
         self.dead = False
-
-        for evt in self.events:
-            self.register(evt)
 
     def __str__(self):
         return self.__repr__()
@@ -40,6 +38,7 @@ class Character(SBBBSObject):
     @property
     def attack(self):
         return self.base_attack + self.attack_bonus
+
 
     @property
     def health(self):
