@@ -18,7 +18,7 @@ def fight_initialization(attacker, defender, **kwargs):
     attacker('OnFightStart', **kwargs)
     defender('OnFightStart', **kwargs)
 
-    fight(attacker, defender, **kwargs)
+    return fight(attacker, defender, **kwargs)
 
 @lru_cache(maxsize=512)
 def fight(attacker, defender, turn=0, **kwargs):

@@ -97,7 +97,7 @@
 			{
 				"id": "SBB_CHARACTER_MONSTAR",
 				"attack": 35,
-				"health": 50,
+				"health": 100,
 				"golden": false,
 				"position": 1,
 				"cost": 3,

@@ -57,8 +57,8 @@ class Board:
             except:
                 traceback.print_exc()
 
-        player_one_win_percent = (endings.count(True) / k) * 100
-        player_two_win_percent = (endings.count(False) / k) * 100
-        ties = 100 - player_two_win_percent - player_one_win_percent
+        player_one_win_percent = round((endings.count(self.p1.id) / k) * 100, 2)
+        player_two_win_percent = round((endings.count(self.p2.id) / k) * 100, 2)
+        ties = round(100 - player_two_win_percent - player_one_win_percent,2)
 
         return player_one_win_percent, player_two_win_percent, ties, time.time() - start
