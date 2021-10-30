@@ -11,7 +11,7 @@ logic_path = __path__
 class Character(SBBBSObject):
     support = False
 
-    def __init__(self, owner, position, attack, health, golden, keywords, tribes):
+    def __init__(self, owner, position, attack, health, golden, keywords, tribes, cost):
         super().__init__()
         self.owner = owner
 
@@ -21,15 +21,13 @@ class Character(SBBBSObject):
         self.golden = golden
         self.keywords = keywords
         self.tribes = tribes
+        self.cost = cost
 
         self.attack_bonus = 0
         self.health_bonus = 0
         self._damage = 0
         self.slay_counter = 0
         self.dead = False
-
-        for evt in self.events:
-            self.register(evt)
 
     def __str__(self):
         return self.__repr__()
@@ -41,6 +39,7 @@ class Character(SBBBSObject):
     def attack(self):
         return self.base_attack + self.attack_bonus
 
+
     @property
     def health(self):
         return self.base_health + self.health_bonus - self.damage
@@ -51,10 +50,12 @@ class Character(SBBBSObject):
 
     @damage.setter
     def damage(self, value):
-        self._damage += value
+        logger.info(f'I am {self.name} and have {self.health} health and have {self.health} health and i have taken {self.damage} damage and am taking {value} damage')
+        self._damage = value
         if self.health <= 0:
             logger.info(f'{self} is marked for death')
             self.dead = True
+        logger.info(f'I am {self.name} and now i ahve {self.health} health and the damage i am taking is {value} and my own damage is {self.damage}')
 
 
 class Registry(object):

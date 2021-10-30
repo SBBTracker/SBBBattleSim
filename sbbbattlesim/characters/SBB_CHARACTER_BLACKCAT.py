@@ -6,13 +6,13 @@ from sbbbattlesim.events import OnDeath
 class CharacterType(Character):
     name = 'Black Cat'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.register(self.BlackCatLastBreath)
+
     class BlackCatLastBreath(OnDeath):
         def handle(self, dead_thing, *args, **kwargs):
             stat = 2 if self.manager.golden else 1
-            cats = [character_registry['Cat'](stat, stat)]
+            cats = [character_registry['Cat'](self.manager.owner, self.manager.position, stat, stat, golden=False, keywords=[], tribes=['evil', 'animal'], cost=1)]
             self.manager.owner.summon(self.manager.position, *cats)
             return 'OnLastBreath', [cats], {}
-
-    events = (
-        BlackCatLastBreath,
-    )

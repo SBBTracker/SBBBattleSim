@@ -5,10 +5,10 @@ from sbbbattlesim.events import Slay
 class CharacterType(Character):
     name = 'Brave Princess'
 
-    class BravePrincessSlay(Slay):
-        def __call__(self, **kwargs):
-            pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.register(self.BravePrincessSlay)
 
-    events = (
-        BravePrincessSlay,
-    )
+    class BravePrincessSlay(Slay):
+        def handle(self, *args, **kwargs):
+            pass

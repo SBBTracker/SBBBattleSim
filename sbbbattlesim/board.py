@@ -3,8 +3,10 @@ import time
 import traceback
 from copy import deepcopy
 from sbbbattlesim.player import Player
-from sbbbattlesim.combat import fight
+from sbbbattlesim.combat import fight_initialization
+import logging
 
+logger = logging.getLogger(__name__)
 
 class Board:
     def __init__(self, p1, p2):
@@ -27,6 +29,8 @@ class Board:
 
         p1, p2 = get_player(p1data), get_player(p2data)
         p1.id, p2.id = p1id, p2id
+        p1.opponent = p2
+        p2.opponent = p1
 
         return cls(p1=p1, p2=p2)
 
@@ -50,7 +54,7 @@ class Board:
                 if random_attacker:
                     attacking, defending = defending, attacking
 
-                endings.append(fight(deepcopy(attacking), deepcopy(defending)))
+                endings.append(fight_initialization(deepcopy(attacking), deepcopy(defending)))
             except:
                 traceback.print_exc()
 

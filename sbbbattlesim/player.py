@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 class Player(EventManager):
     def __init__(self, characters, treasures, hero, hand):
         super().__init__()
+        self.opponent = None
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
         def make_character(char_data):
@@ -24,6 +25,7 @@ class Player(EventManager):
                 golden=char_data['golden'],
                 keywords=char_data['keywords'],
                 tribes=char_data['tribes'],
+                cost=char_data['cost']
             )
 
         for char_data in characters:
@@ -38,14 +40,10 @@ class Player(EventManager):
         for tres in treasures:
             treasure = treasure_registry[tres]
             if treasure is not None:
-                self.treasures[treasure.id] = treasure
-
-            for evt in treasure.events:
-                self.register(evt)
+                self.treasures[treasure.id] = treasure()
 
         self.hero = hero_registry[hero]
-        for evt in self.hero.events:
-            self.register(evt)
+
 
     def __str__(self):
         return self.__repr__()
@@ -102,7 +100,12 @@ class Player(EventManager):
                 # Maybe this only needs to trigger once
                 # self('Support', support_target=buff_target)
 
-        # TODO Handle Treasure Buff Triggers
+        for treasure in self.treasures.values():
+            if treasure.aura:
+                for pos, char in self.characters.items():
+                    if char is not None:
+                        treasure.buff(char)
+
         # TODO Add Temporary Event Stuff
 
     def resolve_damage(self, **kwargs):
@@ -127,7 +130,8 @@ class Player(EventManager):
                 logger.info(f'{char} died')
 
         for char in dead_characters:
-            char('OnDeath', **kwargs)
+            char('OnDeath', dead_thing=char, **kwargs)
+            logger.info(f'ONDEATH COMPLETED HERE!!!!!!!!!')
 
         return action_taken
 
@@ -147,5 +151,15 @@ class Player(EventManager):
         # TODO Summong Portal
 
         return summoned_characters
+
+    def valid_characters(self, _lambda=lambda char : char is not None and not char.dead):
+        """
+        Return a list of valid characters based on an optional lambda that is passed in.
+        You probably do not need to pass in a lambda, so the default behavior is "return all characters that exist and
+        are not dead" effectively filtering out empty board slots.
+        """
+
+        return [char for char in self.characters.values() if _lambda(char)]
+
 
     # TODO Calculate Damage
