@@ -96,7 +96,9 @@ class Player(EventManager):
             buff_targets = [self.characters[buff_pos] for buff_pos in buff_targets if self.characters.get(buff_pos)]
 
             for buff_target in buff_targets:
-                char.buff(target_character=buff_target)
+                # <--- 6/6
+                char.buff(target_character=buff_target) # <---- logging says 6/18
+                # <--- 6/12
 
                 # On Support Event Trigger
                 # Maybe this only needs to trigger once

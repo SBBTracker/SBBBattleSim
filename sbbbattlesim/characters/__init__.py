@@ -23,8 +23,8 @@ class Character(SBBBSObject):
         self.tribes = tribes
         self.cost = cost
 
-        self.attack_bonus = 0
-        self.health_bonus = 0
+        self._attack_bonus = 0
+        self._health_bonus = 0
         self._damage = 0
         self.slay_counter = 0
         self.dead = False
@@ -34,6 +34,28 @@ class Character(SBBBSObject):
 
     def __repr__(self):
         return f'''{self.display_name} ({self.attack}/{self.health})'''
+
+    @property
+    def health_bonus(self):
+        return self._health_bonus
+
+    @health_bonus.setter
+    def health_bonus(self, value):
+        health_buff_difference = value - self.health_bonus
+        self._health_bonus = value
+        if health_buff_difference > 0:
+            self('OnBuff', health_buff=health_buff_difference, temp=True)
+
+    @property
+    def attack_bonus(self):
+        return self._attack_bonus
+
+    @attack_bonus.setter
+    def attack_bonus(self, value):
+        attack_buff_difference = value-self.attack_bonus
+        self._attack_bonus = value
+        if attack_buff_difference > 0:
+            self('OnBuff', attack_buff=attack_buff_difference, temp=True)
 
     @property
     def attack(self):
@@ -49,9 +71,10 @@ class Character(SBBBSObject):
 
     @base_health.setter
     def base_health(self, value):
-        if value > self.base_health:
-            self('OnBuff', health_buff=value-self._base_health)
+        health_buff_difference = value-self._base_health
         self._base_health = value
+        if health_buff_difference > 0:
+            self('OnBuff', health_buff=health_buff_difference, temp=False)
 
     @property
     def base_attack(self):
@@ -59,10 +82,12 @@ class Character(SBBBSObject):
 
     @base_attack.setter
     def base_attack(self, value):
-        if value > self.base_attack:
-            self('OnBuff', attack_buff=value-self._base_attack)
+        attack_buff_difference = value-self._base_attack
         self._base_attack = value
+        if attack_buff_difference > 0:
+            self('OnBuff', attack_buff=attack_buff_difference, temp=False)
 
+    @property
     def max_health(self):
         return self.base_health + self.health_bonus
 

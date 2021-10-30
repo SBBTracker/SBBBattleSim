@@ -9,7 +9,7 @@ COIN_OF_CHARON_STR = 'CoinOfCharon_Proc'
 
 class CoinOfCharonOnDeath(OnDeath):
     priority = 999
-    def handle(self, dead_thing, *args, **kwargs):
+    def handle(self, *args, **kwargs):
         itr = 1 # TODO this may be useful when dealing with mimic
 
         # This should only proc once per combat
