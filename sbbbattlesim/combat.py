@@ -88,7 +88,7 @@ def attack(attack_character, defend_character, attacker, defender, **kwargs):
 
     # SURVIVED ATTACK TRIGGER
     else:
-        defend_character('OnDamagedAndSurvived', **kwargs)
+        defend_character('OnDamagedAndSurvived', **kwargs)  # TODO this needs to be moved to wherever damage+=
 
     resolve_damage(attacker=attacker, defender=defender, **kwargs)
     resolve_damage(attacker=defender, defender=attacker, **kwargs)

@@ -76,13 +76,21 @@ class Player(EventManager):
         return self.characters.get(self._attack_slot)
 
     def resolve_board(self):
-        # Remove all bonus'
+        # Remove all bonuses
+        # these need to be prior so that there is not
+        # wonky ordering issues with clearing buffs
+        # and units that give secondary units buffs that buff
+        # arbitrary units
         for pos, char in self.characters.items():
             if char is None:
                 continue
-
             char.attack_bonus, char.health_bonus = 0, 0
             char.clear_temp()
+
+        # Iterate over buff targets and auras then apply them to all necessary targets
+        for pos, char in self.characters.items():
+            if char is None:
+                continue
 
             # Support & Aura Targeting
             # This does talk about buffs, but it is for buffs that can only be changed by board state
@@ -96,14 +104,13 @@ class Player(EventManager):
             buff_targets = [self.characters[buff_pos] for buff_pos in buff_targets if self.characters.get(buff_pos)]
 
             for buff_target in buff_targets:
-                # <--- 6/6
-                char.buff(target_character=buff_target) # <---- logging says 6/18
-                # <--- 6/12
+                char.buff(target_character=buff_target)
 
                 # On Support Event Trigger
                 # Maybe this only needs to trigger once
                 # self('Support', support_target=buff_target)
 
+        # Apply buffs from treasures
         for treasure in self.treasures.values():
             if treasure.aura:
                 for pos, char in self.characters.items():

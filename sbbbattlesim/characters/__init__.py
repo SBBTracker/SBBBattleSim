@@ -33,7 +33,7 @@ class Character(SBBBSObject):
         return self.__repr__()
 
     def __repr__(self):
-        return f'''{self.display_name} ({self.attack}/{self.health})'''
+        return f'''{self.display_name} pos:{self.position} gold:{self.golden} ({self.attack}/{self.health})'''
 
     @property
     def health_bonus(self):

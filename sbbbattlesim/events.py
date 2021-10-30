@@ -77,7 +77,7 @@ class EventManager:
             self._temp[event_base].append(event)
         else:
             self._events[event_base].append(event)
-        logger.debug(f'Registered {event_base} - {event}')
+        logger.debug(f'{self} in position {self.position} Registered {event_base} - {event}')
 
     def unregister(self, event):
         self._events.pop(event, None)
@@ -87,7 +87,6 @@ class EventManager:
 
     def __call__(self, event, *args, **kwargs):
         logger.debug(f'{self} triggered event {event}')
-
         reactions = []
         for evt in sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: x.priority, reverse=True):
             logger.info(evt)
