@@ -3,7 +3,7 @@ from sbbbattlesim.events import Slay
 
 
 class CharacterType(Character):
-    name = 'Orge Princess'
+    display_name = 'Orge Princess'
 
     class OgrePrincessSlay(Slay):
         def __call__(self, **kwargs):

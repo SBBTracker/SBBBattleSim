@@ -45,17 +45,18 @@ class Character(SBBBSObject):
         return self.base_health + self.health_bonus - self.damage
 
     @property
+    def max_health(self):
+        return self.base_health + self.health_bonus
+
+    @property
     def damage(self):
         return self._damage
 
     @damage.setter
     def damage(self, value):
-        logger.info(f'I am {self.name} and have {self.health} health and have {self.health} health and i have taken {self.damage} damage and am taking {value} damage')
         self._damage = value
         if self.health <= 0:
-            logger.info(f'{self} is marked for death')
             self.dead = True
-        logger.info(f'I am {self.name} and now i ahve {self.health} health and the damage i am taking is {value} and my own damage is {self.damage}')
 
 
 class Registry(object):
