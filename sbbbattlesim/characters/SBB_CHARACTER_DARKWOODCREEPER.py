@@ -10,7 +10,7 @@ class DarkwoodCreeperOnDamage(OnDamagedAndSurvived):
 
 
 class CharacterType(Character):
-    name = 'Darkwood Creeper'
+    display_name = 'Darkwood Creeper'
 
     def buff(self, target_character):
         target_character.register(DarkwoodCreeperOnDamage, temp=True)

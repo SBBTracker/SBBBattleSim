@@ -2,7 +2,7 @@ from sbbbattlesim.characters import Character
 
 
 class CharacterType(Character):
-    name = 'Baby Root'
+    display_name = 'Baby Root'
     support = True
 
     def buff(self, target_character):

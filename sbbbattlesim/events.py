@@ -28,9 +28,6 @@ class OnDeath(SSBBSEvent):
     def __call__(self, *args, **kwargs):
         return self.handle(*args, **kwargs) or ('OnLastBreath', [], {})
 
-    def handle(self, dead_thing, *args, **kwargs):
-        raise NotImplementedError
-
 
 class OnLastBreath(SSBBSEvent):
     '''A character last a last breath'''
@@ -52,7 +49,7 @@ class OnAttackAndKill(SSBBSEvent):
     '''A character attacks something and kills it'''
 
     def __call__(self, *args, **kwargs):
-        return self.handle(*args, **kwargs) or 'OnSlay'
+        return self.handle(*args, **kwargs) or ('OnSlay', [], {})
 
 
 class OnSlay(SSBBSEvent):
@@ -60,6 +57,11 @@ class OnSlay(SSBBSEvent):
 
 class OnFightStart(SSBBSEvent):
     '''A combat has begun'''
+
+
+class OnBuff(SSBBSEvent):
+    def handle(self, attack_buff=0, health_buff=0, *args, **kwargs):
+        raise NotImplementedError
 
 
 class EventManager:
@@ -94,4 +96,5 @@ class EventManager:
                 reactions.append(reaction)
 
         for (react, evt_args, evt_kwargs) in reactions:
+            logger.info(f'Reaction to {event} {reaction}')
             self(react, *evt_args, *args, **evt_kwargs, **kwargs)

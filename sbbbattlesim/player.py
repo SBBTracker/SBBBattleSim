@@ -108,7 +108,7 @@ class Player(EventManager):
 
         # TODO Add Temporary Event Stuff
 
-    def resolve_damage(self, **kwargs):
+    def resolve_damage(self, *args, **kwargs):
         action_taken = False
 
         # TODO Remove all characters before death triggers
@@ -130,7 +130,7 @@ class Player(EventManager):
                 logger.info(f'{char} died')
 
         for char in dead_characters:
-            char('OnDeath', dead_thing=char, **kwargs)
+            char('OnDeath', *args,  **kwargs)
             logger.info(f'ONDEATH COMPLETED HERE!!!!!!!!!')
 
         return action_taken

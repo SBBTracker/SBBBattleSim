@@ -3,7 +3,7 @@ from sbbbattlesim.events import Slay
 
 
 class CharacterType(Character):
-    name = 'Vain-Pire'
+    display_name = 'Vain-Pire'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -2,4 +2,4 @@ from sbbbattlesim.heros import Hero
 
 
 class HeroType(Hero):
-    name = 'Mask'
+    display_name = 'Mask'

@@ -4,7 +4,7 @@ from sbbbattlesim.events import Death
 
 
 class CharacterType(Character):
-    name = 'Princess Peep'
+    display_name = 'Princess Peep'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -13,5 +13,18 @@ class CharacterType(Character):
     class PrincessPeepDeath(Death):
         def __call__(self, **kwargs):
             stat = 2 if self.character.golden else 1
-            self.character.owner.summon(self.character.position,
-                                        *[character_registry['Sheep'](stat, stat) for _ in range(3)])
+
+            sheep = []
+            for _ in range(3):
+                sheep.append(character_registry['Sheep'](
+                    owner=self.manager.owner,
+                    position=self.manager.position,
+                    attack=stat,
+                    health=stat,
+                    golden=False,
+                    keywords=[],
+                    tribes=['evil', 'animal'],
+                    cost=1
+                ))
+
+            self.character.owner.summon(self.character.position, *sheep)
