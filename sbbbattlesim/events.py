@@ -49,7 +49,7 @@ class OnAttackAndKill(SSBBSEvent):
     '''A character attacks something and kills it'''
 
     def __call__(self, *args, **kwargs):
-        return self.handle(*args, **kwargs) or ('OnSlay', [], {})
+        return self.handle(*args, **kwargs) or ('OnSlay', args, kwargs)
 
 
 class OnSlay(SSBBSEvent):
