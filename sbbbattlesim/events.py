@@ -77,7 +77,7 @@ class EventManager:
             self._temp[event_base].append(event)
         else:
             self._events[event_base].append(event)
-        logger.debug(f'{self} in position {self.position} Registered {event_base} - {event}')
+        logger.debug(f'{self} Registered {event_base} - {event}')
 
     def unregister(self, event):
         self._events.pop(event, None)

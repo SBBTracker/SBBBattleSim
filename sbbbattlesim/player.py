@@ -11,8 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 class Player(EventManager):
-    def __init__(self, characters, treasures, hero, hand):
+    def __init__(self, characters, treasures, hero, hand, id):
         super().__init__()
+        self.id = id
         self.opponent = None
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 

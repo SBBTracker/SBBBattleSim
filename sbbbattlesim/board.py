@@ -19,18 +19,17 @@ class Board:
         p1id, p2id = list(data)
         p1data, p2data = data[p1id], data[p2id]
 
-        def get_player(pdat):
+        def get_player(pdat, id):
             return Player(
                 characters=pdat['characters'],
                 treasures=pdat['treasures'],
                 hero=pdat['hero'],
-                hand=pdat['hand']
+                hand=pdat['hand'],
+                id=id
             )
 
-        p1, p2 = get_player(p1data), get_player(p2data)
-        p1.id, p2.id = p1id, p2id
-        p1.opponent = p2
-        p2.opponent = p1
+        p1, p2 = get_player(p1data, p1id), get_player(p2data, p2id)
+
 
         return cls(p1=p1, p2=p2)
 

@@ -1,3 +1,5 @@
+import random
+
 def get_support_targets(position, horn=False):
     if horn:
         return [1, 2, 3, 4]
@@ -40,9 +42,10 @@ def find_stat_extreme_character(player, strongest=True):
     if not valid_characters:
         return None
 
-    reverse = strongest
-    sorted_chars = sorted(valid_characters, key=lambda char: (char.attack, char.cost, -1*char.position), reverse=reverse)
-    return sorted_chars[0]
+    func = max if strongest else min
+    sub_char = func(valid_characters, key=lambda char: (char.attack, char.cost))
+    sub_chars = list(filter(lambda char: char.attack == sub_char.attack and char.cost == sub_char.cost, valid_characters))
+    return random.choice(sub_chars)
 
 
 def find_strongest_character(player):
