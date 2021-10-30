@@ -2,7 +2,7 @@ from sbbbattlesim.characters import Character
 
 
 class CharacterType(Character):
-    name = 'Labyrinth Minotaur'
+    display_name = 'Labyrinth Minotaur'
     aura = True
 
     def buff(self, target_character):

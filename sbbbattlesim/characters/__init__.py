@@ -16,8 +16,8 @@ class Character(SBBBSObject):
         self.owner = owner
 
         self.position = position
-        self.base_attack = attack
-        self.base_health = health
+        self._base_attack = attack
+        self._base_health = health
         self.golden = golden
         self.keywords = keywords
         self.tribes = tribes
@@ -33,18 +33,36 @@ class Character(SBBBSObject):
         return self.__repr__()
 
     def __repr__(self):
-        return f'''{self.name} ({self.attack}/{self.health})'''
+        return f'''{self.display_name} ({self.attack}/{self.health})'''
 
     @property
     def attack(self):
         return self.base_attack + self.attack_bonus
-
 
     @property
     def health(self):
         return self.base_health + self.health_bonus - self.damage
 
     @property
+    def base_health(self):
+        return self._base_health
+
+    @base_health.setter
+    def base_health(self, value):
+        if value > self.base_health:
+            self('OnBuff', health_buff=value-self._base_health)
+        self._base_health = value
+
+    @property
+    def base_attack(self):
+        return self._base_attack
+
+    @base_attack.setter
+    def base_attack(self, value):
+        if value > self.base_attack:
+            self('OnBuff', attack_buff=value-self._base_attack)
+        self._base_attack = value
+
     def max_health(self):
         return self.base_health + self.health_bonus
 
@@ -57,7 +75,7 @@ class Character(SBBBSObject):
         self._damage = value
         if self.health <= 0:
             self.dead = True
-
+            
 
 class Registry(object):
     characters = OrderedDict()
@@ -65,11 +83,11 @@ class Registry(object):
     def __getitem__(self, item):
         character = self.characters.get(item)
         if not character:
-            character = {char.name: char for char in self.characters.values()}.get(item)
+            character = {char.display_name: char for char in self.characters.values()}.get(item)
 
         if not character:
             class NewCharacter(Character):
-                name = item
+                display_name = item
 
             character = NewCharacter
             # print(f'Creating Generic Character for {item}')

@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class AncientSarcophagusOnDeath(OnDeath):
-    def handle(self, dead_thing, *args, **kwargs):
+    def handle(self, *args, **kwargs):
         itr = 1 # TODO this may be useful when dealing with mimic
 
         for _ in range(itr):
@@ -18,7 +18,7 @@ class AncientSarcophagusOnDeath(OnDeath):
 
 
 class TreasureType(Treasure):
-    name = 'Ancient Sarcophagus'
+    display_name = 'Ancient Sarcophagus'
     aura = True
 
     def buff(self, target_character):

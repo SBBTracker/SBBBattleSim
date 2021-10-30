@@ -21,7 +21,7 @@ class Registry(object):
 
         if treasure is None:
             class NewTreasure(Treasure):
-                name = item
+                display_name = item
 
             treasure = NewTreasure
 
@@ -37,7 +37,7 @@ class Registry(object):
 
     def register(self, name, treasure):
         assert name not in self.treasures, 'Integration is already registered.'
-        treasure.name = name
+        treasure.display_name = name
         self.treasures[name] = treasure
         logger.debug(f'Registered {name} - {treasure}')
 

@@ -12,7 +12,7 @@ class MuerteLastBreatBuff(OnLastBreath):
 
 
 class HeroType(Hero):
-    name = 'Muerte'
+    display_name = 'Muerte'
     aura = True
 
     def buff(self, target_character):

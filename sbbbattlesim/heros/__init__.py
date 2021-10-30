@@ -22,7 +22,7 @@ class Registry(object):
 
         if hero is None:
             class NewHero(Hero):
-                name = item
+                display_name = item
 
             hero = NewHero
 

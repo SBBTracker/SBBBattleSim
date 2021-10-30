@@ -2,7 +2,7 @@ from sbbbattlesim.treasures import Treasure
 
 
 class TreasureType(Treasure):
-    name = 'Fountain Of Youth'
+    display_name = 'Fountain Of Youth'
 
     def buff(self, target_character):
         if 'animal' in target_character.tribes:

@@ -2,7 +2,7 @@ from sbbbattlesim.characters import Character
 
 
 class CharacterType(Character):
-    name = 'Good Witch of the North'
+    display_name = 'Good Witch of the North'
     support = True
 
     def buff(self, target_character):

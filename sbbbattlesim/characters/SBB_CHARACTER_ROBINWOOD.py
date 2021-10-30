@@ -4,7 +4,7 @@ from sbbbattlesim.utils import find_strongest_character, find_weakest_character
 
 
 class CharacterType(Character):
-    name = 'Robin Wood'
+    display_name = 'Robin Wood'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
