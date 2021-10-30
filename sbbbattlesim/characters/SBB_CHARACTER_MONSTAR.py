@@ -1,5 +1,5 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import Slay
+from sbbbattlesim.events import OnAttackAndKill
 
 
 class CharacterType(Character):
@@ -9,7 +9,7 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         self.register(self.OgrePrincessSlay)
 
-    class OgrePrincessSlay(Slay):
-        def __call__(self, **kwargs):
+    class OgrePrincessSlay(OnAttackAndKill):
+        def handle(self, *args, **kwargs):
             # TODO Summon random character or don't do this
             pass

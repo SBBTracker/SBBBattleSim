@@ -23,11 +23,13 @@ class Character(SBBBSObject):
         self.tribes = tribes
         self.cost = cost
 
-        self._attack_bonus = 0
-        self._health_bonus = 0
+        self._temp_attack = 0
+        self._temp_health = 0
         self._damage = 0
         self.slay_counter = 0
         self.dead = False
+
+        self.stat_history = []
 
     def __str__(self):
         return self.__repr__()
@@ -36,71 +38,45 @@ class Character(SBBBSObject):
         return f'''{self.display_name} pos:{self.position} gold:{self.golden} ({self.attack}/{self.health})'''
 
     @property
-    def health_bonus(self):
-        return self._health_bonus
-
-    @health_bonus.setter
-    def health_bonus(self, value):
-        health_buff_difference = value - self.health_bonus
-        self._health_bonus = value
-        if health_buff_difference > 0:
-            self('OnBuff', health_buff=health_buff_difference, temp=True)
-
-    @property
-    def attack_bonus(self):
-        return self._attack_bonus
-
-    @attack_bonus.setter
-    def attack_bonus(self, value):
-        attack_buff_difference = value-self.attack_bonus
-        self._attack_bonus = value
-        if attack_buff_difference > 0:
-            self('OnBuff', attack_buff=attack_buff_difference, temp=True)
-
-    @property
     def attack(self):
-        return self.base_attack + self.attack_bonus
+        return self._base_attack + self._temp_attack
 
     @property
     def health(self):
-        return self.base_health + self.health_bonus - self.damage
-
-    @property
-    def base_health(self):
-        return self._base_health
-
-    @base_health.setter
-    def base_health(self, value):
-        health_buff_difference = value-self._base_health
-        self._base_health = value
-        if health_buff_difference > 0:
-            self('OnBuff', health_buff=health_buff_difference, temp=False)
-
-    @property
-    def base_attack(self):
-        return self._base_attack
-
-    @base_attack.setter
-    def base_attack(self, value):
-        attack_buff_difference = value-self._base_attack
-        self._base_attack = value
-        if attack_buff_difference > 0:
-            self('OnBuff', attack_buff=attack_buff_difference, temp=False)
+        return self._base_health + self._temp_health - self._damage
 
     @property
     def max_health(self):
-        return self.base_health + self.health_bonus
+        return self._base_health + self._temp_health
 
-    @property
-    def damage(self):
-        return self._damage
+    def change_stats(self, reason, attack=0, health=0, damage=0, temp=True):
+        starting_repr = self.__repr__()
+        logger.debug(f'{self} stat change b/c {reason} (attack={attack}, health={health}, damage={damage}, temp={temp})')
 
-    @damage.setter
-    def damage(self, value):
-        self._damage = value
-        if self.health <= 0:
-            self.dead = True
-            
+        if temp:
+            self._temp_attack += attack
+            self._temp_health += health
+        else:
+            self._base_attack += attack
+            self._base_health += health
+
+        if damage > 0:
+            self._damage += damage
+            if self.health <= 0:
+                self.dead = True
+                logger.debug(f'{self} marked for death')
+            else:
+                # On Damage and Survived Trigger
+                # TODO Maybe add more args if needed
+                self('OnDamagedAndSurvived', damage=damage)
+
+        if attack > 0 or health > 0:
+            self('OnBuff', attack_buff=attack, health_buff=health, damage=damage, reason=reason, temp=temp)
+
+        logger.debug(f'{self} finishsed stat change')
+
+        self.stat_history.append((reason, attack, health, damage, temp, self.__repr__()))
+
 
 class Registry(object):
     characters = OrderedDict()

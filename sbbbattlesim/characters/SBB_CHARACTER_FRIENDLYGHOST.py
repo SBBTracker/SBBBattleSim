@@ -16,9 +16,12 @@ class CharacterType(Character):
             if not chars:
                 return
 
-            attack_gift = 2*self.manager.attack if self.manager.golden else self.manager.attack
-            health_gift = 2*self.manager.max_health if self.manager.golden else self.manager.max_health
+            golden_multiplyer = 2 if self.manager.golden else 1
 
             char = random.choice(chars)
-            char.base_health += health_gift
-            char.base_attack += attack_gift
+            char.change_stats(
+                attack=self.manager.attack * golden_multiplyer,
+                health=self.manager.max_health * golden_multiplyer,
+                temp=False,
+                reason=f'Friendly spirit buff from {self}'
+            )

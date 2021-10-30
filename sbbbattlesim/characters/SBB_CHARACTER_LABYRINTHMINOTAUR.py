@@ -7,4 +7,4 @@ class CharacterType(Character):
 
     def buff(self, target_character):
         if 'evil' in target_character.tribes and target_character != self:
-            target_character.attack_bonus += 1
+            target_character.change_stats(attack=2 if self.golden else 1, temp=True, reason=f'{self} attack aura')

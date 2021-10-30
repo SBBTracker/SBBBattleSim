@@ -1,6 +1,6 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.events import Death
+from sbbbattlesim.events import OnDeath
 
 
 class CharacterType(Character):
@@ -10,9 +10,9 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         self.register(self.PrincessPeepDeath)
 
-    class PrincessPeepDeath(Death):
-        def __call__(self, **kwargs):
-            stat = 2 if self.character.golden else 1
+    class PrincessPeepDeath(OnDeath):
+        def handle(self, *args, **kwargs):
+            stat = 2 if self.manager.golden else 1
 
             sheep = []
             for _ in range(3):
@@ -27,4 +27,4 @@ class CharacterType(Character):
                     cost=1
                 ))
 
-            self.character.owner.summon(self.character.position, *sheep)
+            self.manager.owner.summon(self.manager.position, *sheep)

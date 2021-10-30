@@ -79,16 +79,12 @@ def attack(attack_character, defend_character, attacker, defender, **kwargs):
     defend_character('OnDefend', **kwargs)
 
     if 'ranged' not in attack_character.keywords:
-        attack_character.damage += defend_character.attack
-    defend_character.damage += attack_character.attack
+        attack_character.change_stats(damage=defend_character.attack, reason=f'Attacking {defend_character}')
+    defend_character.change_stats(damage=attack_character.attack, reason=f'Defending {attack_character}')
 
     # SLAY TRIGGER
     if defend_character.dead:
         attack_character('OnAttackAndKill', **kwargs)
-
-    # SURVIVED ATTACK TRIGGER
-    else:
-        defend_character('OnDamagedAndSurvived', **kwargs)  # TODO this needs to be moved to wherever damage+=
 
     resolve_damage(attacker=attacker, defender=defender, **kwargs)
     resolve_damage(attacker=defender, defender=attacker, **kwargs)

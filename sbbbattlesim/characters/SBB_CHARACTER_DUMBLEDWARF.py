@@ -13,13 +13,10 @@ class CharacterType(Character):
 
     class DublyOnBuff(OnBuff):
         def handle(self, attack_buff=0, health_buff=0, temp=False, *args, **kwargs):
-            logger.info(f'SUP SLUTS PASSING IN ATTACK BUFF OF {attack_buff} AND HEALTH BUFF OF {health_buff}')
-            logger.info(f'THIS IS ME BEFORE THE BUFF: {self.manager}')
             golden_multiplier = 2 if self.manager.golden else 1
-            if temp:
-                self.manager._attack_bonus += attack_buff * golden_multiplier
-                self.manager._health_bonus += health_buff * golden_multiplier
-            else:
-                self.manager._base_attack += attack_buff * golden_multiplier
-                self.manager._base_health += health_buff * golden_multiplier
-            logger.info(f'THIS IS ME AFTER THE BUFF: {self.manager}')
+            self.manager.change_stats(
+                health=health_buff * golden_multiplier,
+                attack=attack_buff * golden_multiplier,
+                temp=temp,
+                reason=f'{self} dubly buff'
+            )

@@ -15,8 +15,8 @@ class CharacterType(Character):
                 echo_wood = self
                 def handle(self, attack_buff=0, health_buff=0, temp=False, *args, **kwargs):
                     if not temp:
-                        self.echo_wood._base_attack += attack_buff
-                        self.echo_wood._base_health += health_buff
+                        self.echo_wood.change_stats(attack=attack_buff, health=health_buff, temp=False,
+                                                    reason=f'{self.manager} is getting buffed')
 
             target_character.register(EchoWoodBuff, temp=True)
 

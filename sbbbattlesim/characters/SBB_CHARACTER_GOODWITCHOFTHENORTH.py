@@ -7,6 +7,5 @@ class CharacterType(Character):
 
     def buff(self, target_character):
         if 'good' in target_character.tribes:
-            target_character.attack_bonus += 4 if self.golden else 2
-            target_character.health_bonus += 6 if self.golden else 3
-
+            golden_multiplyer = 2 if self.golden else 1
+            target_character.change_stats(attack=2*golden_multiplyer, health=3*golden_multiplyer, temp=True, reason=f'Support from {self}')

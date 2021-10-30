@@ -1,5 +1,5 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import Death
+from sbbbattlesim.events import OnDeath
 
 
 class CharacterType(Character):
@@ -7,9 +7,11 @@ class CharacterType(Character):
     # Store the global Puff Puff buff
     display_name = 'PUFF PUFF'
 
-    class PuffPuffDeath(Death):
-        def __call__(self, **kwargs):
-            setattr(self.manager.owner, 'puffpuffbuff', getattr(self.manager.owner, 'puffpuffbuff', 0) + 2 if self.golden else 1)
+    class PuffPuffDeath(OnDeath):
+        def handle(self, *args, **kwargs):
+            stat_change = 2 if self.managergolden else 1
+            setattr(self.manager.owner, 'puffpuffbuff', getattr(self.manager.owner, 'puffpuffbuff', 0) + stat_change)
+            # TODO Trigger On Buff
 
     def __init__(self, attack, health, golden=False, keywords=[], tribes=[]):
         super().__init__(

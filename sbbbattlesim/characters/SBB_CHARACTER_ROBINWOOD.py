@@ -17,8 +17,8 @@ class CharacterType(Character):
                 strongest_enemy_char = find_strongest_character(self.manager.opponent)
                 weakest_allied_char = find_weakest_character(self.manager)
 
-                strongest_enemy_char.base_attack -= 30 if self.golden else 15
-                weakest_allied_char.base_attack += 30 if self.golden else 15
+                strongest_enemy_char.change_stats(attack=-30 if self.golden else -15, temp=False, reason=f'{self} debuff on strongest enemy')
+                weakest_allied_char.change_stats(attack=30 if self.golden else 15, temp=False, reason=f'{self} buff on weakest ally')
 
         self.owner.register(RobinWoodOnFightStart)
 

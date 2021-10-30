@@ -54,6 +54,8 @@ class Player(EventManager):
     def __repr__(self):
         return f'{self.id} {", ".join([char.__repr__() for char in self.characters.values()])}'
 
+    #TODO Make a pretty print for player
+
     @property
     def front(self):
         return dict(list(self.characters.items())[:4])

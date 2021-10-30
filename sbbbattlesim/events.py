@@ -60,7 +60,8 @@ class OnFightStart(SSBBSEvent):
 
 
 class OnBuff(SSBBSEvent):
-    def handle(self, attack_buff=0, health_buff=0, *args, **kwargs):
+    '''Triggered when something has a stat change'''
+    def handle(self, attack=0, health=0, damage=0, reason='', temp=True):
         raise NotImplementedError
 
 
@@ -77,7 +78,7 @@ class EventManager:
             self._temp[event_base].append(event)
         else:
             self._events[event_base].append(event)
-        logger.debug(f'{self} Registered {event_base} - {event}')
+        logger.debug(f'{self} Registered {event_base} - {event.__class__.__name__}')
 
     def unregister(self, event):
         self._events.pop(event, None)
@@ -89,7 +90,6 @@ class EventManager:
         logger.debug(f'{self} triggered event {event}')
         reactions = []
         for evt in sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: x.priority, reverse=True):
-            logger.info(evt)
             reaction = evt(**kwargs)
             if reaction:
                 reactions.append(reaction)

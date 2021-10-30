@@ -1,5 +1,5 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import Slay
+from sbbbattlesim.events import OnSlay
 
 
 class CharacterType(Character):
@@ -9,8 +9,7 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         self.register(self.VainPireSlay)
 
-    class VainPireSlay(Slay):
-        def __call__(self, **kwargs):
-            amount = 2 if self.character.golden else 1
-            self.character.base_attack += amount
-            self.character.base_health += amount
+    class VainPireSlay(OnSlay):
+        def handle(self, *args, **kwargs):
+            stat_buff = 2 if self.character.golden else 1
+            self.manager.change_stats(attack=stat_buff, health=stat_buff, temp=False, reason=f'{self} slay trigger')

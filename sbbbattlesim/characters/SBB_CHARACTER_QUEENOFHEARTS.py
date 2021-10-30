@@ -11,9 +11,9 @@ class CharacterType(Character):
         class EvilQueenOnDeath(OnDeath):
             evil_queen = self
             def handle(self, *args, **kwargs):
-
-                self.evil_queen.base_attack += 4 if self.evil_queen.golden else 2
-                self.evil_queen.base_health += 4 if self.evil_queen.golden else 2
+                stat_change = 4 if self.evil_queen.golden else 2
+                self.evil_queen.change_stats(attack=stat_change, health=stat_change, temp=False,
+                                             reason=f'{self.manager} died and Evil Queen triggered')
 
         # Give evil minions the buff
         if 'evil' in target_character.tribes and target_character is not self:

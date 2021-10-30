@@ -18,8 +18,8 @@ class CoinOfCharonOnDeath(OnDeath):
         self.manager.owner.stateful_effects[COIN_OF_CHARON_STR] = True
 
         for _ in range(itr):
-            self.manager.base_health += 4
-            self.manager.base_attack += 4
+            self.manager._base_health += 4
+            self.manager._base_attack += 4
 
 class TreasureType(Treasure):
     name = 'Coin of Charon'
