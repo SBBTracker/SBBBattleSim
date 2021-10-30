@@ -11,6 +11,9 @@ def fight_initialization(attacker, defender, **kwargs):
     attacker.opponent = defender
     defender.opponent = attacker
 
+    attacker.resolve_board()
+    defender.resolve_board()
+
     ### TODO test who's events trigger in which order
     attacker('OnFightStart', **kwargs)
     defender('OnFightStart', **kwargs)

@@ -89,7 +89,7 @@ class EventManager:
         logger.debug(f'{self} triggered event {event}')
 
         reactions = []
-        for evt in sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: x.priority):
+        for evt in sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: x.priority, reverse=True):
             logger.info(evt)
             reaction = evt(**kwargs)
             if reaction:

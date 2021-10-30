@@ -44,6 +44,8 @@ class Player(EventManager):
 
         self.hero = hero_registry[hero]
 
+        self.stateful_effects = dict()
+
 
     def __str__(self):
         return self.__repr__()

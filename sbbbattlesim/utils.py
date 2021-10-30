@@ -42,7 +42,7 @@ def find_stat_extreme_character(player, strongest=True):
 
     reverse = strongest
     sorted_chars = sorted(valid_characters, key=lambda char: (char.attack, char.cost, -1*char.position), reverse=reverse)
-    return sorted_chars[-1]
+    return sorted_chars[0]
 
 
 def find_strongest_character(player):

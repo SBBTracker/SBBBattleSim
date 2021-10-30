@@ -1,0 +1,62 @@
+{
+	"PLAYERONEIDHERE": {
+		"characters": [
+			{
+				"id": "SBB_CHARACTER_ROBINWOOD",
+				"attack": 2,
+				"health": 50,
+				"golden": true,
+				"position": 5,
+				"keywords": [
+                  "ranged"
+                ],
+				"cost": 6,
+ 				"tribes": [
+					"good",
+					"monster"
+				]
+			},
+            {
+				"id": "SBB_CHARACTER_FRIENDLYGHOST",
+				"attack": 1,
+				"health": 5,
+				"golden": true,
+				"position": 2,
+				"keywords": [],
+				"cost": 6,
+ 				"tribes": [
+					"good",
+					"treant"
+				]
+			}
+		],
+		"treasures": [
+			"SBB_TREASURE_ANCIENTSARCOPHAGUS"
+		],
+		"hand": [],
+		"hero": ""
+	},
+	"PLAYERTWOIDHERE": {
+		"characters": [
+			{
+				"id": "SBB_CHARACTER_MONSTAR",
+				"attack": 35,
+				"health": 50,
+				"golden": false,
+				"position": 1,
+				"cost": 3,
+				"keywords": [
+					"ranged"
+				],
+				"tribes": [
+					"good"
+				]
+			}
+		],
+		"treasures": [
+			"SBB_TREASURE_CROWNOFATLAS"
+		],
+		"hand": [],
+		"hero": ""
+	}
+}

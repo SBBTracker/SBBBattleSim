@@ -5,10 +5,10 @@ from sbbbattlesim.heros import Hero
 class MuerteLastBreatBuff(OnLastBreath):
     def handle(self, *args, **kwargs):
         last_breather = kwargs['last_breather']
-        if not getattr(self.manager.owner, 'Meurte_Proc', False):
+        if not self.manager.owner.stateful_effects.get('Muerte_Proc', False):
             # TODO only handle 1 trigger
             last_breather('OnDeath', *args, **kwargs)
-            setattr(self.manager.owner, 'Meurte_Proc', True)
+            self.manager.owner.stateful_effects['Muerte_Proc'] = True
 
 
 class HeroType(Hero):

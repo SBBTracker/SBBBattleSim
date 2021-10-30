@@ -1,0 +1,71 @@
+{
+	"PLAYERONEIDHERE": {
+		"characters": [
+            {
+				"id": "SBB_CHARACTER_FRIENDLYGHOST",
+				"attack": 3,
+				"health": 3,
+				"golden": false,
+				"position": 3,
+				"keywords": [],
+				"cost": 4,
+ 				"tribes": [
+					"good",
+					"monster"
+				]
+			},
+            {
+				"id": "SBB_CHARACTER_FRIENDLYGHOST",
+				"attack": 6,
+				"health": 6,
+				"golden": true,
+				"position": 2,
+				"keywords": [],
+				"cost": 4,
+ 				"tribes": [
+					"good",
+					"monster"
+				]
+			},
+			{
+				"id": "SBB_CHARACTER_BABYROOT",
+				"attack": 0,
+				"health": 3,
+				"golden": true,
+				"position": 5,
+				"keywords": [],
+				"cost": 1,
+ 				"tribes": [
+					"good",
+					"treant"
+				]
+			}
+		],
+		"treasures": [
+			"SBB_TREASURE_MONKEY'SPAW"
+		],
+		"hand": [],
+		"hero": ""
+	},
+	"PLAYERTWOIDHERE": {
+		"characters": [
+			{
+				"id": "SBB_CHARACTER_MONSTAR",
+				"attack": 35,
+				"health": 50,
+				"golden": false,
+				"position": 1,
+				"cost": 3,
+				"keywords": [],
+				"tribes": [
+					"good"
+				]
+			}
+		],
+		"treasures": [
+			"SBB_TREASURE_CROWNOFATLAS"
+		],
+		"hand": [],
+		"hero": ""
+	}
+}

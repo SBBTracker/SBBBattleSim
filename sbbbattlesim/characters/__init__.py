@@ -63,19 +63,19 @@ class Character(SBBBSObject):
             self('OnBuff', attack_buff=value-self._base_attack)
         self._base_attack = value
 
+    def max_health(self):
+        return self.base_health + self.health_bonus
+
     @property
     def damage(self):
         return self._damage
 
     @damage.setter
     def damage(self, value):
-        logger.info(f'I am {self.display_name} and have {self.health} health and have {self.health} health and i have taken {self.damage} damage and am taking {value} damage')
         self._damage = value
         if self.health <= 0:
-            logger.info(f'{self} is marked for death')
             self.dead = True
-        logger.info(f'I am {self.display_name} and now i ahve {self.health} health and the damage i am taking is {value} and my own damage is {self.damage}')
-
+            
 
 class Registry(object):
     characters = OrderedDict()
