@@ -17,7 +17,7 @@ class CharacterType(Character):
     class RomeoLastBreath(OnDeath):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.priority = sbbbattlesim.SUMMONING_PRIORITY + self.manager.position
+            self.priority = sbbbattlesim.SUMMONING_PRIORITY
 
         def handle(self, *args, **kwargs):
             juliet = max([j for j in self.manager.owner.graveyard if j.id == JULIET_ID],

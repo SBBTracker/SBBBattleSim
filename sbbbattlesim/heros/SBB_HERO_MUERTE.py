@@ -15,6 +15,7 @@ class HeroType(Hero):
     display_name = 'Muerte'
     aura = True
 
+    # NOTE question: does this trigger the first one, or the rightmost one that triggers in the same stack?
     def buff(self, target_character):
         if 'evil' in target_character.tribes:
             target_character.register(MuerteLastBreatBuff, temp=True)

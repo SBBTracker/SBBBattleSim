@@ -89,7 +89,7 @@ class EventManager:
     def __call__(self, event, *args, **kwargs):
         logger.debug(f'{self} triggered event {event}')
         reactions = []
-        for evt in sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: x.priority, reverse=True):
+        for evt in sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True):
             reaction = evt(**kwargs)
             if reaction:
                 reactions.append(reaction)

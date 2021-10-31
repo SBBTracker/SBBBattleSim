@@ -5,7 +5,7 @@ from sbbbattlesim import Board
 
 
 if __name__ == '__main__':
-    board = Board.from_json(json.loads(open(os.path.join(os.path.dirname(__file__), 'tests', 'thewhitestag.json')).read()))
+    board = Board.from_json(json.loads(open(os.path.join(os.path.dirname(__file__), 'tests', 'copycast_muerte.json')).read()))
     powp, ptwp, t, rt = board.simulate(k=1)
 
     print(f'Outcomes'

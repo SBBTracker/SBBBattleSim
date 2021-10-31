@@ -4,7 +4,7 @@ import os
 
 config = {
     'logging': {
-        'logging_conf': os.getenv('LOGGING_CONF', None),
+        'logging_conf': os.getenv('LOGGING_CONF', 'logging.ini'),
         'logging_level': os.getenv('LOGGING_LEVEL', 'DEBUG'),
         'pretty_print': os.getenv('LOG_PRETTY_PRINT', False)
     }
@@ -18,14 +18,6 @@ def configure_logging():
     # Configure logging config
     if python_logging_config is not None:
         logging.config.fileConfig(python_logging_config, disable_existing_loggers=False)
-    else:
-        formatter = logging.Formatter('%(asctime)-15s %(name)-25s %(funcName)-20s %(message)s')
-        stream_handler = logging.StreamHandler()
-        stream_handler.setFormatter(formatter)
-        for logger_name in ['sbbbattlesim.characters', 'sbbbattlesim.heros', 'sbbbattlesim.treasures',
-                            'sbbbattlesim.combat', 'sbbbattlesim.events', 'sbbbattlesim.player']:
-            logger = logging.getLogger(logger_name)
-            logger.addHandler(stream_handler)
 
     # Configure logging level
     if python_logging_level:

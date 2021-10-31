@@ -14,7 +14,7 @@ class CharacterType(Character):
     class TweedleDeeLastBreath(OnDeath):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.priority = sbbbattlesim.SUMMONING_PRIORITY + self.manager.position
+            self.priority = sbbbattlesim.SUMMONING_PRIORITY
 
         def handle(self, *args, **kwargs):
             attack, health = (2,8) if self.manager.golden else (1,4)
