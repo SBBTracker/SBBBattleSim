@@ -3,6 +3,8 @@ import random
 import sys
 from functools import lru_cache, cache
 
+from sbbbattlesim.utils import StatChangeCause
+
 sys.setrecursionlimit(500)
 
 logger = logging.getLogger(__name__)
@@ -15,8 +17,8 @@ def fight_initialization(attacker, defender, **kwargs):
     defender.resolve_board()
 
     ### TODO test who's events trigger in which order
-    attacker('OnFightStart', **kwargs)
-    defender('OnFightStart', **kwargs)
+    attacker('OnStart', **kwargs)
+    defender('OnStart', **kwargs)
 
     return fight(attacker, defender, **kwargs)
 
@@ -34,26 +36,9 @@ def fight(attacker, defender, turn=0, **kwargs):
     # Get Attacker
     attack_character = attacker.attack_character
     if attack_character is not None:
+        attack(attacker=attacker, defender=defender, attack_character=attack_character, **kwargs )
 
-
-        # Get valid defending
-        valid_defenders = defender.front
-        if getattr(attack_character, 'flying', False) and next((True for m in defender.back.values() if m is not None), False):
-            valid_defenders = defender.back
-        valid_defenders = [m for m in valid_defenders.values() if m is not None]
-        if not valid_defenders:
-            valid_defenders = [m for m in defender.back.values() if m is not None]
-
-        if valid_defenders:
-            # Run the attack
-            attack(
-                attacker=attacker,
-                defender=defender,
-                attack_character=attack_character,
-                defend_character=random.choice(valid_defenders),
-                **kwargs
-            )
-
+    # Try to figure out if there is a winner
     attacker_no_characters_left = next((False for c in attacker.characters.values() if c is not None), True)
     defender_no_characters_left = next((False for c in defender.characters.values() if c is not None), True)
 
@@ -71,7 +56,20 @@ def fight(attacker, defender, turn=0, **kwargs):
     )
 
 
-def attack(attack_character, defend_character, attacker, defender, **kwargs):
+def attack(attack_character, attacker, defender, **kwargs):
+    # Get valid defending
+    valid_defenders = defender.front
+    if getattr(attack_character, 'flying', False) and next((True for m in defender.back.values() if m is not None), False):
+        valid_defenders = defender.back
+    valid_defenders = [m for m in valid_defenders.values() if m is not None]
+    if not valid_defenders:
+        valid_defenders = [m for m in defender.back.values() if m is not None]
+
+    if not valid_defenders:
+        return
+
+    defend_character = random.choice(valid_defenders)
+
     logger.info(f'{attack_character} -> {defend_character}')
 
     # Attack Event
@@ -81,8 +79,8 @@ def attack(attack_character, defend_character, attacker, defender, **kwargs):
     defend_character('OnDefend', **kwargs)
 
     if 'ranged' not in attack_character.keywords:
-        attack_character.change_stats(damage=defend_character.attack, reason=f'Attacking {defend_character}')
-    defend_character.change_stats(damage=attack_character.attack, reason=f'Defending {attack_character}')
+        attack_character.change_stats(damage=defend_character.attack, reason=StatChangeCause.DAMAGE_WHILE_ATTACKING)
+    defend_character.change_stats(damage=attack_character.attack, reason=StatChangeCause.DAMAGE_WHILE_DEFENDING)
 
     # SLAY TRIGGER
     if defend_character.dead:

@@ -1,4 +1,34 @@
+import enum
 import random
+
+class Tribes(enum.Enum):
+    ANIMAL = 'animal'
+    DRAGON = 'dragon'
+    DWARF = 'dwarf'
+    EGG = 'egg'
+    FAIRY = 'fairy'
+    MAGE = 'mage'
+    MONSTER = 'monster'
+    PRINCE = 'prince'
+    PRINCESS = 'princess'
+    PUFF_PUFF = 'puff puff'
+    QUEEN = 'queen'
+    Treant = 'treant'
+
+
+class Keywords(enum.Enum):
+    SUPPORT = 'support'
+    FLYING = 'flying'
+    SLAY = 'slay'
+    LAST_BREATH = 'last breath'
+    RANGED = 'ranged'
+    QUEST = 'quest'
+
+
+class StatChangeCause(enum.Enum):
+    DAMAGE_WHILE_ATTACKING = 1
+    DAMAGE_WHILE_DEFENDING = 2
+
 
 def get_support_targets(position, horn=False):
     if horn:
