@@ -55,27 +55,46 @@ def fight(attacker, defender, turn=0, **kwargs):
 
 def attack(attack_character, attacker, defender, **kwargs):
     # Get valid defending
-    defender_positions = (1, 2, 3, 4)
-    if getattr(attack_character, 'flying', False) and next((True for m in defender.back.values() if m is not None), False):
-        defender_positions = (5, 6, 7)
-    valid_defenders = defender.valid_characters(_lambda=lambda char: char != attack_character and char.position in defender_positions)
+
+    # Fliers target back first
+    # everyone else targets front first
+    front = (1, 2, 3, 4)
+    back = (5, 6, 7)
+    front_characters = defender.valid_characters(_lambda=lambda char: char.position in front)
+    back_characters = defender.valid_characters(_lambda=lambda char: char.position in back)
+    if 'flying' in attack_character.keywords:
+        if any(back_characters):
+            valid_defenders = back_characters
+        else:
+            valid_defenders = front_characters
+    else:
+        if any(front_characters):
+            valid_defenders = front_characters
+        else:
+            valid_defenders = back_characters
 
     if not valid_defenders:
         return
 
     defend_character = random.choice(valid_defenders)
+    attack_position = attack_character.position
+    defend_position = defend_character.position
 
     logger.info(f'{attack_character} -> {defend_character}')
 
     # Attack Event
-    attack_character('OnAttack', attack_character=attack_character, defend_character=defend_character, **kwargs)
+    attack_character('OnAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
 
     # Defend Event
-    defend_character('OnDefend', attack_character=attack_character, defend_character=defend_character, **kwargs)
+    defend_character('OnDefend', attack_position=attack_position, defend_character=defend_position, **kwargs)
 
+    defend_character = defender.characters[defend_position]
+    attack_character = attacker.characters[attack_position]
+    defender_attack = defend_character.attack
+    attacker_attack = attack_character.attack
     if 'ranged' not in attack_character.keywords:
-        attack_character.change_stats(damage=defend_character.attack, reason=StatChangeCause.DAMAGE_WHILE_ATTACKING)
-    defend_character.change_stats(damage=attack_character.attack, reason=StatChangeCause.DAMAGE_WHILE_DEFENDING)
+        attack_character.change_stats(damage=defender_attack, reason=StatChangeCause.DAMAGE_WHILE_ATTACKING)
+    defend_character.change_stats(damage=attacker_attack, reason=StatChangeCause.DAMAGE_WHILE_DEFENDING)
 
     # SLAY TRIGGER
     if defend_character.dead:

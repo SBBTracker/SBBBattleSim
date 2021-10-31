@@ -40,7 +40,7 @@ class OnLastBreath(SSBBSEvent):
 
 class OnAttack(SSBBSEvent):
     '''An attacking character attacks'''
-    def handle(self, attack_character, defend_character, *args, **kwargs):
+    def handle(self, attack_position, defend_position, *args, **kwargs):
         raise NotImplementedError
 
 class OnDefend(SSBBSEvent):

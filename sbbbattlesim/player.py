@@ -79,6 +79,7 @@ class Player(EventManager):
             self._attack_chain = 0
         else:
             self._attack_chain += 1
+            logger.info(f'Attacker is {self._last_attacker}')
             return self._last_attacker
 
         # If we are advancing the attack slot do it here
@@ -91,15 +92,17 @@ class Player(EventManager):
                     break
             self._attack_slot += 1
 
-            if self._attack_slot == 7:
-                self._attack_slot = 0
+            if self._attack_slot == 8:
+                self._attack_slot = 1
 
         # If we have not found an attacker just return None
         if found_attacker:
             attacker = self.characters.get(self._attack_slot)
             self._last_attacker = attacker
+            logger.info(f'Attacker is {attacker}')
             return attacker
         else:
+            logger.info(f'There is no attacker')
             return None
 
     def resolve_board(self):
@@ -113,7 +116,6 @@ class Player(EventManager):
         for pos, char in self.characters.items():
             if char is None:
                 continue
-            char.attack_bonus, char.health_bonus = 0, 0
             char.clear_temp()
 
         # Iterate over buff targets and auras then apply them to all necessary targets
@@ -174,7 +176,7 @@ class Player(EventManager):
 
                 logger.info(f'{char} died')
 
-        for char in dead_characters:
+        for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
             char('OnDeath', *args,  **kwargs)
 
         return action_taken

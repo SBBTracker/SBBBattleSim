@@ -77,6 +77,13 @@ class Character(SBBBSObject):
 
         self.stat_history.append((reason, attack, health, damage, temp, self.__repr__()))
 
+    def clear_temp(self):
+        super().clear_temp()
+
+        self._temp_attack = 0
+        self._temp_health = 0
+
+
 
 class Registry(object):
     characters = OrderedDict()

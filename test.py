@@ -5,7 +5,7 @@ from sbbbattlesim import simulate
 
 
 if __name__ == '__main__':
-    data = open(os.path.join(os.path.dirname(__file__), 'tests', 'lightningdragon.json')).read()
+    data = open(os.path.join(os.path.dirname(__file__), 'tests', 'medusa.json')).read()
     powp, ptwp, t, rt = simulate(data, k=1)
 
     print(f'Outcomes'
