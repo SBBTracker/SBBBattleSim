@@ -10,9 +10,6 @@ sys.setrecursionlimit(500)
 logger = logging.getLogger(__name__)
 
 def fight_initialization(attacker, defender, **kwargs):
-    attacker.opponent = defender
-    defender.opponent = attacker
-
     attacker.resolve_board()
     defender.resolve_board()
 
@@ -58,12 +55,10 @@ def fight(attacker, defender, turn=0, **kwargs):
 
 def attack(attack_character, attacker, defender, **kwargs):
     # Get valid defending
-    valid_defenders = defender.front
+    defender_positions = (1, 2, 3, 4)
     if getattr(attack_character, 'flying', False) and next((True for m in defender.back.values() if m is not None), False):
-        valid_defenders = defender.back
-    valid_defenders = [m for m in valid_defenders.values() if m is not None]
-    if not valid_defenders:
-        valid_defenders = [m for m in defender.back.values() if m is not None]
+        defender_positions = (5, 6, 7)
+    valid_defenders = defender.valid_characters(_lambda=lambda char: char != attack_character and char.position in defender_positions)
 
     if not valid_defenders:
         return
@@ -73,10 +68,10 @@ def attack(attack_character, attacker, defender, **kwargs):
     logger.info(f'{attack_character} -> {defend_character}')
 
     # Attack Event
-    attack_character('OnAttack', **kwargs)
+    attack_character('OnAttack', attack_character=attack_character, defend_character=defend_character, **kwargs)
 
     # Defend Event
-    defend_character('OnDefend', **kwargs)
+    defend_character('OnDefend', attack_character=attack_character, defend_character=defend_character, **kwargs)
 
     if 'ranged' not in attack_character.keywords:
         attack_character.change_stats(damage=defend_character.attack, reason=StatChangeCause.DAMAGE_WHILE_ATTACKING)
@@ -91,6 +86,7 @@ def attack(attack_character, attacker, defender, **kwargs):
 
 
 def resolve_damage(attacker, defender, **kwargs):
+    logger.debug(f'Resolving Damage for {attacker.id}')
     attack_action = attacker.resolve_damage()
 
     if attack_action is True:

@@ -1,12 +1,12 @@
 import json
 import os
 
-from sbbbattlesim import Board
+from sbbbattlesim import simulate
 
 
 if __name__ == '__main__':
-    board = Board.from_json(json.loads(open(os.path.join(os.path.dirname(__file__), 'tests', 'lightningdragon.json')).read()))
-    powp, ptwp, t, rt = board.simulate(k=1)
+    data = open(os.path.join(os.path.dirname(__file__), 'tests', 'lightningdragon.json')).read()
+    powp, ptwp, t, rt = simulate(data, k=1)
 
     print(f'Outcomes'
           f'\n\tPlayer One Win Percent {powp}'

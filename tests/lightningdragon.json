@@ -41,9 +41,7 @@
 				]
 			}
 		],
-		"treasures": [
-			"SBB_TREASURE_MONKEY'SPAW"
-		],
+		"treasures": [],
 		"hand": [],
 		"hero": ""
 	},
@@ -62,9 +60,7 @@
 				]
 			}
 		],
-		"treasures": [
-			"SBB_TREASURE_CROWNOFATLAS"
-		],
+		"treasures": [],
 		"hand": [],
 		"hero": ""
 	}

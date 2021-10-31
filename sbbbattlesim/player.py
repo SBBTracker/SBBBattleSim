@@ -11,8 +11,11 @@ logger = logging.getLogger(__name__)
 
 
 class Player(EventManager):
-    def __init__(self, characters, treasures, hero, hand, id):
+    def __init__(self, characters, treasures, hero, hand, id, board):
         super().__init__()
+        # Board is board
+        self.board = board
+
         self.id = id
         self.opponent = None
         self._last_attacker = None
@@ -155,6 +158,8 @@ class Player(EventManager):
 
         # Resolve Character Deaths
         dead_characters = []
+
+        logger.debug(f'RESOLVING DAMAGE FOR {self}')
 
         for pos, char in self.characters.items():
             if char is None:

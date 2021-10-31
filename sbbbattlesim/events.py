@@ -40,7 +40,8 @@ class OnLastBreath(SSBBSEvent):
 
 class OnAttack(SSBBSEvent):
     '''An attacking character attacks'''
-
+    def handle(self, attack_character, defend_character, *args, **kwargs):
+        raise NotImplementedError
 
 class OnDefend(SSBBSEvent):
     '''A defending character is attacked'''
@@ -86,7 +87,20 @@ class EventManager:
         logger.debug(f'{self} Registered {event_base} - {event.__class__.__name__}')
 
     def unregister(self, event):
-        self._events.pop(event, None)
+        logger.debug(f'UNREGISTERING {event} {type(event)}')
+        if isinstance(event, str):
+            evt_check = lambda evt: evt.__class__.__name__ == event
+        elif isinstance(event, SSBBSEvent):
+            evt_check = lambda evt: evt == event
+        elif issubclass(event, SSBBSEvent):
+            evt_check = lambda evt: evt.__class__ == event
+        else:
+            return
+
+        for event_base, evts in self._events.items():
+            [evts.remove(evt) for evt in evts if evt_check(evt)]
+        for event_base, evts in self._temp.items():
+            [evts.remove(evt) for evt in evts if evt_check(evt)]
 
     def clear_temp(self):
         self._temp = collections.defaultdict(list)
@@ -95,7 +109,8 @@ class EventManager:
         logger.debug(f'{self} triggered event {event}')
         reactions = []
         for evt in sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True):
-            reaction = evt(**kwargs)
+            logger.debug(f'Firing {evt} with {args} and {kwargs}')
+            reaction = evt(*args, **kwargs)
             if reaction:
                 reactions.append(reaction)
 
