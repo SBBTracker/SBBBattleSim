@@ -5,19 +5,18 @@ from sbbbattlesim.events import OnDeath
 
 
 class CharacterType(Character):
-    display_name = 'Black Cat'
+    display_name = 'Tweedle Dee'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.BlackCatLastBreath)
+        self.register(self.TweedleDeeLastBreath)
 
-    class BlackCatLastBreath(OnDeath):
+    class TweedleDeeLastBreath(OnDeath):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.priority = sbbbattlesim.SUMMONING_PRIORITY + self.manager.position
 
         def handle(self, *args, **kwargs):
-            stat = 2 if self.manager.golden else 1
-            cats = [character_registry['Cat'](self.manager.owner, self.manager.position, stat, stat, golden=False, keywords=[], tribes=['evil', 'animal'], cost=1)]
-            self.manager.owner.summon(self.manager.position, *cats)
-            return 'OnLastBreath', [cats], {}
+            attack, health = (2,8) if self.manager.golden else (1,4)
+            tweedle_dum = [character_registry['Tweedle Dum'](self.manager.owner, self.manager.position, attack, health, golden=False, keywords=[], tribes=['dwarf'], cost=1)]
+            self.manager.owner.summon(self.manager.position, *tweedle_dum)

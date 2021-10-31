@@ -23,7 +23,7 @@ def fight_initialization(attacker, defender, **kwargs):
 @lru_cache(maxsize=512)
 def fight(attacker, defender, turn=0, **kwargs):
 
-    logger.debug(f'NEW ROUND OF COMBAT: turn={turn}')
+    logger.debug(f'********************NEW ROUND OF COMBAT: turn={turn}')
 
     attacker.resolve_board()
     defender.resolve_board()

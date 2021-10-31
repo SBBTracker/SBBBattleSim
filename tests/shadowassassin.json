@@ -1,0 +1,109 @@
+{
+	"PLAYERONEIDHERE": {
+		"characters": [
+            {
+				"id": "SBB_CHARACTER_CATBURGLAR",
+				"attack": 300,
+				"health": 300,
+				"golden": false,
+				"position": 1,
+				"keywords": [
+                  "slay"
+                ],
+				"cost": 2,
+ 				"tribes": [
+					"evil",
+					"animal"
+				]
+			},
+			{
+				"id": "SBB_CHARACTER_SHADOWASSASSIN",
+				"attack": 1,
+				"health": 1,
+				"golden": false,
+				"position": 5,
+				"keywords": [
+                  "ranged"
+                ],
+				"cost": 3,
+ 				"tribes": [
+					"evil",
+					"monster"
+				]
+			},
+			{
+				"id": "SBB_CHARACTER_SHADOWASSASSIN",
+				"attack": 2,
+				"health": 2,
+				"golden": true,
+				"position": 6,
+				"keywords": [
+                  "ranged"
+                ],
+				"cost": 3,
+ 				"tribes": [
+					"evil",
+					"monster"
+				]
+			}
+		],
+		"treasures": [],
+		"hand": [],
+		"hero": ""
+	},
+	"PLAYERTWOIDHERE": {
+		"characters": [
+            {
+				"id": "SBB_CHARACTER_BLACKCAT",
+				"attack": 1,
+				"health": 1,
+				"golden": false,
+				"position": 1,
+				"keywords": [],
+				"cost": 1,
+ 				"tribes": [
+					"evil"
+				]
+			},
+			{
+				"id": "SBB_CHARACTER_BLACKCAT",
+				"attack": 1,
+				"health": 1,
+				"golden": false,
+				"position": 2,
+				"keywords": [],
+				"cost": 1,
+ 				"tribes": [
+					"evil"
+				]
+			},
+			{
+				"id": "SBB_CHARACTER_BLACKCAT",
+				"attack": 1,
+				"health": 1,
+				"golden": false,
+				"position": 3,
+				"keywords": [],
+				"cost": 1,
+ 				"tribes": [
+					"evil"
+				]
+			},
+			{
+				"id": "SBB_CHARACTER_BLACKCAT",
+				"attack": 1,
+				"health": 1,
+				"golden": false,
+				"position": 4,
+				"keywords": [],
+				"cost": 1,
+ 				"tribes": [
+					"evil"
+				]
+			}
+		],
+		"treasures": [],
+		"hand": [],
+		"hero": ""
+	}
+}

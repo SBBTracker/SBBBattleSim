@@ -1,5 +1,5 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import Slay
+from sbbbattlesim.events import OnAttackAndKill
 
 
 class CharacterType(Character):
@@ -9,6 +9,6 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         self.register(self.BravePrincessSlay)
 
-    class BravePrincessSlay(Slay):
+    class BravePrincessSlay(OnAttackAndKill):
         def handle(self, *args, **kwargs):
             pass

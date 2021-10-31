@@ -15,6 +15,8 @@ class Player(EventManager):
         super().__init__()
         self.id = id
         self.opponent = None
+        self._last_attacker = None
+        self._attack_chain = 0
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
         def make_character(char_data):
@@ -66,17 +68,35 @@ class Player(EventManager):
 
     @property
     def attack_character(self):
+        # Handle case where tokens are spawning in the same position
+        # With the max chain of 5 as implemented to stop trophy hunter + croc + grim soul shenanigans
+        if (self.characters.get(self._attack_slot) == self._last_attacker) or (self._attack_chain >= 5) or (self._last_attacker is None):
+            if self._last_attacker is not None:
+                self._attack_slot += 1
+            self._attack_chain = 0
+        else:
+            self._attack_chain += 1
+            return self._last_attacker
+
+        # If we are advancing the attack slot do it here
+        found_attacker = False
         for _ in range(7):
             character = self.characters[self._attack_slot]
             if character is not None:
                 if character.attack > 0:
+                    found_attacker = True
                     break
 
             if self._attack_slot == 7:
                 self._attack_slot = 0
-            self._attack_slot += 1
 
-        return self.characters.get(self._attack_slot)
+        # If we have not found an attacker just return None
+        if found_attacker:
+            attacker = self.characters.get(self._attack_slot)
+            self._last_attacker = attacker
+            return attacker
+        else:
+            return None
 
     def resolve_board(self):
         # Remove all bonuses

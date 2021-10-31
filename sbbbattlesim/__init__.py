@@ -32,5 +32,7 @@ class DamageCause(enum.Enum):
     WHILE_DEFENDING = 2
     SPELL = 3
 
+SUMMONING_PRIORITY = 10
+
 
 configure_logging()
