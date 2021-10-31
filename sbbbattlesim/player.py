@@ -145,7 +145,6 @@ class Player(EventManager):
 
         for char in dead_characters:
             char('OnDeath', *args,  **kwargs)
-            logger.info(f'ONDEATH COMPLETED HERE!!!!!!!!!')
 
         return action_taken
 

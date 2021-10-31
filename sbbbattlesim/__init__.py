@@ -1,35 +1,36 @@
-import logging
+import enum
 
-from sbbbattlesim.config import configure_logging
 from sbbbattlesim.board import Board
-from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.heros import registry as hero_registry
-from sbbbattlesim.player import Player
-from sbbbattlesim.treasures import registry as treasure_registry
+from sbbbattlesim.config import configure_logging
 
-keywords = (
-    'support',
-    'flying',
-    'slay',
-    'last breath',
-    'ranged',
-    'quest',
-)
 
-tribes = (
-    'animal',
-    'monster',
-    'mage',
-    'princess',
-    'prince',
-    'queen',
-    'dwarf',
-    'fairy',
-    'puff puff',
-    'dragon',
+class Tribes(enum.Enum):
+    ANIMAL = 'animal'
+    DRAGON = 'dragon'
+    DWARF = 'dwarf'
+    EGG = 'egg'
+    FAIRY = 'fairy'
+    MAGE = 'mage'
+    MONSTER = 'monster'
+    PRINCE = 'prince'
+    PRINCESS = 'princess'
+    PUFF_PUFF = 'puff puff'
+    QUEEN = 'queen'
+    Treant = 'treant'
 
-    'good',
-    'evil'
-)
+
+class Keywords(enum.Enum):
+    SUPPORT = 'support'
+    FLYING = 'flying'
+    SLAY = 'slay'
+    LAST_BREATH = 'last breath'
+    RANGED = 'ranged'
+    QUEST = 'quest'
+
+class DamageCause(enum.Enum):
+    WHILE_ATTACKING = 1
+    WHILE_DEFENDING = 2
+    SPELL = 3
+
 
 configure_logging()
