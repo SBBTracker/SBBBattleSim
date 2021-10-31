@@ -15,10 +15,10 @@ class CharacterType(Character):
             behind_targets = get_behind_targets(self.manager.position)
             targetted_chars = [c for c in self.manager.owner.valid_characters() if c.position in behind_targets]
 
-            itr = 2 if self.golden else 1
+            itr = 2 if self.manager.golden else 1
             for char in targetted_chars:
-                for _ in itr:
-                    char('OnLastBreath', *args, **kwargs)
+                for _ in range(itr):
+                    char('OnDeath', *args, **kwargs)
 
 
 

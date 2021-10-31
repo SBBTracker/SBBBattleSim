@@ -17,6 +17,11 @@ class SSBBSEvent:
     def handle(self, *args, **kwargs):
         raise NotImplementedError
 
+class OnSummon(SSBBSEvent):
+    '''A unit is summoned'''
+
+    def handle(self, summoned_characters, *args, **kwargs):
+        raise NotImplementedError
 
 class OnStart(SSBBSEvent):
     '''Start of Brawl'''
@@ -97,3 +102,13 @@ class EventManager:
         for (react, evt_args, evt_kwargs) in reactions:
             logger.info(f'Reaction to {event} {reaction}')
             self(react, *evt_args, *args, **evt_kwargs, **kwargs)
+
+    def event_type_is_registered(self, type):
+        """
+        Does not check for specific events like polywoggle slay
+        instead checks for thigns like OnBuff
+        """
+        if not isinstance(type, str):
+            type = inspect.getmro(type)[1].__name__
+
+        return type in self._temp or type in self._events

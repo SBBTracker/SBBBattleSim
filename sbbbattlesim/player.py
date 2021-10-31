@@ -81,11 +81,12 @@ class Player(EventManager):
         # If we are advancing the attack slot do it here
         found_attacker = False
         for _ in range(7):
-            character = self.characters[self._attack_slot]
+            character = self.characters.get(self._attack_slot)
             if character is not None:
                 if character.attack > 0:
                     found_attacker = True
                     break
+            self._attack_slot += 1
 
             if self._attack_slot == 7:
                 self._attack_slot = 0
@@ -104,6 +105,8 @@ class Player(EventManager):
         # wonky ordering issues with clearing buffs
         # and units that give secondary units buffs that buff
         # arbitrary units
+        self.clear_temp()
+
         for pos, char in self.characters.items():
             if char is None:
                 continue
@@ -128,6 +131,9 @@ class Player(EventManager):
 
             for buff_target in buff_targets:
                 char.buff(target_character=buff_target)
+
+            if getattr(char, 'buff_player', False):
+                char.buff_player(player=self)
 
                 # On Support Event Trigger
                 # Maybe this only needs to trigger once
@@ -181,18 +187,23 @@ class Player(EventManager):
             summoned_characters.append(char)
             logger.info(f'Spawning {char} in {pos} position')
 
-        # TODO Summong Portal
+        # Now that we have summoned units, make sure they have the buffs they should
+        self.resolve_board()
+
+        # The player handles on-summon effects
+        self('OnSummon', summoned_characters=summoned_characters)
 
         return summoned_characters
 
-    def valid_characters(self, _lambda=lambda char : char is not None and not char.dead):
+    def valid_characters(self, _lambda=lambda char: True):
         """
-        Return a list of valid characters based on an optional lambda that is passed in.
-        You probably do not need to pass in a lambda, so the default behavior is "return all characters that exist and
-        are not dead" effectively filtering out empty board slots.
+        Return a list of valid characters based on an optional lambda that is passed in as an additoinal filter
+        onto the base lambda that guarantees that the character exists and is not dead
         """
+        # NOTE: this assumes that a dead thing can NEVER be targetted
+        base_lambda = lambda char : char is not None and not char.dead
 
-        return [char for char in self.characters.values() if _lambda(char)]
+        return [char for char in self.characters.values() if base_lambda(char) and _lambda(char)]
 
 
     # TODO Calculate Damage
