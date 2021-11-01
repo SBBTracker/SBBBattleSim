@@ -86,7 +86,7 @@ def attack(attack_character, attacker, defender, **kwargs):
     attack_character('OnAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
 
     # Defend Event
-    defend_character('OnDefend', attack_position=attack_position, defend_character=defend_position, **kwargs)
+    defend_character('OnDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
 
     defend_character = defender.characters[defend_position]
     attack_character = attacker.characters[attack_position]
@@ -98,7 +98,7 @@ def attack(attack_character, attacker, defender, **kwargs):
 
     # SLAY TRIGGER
     if defend_character.dead:
-        attack_character('OnAttackAndKill', **kwargs)
+        attack_character('OnAttackAndKill', defend_character, **kwargs)
 
     resolve_damage(attacker=attacker, defender=defender, **kwargs)
     resolve_damage(attacker=defender, defender=attacker, **kwargs)

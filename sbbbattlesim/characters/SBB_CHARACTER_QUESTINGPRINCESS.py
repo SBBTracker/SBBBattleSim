@@ -10,5 +10,5 @@ class CharacterType(Character):
         self.register(self.BravePrincessSlay)
 
     class BravePrincessSlay(OnAttackAndKill):
-        def handle(self, *args, **kwargs):
+        def handle(self, killed_character, *args, **kwargs):
             pass

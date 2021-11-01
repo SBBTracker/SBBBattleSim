@@ -18,4 +18,4 @@ class CharacterType(Character):
             )
 
             char = random.choice(valid_chars)
-            char('OnAttackAndKill', *args, **kwargs)
+            char('OnAttackAndKill', None, *args, **kwargs)

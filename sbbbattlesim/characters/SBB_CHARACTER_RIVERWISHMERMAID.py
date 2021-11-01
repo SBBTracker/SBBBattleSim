@@ -11,7 +11,7 @@ class CharacterType(Character):
         class RiverwishMermaidBuff(OnAttackAndKill):
             riverwish_mermaid = self
 
-            def handle(self, *args, **kwargs):
+            def handle(self, killed_character, *args, **kwargs):
                 stats = 2 if self.riverwish_mermaid.golden else 1
                 self.manager.change_stats(attack=stats, health=stats, temp=False,
                                           reason='{self.riverwish_mermaid} gave {self} slay from which I am gaining stats')

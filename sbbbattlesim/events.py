@@ -31,7 +31,7 @@ class OnDeath(SSBBSEvent):
     '''A character dies'''
 
     def __call__(self, *args, **kwargs):
-        return self.handle(*args, **kwargs) or ('OnLastBreath', [], {})
+        return self.handle(*args, **kwargs) or ('OnLastBreath', args, kwargs)
 
 
 class OnLastBreath(SSBBSEvent):
@@ -45,7 +45,8 @@ class OnAttack(SSBBSEvent):
 
 class OnDefend(SSBBSEvent):
     '''A defending character is attacked'''
-
+    def handle(self, attack_position, defend_position, *args, **kwargs):
+        raise NotImplementedError
 
 class OnDamagedAndSurvived(SSBBSEvent):
     '''A character gets damaged and doesn't die'''
@@ -56,6 +57,9 @@ class OnAttackAndKill(SSBBSEvent):
 
     def __call__(self, *args, **kwargs):
         return self.handle(*args, **kwargs) or ('OnSlay', args, kwargs)
+
+    def handle(self, killed_character, *args, **kwargs):
+        raise NotImplementedError
 
 
 class OnSlay(SSBBSEvent):
@@ -77,7 +81,6 @@ class EventManager:
         self._events = collections.defaultdict(list)
 
     def register(self, event, temp=False):
-        #event_base = event.__class__.__base__.__name__
         event_base = inspect.getmro(event)[1].__name__
         event = event(manager=self)
         if temp:

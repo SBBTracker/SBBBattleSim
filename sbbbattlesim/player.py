@@ -73,14 +73,20 @@ class Player(EventManager):
     def attack_character(self):
         # Handle case where tokens are spawning in the same position
         # With the max chain of 5 as implemented to stop trophy hunter + croc + grim soul shenanigans
-        if (self.characters.get(self._attack_slot) == self._last_attacker) or (self._attack_chain >= 5) or (self._last_attacker is None):
+        if (self.characters.get(self._attack_slot) is self._last_attacker) or (self._attack_chain >= 5) or (self._last_attacker is None):
             if self._last_attacker is not None:
                 self._attack_slot += 1
             self._attack_chain = 0
         else:
             self._attack_chain += 1
-            logger.info(f'Attacker is {self._last_attacker}')
-            return self._last_attacker
+
+            # The character in the attack slot is not the same as the character in this attack slot last time
+            # this slot attacked, so fetch the new attacker in that position and return it
+            new_attacker_old_position = self.characters[self._last_attacker.position]
+            logger.info(f'Attacker is {new_attacker_old_position}')
+            self._last_attacker = new_attacker_old_position
+
+            return new_attacker_old_position
 
         # If we are advancing the attack slot do it here
         found_attacker = False

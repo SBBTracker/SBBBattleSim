@@ -10,7 +10,7 @@ class CharacterType(Character):
         self.register(self.ChupacabraSlay)
 
     class ChupacabraSlay(OnAttackAndKill):
-        def handle(self, *args, **kwargs):
+        def handle(self, killed_character, *args, **kwargs):
             modifier = 2 if self.character.golden else 1
 
             behind_targets = get_behind_targets(self.manager.position)
