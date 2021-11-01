@@ -1,7 +1,7 @@
 from sbbbattlesim.utils import StatChangeCause
 from sbbbattlesim.characters import Character
 from sbbbattlesim.combat import attack
-from sbbbattlesim.events import OnAttack, OnDamagedAndSurvived, OnDeath
+from sbbbattlesim.events import OnPreAttack, OnDamagedAndSurvived, OnDeath
 import logging
 
 logger = logging.getLogger(__name__)
@@ -11,9 +11,9 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.CupidOnAttack)
+        self.register(self.CupidOnPreAttack)
 
-    class CupidOnAttack(OnAttack):
+    class CupidOnPreAttack(OnPreAttack):
         def handle(self, attack_character, defend_character, *args, **kwargs):
 
             class CupidConfusionOnDefendAndSurvive(OnDamagedAndSurvived):

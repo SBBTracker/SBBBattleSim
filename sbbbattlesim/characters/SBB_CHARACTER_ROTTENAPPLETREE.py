@@ -1,5 +1,5 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnDefend
+from sbbbattlesim.events import OnPreDefend
 
 
 class CharacterType(Character):
@@ -7,9 +7,9 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.RottenAppletreeOnDefend)
+        self.register(self.RottenAppletreeOnPreDefend)
 
-    class RottenAppletreeOnDefend(OnDefend):
+    class RottenAppletreeOnPreDefend(OnPreDefend):
         def handle(self, attack_position, defend_position, *args, **kwargs):
             appled_enemy = self.manager.owner.opponent.characters[defend_position]
             appled_enemy.change_stats(health=1 - appled_enemy.health,

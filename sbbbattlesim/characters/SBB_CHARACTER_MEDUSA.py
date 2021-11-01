@@ -1,5 +1,5 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnAttack
+from sbbbattlesim.events import OnPreAttack
 from sbbbattlesim.utils import get_behind_targets
 from sbbbattlesim.characters import registry as character_registry
 import logging
@@ -13,9 +13,9 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.MedusaOnAttack)
+        self.register(self.MedusaOnPreAttack)
 
-    class MedusaOnAttack(OnAttack):
+    class MedusaOnPreAttack(OnPreAttack):
         def handle(self, defend_position, *args, **kwargs):
             attack = 0
             health = 3 if self.manager.golden else 6

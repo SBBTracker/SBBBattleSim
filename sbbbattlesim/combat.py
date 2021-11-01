@@ -31,9 +31,9 @@ def fight(attacker, defender, turn=0, **kwargs):
     logger.info(f'Defender {defender}')
 
     # Get Attacker
-    attack_character = attacker.attack_character
-    if attack_character is not None:
-        attack(attacker=attacker, defender=defender, attack_character=attack_character, **kwargs )
+    attack_position = attacker.attack_slot
+    if attack_position is not None:
+        attack(attacker=attacker, defender=defender, attack_position=attack_position, **kwargs )
 
     # Try to figure out if there is a winner
     attacker_no_characters_left = next((False for c in attacker.characters.values() if c is not None), True)
@@ -53,8 +53,8 @@ def fight(attacker, defender, turn=0, **kwargs):
     )
 
 
-def attack(attack_character, attacker, defender, **kwargs):
-    # Get valid defending
+def attack(attack_position, attacker, defender, **kwargs):
+    attack_character = attacker.characters.get(attack_position)
 
     # Fliers target back first
     # everyone else targets front first
@@ -62,7 +62,7 @@ def attack(attack_character, attacker, defender, **kwargs):
     back = (5, 6, 7)
     front_characters = defender.valid_characters(_lambda=lambda char: char.position in front)
     back_characters = defender.valid_characters(_lambda=lambda char: char.position in back)
-    if 'flying' in attack_character.keywords:
+    if 'flying' in attacker.characters.get(attack_position).keywords:
         if any(back_characters):
             valid_defenders = back_characters
         else:
@@ -77,24 +77,34 @@ def attack(attack_character, attacker, defender, **kwargs):
         return
 
     defend_character = random.choice(valid_defenders)
-    attack_position = attack_character.position
     defend_position = defend_character.position
+
+    # AFTER THIS POINT BOTH ATTACK AND DEFEND POSITION IS DEFINED
+    # The characters in attack and defend slots may change after this point so
+    # before each event attack_character and defend character is set again
 
     logger.info(f'{attack_character} -> {defend_character}')
 
-    # Attack Event
-    attack_character('OnAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
+    # Pre Damage Event
+    # These functions can change the characters in given positions like Medusa
+    attack_character('OnPreAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
+    defend_character('OnPreDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
 
-    # Defend Event
-    defend_character('OnDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
+    # We are pulling the latest attack_character and defend character incase they changed
+    attack_character = attacker.characters.get(attack_position)
+    defend_character = defender.characters.get(defend_position)
 
-    defend_character = defender.characters[defend_position]
-    attack_character = attacker.characters[attack_position]
-    defender_attack = defend_character.attack
-    attacker_attack = attack_character.attack
     if 'ranged' not in attack_character.keywords:
-        attack_character.change_stats(damage=defender_attack, reason=StatChangeCause.DAMAGE_WHILE_ATTACKING)
-    defend_character.change_stats(damage=attacker_attack, reason=StatChangeCause.DAMAGE_WHILE_DEFENDING)
+        attack_character.change_stats(damage=defend_character.attack, reason=StatChangeCause.DAMAGE_WHILE_ATTACKING)
+    defend_character.change_stats(damage=attack_character.attack, reason=StatChangeCause.DAMAGE_WHILE_DEFENDING)
+
+    # Post Damage Event
+    attack_character('OnPostAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
+    defend_character('OnPostDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
+
+    # We are pulling the latest attack_character and defend character incase they changed
+    attack_character = attacker.characters.get(attack_position)
+    defend_character = defender.characters.get(defend_position)
 
     # SLAY TRIGGER
     if defend_character.dead:

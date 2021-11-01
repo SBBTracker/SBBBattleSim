@@ -70,23 +70,16 @@ class Player(EventManager):
         return dict(list(self.characters.items())[4:])
 
     @property
-    def attack_character(self):
+    def attack_slot(self):
         # Handle case where tokens are spawning in the same position
         # With the max chain of 5 as implemented to stop trophy hunter + croc + grim soul shenanigans
         if (self.characters.get(self._attack_slot) is self._last_attacker) or (self._attack_chain >= 5) or (self._last_attacker is None):
+            # Prevents the same character from attacking repeatedly
             if self._last_attacker is not None:
                 self._attack_slot += 1
             self._attack_chain = 0
         else:
             self._attack_chain += 1
-
-            # The character in the attack slot is not the same as the character in this attack slot last time
-            # this slot attacked, so fetch the new attacker in that position and return it
-            new_attacker_old_position = self.characters[self._last_attacker.position]
-            logger.info(f'Attacker is {new_attacker_old_position}')
-            self._last_attacker = new_attacker_old_position
-
-            return new_attacker_old_position
 
         # If we are advancing the attack slot do it here
         found_attacker = False
@@ -103,13 +96,11 @@ class Player(EventManager):
 
         # If we have not found an attacker just return None
         if found_attacker:
-            attacker = self.characters.get(self._attack_slot)
-            self._last_attacker = attacker
-            logger.info(f'Attacker is {attacker}')
-            return attacker
+            self._last_attacker = self.characters.get(self._attack_slot)
         else:
-            logger.info(f'There is no attacker')
             return None
+
+        return self._attack_slot
 
     def resolve_board(self):
         # Remove all bonuses
