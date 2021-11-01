@@ -5,30 +5,30 @@ import sbbbattlesim
 
 
 class CharacterType(Character):
-    display_name = 'Princess Peep'
+    display_name = 'Three Big Pigs'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.PrincessPeepDeath)
+        self.register(self.ThreeBigPigsDeath)
 
-    class PrincessPeepDeath(OnDeath):
+    class ThreeBigPigsDeath(OnDeath):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.priority = sbbbattlesim.SUMMONING_PRIORITY
 
         def handle(self, *args, **kwargs):
-            stat = 2 if self.manager.golden else 1
+            stat = 10 if self.manager.golden else 5
 
             sheep = []
             for _ in range(3):
-                sheep.append(character_registry['Sheep'](
+                sheep.append(character_registry['Pig'](
                     owner=self.manager.owner,
                     position=self.manager.position,
                     attack=stat,
                     health=stat,
                     golden=False,
                     keywords=[],
-                    tribes=['good', 'animal'],
+                    tribes=['evil', 'animal'],
                     cost=1
                 ))
 
