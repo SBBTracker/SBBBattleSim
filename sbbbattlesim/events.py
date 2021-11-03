@@ -17,11 +17,13 @@ class SSBBSEvent:
     def handle(self, *args, **kwargs):
         raise NotImplementedError
 
+
 class OnSummon(SSBBSEvent):
     '''A unit is summoned'''
 
     def handle(self, summoned_characters, *args, **kwargs):
         raise NotImplementedError
+
 
 class OnStart(SSBBSEvent):
     '''Start of Brawl'''
@@ -29,9 +31,6 @@ class OnStart(SSBBSEvent):
 
 class OnDeath(SSBBSEvent):
     '''A character dies'''
-
-    def __call__(self, *args, **kwargs):
-        return self.handle(*args, **kwargs) or ('OnLastBreath', args, kwargs)
 
 
 class OnLastBreath(SSBBSEvent):
@@ -43,20 +42,24 @@ class OnPreAttack(SSBBSEvent):
     def handle(self, attack_position, defend_position, *args, **kwargs):
         raise NotImplementedError
 
+
 class OnPostAttack(SSBBSEvent):
     '''An attacking character attacks'''
     def handle(self, attack_position, defend_position, *args, **kwargs):
         raise NotImplementedError
+
 
 class OnPreDefend(SSBBSEvent):
     '''A defending character is attacked'''
     def handle(self, attack_position, defend_position, *args, **kwargs):
         raise NotImplementedError
 
+
 class OnPostDefend(SSBBSEvent):
     '''A defending character is attacked'''
     def handle(self, attack_position, defend_position, *args, **kwargs):
         raise NotImplementedError
+
 
 class OnDamagedAndSurvived(SSBBSEvent):
     '''A character gets damaged and doesn't die'''
@@ -64,10 +67,6 @@ class OnDamagedAndSurvived(SSBBSEvent):
 
 class OnAttackAndKill(SSBBSEvent):
     '''A character attacks something and kills it'''
-
-    def __call__(self, *args, **kwargs):
-        return self.handle(*args, **kwargs) or ('OnSlay', args, kwargs)
-
     def handle(self, killed_character, *args, **kwargs):
         raise NotImplementedError
 
@@ -75,8 +74,11 @@ class OnAttackAndKill(SSBBSEvent):
 class OnSlay(SSBBSEvent):
     '''A character has triggered a slay'''
 
-class OnFightStart(SSBBSEvent):
-    '''A combat has begun'''
+
+class OnSpellCast(SSBBSEvent):
+    '''A player cast a spell'''
+    def handle(self, caster, spell, *args, **kwargs):
+        raise NotImplementedError
 
 
 class OnBuff(SSBBSEvent):

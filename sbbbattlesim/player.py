@@ -1,17 +1,19 @@
 import logging
+import random
 from collections import OrderedDict
 
 from sbbbattlesim.treasures import registry as treasure_registry
 from sbbbattlesim.heros import registry as hero_registry
 from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim import utils
-from sbbbattlesim.events import EventManager
+from sbbbattlesim.events import EventManager, OnStart
 
 logger = logging.getLogger(__name__)
 
 
 class Player(EventManager):
-    def __init__(self, characters, treasures, hero, hand, id, board):
+    def __init__(self, characters, treasures, hero, hand, spells, id, board):
         super().__init__()
         # Board is board
         self.board = board
@@ -50,7 +52,13 @@ class Player(EventManager):
 
         self.hero = hero_registry[hero]
 
-        self.stateful_effects = dict()
+        for spl in spells:
+            class CastSpellOnStart(OnStart):
+                spell = spl
+                def handle(self, *args, **kwargs):
+                    self.manager.cast_spell(self.spell)
+
+            self.register(CastSpellOnStart)
 
 
     def __str__(self):
@@ -209,5 +217,20 @@ class Player(EventManager):
 
         return [char for char in self.characters.values() if base_lambda(char) and _lambda(char)]
 
+    def cast_spell(self, spell_id):
+        spell = spell_registry[spell_id]
+        if spell is None:
+            return
 
-    # TODO Calculate Damage
+        target = None
+        if spell.targeted:
+            def valid_spell_targets(char):
+                for spell_type in spell.spell_filter:
+                    if not (spell_type in char.keywords or spell_type in char.tribes):
+                        return False
+                return True
+            target = random.choice(self.valid_characters(_lambda=valid_spell_targets))
+
+        # If a spell requires a valid target and the spells filter specifies valid tags to search for
+        spell.cast(player=self, target=target)
+        self('OnSpellCast', caster=self, spell=spell)

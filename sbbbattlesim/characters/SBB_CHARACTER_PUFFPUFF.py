@@ -5,6 +5,7 @@ from sbbbattlesim.events import OnDeath
 class CharacterType(Character):
     # PUFF PUFF VARIABLE
     # Store the global Puff Puff buff
+    # THIS IS WRONG
     display_name = 'PUFF PUFF'
 
     class PuffPuffDeath(OnDeath):

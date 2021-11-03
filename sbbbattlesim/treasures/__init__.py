@@ -2,15 +2,20 @@ import logging
 import pkgutil
 from collections import OrderedDict
 
-from sbbbattlesim.sbbbsobj import SBBBSObject
+from sbbbattlesim.events import EventManager
 
 logger = logging.getLogger(__name__)
 
 logic_path = __path__
 
 
-class Treasure(SBBBSObject):
-    pass
+class Treasure(EventManager):
+    display_name = ''
+    id = ''
+    aura = False
+
+    def buff(self, target_character):
+        raise NotImplementedError(self.display_name)
 
 
 class Registry(object):

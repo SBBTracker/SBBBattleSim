@@ -1,14 +1,18 @@
 import logging
 import pkgutil
 from collections import OrderedDict
-from sbbbattlesim.sbbbsobj import SBBBSObject
+from sbbbattlesim.events import EventManager
+
 
 logger = logging.getLogger(__name__)
 
 logic_path = __path__
 
 
-class Character(SBBBSObject):
+class Character(EventManager):
+    display_name = ''
+    id = ''
+    aura = False
     support = False
 
     def __init__(self, owner, position, attack, health, golden, keywords, tribes, cost):
@@ -36,6 +40,9 @@ class Character(SBBBSObject):
 
     def __repr__(self):
         return f'''{self.display_name} pos:{self.position} gold:{self.golden} ({self.attack}/{self.health})'''
+
+    def buff(self, target_character):
+        raise NotImplementedError(self.display_name)
 
     @property
     def attack(self):

@@ -19,11 +19,12 @@ class Board(EventManager):
 
         def get_player(pdat, id):
             return Player(
-                characters=pdat['characters'],
-                treasures=pdat['treasures'],
-                hero=pdat['hero'],
-                hand=pdat['hand'],
+                characters=pdat.get('characters', ()),
+                treasures=pdat.get('treasures', ()),
+                hero=pdat.get('hero', ''),
+                hand=pdat.get('hand', ()),
                 id=id,
+                spells=pdat.get('spells', ()),
                 board=self
             )
 

@@ -1,5 +1,5 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnFightStart
+from sbbbattlesim.events import OnStart
 from sbbbattlesim.utils import find_strongest_character, find_weakest_character
 
 
@@ -9,7 +9,7 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        class RobinWoodOnFightStart(OnFightStart):
+        class RobinWoodOnFightStart(OnStart):
             priority = 50
             golden = self.golden
 
