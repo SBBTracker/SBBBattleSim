@@ -1,13 +1,9 @@
-import random
-
-from sbbbattlesim.spells import Spell
+from sbbbattlesim.spells import TargetedSpell
 
 
-class SpellType(Spell):
+class SpellType(TargetedSpell):
     display_name = 'Magic Research'
+    spell_type = ()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        target = random.choice(self.caster.valid_characters())
+    def cast(self, target, *args, **kwargs):
         target.change_stats(health=1, attack=1, temp=False, reason=f'{self} buff')
