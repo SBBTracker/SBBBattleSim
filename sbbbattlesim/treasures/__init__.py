@@ -13,6 +13,8 @@ class Treasure(EventManager):
     display_name = ''
     id = ''
     aura = False
+    def __init__(self, player):
+        self.player = player
 
     def buff(self, target_character):
         raise NotImplementedError(self.display_name)
