@@ -10,6 +10,7 @@ class CharacterType(Character):
         self.register(self.LancelotSlay)
 
     class LancelotSlay(OnAttackAndKill):
+        slay = True
         def handle(self, killed_character, *args, **kwargs):
             modifier = 4 if self.golden else 2
             self.manager.change_stats(attack=modifier, health=modifier, temp=False, reason=f'{self} slayed an enemy and is growing')

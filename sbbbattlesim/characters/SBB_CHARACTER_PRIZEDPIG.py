@@ -11,5 +11,6 @@ class CharacterType(Character):
         self.register(self.PrizedPigLastBreath)
 
     class PrizedPigLastBreath(OnDeath):
+        last_breath = True
         def handle(self, *args, **kwargs):
             pass  # this is only relevant for things like trophy hunter

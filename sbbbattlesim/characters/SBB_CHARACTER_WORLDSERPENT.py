@@ -7,9 +7,10 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.LancelotSlay)
+        self.register(self.JormungandrOnAttackAndKill)
 
     class JormungandrOnAttackAndKill(OnAttackAndKill):
+        slay = True
         def handle(self, killed_character, *args, **kwargs):
             modifier = 40 if self.golden else 20
             self.manager.change_stats(attack=modifier, health=modifier, temp=False, reason=f'{self} slayed an enemy and is growing')

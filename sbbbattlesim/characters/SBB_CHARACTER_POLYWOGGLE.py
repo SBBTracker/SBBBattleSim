@@ -10,5 +10,6 @@ class CharacterType(Character):
         self.register(self.PolywoggleSlay)
 
     class PolywoggleSlay(OnAttackAndKill):
+        slay = True
         def handle(self, killed_character, *args, **kwargs):
             pass  #TODO implement random spawn on survive

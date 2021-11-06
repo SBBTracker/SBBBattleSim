@@ -13,6 +13,7 @@ class CharacterType(Character):
 
 
     class BabyBearLastBreath(OnDeath):
+        last_breath = True
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.priority = sbbbattlesim.SUMMONING_PRIORITY
@@ -43,6 +44,7 @@ class PapaBear(Character):
         self.register(self.PapaBearLastBreath)
 
     class PapaBearLastBreath(OnDeath):
+        last_breath = True
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.priority = sbbbattlesim.SUMMONING_PRIORITY

@@ -13,6 +13,7 @@ class CharacterType(Character):
         self.register(self.GoodBoyDeath)
 
     class GoodBoyDeath(OnDeath):
+        last_breath = True
         def handle(self, *args, **kwargs):
             golden_multiplyer = 2 if self.manager.golden else 1
             attack_buff = self.manager.attack * golden_multiplyer

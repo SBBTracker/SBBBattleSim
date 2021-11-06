@@ -14,6 +14,9 @@ class Character(EventManager):
     id = ''
     aura = False
     support = False
+    slay = False
+    quest = False
+    last_breath = False
 
     def __init__(self, owner, position, attack, health, golden, keywords, tribes, cost):
         super().__init__()
@@ -135,9 +138,6 @@ class Registry(object):
                 pass
             except Exception as exc:
                 logger.exception('Error loading characters: {}'.format(name))
-
-    def items(self):
-        return {i.display_name: i for i in self.characters.values()}.items()
 
 
 registry = Registry()

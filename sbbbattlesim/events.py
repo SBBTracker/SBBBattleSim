@@ -14,6 +14,9 @@ class SSBBSEvent:
         # TODO Add more logging???
         return self.handle(*args, **kwargs)
 
+    def is_valid(self):
+        return True
+
     def handle(self, *args, **kwargs):
         raise NotImplementedError
 
@@ -31,6 +34,11 @@ class OnStart(SSBBSEvent):
 
 class OnDeath(SSBBSEvent):
     '''A character dies'''
+    last_breath = None
+
+    def is_valid(self):
+        return self.last_breath is True or self.last_breath is False
+
 
 
 class OnLastBreath(SSBBSEvent):
@@ -66,9 +74,13 @@ class OnDamagedAndSurvived(SSBBSEvent):
 
 
 class OnAttackAndKill(SSBBSEvent):
+    slay = None
     '''A character attacks something and kills it'''
     def handle(self, killed_character, *args, **kwargs):
         raise NotImplementedError
+
+    def is_valid(self):
+        return self.slay is True or self.slay is False
 
 
 class OnSlay(SSBBSEvent):
@@ -95,6 +107,11 @@ class EventManager:
     def register(self, event, temp=False):
         event_base = inspect.getmro(event)[1].__name__
         event = event(manager=self)
+
+        if not event.is_valid():
+            logger.debug(f'{self} found invalid event {event_base} - {event.__class__.__name__}')
+            raise NotImplementedError
+
         if temp:
             self._temp[event_base].append(event)
         else:

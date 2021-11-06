@@ -12,6 +12,7 @@ class CharacterType(Character):
         self.register(self.SheepWolfLastBreath)
 
     class SheepWolfLastBreath(OnDeath):
+        last_breath = True
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.priority = sbbbattlesim.SUMMONING_PRIORITY
