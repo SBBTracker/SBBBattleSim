@@ -11,6 +11,7 @@ class CharacterType(Character):
         self.register(self.FriendlySpiritLastBreath)
 
     class FriendlySpiritLastBreath(OnDeath):
+        last_breath = True
         def handle(self, *args, **kwargs):
             chars = self.manager.owner.valid_characters()
             if not chars:

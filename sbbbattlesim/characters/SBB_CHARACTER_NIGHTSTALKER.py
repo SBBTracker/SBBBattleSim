@@ -10,6 +10,7 @@ class CharacterType(Character):
         self.register(self.VainPireSlay)
 
     class VainPireSlay(OnAttackAndKill):
+        slay = True
         def handle(self, killed_character, *args, **kwargs):
             stat_buff = 2 if self.character.golden else 1
             self.manager.change_stats(attack=stat_buff, health=stat_buff, temp=False, reason=f'{self} slay trigger')

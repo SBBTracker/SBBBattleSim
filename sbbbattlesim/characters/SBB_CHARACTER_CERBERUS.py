@@ -11,6 +11,7 @@ class CharacterType(Character):
         self.register(self.GrimSoulLastBreath)
 
     class GrimSoulLastBreath(OnDeath):
+        last_breath = True
         def handle(self, *args, **kwargs):
             valid_chars = self.manager.owner.valid_characters(
                 _lambda = lambda char : char.event_type_is_registered('OnAttackAndKill') \

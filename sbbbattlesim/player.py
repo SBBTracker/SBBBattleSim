@@ -48,7 +48,7 @@ class Player(EventManager):
         for tres in treasures:
             treasure = treasure_registry[tres]
             if treasure is not None:
-                self.treasures[treasure.id] = treasure()
+                self.treasures[treasure.id] = treasure(self)
 
         self.hero = hero_registry[hero]
 

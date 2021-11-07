@@ -11,6 +11,7 @@ class CharacterType(Character):
         self.register(self.SouthernSirenSlay)
 
     class SouthernSirenSlay(OnAttackAndKill):
+        slay = True
         def handle(self, killed_character, *args, **kwargs):
             modifier = 2 if self.manager.golden else 1
             chars = [character_registry[killed_character.id](self.manager.owner, self.manager.position,

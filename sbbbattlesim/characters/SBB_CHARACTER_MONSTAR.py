@@ -10,6 +10,7 @@ class CharacterType(Character):
         self.register(self.OgrePrincessSlay)
 
     class OgrePrincessSlay(OnAttackAndKill):
+        slay = True
         def handle(self, killed_character, *args, **kwargs):
             # TODO Summon random character or don't do this
             pass

@@ -64,7 +64,7 @@ def get_spawn_positions(position):
 
 
 #TODO are these the same across different effects (robin wood, helm of the gosling, juliets in graveyards)
-# or do they behaave differently. Set up tests with tied attack and different cost, and tied attack&cost but different
+# or do they behaave differently. Set up resources with tied attack and different cost, and tied attack&cost but different
 # position and do so for both weaker and stronger style effects
 def find_stat_extreme_character(player, strongest=True):
     # If there are no valid characters,  return nothing

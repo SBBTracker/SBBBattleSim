@@ -11,6 +11,7 @@ class CharacterType(Character):
         self.register(self.WretchedMummyDeath)
 
     class WretchedMummyDeath(OnDeath):
+        last_breath = True
         def handle(self, *args, **kwargs):
             damage = 8 if self.manager.golden else 4
             for char in self.manager.owner.opponent.valid_characters():

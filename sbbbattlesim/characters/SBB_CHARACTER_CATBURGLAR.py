@@ -10,5 +10,6 @@ class CharacterType(Character):
         self.register(self.KittyCutpurseSlay)
 
     class KittyCutpurseSlay(OnAttackAndKill):
+        slay = True
         def handle(self, killed_character, *args, **kwargs):
             pass

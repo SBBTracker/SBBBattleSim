@@ -1,3 +1,5 @@
+import collections
+
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 
@@ -7,33 +9,35 @@ class CharacterType(Character):
     # Store the global Puff Puff buff
     # THIS IS WRONG
     display_name = 'PUFF PUFF'
+    puffbuffs = collections.defaultdict(int)
 
-    class PuffPuffDeath(OnDeath):
-        def handle(self, *args, **kwargs):
-            stat_change = 2 if self.managergolden else 1
-            setattr(self.manager.owner, 'puffpuffbuff', getattr(self.manager.owner, 'puffpuffbuff', 0) + stat_change)
-            # TODO Trigger On Buff
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-    def __init__(self, attack, health, golden=False, keywords=[], tribes=[]):
-        super().__init__(
-            attack=attack,
-            health=health,
-            golden=golden,
-            keywords=keywords,
-            tribes=tribes
-        )
+        current_buff = self.puffbuffs[self.owner.id]
+        new_buff = min(self.attack, self.health) - (12 if self.golden else 6)
+        self.puffbuffs[self.owner.id] = min(current_buff, new_buff) if current_buff != 0 else new_buff
 
-        ppb = getattr(self.owner, 'puffpuffbuff', None)
-        new_ppb = min(attack, health) - (12 if golden else 6)
-        puffpuffbuff = min(ppb, new_ppb) if ppb is not None else new_ppb
-        setattr(self.owner, 'puffpuffbuff', puffpuffbuff)
+        class PuffPuffDeath(OnDeath):
+            last_breath = True
 
-        self.register(self.PuffPuffDeath)
+            def handle(self, *args, **kwargs):
+                self.manager.change_stats(puffpuffbuff=2 if self.manager.golden else 1)
+
+        self.register(PuffPuffDeath)
 
     @property
     def attack(self):
-        return self.base_attack + self.attack_bonus + getattr(self.owner, 'puffpuffbuff', 0)
+        return super().attack + self.puffbuffs[self.owner.id]
 
     @property
     def health(self):
-        return self.base_health + self.health_bonus - self.damage + getattr(self.owner, 'puffpuffbuff', 0)
+        return super().health + self.puffbuffs[self.owner.id]
+
+    def change_stats(self, reason, puffpuffbuff=0, attack=0, health=0, damage=0, temp=True):
+        super().change_stats(reason, attack, health, damage, temp)
+
+        if puffpuffbuff > 0:
+            self.puffbuffs[self.owner.id] += puffpuffbuff
+
+            self('OnBuff', attack_buff=puffpuffbuff, health_buff=puffpuffbuff, reason=f'PuffPuffBuff', temp=False)
