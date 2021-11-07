@@ -14,7 +14,10 @@ class Tribe(enum.Enum):
     PRINCESS = 'princess'
     PUFF_PUFF = 'puff puff'
     QUEEN = 'queen'
-    Treant = 'treant'
+    TREANT = 'treant'
+
+    GOOD = 'good'
+    EVIL = 'evil'
 
 
 class Keyword(enum.Enum):

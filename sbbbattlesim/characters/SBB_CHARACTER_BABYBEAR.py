@@ -2,6 +2,7 @@ import sbbbattlesim
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDeath
+from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):
@@ -26,7 +27,7 @@ class CharacterType(Character):
                                  attack=stat,
                                  golden=self.manager.golden,
                                  keywords=[],
-                                 tribes=['good', 'animal'],
+                                 tribes=[Tribe.GOOD, Tribe.ANIMAL],
                                  cost=1
                                  )
             self.manager.owner.summon(self.manager.position, papa_bear)

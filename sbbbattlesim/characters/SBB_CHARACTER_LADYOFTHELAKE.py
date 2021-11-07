@@ -1,4 +1,5 @@
 from sbbbattlesim.characters import Character
+from sbbbattlesim.utils import StatChangeCause
 
 
 class CharacterType(Character):

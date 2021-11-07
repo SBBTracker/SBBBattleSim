@@ -34,4 +34,4 @@ def make_monstar():
 
 
 def get_characters(_lambda=lambda char: True):
-    return [char for char in character_registry.characters.keys() if _lambda(char)]
+    return [key for key, char in character_registry.characters.items() if _lambda(char)]

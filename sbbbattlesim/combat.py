@@ -24,7 +24,7 @@ def fight(attacker, defender, turn=0, limit=None, **kwargs):
 
     if limit is not None:
         if turn > limit:
-            return
+            return None, None
 
     logger.debug(f'********************NEW ROUND OF COMBAT: turn={turn}')
 

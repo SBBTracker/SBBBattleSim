@@ -5,11 +5,20 @@ from sbbbattlesim.events import EventManager
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.spells import Spell
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Keyword, Tribe
 
 logger = logging.getLogger(__name__)
 
 logic_path = __path__
+
+class StatChange:
+    def __init__(self, reason, source, attack_change, health_change, damage_change, temp):
+        self.reason = reason,
+        self.source = source
+        self.attack_change = attack_change
+        self.health_change = health_change
+        self.damage_change = damage_change
+        self.temp = temp
 
 
 class Character(EventManager):
@@ -29,8 +38,8 @@ class Character(EventManager):
         self._base_attack = attack
         self._base_health = health
         self.golden = golden
-        self.keywords = keywords
-        self.tribes = tribes
+        self.keywords = [Keyword(kw) for kw in keywords]
+        self.tribes = [Tribe(tribe) for tribe in tribes]
         self.cost = cost
 
         self._temp_attack = 0
@@ -89,7 +98,8 @@ class Character(EventManager):
 
         logger.debug(f'{self} finishsed stat change')
 
-        self.stat_history.append((reason, attack, health, damage, temp, self.__repr__()))
+        self.stat_history.append(StatChange(reason=reason, source=source, attack_change=attack,
+                                            health_change=health, damage_change=damage, temp=temp))
 
     def clear_temp(self):
         super().clear_temp()
