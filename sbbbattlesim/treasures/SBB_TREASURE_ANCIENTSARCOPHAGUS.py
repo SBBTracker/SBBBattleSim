@@ -14,7 +14,7 @@ class AncientSarcophagusOnDeath(OnDeath):
 
             if valid_targets:
                 target = random.choice(valid_targets)
-                target.damage += 3
+                target.changestats(damage=3, reason=f'{self} damage')
 
 
 class TreasureType(Treasure):
