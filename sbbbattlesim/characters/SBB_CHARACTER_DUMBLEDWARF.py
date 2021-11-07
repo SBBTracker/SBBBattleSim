@@ -2,6 +2,8 @@ from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnBuff
 import logging
 
+from sbbbattlesim.utils import StatChangeCause
+
 logger = logging.getLogger(__name__)
 
 class CharacterType(Character):
@@ -18,5 +20,6 @@ class CharacterType(Character):
                 health=health_buff * golden_multiplier,
                 attack=attack_buff * golden_multiplier,
                 temp=temp,
-                reason=f'{self} dubly buff'
+                reason=StatChangeCause.DOUBLEY_BUFF,
+                source=self
             )

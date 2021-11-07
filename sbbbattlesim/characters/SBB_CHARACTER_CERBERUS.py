@@ -18,5 +18,6 @@ class CharacterType(Character):
                                         and char.id != "SBB_CHARACTER_CERBERUS"
             )
 
-            char = random.choice(valid_chars)
-            char('OnAttackAndKill', None, *args, **kwargs)
+            if valid_chars:
+                char = random.choice(valid_chars)
+                char('OnAttackAndKill', None, *args, **kwargs)

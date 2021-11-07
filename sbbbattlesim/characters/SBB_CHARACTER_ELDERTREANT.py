@@ -17,6 +17,7 @@ class CharacterType(Character):
                     char = self.manager.characters[pos]
                     if char is not None:
                          if 'treant' in char.tribes:
-                             char.change_stats(attack=stat_change, health=stat_change, temp=False, reason=f'{self.heartwood} OnStart Support Buff')
+                             char.change_stats(attack=stat_change, health=stat_change, temp=False,
+                                               reason=StatChangeCause.HEARTWOOD_BUFF, source=self)
 
         self.owner.register(HeartWoodOnStart)

@@ -1,7 +1,8 @@
 import enum
 import random
 
-class Tribes(enum.Enum):
+
+class Tribe(enum.Enum):
     ANIMAL = 'animal'
     DRAGON = 'dragon'
     DWARF = 'dwarf'
@@ -16,7 +17,7 @@ class Tribes(enum.Enum):
     Treant = 'treant'
 
 
-class Keywords(enum.Enum):
+class Keyword(enum.Enum):
     SUPPORT = 'support'
     FLYING = 'flying'
     SLAY = 'slay'
@@ -28,6 +29,19 @@ class Keywords(enum.Enum):
 class StatChangeCause(enum.Enum):
     DAMAGE_WHILE_ATTACKING = 1
     DAMAGE_WHILE_DEFENDING = 2
+    SUPPORT_BUFF = 3
+    AURA_BUFF = 4
+    SLAY = 5
+
+    ANGRY_BUFF = 101
+    DOUBLEY_BUFF = 102
+    FRIENDLY_SPIRIT_BUFF = 103
+    PUFF_PUFF_BUFF = 107
+    ROBIN_WOOD_DEBUFF = 108
+    ROBIN_WOOD_BUFF = 109
+    ROTTEN_APPLE_TREE_HEALTH = 110
+    SHOULDER_FAIRY_BUFF = 111
+    WRETCHED_MUMMY_EXPLOSION = 120
 
 
 def get_support_targets(position, horn=False):

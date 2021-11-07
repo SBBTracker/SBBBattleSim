@@ -195,6 +195,7 @@ class Player(EventManager):
             if pos is None:
                 break
 
+            char.position = pos
             self.characters[pos] = char
             summoned_characters.append(char)
             logger.info(f'Spawning {char} in {pos} position')
@@ -212,7 +213,7 @@ class Player(EventManager):
         Return a list of valid characters based on an optional lambda that is passed in as an additoinal filter
         onto the base lambda that guarantees that the character exists and is not dead
         """
-        # NOTE: this assumes that a dead thing can NEVER be targetted
+        # NOTE: this assumes that a dead thing can NEVER be targeted
         base_lambda = lambda char : char is not None and not char.dead
 
         return [char for char in self.characters.values() if base_lambda(char) and _lambda(char)]

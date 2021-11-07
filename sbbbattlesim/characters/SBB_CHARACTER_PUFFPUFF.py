@@ -2,6 +2,7 @@ import collections
 
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
+from sbbbattlesim.utils import StatChangeCause
 
 
 class CharacterType(Character):
@@ -22,7 +23,8 @@ class CharacterType(Character):
             last_breath = True
 
             def handle(self, *args, **kwargs):
-                self.manager.change_stats(puffpuffbuff=2 if self.manager.golden else 1)
+                self.manager.change_stats(puffpuffbuff=2 if self.manager.golden else 1,
+                                          reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.manager)
 
         self.register(PuffPuffDeath)
 
@@ -34,10 +36,12 @@ class CharacterType(Character):
     def health(self):
         return super().health + self.puffbuffs[self.owner.id]
 
-    def change_stats(self, reason, puffpuffbuff=0, attack=0, health=0, damage=0, temp=True):
-        super().change_stats(reason, attack, health, damage, temp)
+    def change_stats(self, puffpuffbuff=0, *args, **kwargs):
+        super().change_stats(*args, **kwargs)
 
         if puffpuffbuff > 0:
             self.puffbuffs[self.owner.id] += puffpuffbuff
 
-            self('OnBuff', attack_buff=puffpuffbuff, health_buff=puffpuffbuff, reason=f'PuffPuffBuff', temp=False)
+            total_stat_change = len(self.owner.valid_characters(_lambda=lambda char: char.id == self.id)) * puffpuffbuff
+
+            self('OnBuff', attack_buff=total_stat_change, health_buff=total_stat_change, reason=f'PuffPuffBuff', temp=False)

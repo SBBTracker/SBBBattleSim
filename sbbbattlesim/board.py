@@ -35,3 +35,14 @@ class Board(EventManager):
 
         self.p1.opponent = self.p2
         self.p2.opponent = self.p1
+
+    def fight(self, limit=None):
+        # Determine Setup and Turn Order
+        if self.p1.treasures.get("SBB_TREASURE_HERMES'BOOTS") and not self.p2.treasures.get('hermes_boots'):
+            attacking, defending = self.p1, self.p2
+        elif self.p1.treasures.get("SBB_TREASURE_HERMES'BOOTS") and not self.p2.treasures.get('hermes_boots'):
+            attacking, defending = self.p1, self.p2
+        else:
+            attacking, defending = random.sample((self.p1, self.p2), 2)
+
+        return fight_initialization(attacker=attacking, defender=defending, limit=limit, board=self)

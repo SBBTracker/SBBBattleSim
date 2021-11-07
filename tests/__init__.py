@@ -1,10 +1,4 @@
-import json
-
-from sbbbattlesim import Board
-
-
-def make_fight(player, enemy):
-    return Board({'PLAYER': player, 'ENEMY': enemy})
+from sbbbattlesim.characters import registry as character_registry
 
 
 def make_player(characters, hero='', spell='', treasures=[], hand=[]):
@@ -19,7 +13,7 @@ def make_player(characters, hero='', spell='', treasures=[], hand=[]):
     return PLAYER
 
 
-def make_character(id, position=None, attack=0, health=1, golden=False, cost=0, level=0, keywords=[], tribes=[]):
+def make_character(id, position, attack=1, health=1, golden=False, cost=0, level=0, keywords=[], tribes=[]):
     CHARACTER = {
         "id": id,
         "attack": attack,
@@ -35,6 +29,9 @@ def make_character(id, position=None, attack=0, health=1, golden=False, cost=0, 
     return CHARACTER
 
 
-def fight_monstar(player):
-    monstar = make_player([make_character(id='SBB_CHARACTER_MONSTAR', attack=50, health=50)])
-    return make_fight(player, monstar)
+def make_monstar():
+    return make_character(id='SBB_CHARACTER_MONSTAR', attack=50, health=50)
+
+
+def get_characters(_lambda=lambda char: True):
+    return [char for char in character_registry.characters.keys() if _lambda(char)]

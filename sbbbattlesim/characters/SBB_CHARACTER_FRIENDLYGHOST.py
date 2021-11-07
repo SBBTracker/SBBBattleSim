@@ -2,6 +2,8 @@ from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 import random
 
+from sbbbattlesim.utils import StatChangeCause
+
 
 class CharacterType(Character):
     display_name = 'Friendly Spirit'
@@ -24,5 +26,6 @@ class CharacterType(Character):
                 attack=self.manager.attack * golden_multiplyer,
                 health=self.manager.max_health * golden_multiplyer,
                 temp=False,
-                reason=f'Friendly spirit buff from {self}'
+                reason=StatChangeCause.FRIENDLY_SPIRIT_BUFF,
+                source=self.manager
             )

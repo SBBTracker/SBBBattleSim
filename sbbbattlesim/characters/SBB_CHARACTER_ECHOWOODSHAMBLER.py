@@ -16,7 +16,7 @@ class CharacterType(Character):
                 def handle(self, attack_buff=0, health_buff=0, temp=False, *args, **kwargs):
                     if not temp:
                         self.echo_wood.change_stats(attack=attack_buff, health=health_buff, temp=False,
-                                                    reason=f'{self.manager} is getting buffed')
+                                                    reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager)
 
             target_character.register(EchoWoodBuff, temp=True)
 

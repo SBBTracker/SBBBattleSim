@@ -21,17 +21,18 @@ class CharacterType(Character):
             self.priority = sbbbattlesim.SUMMONING_PRIORITY
 
         def handle(self, *args, **kwargs):
-            juliet = max([j for j in self.manager.owner.graveyard if j.id == JULIET_ID],
-                         key=lambda juliet : (juliet.attack, juliet.health)
-                         )
-            juliet._damage = 0  # Reset damage dealt to this unit
+            dead_juliets = [j for j in self.manager.owner.graveyard if j.id == JULIET_ID]
+            if dead_juliets:
 
-            # QUESTION Does juliet pick the biggest attack & health one or does it sort on golden as well
-            modifier = 14 if self.manager.golden else 7
-            j_attack, j_health = juliet.attack + modifier, juliet.health + modifier
+                juliet = max(dead_juliets, key=lambda juliet : (juliet.attack, juliet.health))
+                juliet._damage = 0  # Reset damage dealt to this unit
 
-            juliets = [character_registry[JULIET_ID](self.manager.owner, self.manager.position, j_attack, j_health,
-                                                  golden=juliet.golden, keywords=[], tribes=['good', 'princess'],
-                                                  cost=juliet.cost)]
+                # QUESTION Does juliet pick the biggest attack & health one or does it sort on golden as well
+                modifier = 14 if self.manager.golden else 7
+                j_attack, j_health = juliet.attack + modifier, juliet.health + modifier
 
-            self.manager.owner.summon(self.manager.position, *juliets)
+                juliets = [character_registry[JULIET_ID](self.manager.owner, self.manager.position, j_attack, j_health,
+                                                      golden=juliet.golden, keywords=[], tribes=['good', 'princess'],
+                                                      cost=juliet.cost)]
+
+                self.manager.owner.summon(self.manager.position, *juliets)

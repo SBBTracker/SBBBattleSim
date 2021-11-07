@@ -1,7 +1,7 @@
 from sbbbattlesim.utils import StatChangeCause
 from sbbbattlesim.characters import Character
 from sbbbattlesim.combat import attack
-from sbbbattlesim.events import OnPreAttack, OnDamagedAndSurvived, OnDeath
+from sbbbattlesim.events import OnDamagedAndSurvived, OnDeath, OnPostAttack
 import logging
 
 logger = logging.getLogger(__name__)
@@ -13,20 +13,20 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         self.register(self.CupidOnPreAttack)
 
-    class CupidOnPreAttack(OnPreAttack):
-        def handle(self, attack_character, defend_character, *args, **kwargs):
+    class CupidOnPreAttack(OnPostAttack):
+        def handle(self, attack_position, defend_position, *args, **kwargs):
 
-            class CupidConfusionOnDefendAndSurvive(OnDamagedAndSurvived):
-                def handle(self, *args, **kwargs):
-                    logger.debug(f'Cupid Confusion Is Causing an Attack')
+            defend_character = self.manager.owner.opponent.characters.get(defend_position)
+            if defend_character is not None:
+                if not defend_character.dead:
+
+                    opponent = self.manager.owner.opponent
+
                     attack(
-                        attack_character=self.manager,
-                        attacker=self.manager.owner,
-                        defender=self.manager.owner
+                        attack_position=defend_position,
+                        attacker=opponent,
+                        defender=opponent
                     )
-                    self.manager.unregister(self)
-
-            defend_character.register(CupidConfusionOnDefendAndSurvive)
 
     class Bla(OnDeath):
         def handle(self, *args, **kwargs):

@@ -2,7 +2,10 @@ import logging
 import pkgutil
 from collections import OrderedDict
 from sbbbattlesim.events import EventManager
-
+from sbbbattlesim.heros import Hero
+from sbbbattlesim.spells import Spell
+from sbbbattlesim.treasures import Treasure
+from sbbbattlesim.utils import StatChangeCause
 
 logger = logging.getLogger(__name__)
 
@@ -59,8 +62,9 @@ class Character(EventManager):
     def max_health(self):
         return self._base_health + self._temp_health
 
-    def change_stats(self, reason, attack=0, health=0, damage=0, temp=True):
-        starting_repr = self.__repr__()
+    def change_stats(self, reason, source, attack=0, health=0, damage=0, temp=True):
+        assert isinstance(reason, StatChangeCause)
+        assert isinstance(source, (Character, Treasure, Hero, Spell))
         logger.debug(f'{self} stat change b/c {reason} (attack={attack}, health={health}, damage={damage}, temp={temp})')
 
         if temp:
@@ -134,10 +138,9 @@ class Registry(object):
             try:
                 character = __import__(name, globals(), locals(), ['CharacterType'], 1)
                 self.register(name, character.CharacterType)
-            except ImportError as e:
-                pass
             except Exception as exc:
                 logger.exception('Error loading characters: {}'.format(name))
+                raise exc
 
 
 registry = Registry()

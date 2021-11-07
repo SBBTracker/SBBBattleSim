@@ -17,6 +17,6 @@ class CharacterType(Character):
                 attack_change = base_attack_change*modifier
 
                 for char in self.manager.valid_characters(_lambda=lambda char: 'treant' in char.tribes):
-                    char.change_stats(attack=attack_change, temp=False, reason=f'{self.ashwood} giving {self} attack')
+                    char.change_stats(attack=attack_change, temp=False, reasos=StatChangeCause.ASHWOOD_ELM_BUFF, source=self.ashwood)
 
         self.owner.register(AshwoodElmOnStart)

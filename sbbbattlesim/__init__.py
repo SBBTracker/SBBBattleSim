@@ -22,17 +22,8 @@ def simulate(data, k=1):
     endings = []
     for _ in range(k):
         try:
-            board = Board(deepcopy(json_data))
-
-            # Determine Setup and Turn Order
-            if board.p1.treasures.get("SBB_TREASURE_HERMES'BOOTS") and not board.p2.treasures.get('hermes_boots'):
-                attacking, defending = board.p1, board.p2
-            elif board.p1.treasures.get("SBB_TREASURE_HERMES'BOOTS") and not board.p2.treasures.get('hermes_boots'):
-                attacking, defending = board.p1, board.p2
-            else:
-                attacking, defending = random.sample((board.p1, board.p2), 2)
-
-            endings.append(fight_initialization(attacking, defending))
+            winner, _ = Board(deepcopy(json_data)).fight()
+            endings.append(winner)
         except:
             traceback.print_exc()
 

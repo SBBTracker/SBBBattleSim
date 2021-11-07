@@ -15,7 +15,7 @@ class CharacterType(Character):
             lightning_dragon = self
             def handle(self, *args, **kwargs):
                 attack(
-                    attack_character=self.lightning_dragon,
+                    attack_position=self.lightning_dragon.position,
                     attacker=self.manager,
                     defender=self.manager.opponent,
                     **kwargs

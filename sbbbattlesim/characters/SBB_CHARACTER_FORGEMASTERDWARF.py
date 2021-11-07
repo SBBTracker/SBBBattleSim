@@ -17,6 +17,7 @@ class CharacterType(Character):
                 dwarfes = self.manager.valid_characters(_lambda=lambda char: 'dwarf' in char.tribes or char.id == 'SBB_CHARACTER_PRINCESSNIGHT')
                 stat_change = len(dwarfes) * (4 if self.lordy.golden else 2)
                 for dwarf in dwarfes:
-                    dwarf.change_stats(attack=stat_change, health=stat_change, temp=False, reason=f'{self} buff')
+                    dwarf.change_stats(attack=stat_change, health=stat_change, temp=False,
+                                       reason=StatChangeCause.LORDY_BUFF, source=self.lordy)
 
         self.owner.register(LordyBuffOnStart)
