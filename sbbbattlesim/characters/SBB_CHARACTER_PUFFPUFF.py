@@ -22,7 +22,7 @@ class CharacterType(Character):
             last_breath = True
 
             def handle(self, *args, **kwargs):
-                self.manager.puffbuffs[self.manager.owner.id] += 2 if self.manager.golden else 1
+                self.manager.change_stats(puffpuffbuff=2 if self.manager.golden else 1)
 
         self.register(PuffPuffDeath)
 
