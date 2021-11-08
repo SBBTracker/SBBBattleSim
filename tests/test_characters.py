@@ -58,10 +58,10 @@ def test_slay(char, golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
-        characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=i, attack=0, health=1) for i in range(4)],
+        characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=i, attack=0, health=1) for i in range(1, 5)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    winner, loser = board.fight()
 
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -76,4 +76,4 @@ def test_last_breath(char, golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    winner, loser = board.fight()

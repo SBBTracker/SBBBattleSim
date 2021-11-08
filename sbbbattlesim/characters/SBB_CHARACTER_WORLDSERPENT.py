@@ -1,5 +1,6 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnAttackAndKill
+from sbbbattlesim.utils import StatChangeCause
 
 
 class CharacterType(Character):
@@ -13,5 +14,5 @@ class CharacterType(Character):
     class JormungandrOnAttackAndKill(OnAttackAndKill):
         slay = True
         def handle(self, killed_character, *args, **kwargs):
-            modifier = 40 if self.golden else 20
-            self.manager.change_stats(attack=modifier, health=modifier, temp=False, reason=f'{self} slayed an enemy and is growing')
+            modifier = 40 if self.manager.golden else 20
+            self.manager.change_stats(attack=modifier, health=modifier, temp=False, reason=StatChangeCause.SLAY, source=self.manager)
