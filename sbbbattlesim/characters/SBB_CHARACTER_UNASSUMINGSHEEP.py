@@ -5,7 +5,8 @@ from sbbbattlesim.events import OnDeath
 
 
 class CharacterType(Character):
-    display_name = 'Sheep in Wolf\'s Clothing'
+    display_name = '''Sheep in Wolfs Clothing'''
+    last_breath = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

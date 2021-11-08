@@ -57,7 +57,7 @@ class Character(EventManager):
         return f'''{self.display_name} pos:{self.position} gold:{self.golden} ({self.attack}/{self.health})'''
 
     def buff(self, target_character):
-        raise NotImplementedError(self.display_name)
+        raise NotImplementedError
 
     @property
     def attack(self):

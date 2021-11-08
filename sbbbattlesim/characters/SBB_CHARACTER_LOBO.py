@@ -5,6 +5,7 @@ from sbbbattlesim.characters import registry as character_registry
 
 class CharacterType(Character):
     display_name = 'Southern Siren'
+    slay = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

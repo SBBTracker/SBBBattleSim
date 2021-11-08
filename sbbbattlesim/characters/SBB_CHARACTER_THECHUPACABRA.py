@@ -4,6 +4,7 @@ from sbbbattlesim.utils import get_behind_targets
 
 class CharacterType(Character):
     display_name = 'The Chupacabra'
+    slay = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

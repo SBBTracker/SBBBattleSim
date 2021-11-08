@@ -5,6 +5,7 @@ import random
 
 class CharacterType(Character):
     display_name = 'Grim Soul'
+    last_breath = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

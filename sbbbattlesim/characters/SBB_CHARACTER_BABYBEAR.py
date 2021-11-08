@@ -7,6 +7,7 @@ from sbbbattlesim.utils import Tribe
 
 class CharacterType(Character):
     display_name = 'Baby Bear'
+    last_breath = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -36,6 +37,7 @@ class CharacterType(Character):
 # Instantiate Papa Bear
 class PapaBear(Character):
     display_name = 'Papa Bear'
+    last_breath = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -1,10 +1,12 @@
 from sbbbattlesim import utils
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
+from sbbbattlesim.utils import StatChangeCause
 
 
 class CharacterType(Character):
     display_name = 'Heartwood Elder'
+    support = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,3 +23,6 @@ class CharacterType(Character):
                                                reason=StatChangeCause.HEARTWOOD_BUFF, source=self)
 
         self.owner.register(HeartWoodOnStart)
+
+    def buff(self, target_character):
+        pass

@@ -4,6 +4,7 @@ from sbbbattlesim.events import OnAttackAndKill
 
 class CharacterType(Character):
     display_name = 'Orge Princess'
+    slay = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

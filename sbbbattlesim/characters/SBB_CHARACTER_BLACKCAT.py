@@ -6,6 +6,7 @@ from sbbbattlesim.events import OnDeath
 
 class CharacterType(Character):
     display_name = 'Black Cat'
+    last_breath = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -6,6 +6,7 @@ import sbbbattlesim
 
 class CharacterType(Character):
     display_name = 'Princess Peep'
+    last_breath = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

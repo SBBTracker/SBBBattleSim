@@ -9,6 +9,7 @@ JULIET_ID = 'SBB_CHARACTER_JULIET'
 
 class CharacterType(Character):
     display_name = 'Romeo'
+    last_breath = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

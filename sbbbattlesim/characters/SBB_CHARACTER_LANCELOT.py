@@ -5,6 +5,8 @@ from sbbbattlesim.utils import StatChangeCause
 
 class CharacterType(Character):
     display_name = 'Lancelot'
+    slay = True
+    quest = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

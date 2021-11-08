@@ -10,6 +10,8 @@ class CharacterType(Character):
     # Store the global Puff Puff buff
     # THIS IS WRONG
     display_name = 'PUFF PUFF'
+    last_breath = True
+
     puffbuffs = collections.defaultdict(int)
 
     def __init__(self, *args, **kwargs):

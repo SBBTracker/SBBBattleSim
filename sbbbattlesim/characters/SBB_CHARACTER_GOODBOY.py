@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 class CharacterType(Character):
     display_name = 'Good Boy'
+    last_breath = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
