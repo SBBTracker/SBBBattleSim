@@ -78,3 +78,24 @@ def test_last_breath(char, golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+
+
+@pytest.mark.parametrize('golden', (True, False))
+def test_baba_yaga(golden):
+    lance = make_character(id='SBB_CHARACTER_LANCELOT', position=1, attack=1, health=1)
+    baba = make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=0, health=1, golden=golden)
+    player = make_player(
+        characters=[lance, baba],
+    )
+    enemy = make_player(
+        characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=1, attack=0, health=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+    if golden:
+        assert player.characters[1].attack == 7
+    else:
+        assert player.characters[1].attack == 5

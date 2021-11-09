@@ -5,6 +5,16 @@ import inspect
 logger = logging.getLogger(__name__)
 
 
+class EventResponse:
+    def __init__(self, event, source, *args, **kwargs):
+        self.event = event
+        self.source = source
+        self.args = args
+        self.kwargs
+
+
+
+
 class SSBBSEvent:
     priority = 0
     def __init__(self, manager):
@@ -74,8 +84,18 @@ class OnDamagedAndSurvived(SSBBSEvent):
 
 
 class OnAttackAndKill(SSBBSEvent):
-    slay = None
     '''A character attacks something and kills it'''
+    slay = None
+
+    def __call__(self, *args, **kwargs):
+        response = self.handle(*args, **kwargs)
+
+        if self.slay and not response:
+            return 'OnSlay', [], {}
+
+        return response
+
+
     def handle(self, killed_character, *args, **kwargs):
         raise NotImplementedError
 
@@ -144,11 +164,11 @@ class EventManager:
             logger.debug(f'Firing {evt} with {args} and {kwargs}')
             reaction = evt(*args, **kwargs)
             if reaction:
-                reactions.append(reaction)
+                reactions.append((*reaction, evt))
 
-        for (react, evt_args, evt_kwargs) in reactions:
+        for (react, evt_args, evt_kwargs, source) in reactions:
             logger.info(f'Reaction to {event} {reaction}')
-            self(react, *evt_args, *args, **evt_kwargs, **kwargs)
+            self(react, *evt_args, *args, **evt_kwargs, **kwargs, source=source)
 
     def event_type_is_registered(self, type):
         """
