@@ -1,12 +1,13 @@
 from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.spells import registry as spell_registry
 
 
-def make_player(characters, hero='', spell='', treasures=[], hand=[]):
+def make_player(characters, hero='', spells=[], treasures=[], hand=[]):
     PLAYER = {
         'characters': characters,
         'treasures': treasures,
         'hero': hero,
-        'spell': spell,
+        'spells': spells,
         'hand': hand,
     }
 
@@ -29,9 +30,9 @@ def make_character(id, position, attack=1, health=1, golden=False, cost=0, level
     return CHARACTER
 
 
-def make_monstar():
-    return make_character(id='SBB_CHARACTER_MONSTAR', attack=50, health=50)
-
-
 def get_characters(_lambda=lambda char: True):
     return [key for key, char in character_registry.characters.items() if _lambda(char)]
+
+
+def get_spells(_lambda=lambda spell: True):
+    return [key for key, spell in spell_registry.spells.items() if _lambda(spell)]

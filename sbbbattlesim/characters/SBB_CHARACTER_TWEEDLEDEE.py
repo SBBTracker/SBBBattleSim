@@ -19,6 +19,6 @@ class CharacterType(Character):
             self.priority = sbbbattlesim.SUMMONING_PRIORITY
 
         def handle(self, *args, **kwargs):
-            attack, health = (2,8) if self.manager.golden else (1,4)
+            attack, health = (4,6) if self.manager.golden else (2,3)
             tweedle_dum = [character_registry['Tweedle Dum'](self.manager.owner, self.manager.position, attack, health, golden=False, keywords=[], tribes=['dwarf'], cost=1)]
             self.manager.owner.summon(self.manager.position, *tweedle_dum)

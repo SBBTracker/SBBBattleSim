@@ -10,17 +10,18 @@ from tests import make_character, make_player, get_characters
 @pytest.mark.parametrize('char', get_characters())
 def test_character(char, attack, golden):
     char = make_character(id=char, position=1, golden=golden)
-    generic_char = make_character(id='GENERIC', attack=0, position=7, keywords=[kw for kw in Keyword], tribes=[tribe for tribe in Tribe])
+    generic_char = make_character(id='GENERIC', attack=1, position=7, keywords=[kw for kw in Keyword], tribes=[tribe for tribe in Tribe])
     player = make_player(
         characters=[char, generic_char],
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if attack else []
     )
     enemy = make_player(
-        characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=1, attack=50, health=50)],
+        characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=1, attack=1, health=1)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if not attack else []
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+
 
 SUPPORT_EXCLUSION = (
     'SBB_CHARACTER_RIVERWISHMERMAID',
@@ -72,7 +73,7 @@ def test_last_breath(char, golden):
         characters=[last_breath],
     )
     enemy = make_player(
-        characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=i, attack=50, health=50) for i in range(4)],
+        characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=1, attack=50, health=50)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})

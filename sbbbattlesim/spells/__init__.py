@@ -13,13 +13,15 @@ class Spell:
     id = ''
     level = 0
     targeted = True
-    spell_filter = ()
 
     def __init__(self):
         pass
 
     def cast(self, *args, **kwargs):
         raise NotImplementedError
+
+    def filter(self, char):
+        return True
 
     def __str__(self):
         return self.__repr__()

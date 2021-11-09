@@ -2,6 +2,7 @@ from sbbbattlesim.characters import Character
 import logging
 
 from sbbbattlesim.events import OnStart
+from sbbbattlesim.utils import StatChangeCause
 
 logger = logging.getLogger(__name__)
 

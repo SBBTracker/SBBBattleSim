@@ -1,6 +1,7 @@
 from sbbbattlesim import utils
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
+from sbbbattlesim.utils import StatChangeCause
 
 
 class CharacterType(Character):

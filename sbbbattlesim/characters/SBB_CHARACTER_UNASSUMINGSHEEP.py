@@ -19,7 +19,7 @@ class CharacterType(Character):
             self.priority = sbbbattlesim.SUMMONING_PRIORITY
 
         def handle(self, *args, **kwargs):
-            stat = 10 if self.manager.golden else 5
+            stat = 12 if self.manager.golden else 6
             sheep = [character_registry['Sheep'](self.manager.owner, self.manager.position, stat, stat, golden=False, keywords=[], tribes=['evil', 'animal'], cost=1)]
             self.manager.owner.summon(self.manager.position, *sheep)
             return 'OnLastBreath', [sheep], {}

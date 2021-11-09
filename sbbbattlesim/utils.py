@@ -2,6 +2,25 @@ import enum
 import random
 
 
+LOKI_SPELLS = (
+    '''SBB_SPELL_TESTYOURMIGHT''',  # Magic Research
+    '''SBB_SPELL_SUGARANDSPICE''',  # Sugar and Spice
+    '''SBB_SPELL_WITCHS'SBREW''',  # Witch's Brew
+    '''SBB_SPELL_DRINKMEPOTION''',  # Luna's Grace
+    '''SBB_SPELL_SAPMAGIC''',  # Flourish
+    '''SBB_SPELL_MONSTERMASH''',  # Worm Root
+    '''SBB_SPELL_BELLE'SINFLUENCE''',  # Beauty's Influence
+    '''SBB_SPELL_FLAMINGAURA''',  # Burning Palm
+    '''SBB_SPELL_STONESKIN''',  # Stoneskin
+    '''SBB_SPELL_MERLIN'SHAT''',  # Merlin's Test
+    '''SBB_SPELL_ROYALPOWER''',  # Queen's Grace
+    '''SBB_SPELL_GIGANTIFY''',  # Gigantify
+    '''SBB_SPELL_HUGEIFY''',  # Hugeify
+    '''SBB_SPELL_KNIGHTHOOD''',  # Knighthood
+    '''SBB_SPELL_TESTYOURMIGHT''',  # Evil Twin
+)
+
+
 class Tribe(enum.Enum):
     ANIMAL = 'animal'
     DRAGON = 'dragon'
@@ -45,6 +64,28 @@ class StatChangeCause(enum.Enum):
     ROTTEN_APPLE_TREE_HEALTH = 110
     SHOULDER_FAIRY_BUFF = 111
     WRETCHED_MUMMY_EXPLOSION = 120
+
+    BLESSING_OF_ATHENA = 401
+    LUNAS_GRAVE = 402
+    RIDE_OF_THE_VALKYRIES = 403
+    SUGAR_AND_SPICE = 404
+    MAGIC_RESEARCH = 405
+    WITCHS_BREW = 406
+    GIGANTIFY = 407
+    HUGEIFY = 408
+    STONE_SKIN = 409
+    WORM_ROOT = 410
+    BEAUTYS_INFLUENCE = 411
+    MERLINS_TEST = 412
+    QUEENS_GRACE = 413
+
+    SMITE = 450
+    EARTHQUAKE = 451
+    SHRIVEL = 452
+    FALLING_STARS = 453
+    FIREBALL = 454
+    LIGHTNING_BOLT = 455
+    POISON_APPLE = 456
 
 
 def get_support_targets(position, horn=False):
@@ -101,6 +142,7 @@ def find_strongest_character(player):
 
 def find_weakest_character(player):
     return find_stat_extreme_character(player, strongest=False)
+
 
 # DO NOT DO THIS
 # TODO Summon random character with conditions

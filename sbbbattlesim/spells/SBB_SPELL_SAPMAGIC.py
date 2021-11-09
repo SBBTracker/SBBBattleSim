@@ -1,14 +1,12 @@
-import random
-
 from sbbbattlesim.spells import TargetedSpell
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
 class SpellType(TargetedSpell):
-    display_name = '''Witch's Brew'''
+    display_name = 'Flourish'
 
     def cast(self, target, *args, **kwargs):
-        target.change_stats(health=1, attack=1, temp=False, reason=StatChangeCause.WITCHS_BREW, source=self)
+        target.change_stats(health=7, temp=False, reason=StatChangeCause.STONE_SKIN, source=self)
 
     def filter(self, char):
-        return Tribe.EVIL in char.tribes
+        return Tribe.TREANT in char.tribes

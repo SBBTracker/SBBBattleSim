@@ -214,7 +214,7 @@ class Player(EventManager):
         onto the base lambda that guarantees that the character exists and is not dead
         """
         # NOTE: this assumes that a dead thing can NEVER be targeted
-        base_lambda = lambda char : char is not None and not char.dead
+        base_lambda = lambda char: char is not None and not char.dead
 
         return [char for char in self.characters.values() if base_lambda(char) and _lambda(char)]
 
@@ -225,12 +225,9 @@ class Player(EventManager):
 
         target = None
         if spell.targeted:
-            def valid_spell_targets(char):
-                for spell_type in spell.spell_filter:
-                    if not (spell_type in char.keywords or spell_type in char.tribes):
-                        return False
-                return True
-            target = random.choice(self.valid_characters(_lambda=valid_spell_targets))
+            valid_targets = self.valid_characters(_lambda=spell.filter)
+            if valid_targets:
+                target = random.choice(valid_targets)
 
         # If a spell requires a valid target and the spells filter specifies valid tags to search for
         spell.cast(player=self, target=target)

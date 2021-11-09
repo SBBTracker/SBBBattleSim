@@ -9,8 +9,6 @@ PIGOMORPH_ID = 'SBB_CHARACTER_PIG'
 
 class SpellType(NonTargetedSpell):
     display_name = 'Pigomorph'
-    level = 0
-    spell_filter = ()
 
     def cast(self, player, *args, **kwargs):
         target = random.choice(player.opponent.valid_characters())
