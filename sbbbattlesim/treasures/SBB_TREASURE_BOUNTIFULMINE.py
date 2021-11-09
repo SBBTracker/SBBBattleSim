@@ -6,4 +6,4 @@ class TreasureType(Treasure):
 
     def buff(self, target_character):
         if "dwarf" in target_character.tribes:
-            target_character.change_stats(attack=2, health=2, reason=f'{self} aura', temp=True)
+            target_character.change_stats(attack=2, health=2, reason=204, source=self, temp=True)

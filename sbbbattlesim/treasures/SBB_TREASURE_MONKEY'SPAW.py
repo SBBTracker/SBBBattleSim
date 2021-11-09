@@ -11,6 +11,7 @@ class CoinOfCharonOnDeath(OnDeath):
     priority = 999
     def handle(self, *args, **kwargs):
         itr = 1 # TODO this may be useful when dealing with mimic
+        #TODO update this treasure
 
         # This should only proc once per combat
         if self.manager.owner.stateful_effects.get(COIN_OF_CHARON_STR, False):
