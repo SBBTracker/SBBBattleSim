@@ -87,6 +87,38 @@ class StatChangeCause(enum.Enum):
     LIGHTNING_BOLT = 455
     POISON_APPLE = 456
 
+    ANCIENT_SARCOPHAGUS = 201
+    BAD_MOON = 202
+    BOOK_OF_HEROES = 203
+    DEEPSTONE_MINE = 204
+    CLOAK_OF_THE_ASSASSIN = 205
+    CORRUPTED_HEARTWOOD = 206
+    CROWN_OF_ATLAS = 207
+    DRAGON_NEST = 208
+    EASTER_EGG = 209
+    EYE_OF_ARES = 210
+    FAIRY_QUEENS_WAND = 211
+    FOUNTAIN_OF_YOUTH = 212
+    MONKEYS_PAW = 213
+    JACKS_JUMPING_BEANS = 214
+    OTHER_HAND_OF_VEKNA = 215
+    MAGIC_SWORD = 216
+    COIN_OF_CHARON = 217
+    POWER_ORB = 218
+    NOBLE_STEED = 219
+    SIX_OF_SHIELDS = 220
+    RING_OF_METEORS = 221
+    RING_OF_RAGE = 222
+    RING_OF_REVENGE = 223
+    NEEDLE_NOSE_DAGGERS = 224
+    DANCING_SWORD = 225
+    SHEPHERDS_SLING = 226
+    SKYCASTLE = 227
+    STING = 228
+    STONEHELM = 229
+    SWORD_OF_FIRE_AND_ICE = 230
+    TELL_TALE_QUIVER = 231
+
 
 def get_support_targets(position, horn=False):
     if horn:
@@ -119,6 +151,8 @@ def get_spawn_positions(position):
     }
 
     return spawn_order.get(position, ())
+def random_spells(source):
+    pass
 
 
 #TODO are these the same across different effects (robin wood, helm of the gosling, juliets in graveyards)

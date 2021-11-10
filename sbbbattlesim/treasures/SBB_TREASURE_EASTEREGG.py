@@ -6,4 +6,4 @@ class TreasureType(Treasure):
 
     def buff(self, target_character):
         if target_character.golden:
-            target_character.change_stats(attack=3, health=3, reason=f'{self} aura', temp=True)
+            target_character.change_stats(attack=3, health=3, reason=209, source=self, temp=True)

@@ -6,4 +6,4 @@ class TreasureType(Treasure):
 
     def buff(self, target_character):
         if 'slay' in target_character.keywords:
-            target_character.change_stats(health=3, attack=3, reason=f'{self} aura', temp=True)
+            target_character.change_stats(health=3, attack=3, reason=205, source=self, temp=True)

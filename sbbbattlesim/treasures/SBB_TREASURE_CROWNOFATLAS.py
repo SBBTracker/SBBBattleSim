@@ -6,7 +6,7 @@ class TreasureType(Treasure):
 
     def buff(self, target_character):
         if 'animal' in target_character.tribes:
-            target_character.change_stats(health=1, attack=1, reason=f'{self} aura', temp=True)
+            target_character.change_stats(health=1, attack=1, reason=207, source=self, temp=True)
 
             # todo implement alignment changing this is actually pseudo code
             if 'evil' in target_character.tribes:

@@ -14,7 +14,7 @@ class TreasureType(Treasure):
 
                 def handle(self, killed_character, *args, **kwargs):
                     if 'evil' in killed_character.tribes:
-                        self.good_character.change_stats(attack=1, health=1, reason=f'{self} on attack and kill',
+                        self.good_character.change_stats(attack=1, health=1, reason=203,source=self,
                                                          temp=False)
                     return "none", [], {}
                     #return value to dodge slay
