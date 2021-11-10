@@ -1,5 +1,6 @@
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.spells import registry as spell_registry
+from sbbbattlesim.treasures import registry as treasure_registry
 
 
 def make_player(characters, hero='', spells=[], treasures=[], hand=[]):
@@ -36,3 +37,7 @@ def get_characters(_lambda=lambda char: True):
 
 def get_spells(_lambda=lambda spell: True):
     return [key for key, spell in spell_registry.spells.items() if _lambda(spell)]
+
+
+def get_treasures(_lambda=lambda treasure: True):
+    return [key for key, treasure in treasure_registry.treasures.items() if _lambda(treasure)]
