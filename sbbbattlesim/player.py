@@ -24,6 +24,8 @@ class Player(EventManager):
         self._attack_chain = 0
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
+        self.stateful_effects = {}
+
         def make_character(char_data):
             return character_registry[char_data['id']](
                 owner=self,
@@ -231,4 +233,4 @@ class Player(EventManager):
 
         # If a spell requires a valid target and the spells filter specifies valid tags to search for
         spell.cast(player=self, target=target)
-        self('OnSpellCast', caster=self, spell=spell)
+        self('OnSpellCast', caster=self, spell=spell, target=target)

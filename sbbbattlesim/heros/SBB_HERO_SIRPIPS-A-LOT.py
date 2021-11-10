@@ -4,9 +4,9 @@ from sbbbattlesim.utils import Tribe, StatChangeCause
 
 
 class HeroType(Hero):
-    display_name = 'Krampus'
+    display_name = '''Jack's Giant'''
     aura = True
 
     def buff(self, target_character):
-        if Tribe.EVIL in target_character.tribes:
-            target_character.change_stats(attack=1, health=1, reason=StatChangeCause.KRAMPUS_BUFF, source=self)
+        if target_character.position in (1, 2, 3, 4):
+            target_character.change_stats(health=2, reason=StatChangeCause.JACKS_GIANT_BUFF, source=self)

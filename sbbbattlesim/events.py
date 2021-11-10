@@ -109,7 +109,7 @@ class OnSlay(SSBBSEvent):
 
 class OnSpellCast(SSBBSEvent):
     '''A player cast a spell'''
-    def handle(self, caster, spell, *args, **kwargs):
+    def handle(self, caster, spell, target, *args, **kwargs):
         raise NotImplementedError
 
 
