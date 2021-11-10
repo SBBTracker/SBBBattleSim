@@ -10,7 +10,7 @@ from tests import make_character, make_player, get_characters
 @pytest.mark.parametrize('char', get_characters())
 def test_character(char, attack, golden):
     char = make_character(id=char, position=1, golden=golden)
-    generic_char = make_character(id='GENERIC', attack=1, position=7, keywords=[kw for kw in Keyword], tribes=[tribe for tribe in Tribe])
+    generic_char = make_character(id='GENERIC', attack=1, position=7, keywords=[kw.value for kw in Keyword], tribes=[tribe.value for tribe in Tribe])
     player = make_player(
         characters=[char, generic_char],
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if attack else []
@@ -20,19 +20,20 @@ def test_character(char, attack, golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if not attack else []
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    winner, loser = board.fight(limit=5)
 
 
 SUPPORT_EXCLUSION = (
     'SBB_CHARACTER_RIVERWISHMERMAID',
-    'SBB_CHARACTER_ELDERTREANT'
+    'SBB_CHARACTER_ELDERTREANT',
+    'SBB_CHARACTER_BABAYAGA'
 )
 
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('char', get_characters(_lambda=lambda char: char.support is True))
 def test_support(char, golden):
     support = make_character(id=char, position=5, golden=golden)
-    generic_char = make_character(id='GENERIC', attack=1, position=1, keywords=[kw for kw in Keyword], tribes=[tribe for tribe in Tribe])
+    generic_char = make_character(id='GENERIC', attack=1, position=1, keywords=[kw.value for kw in Keyword], tribes=[tribe.value for tribe in Tribe])
     player = make_player(
         characters=[support, generic_char],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
@@ -99,3 +100,21 @@ def test_baba_yaga(golden):
         assert player.characters[1].attack == 7
     else:
         assert player.characters[1].attack == 5
+
+
+def test_soltak():
+    soltak = make_character(id='SBB_CHARACTER_SOLTAKANCIENT', position=1, attack=0, health=1)
+    generic = make_character(id='GENERIC', attack=1, health=1, position=5)
+    player = make_player(
+        characters=[soltak, generic],
+    )
+    enemy = make_player(
+        characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=1, attack=1, health=2, keywords=['flying'])],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+    assert player.characters[5] is None and winner is player

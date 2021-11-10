@@ -3,7 +3,7 @@ import random
 import sys
 from functools import lru_cache, cache
 
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Keyword
 
 sys.setrecursionlimit(500)
 
@@ -68,7 +68,7 @@ def attack(attack_position, attacker, defender, **kwargs):
     back = (5, 6, 7)
     front_characters = defender.valid_characters(_lambda=lambda char: char.position in front)
     back_characters = defender.valid_characters(_lambda=lambda char: char.position in back)
-    if 'flying' in attacker.characters.get(attack_position).keywords:
+    if Keyword.FLYING in attacker.characters.get(attack_position).keywords:
         if any(back_characters):
             valid_defenders = back_characters
         else:

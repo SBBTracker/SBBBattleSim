@@ -47,6 +47,7 @@ class Character(EventManager):
         self._damage = 0
         self.slay_counter = 0
         self.dead = False
+        self.invincible = False
 
         self.stat_history = []
 
@@ -84,6 +85,12 @@ class Character(EventManager):
             self._base_health += health
 
         if damage > 0:
+
+            # ONLY FOR SOLTAK ATM
+            if self.invincible and reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:
+                logger.debug('SOLTAK PREVENTED DAMAGE')
+                return
+
             self._damage += damage
             if self.health <= 0:
                 self.dead = True
@@ -106,6 +113,7 @@ class Character(EventManager):
 
         self._temp_attack = 0
         self._temp_health = 0
+        self.invincible = False
 
 
 

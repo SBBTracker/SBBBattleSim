@@ -99,7 +99,7 @@ class Player(EventManager):
                     break
             self._attack_slot += 1
 
-            if self._attack_slot == 8:
+            if self._attack_slot >= 8:
                 self._attack_slot = 1
 
         # If we have not found an attacker just return None

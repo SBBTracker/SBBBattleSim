@@ -27,7 +27,3 @@ class CharacterType(Character):
                         attacker=opponent,
                         defender=opponent
                     )
-
-    class Bla(OnDeath):
-        def handle(self, *args, **kwargs):
-            return 'NotALastBreath', [], {}
