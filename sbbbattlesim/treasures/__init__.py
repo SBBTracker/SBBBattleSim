@@ -13,6 +13,7 @@ class Treasure(EventManager):
     display_name = ''
     id = ''
     aura = False
+
     def __init__(self, player):
         self.player = player
 
