@@ -37,11 +37,12 @@ class Board(EventManager):
         self.p2.opponent = self.p1
 
     def fight(self, limit=None):
+        HERMES_BOOTS = '''SBB_TREASURE_HERMES'BOOTS'''
         # Determine Setup and Turn Order
-        if self.p1.treasures.get("SBB_TREASURE_HERMES'BOOTS") and not self.p2.treasures.get('hermes_boots'):
+        if self.p1.treasures.get(HERMES_BOOTS) and not self.p2.treasures.get(HERMES_BOOTS):
             attacking, defending = self.p1, self.p2
-        elif self.p1.treasures.get("SBB_TREASURE_HERMES'BOOTS") and not self.p2.treasures.get('hermes_boots'):
-            attacking, defending = self.p1, self.p2
+        elif self.p2.treasures.get(HERMES_BOOTS) and not self.p1.treasures.get(HERMES_BOOTS):
+            attacking, defending = self.p2, self.p1
         else:
             attacking, defending = random.sample((self.p1, self.p2), 2)
 

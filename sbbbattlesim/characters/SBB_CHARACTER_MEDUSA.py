@@ -22,6 +22,8 @@ class CharacterType(Character):
 
             defend_character = self.manager.owner.opponent.characters[defend_position]
 
+            logger.debug(f'DUSA CHECK {defend_character.id}')
+
             if defend_character.id != STATUE_ID:
                 new_statue = character_registry[STATUE_ID](self.manager.owner, defend_character.position, attack, health, golden=False, keywords=[], tribes=[], cost=1)
                 defend_character.owner.characters[defend_character.position] = new_statue
