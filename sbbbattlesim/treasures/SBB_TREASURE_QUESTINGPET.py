@@ -1,12 +1,11 @@
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Keyword
 
 
 class TreasureType(Treasure):
     display_name = 'Noble Steed'
 
     def buff(self, target_character):
-        if 'quest' in target_character.tribes:
-            # todo decide if quest is going to be a tribe
+        if Keyword.QUEST in target_character.keywords:
             target_character.change_stats(health=1, attack=1, reason=StatChangeCause.NOBLE_STEED, source=self,
                                           temp=True)

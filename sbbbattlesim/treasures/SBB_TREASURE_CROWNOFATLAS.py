@@ -1,5 +1,5 @@
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
 class TreasureType(Treasure):
@@ -11,7 +11,7 @@ class TreasureType(Treasure):
                                           temp=True)
 
             # todo implement alignment changing this is actually pseudo code
-            if 'evil' in target_character.tribes:
-                target_character.remove('evil')
-            elif 'good' in target_character.tribes:
-                target_character.append('good')
+            if Tribe.EVIL in target_character.tribes:
+                target_character.remove(Tribe.EVIL)
+            if Tribe.GOOD not in target_character.tribes:
+                target_character.append(Tribe.GOOD)

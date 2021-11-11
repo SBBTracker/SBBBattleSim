@@ -1,5 +1,3 @@
-import random
-
 from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.treasures import Treasure
 
