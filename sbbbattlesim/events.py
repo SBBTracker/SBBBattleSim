@@ -118,6 +118,11 @@ class OnBuff(SSBBSEvent):
     def handle(self, attack=0, health=0, damage=0, reason='', temp=True):
         raise NotImplementedError
 
+class OnSupport(SSBBSEvent):
+    '''Triggered when something '''
+    def handle(self, buffed, support, *args, **kwargs):
+        raise NotImplementedError
+
 
 class EventManager:
     def __init__(self):
@@ -153,6 +158,9 @@ class EventManager:
             [evts.remove(evt) for evt in evts if evt_check(evt)]
         for event_base, evts in self._temp.items():
             [evts.remove(evt) for evt in evts if evt_check(evt)]
+
+    def get(self, event):
+        return self._temp.get(event, []) + self._events.get(event, [])
 
     def clear_temp(self):
         self._temp = collections.defaultdict(list)

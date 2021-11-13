@@ -2,34 +2,38 @@ from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
 
+PLAYER = {
+    'characters': [],
+    'treasures': [],
+    'hero': '',
+    'spells': [],
+    'hand': [],
+    'level': 0
+}
 
-def make_player(characters, hero='', spells=[], treasures=[], hand=[], level=0):
-    PLAYER = {
-        'characters': characters,
-        'treasures': treasures,
-        'hero': hero,
-        'spells': spells,
-        'hand': hand,
-        'level': level
-    }
+CHARACTER = {
+    "id": 'TEST',
+    "attack": 1,
+    "health": 1,
+    "golden": False,
+    "cost": 0,
+    "level": 0,
+    "position": 1,
+    "keywords": [],
+    "tribes": []
+}
 
-    return PLAYER
+
+def make_player(**kwargs):
+    player = PLAYER.copy()
+    player.update(kwargs)
+    return player
 
 
-def make_character(id, position, attack=1, health=1, golden=False, cost=0, level=0, keywords=[], tribes=[]):
-    CHARACTER = {
-        "id": id,
-        "attack": attack,
-        "health": health,
-        "golden": golden,
-        "cost": cost,
-        "level": level,
-        "position": position,
-        "keywords": keywords,
-        "tribes": tribes
-    }
-
-    return CHARACTER
+def make_character(**kwargs):
+    character = CHARACTER.copy()
+    character.update(kwargs)
+    return character
 
 
 def get_characters(_lambda=lambda char: True):

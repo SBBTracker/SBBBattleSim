@@ -12,12 +12,13 @@ logger = logging.getLogger(__name__)
 logic_path = __path__
 
 class StatChange:
-    def __init__(self, reason, source, attack_change, health_change, damage_change, temp):
+    def __init__(self, reason, source, attack_change, health_change, damage_change, heal, temp):
         self.reason = reason,
         self.source = source
         self.attack_change = attack_change
         self.health_change = health_change
         self.damage_change = damage_change
+        self.heal = heal
         self.temp = temp
 
 
@@ -30,7 +31,7 @@ class Character(EventManager):
     quest = False
     last_breath = False
 
-    def __init__(self, owner, position, attack, health, golden, keywords, tribes, cost):
+    def __init__(self, owner, position, attack, health, golden, keywords, tribes, cost, *args, **kwargs):
         super().__init__()
         self.owner = owner
 
@@ -38,8 +39,8 @@ class Character(EventManager):
         self._base_attack = attack
         self._base_health = health
         self.golden = golden
-        self.keywords = [Keyword(kw) for kw in keywords]
-        self.tribes = [Tribe(tribe) for tribe in tribes]
+        self.keywords = {Keyword(kw) for kw in keywords}
+        self.tribes = {Tribe(tribe) for tribe in tribes}
         self.cost = cost
 
         self._temp_attack = 0
@@ -75,7 +76,7 @@ class Character(EventManager):
     def change_stats(self, reason, source, attack=0, health=0, damage=0, heal=0, temp=True):
         assert isinstance(reason, StatChangeCause)
         assert isinstance(source, (Character, Treasure, Hero, Spell))
-        logger.debug(f'{self} stat change b/c {reason} (attack={attack}, health={health}, damage={damage}, temp={temp})')
+        logger.debug(f'{self} stat change b/c {reason} (attack={attack}, health={health}, damage={damage}, heal={heal}, temp={temp})')
 
         if temp:
             self._temp_attack += attack
@@ -112,7 +113,7 @@ class Character(EventManager):
         logger.debug(f'{self} finishsed stat change')
 
         self.stat_history.append(StatChange(reason=reason, source=source, attack_change=attack,
-                                            health_change=health, damage_change=damage, temp=temp))
+                                            health_change=health, damage_change=damage, heal=heal, temp=temp))
 
     def clear_temp(self):
         super().clear_temp()

@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class Player(EventManager):
-    def __init__(self, characters, treasures, hero, hand, spells, id, board, level):
+    def __init__(self, characters, id, board, treasures=[], hero='', hand=[], spells=[], level=0, raw=False, *args, **kwargs):
         super().__init__()
         # Board is board
         self.board = board
@@ -28,24 +28,12 @@ class Player(EventManager):
 
         self.stateful_effects = {}
 
-        def make_character(char_data):
-            return character_registry[char_data['id']](
-                owner=self,
-                position=char_data.get('position'),
-                attack=char_data['attack'],
-                health=char_data['health'],
-                golden=char_data['golden'],
-                keywords=char_data['keywords'],
-                tribes=char_data['tribes'],
-                cost=char_data['cost']
-            )
-
         for char_data in characters:
-            char = make_character(char_data)
+            char = character_registry[char_data['id']](owner=self, **char_data)
             self.characters[char.position] = char
 
         self._attack_slot = 1
-        self.hand = [make_character(char_data) for char_data in hand]
+        self.hand = [character_registry[char_data['id']](owner=self, **char_data) for char_data in hand]
         self.graveyard = []
 
         self.treasures = {}
@@ -53,7 +41,9 @@ class Player(EventManager):
             treasure = treasure_registry[tres]
             self.treasures[treasure.id] = treasure(self)
 
-        self.hero = hero_registry[hero](self)
+        logger.debug(hero_registry[hero])
+
+        self.hero = hero_registry[hero](player=self, *args, **kwargs)
 
         for spl in spells:
             class CastSpellOnStart(OnStart):
@@ -61,6 +51,14 @@ class Player(EventManager):
                     self.manager.cast_spell(spl)
 
             self.register(CastSpellOnStart)
+
+        # This is designed to remove temp buffs that were passed in
+        if raw:
+            self.resolve_board()
+            for char in self.characters.values():
+                if char:
+                    char._base_health -= char._temp_health
+                    char._base_attack -= char._temp_attack
 
 
     def __str__(self):
@@ -128,33 +126,32 @@ class Player(EventManager):
                 continue
             char.clear_temp()
 
+        # CHARACTER BUFFS
         # Iterate over buff targets and auras then apply them to all necessary targets
-        for pos, char in self.characters.items():
-            if char is None:
-                continue
+        # Support & Aura Targeting
+        # This does talk about buffs, but it is for buffs that can only be changed by board state
+        for char in self.valid_characters():
+            if char.support:
+                for target_position in utils.get_support_targets(position=char.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures):
+                    target = self.characters.get(target_position)
+                    if target:
+                        char.buff(target)
+                        char('OnSupport', buffed=target, support=char)
 
-            # Support & Aura Targeting
-            # This does talk about buffs, but it is for buffs that can only be changed by board state
-            buff_targets = []
-            if getattr(char, 'support', False):
-                buff_targets = utils.get_support_targets(position=char.position,
-                                                         horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures)
-            elif getattr(char, 'aura', False):
-                buff_targets = self.characters.keys()
+            elif char.aura:
+                for target in self.valid_characters():
+                    char.buff(target)
 
-            buff_targets = [self.characters[buff_pos] for buff_pos in buff_targets if self.characters.get(buff_pos)]
+        # TREASURE BUFFS
+        for treasure in self.treasures.values():
+            if treasure.aura:
+                for target in self.valid_characters():
+                    treasure.buff(target)
 
-            for buff_target in buff_targets:
-                char.buff(target_character=buff_target)
-
-            # TREASURE BUFFS
-            for treasure in self.treasures.values():
-                if treasure.aura:
-                    treasure.buff(char)
-
-            # HERO BUFFS:
-            if self.hero.aura:
-                self.hero.buff(char)
+        # HERO BUFFS:
+        if self.hero.aura:
+            for target in self.valid_characters():
+                self.hero.buff(target)
 
 
     def resolve_damage(self, *args, **kwargs):

@@ -17,19 +17,7 @@ class Board(EventManager):
         p1id, p2id = list(data)
         p1data, p2data = data[p1id], data[p2id]
 
-        def get_player(pdat, id):
-            return Player(
-                characters=pdat.get('characters', ()),
-                treasures=pdat.get('treasures', ()),
-                hero=pdat.get('hero', ''),
-                hand=pdat.get('hand', ()),
-                id=id,
-                spells=pdat.get('spells', ()),
-                level=pdat.get('level', 0),
-                board=self
-            )
-
-        p1, p2 = get_player(p1data, p1id), get_player(p2data, p2id)
+        p1, p2 = Player(id=p1id, board=self, **p1data), Player(id=p2id, board=self, **p2data)
 
         self.p1 = p1
         self.p2 = p2

@@ -1,3 +1,5 @@
+import pytest
+
 from sbbbattlesim import Board
 from sbbbattlesim.utils import Keyword, Tribe
 from tests import make_character, make_player
@@ -201,6 +203,7 @@ def test_potion_master():
     assert generic
     assert generic.attack == 4 and generic.health == 3
 
+
 def test_jacks_giant():
     player = make_player(
         characters=[
@@ -222,5 +225,113 @@ def test_jacks_giant():
     assert generic.health == 2
 
 
+def test_mirhi():
+    player = make_player(
+        characters=[
+            make_character(id='ROYAL', position=1, tribes=['prince', 'princess'])
+        ],
+        hero='SBB_HERO_KINGLION',
+        mirhi_buff=5
+    )
 
+    enemy = make_player(
+        characters=[make_character(id='GENERIC', position=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+    royal = player.characters.get(1)
+
+    assert royal
+    assert royal.attack == 6 and royal.health == 10
+
+
+def test_trophy_hunter():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_BLACKCAT')
+        ],
+        hero='SBB_HERO_MILITARYLEADER',
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+
+    enemy = make_player(
+        characters=[make_character(id='GENERIC', position=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+    assert player.characters[1].id == 'Cat'
+    assert player.characters[2].id == 'Cat'
+
+
+def test_modred():
+    player = make_player(
+        characters=[
+            make_character()
+        ],
+        hero='SBB_HERO_MORDRED',
+        hand=[make_character(id=f'TEST{i}', attack=i) for i in range(4)]
+    )
+
+    enemy = make_player(
+        characters=[make_character(id='GENERIC', position=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+    assert player.characters[1].id == 'TEST3'
+
+
+def test_beauty():
+    player = make_player(
+        characters=[
+            make_character(position=1, tribes=['good']),
+            make_character(position=2, tribes=['evil'])
+        ],
+        hero='SBB_HERO_PRINCESSBELLE',
+        hand=[make_character(id=f'TEST{i}', attack=i) for i in range(4)]
+    )
+
+    enemy = make_player()
+
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+    assert Tribe.EVIL in player.characters[1].tribes
+    assert Tribe.GOOD in player.characters[2].tribes
+
+
+FALLEN_ANGEL_TESTS = (
+    (['good'], 1, 3),
+    (['evil'], 3, 1),
+    (['good', 'evil'], 3, 3)
+)
+
+@pytest.mark.parametrize('tribes, attack, health', FALLEN_ANGEL_TESTS)
+def test_fallen_angel(tribes, attack, health):
+    player = make_player(
+        characters=[make_character(position=i, tribes=tribes) for i in range(1, 4)],
+        hero='SBB_HERO_FALLENANGEL',
+    )
+
+    enemy = make_player()
+
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+    for char in player.characters.values():
+        if char:
+            assert char.health == health
+            assert char.attack == attack
 
