@@ -8,13 +8,14 @@ from sbbbattlesim.utils import StatChangeCause
 class TreasureType(Treasure):
     display_name = '''Jack's Jumping Beans'''
 
-    def __init__(self, player):
-        super().__init__(player)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         class JacksJumpingBeansOnStartBuff(OnStart):
+            beans = self
             def handle(self, *args, **kwargs):
                 target_character = choice(self.manager.valid_characters())
                 target_character.change_stats(attack=4, health=4, reason=StatChangeCause.JACKS_JUMPING_BEANS,
-                                              source=self, temp=False)
+                                              source=self.beans, temp=False)
 
         self.player.register(JacksJumpingBeansOnStartBuff)

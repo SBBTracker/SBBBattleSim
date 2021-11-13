@@ -20,19 +20,28 @@ def test_treasure(treasure, mimic):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
 
-def test_ring_of_revenge():
-    peep = make_character(id='SBB_CHARACTER_PRINCESSPEEP', attack=1, health=1, position=1)
-    generic_char1 = make_character(id='GENERIC', attack=1, health=1, position=2)
-    generic_char2 = make_character(id='GENERIC', attack=1, health=1, position=3)
 
+def test_ring_of_revenge():
     player = make_player(
-        characters=[peep, generic_char1,generic_char2],
-        treasures=['SBB_TREASURE_RINGOFREVENGE','SBB_TREASURE_HERMESBOOTS']
+        characters=[
+            make_character(id='SBB_CHARACTER_PRINCESSPEEP'),
+            make_character(position=2),
+            make_character(position=3),
+            make_character(position=4),
+
+        ],
+        treasures=[
+            'SBB_TREASURE_RINGOFREVENGE',
+            'SBB_TREASURE_HERMESBOOTS'
+        ]
     )
     enemy = make_player(
-        characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=1, attack=1, health=1)],
+        characters=[make_character()],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+
+    player = board.p1
+
     assert player.characters[1].attack == 1
     assert player.characters[5].attack == 2

@@ -37,9 +37,10 @@ class Player(EventManager):
         self.graveyard = []
 
         self.treasures = {}
+        mimic = 'SBB_TREASURE_TREASURECHEST' in treasures
         for tres in treasures:
             treasure = treasure_registry[tres]
-            self.treasures[treasure.id] = treasure(self)
+            self.treasures[treasure.id] = treasure(self, mimic)
 
         logger.debug(hero_registry[hero])
 

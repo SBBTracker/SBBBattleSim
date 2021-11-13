@@ -6,12 +6,13 @@ from sbbbattlesim.utils import StatChangeCause
 class TreasureType(Treasure):
     display_name = '''Ring of Meteors'''
 
-    def __init__(self, player):
-        super().__init__(player)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         class RingOfMeteorsActivation(OnStart):
+            ring = self
             def handle(self, *args, **kwargs):
-                for char in player.valid_characters() + player.opponent.valid_characters():
-                    char.change_stats(damage=1, reason=StatChangeCause.RING_OF_METEORS, source=self)
+                for char in self.manager.valid_characters() + self.manager.opponent.valid_characters():
+                    char.change_stats(damage=1, reason=StatChangeCause.RING_OF_METEORS, source=self.ring)
 
         self.player.register(RingOfMeteorsActivation)
