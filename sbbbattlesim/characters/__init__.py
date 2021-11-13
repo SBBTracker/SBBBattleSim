@@ -72,7 +72,7 @@ class Character(EventManager):
     def max_health(self):
         return self._base_health + self._temp_health
 
-    def change_stats(self, reason, source, attack=0, health=0, damage=0, temp=True):
+    def change_stats(self, reason, source, attack=0, health=0, damage=0, heal=0, temp=True):
         assert isinstance(reason, StatChangeCause)
         assert isinstance(source, (Character, Treasure, Hero, Spell))
         logger.debug(f'{self} stat change b/c {reason} (attack={attack}, health={health}, damage={damage}, temp={temp})')
@@ -99,6 +99,12 @@ class Character(EventManager):
                 # On Damage and Survived Trigger
                 # TODO Maybe add more args if needed
                 self('OnDamagedAndSurvived', damage=damage)
+
+        if heal > 0:
+            if heal < self._damage:
+                self._damage = self._damage - heal
+            else:
+                self._damage = 0
 
         if attack > 0 or health > 0:
             self('OnBuff', attack_buff=attack, health_buff=health, damage=damage, reason=reason, temp=temp)

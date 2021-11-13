@@ -11,7 +11,7 @@ class TreasureType(Treasure):
             character = self
 
             def handle(self, *args, **kwargs):
-                self.character.change_stats(health=self.character.maxHealth, temp=True,
+                self.character.change_stats(heal=self.character.maxHealth, temp=True,
                                             reason=StatChangeCause.TREE_OF_LIFE,
                                             source=self)
 
