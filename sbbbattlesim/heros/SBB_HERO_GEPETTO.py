@@ -14,7 +14,8 @@ class HeroType(Hero):
         class GeppettoOnSummon(OnSummon):
             geppetto = self
             def handle(self, summoned_characters, *args, **kwargs):
+                level = self.geppetto.player.level
                 for char in summoned_characters:
-                    char.change_stats(attack=3, health=3, reason=StatChangeCause.GEPPETTO_BUFF, source=self.geppetto)
+                    char.change_stats(attack=level, health=level, reason=StatChangeCause.GEPPETTO_BUFF, source=self.geppetto)
 
         self.player.register(GeppettoOnSummon)
