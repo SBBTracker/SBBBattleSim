@@ -52,7 +52,7 @@ class Player(EventManager):
             if treasure is not None:
                 self.treasures[treasure.id] = treasure(self)
 
-        self.hero = hero_registry[hero]
+        self.hero = hero_registry[hero](self)
 
         for spl in spells:
             class CastSpellOnStart(OnStart):

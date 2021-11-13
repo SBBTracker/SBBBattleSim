@@ -35,7 +35,7 @@ class Registry(object):
 
         hero.id = item
 
-        return hero()
+        return hero
 
     def __getattr__(self, item):
         return getattr(self.heros, item)
