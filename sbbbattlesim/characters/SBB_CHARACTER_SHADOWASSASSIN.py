@@ -16,7 +16,8 @@ class CharacterType(Character):
             def handle(self, *args, **kwargs):
                 attack_buff, health_buff = (2, 2) if self.shadow_assassin.golden else (1, 1)
                 self.shadow_assassin.change_stats(attack=attack_buff, health=health_buff, temp=False,
-                                                  reason=f'{self.manager} triggered a slay and is buffing {self.shadow_assassin}')
+                                                  reason=f'{self.manager} triggered a slay and is buffing {self.shadow_assassin}',source=self)
+                #TODO UPDATE REASON?
 
         target_character.register(ShadowAssassinOnSlay, temp=True)
 
