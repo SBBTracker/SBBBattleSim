@@ -65,6 +65,7 @@ class StatChangeCause(enum.Enum):
     SHOULDER_FAIRY_BUFF = 111
     WRETCHED_MUMMY_EXPLOSION = 120
 
+
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202
     BOOK_OF_HEROES = 203
@@ -96,6 +97,8 @@ class StatChangeCause(enum.Enum):
     STONEHELM = 229
     SWORD_OF_FIRE_AND_ICE = 230
     TELL_TALE_QUIVER = 231
+    TREE_OF_LIFE = 232
+    SPEAR_OF_ACHILLES = 233
 
     EVELLA_BUFF = 301
     MERLIN_BUFF = 302
