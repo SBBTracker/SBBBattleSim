@@ -21,3 +21,4 @@ class CharacterType(Character):
             if valid_targets:
                 target = random.choice(valid_targets)
                 target.change_stats(damage=self.manager.attack, reason=StatChangeCause.WRETCHED_MUMMY_EXPLOSION, source=self.manager)
+    #todo add golden effect
