@@ -25,6 +25,7 @@ class Board(EventManager):
                 hand=pdat.get('hand', ()),
                 id=id,
                 spells=pdat.get('spells', ()),
+                level=pdat.get('level', 0),
                 board=self
             )
 

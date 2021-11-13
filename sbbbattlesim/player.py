@@ -2,24 +2,26 @@ import logging
 import random
 from collections import OrderedDict
 
-from sbbbattlesim.treasures import registry as treasure_registry
-from sbbbattlesim.heros import registry as hero_registry
-from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim import utils
+from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.utils import resolve_damage
 from sbbbattlesim.events import EventManager, OnStart
+from sbbbattlesim.heros import registry as hero_registry
+from sbbbattlesim.spells import registry as spell_registry
+from sbbbattlesim.treasures import registry as treasure_registry
 
 logger = logging.getLogger(__name__)
 
 
 class Player(EventManager):
-    def __init__(self, characters, treasures, hero, hand, spells, id, board):
+    def __init__(self, characters, treasures, hero, hand, spells, id, board, level):
         super().__init__()
         # Board is board
         self.board = board
 
         self.id = id
         self.opponent = None
+        self.level = level
         self._last_attacker = None
         self._attack_chain = 0
         self.characters = OrderedDict({i: None for i in range(1, 8)})
@@ -49,16 +51,14 @@ class Player(EventManager):
         self.treasures = {}
         for tres in treasures:
             treasure = treasure_registry[tres]
-            if treasure is not None:
-                self.treasures[treasure.id] = treasure(self)
+            self.treasures[treasure.id] = treasure(self)
 
         self.hero = hero_registry[hero](self)
 
         for spl in spells:
             class CastSpellOnStart(OnStart):
-                spell = spl
                 def handle(self, *args, **kwargs):
-                    self.manager.cast_spell(self.spell)
+                    self.manager.cast_spell(spl)
 
             self.register(CastSpellOnStart)
 
@@ -113,6 +113,9 @@ class Player(EventManager):
         return self._attack_slot
 
     def resolve_board(self):
+
+        self.resolve_damage()
+
         # Remove all bonuses
         # these need to be prior so that there is not
         # wonky ordering issues with clearing buffs
@@ -144,21 +147,15 @@ class Player(EventManager):
             for buff_target in buff_targets:
                 char.buff(target_character=buff_target)
 
-            if getattr(char, 'buff_player', False):
-                char.buff_player(player=self)
+            # TREASURE BUFFS
+            for treasure in self.treasures.values():
+                if treasure.aura:
+                    treasure.buff(char)
 
-                # On Support Event Trigger
-                # Maybe this only needs to trigger once
-                # self('Support', support_target=buff_target)
+            # HERO BUFFS:
+            if self.hero.aura:
+                self.hero.buff(char)
 
-        # Apply buffs from treasures
-        for treasure in self.treasures.values():
-            if treasure.aura:
-                for pos, char in self.characters.items():
-                    if char is not None:
-                        treasure.buff(char)
-
-        # TODO Add Temporary Event Stuff
 
     def resolve_damage(self, *args, **kwargs):
         action_taken = False
@@ -233,4 +230,8 @@ class Player(EventManager):
 
         # If a spell requires a valid target and the spells filter specifies valid tags to search for
         spell.cast(player=self, target=target)
+
+        resolve_damage(attacker=self, defender=self.opponent)
+        resolve_damage(attacker=self.opponent, defender=self)
+
         self('OnSpellCast', caster=self, spell=spell, target=target)

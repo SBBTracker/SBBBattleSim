@@ -3,13 +3,14 @@ from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
 
 
-def make_player(characters, hero='', spells=[], treasures=[], hand=[]):
+def make_player(characters, hero='', spells=[], treasures=[], hand=[], level=0):
     PLAYER = {
         'characters': characters,
         'treasures': treasures,
         'hero': hero,
         'spells': spells,
         'hand': hand,
+        'level': level
     }
 
     return PLAYER

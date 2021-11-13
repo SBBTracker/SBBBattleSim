@@ -15,6 +15,6 @@ class HeroType(Hero):
             potion_master = self
             def handle(self, caster, spell, target, *args, **kwargs):
                 if target is not None:
-                    target.change_stats(attack=2, health=2, reason=StatChangeCause.POTION_MASTER_BUFF, source=self.potion_master)
+                    target.change_stats(attack=2, health=2, reason=StatChangeCause.POTION_MASTER_BUFF, source=self.potion_master, temp=False)
 
         self.player.register(PotionMasterOnSpellCast)

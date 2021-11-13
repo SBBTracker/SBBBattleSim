@@ -1,11 +1,14 @@
+import logging
+
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSummon
-import logging
 
 logger = logging.getLogger(__name__)
 
 class CharacterType(Character):
     display_name = 'Hungry Hungry Hippocampus'
+
+    # TODO FIX THIS
 
     def buff_player(self, player):
         class HungryHungryHippocampusOnSummon(OnSummon):

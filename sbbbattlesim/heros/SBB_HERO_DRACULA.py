@@ -1,6 +1,6 @@
-from sbbbattlesim.events import OnDeath, OnAttackAndKill
+from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.heros import Hero
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import StatChangeCause
 
 
 class HeroType(Hero):
@@ -11,8 +11,9 @@ class HeroType(Hero):
         if target_character.position == 1:
             class SadDraculaOnAttackAndKill(OnAttackAndKill):
                 sad_dracula = self
+                slay = True
 
                 def handle(self, killed_character, *args, **kwargs):
                     self.manager.change_stats(attack=3, reason=StatChangeCause.SAD_DRACULA_SLAY, source=self.sad_dracula)
 
-            target_character.register(SadDraculaOnAttackAndKill)
+            target_character.register(SadDraculaOnAttackAndKill, temp=True)

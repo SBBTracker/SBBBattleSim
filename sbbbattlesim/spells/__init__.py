@@ -53,7 +53,17 @@ class Registry(object):
         return spell()
 
     def __getattr__(self, item):
-        return getattr(self.spells, item)
+        spell = getattr(self.spells, item)
+
+        if spell is None:
+            class NewSpell(Spell):
+                display_name = item
+
+            spell = NewSpell
+
+        spell.id = item
+
+        return spell
 
     def __contains__(self, item):
         return item in self.spells

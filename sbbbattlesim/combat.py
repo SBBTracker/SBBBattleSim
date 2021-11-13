@@ -3,7 +3,7 @@ import random
 import sys
 from functools import lru_cache, cache
 
-from sbbbattlesim.utils import StatChangeCause, Keyword
+from sbbbattlesim.utils import StatChangeCause, Keyword, resolve_damage
 
 sys.setrecursionlimit(500)
 
@@ -121,11 +121,3 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     resolve_damage(attacker=attacker, defender=defender, **kwargs)
     resolve_damage(attacker=defender, defender=attacker, **kwargs)
-
-
-def resolve_damage(attacker, defender, **kwargs):
-    logger.debug(f'Resolving Damage for {attacker.id}')
-    attack_action = attacker.resolve_damage()
-
-    if attack_action is True:
-        resolve_damage(attacker=defender, defender=attacker, **kwargs)

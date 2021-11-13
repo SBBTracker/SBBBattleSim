@@ -1,31 +1,26 @@
-import random
-
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.heros import Hero
-
+from sbbbattlesim.utils import StatChangeCause
 
 CHARON_STR = 'SBB_HER_CHARON'
 
 class HeroType(Hero):
     display_name = 'Charon'
+    aura = True
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
+    def buff(self, target_character):
         class CharonOnDeath(OnDeath):
             priority = 999
+            last_breath = False
+            charon = self
 
             def handle(self, *args, **kwargs):
-                itr = 1  # TODO this may be useful when dealing with mimic
-                # TODO update this treasure
-
                 # This should only proc once per combat
                 if self.manager.owner.stateful_effects.get(CHARON_STR, False):
                     return  # This has already procced
                 self.manager.owner.stateful_effects[CHARON_STR] = True
 
-                for _ in range(itr):
-                    self.manager._base_health += 2
-                    self.manager._base_attack += 1
+                self.manager.change_stats(attack=2, health=1, reason=StatChangeCause.CHARON_BUFF, source=self.charon)
 
-        self.player.register(CharonOnDeath)
+        target_character.register(CharonOnDeath)
+

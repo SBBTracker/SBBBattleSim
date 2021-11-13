@@ -1,5 +1,9 @@
 import enum
+import logging
 import random
+
+
+logger = logging.getLogger(__name__)
 
 
 LOKI_SPELLS = (
@@ -64,7 +68,7 @@ class StatChangeCause(enum.Enum):
     ROTTEN_APPLE_TREE_HEALTH = 110
     SHOULDER_FAIRY_BUFF = 111
     WRETCHED_MUMMY_EXPLOSION = 120
-
+    SHADOW_ASSASSIN_ON_SLAY_BUFF = 121
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202
@@ -108,6 +112,8 @@ class StatChangeCause(enum.Enum):
     MRS_CLAUS_BUFF = 306
     FATES_BUFF = 307
     KRAMPUS_BUFF = 308
+    CHARON_BUFF = 309
+    SAD_DRACULA_SLAY = 310
 
     BLESSING_OF_ATHENA = 401
     LUNAS_GRAVE = 402
@@ -132,6 +138,12 @@ class StatChangeCause(enum.Enum):
     POISON_APPLE = 456
 
 
+def resolve_damage(attacker, defender, **kwargs):
+    logger.debug(f'Resolving Damage for {attacker.id}')
+    attack_action = attacker.resolve_damage()
+
+    if attack_action is True:
+        resolve_damage(attacker=defender, defender=attacker, **kwargs)
 
 
 def get_support_targets(position, horn=False):
@@ -165,6 +177,8 @@ def get_spawn_positions(position):
     }
 
     return spawn_order.get(position, ())
+
+
 def random_spells(source):
     pass
 

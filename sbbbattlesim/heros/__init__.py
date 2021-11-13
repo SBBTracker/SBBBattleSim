@@ -2,14 +2,12 @@ import logging
 import pkgutil
 from collections import OrderedDict
 
-from sbbbattlesim.events import EventManager
-
 logger = logging.getLogger(__name__)
 
 logic_path = __path__
 
 
-class Hero(EventManager):
+class Hero:
     display_name = ''
     id = ''
     aura = False
