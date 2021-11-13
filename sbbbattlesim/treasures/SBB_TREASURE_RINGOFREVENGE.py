@@ -9,12 +9,11 @@ class TreasureType(Treasure):
     # TODO implement this
     def buff(self, target_character):
         class RingOfRevengeBuff(OnDeath):
-            dead_character = self
-
             def handle(self, *args, **kwargs):
-                targets = self.dead_character.get_behind_targets()
+                targets = self.manager.get_behind_targets()
                 for char in self.manager.owner.valid_characters():
                     if char.position in targets:
                         char.changestats(health=1, attack=1, reason=StatChangeCause.RING_OF_REVENGE,
-                                         source=self.dead_character)
+                                         source=self.manager)
+
         target_character.register(RingOfRevengeBuff, temp=True)
