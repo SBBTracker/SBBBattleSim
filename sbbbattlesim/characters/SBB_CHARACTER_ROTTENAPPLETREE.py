@@ -1,10 +1,15 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnPreDefend
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
 class CharacterType(Character):
     display_name = 'Rotten Appletree'
+
+    _attack = 0
+    _health = 18
+    _level = 5
+    _tribes = {Tribe.EVIL, Tribe.TREANT}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

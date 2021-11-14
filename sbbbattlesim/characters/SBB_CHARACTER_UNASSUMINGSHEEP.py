@@ -2,11 +2,17 @@ import sbbbattlesim
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDeath
+from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):
     display_name = '''Sheep in Wolfs Clothing'''
     last_breath = True
+
+    _attack = 2
+    _health = 2
+    _level = 4
+    _tribes = {Tribe.EVIL, Tribe.ANIMAL}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

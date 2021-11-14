@@ -2,12 +2,18 @@ from sbbbattlesim.characters import Character
 import logging
 
 from sbbbattlesim.events import OnStart, OnDamagedAndSurvived
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
 
 class CharacterType(Character):
     display_name = 'Angry'
+
+    _attack = 4
+    _health = 10
+    _level = 5
+    _tribes = {Tribe.DWARF}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

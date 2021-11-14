@@ -2,11 +2,18 @@ from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 import logging
 
+from sbbbattlesim.utils import Tribe
+
 logger = logging.getLogger(__name__)
 
 class CharacterType(Character):
     display_name = 'Bearded Vulture'
     aura = True
+
+    _attack = 3
+    _health = 3
+    _level = 4
+    _tribes = {Tribe.EVIL, Tribe.ANIMAL}
 
     def buff(self, target_character):
         class BeardedVultureOnDeath(OnDeath):

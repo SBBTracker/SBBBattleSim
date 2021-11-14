@@ -1,10 +1,15 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
-from sbbbattlesim.utils import find_strongest_character, find_weakest_character, StatChangeCause
+from sbbbattlesim.utils import find_strongest_character, find_weakest_character, StatChangeCause, Tribe
 
 
 class CharacterType(Character):
     display_name = 'Robin Wood'
+
+    _attack = 7
+    _health = 10
+    _level = 6
+    _tribes = {Tribe.GOOD, Tribe.TREANT}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -1,10 +1,16 @@
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.characters import Character
+from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):
     display_name = 'Evil Queen'
     aura = True
+
+    _attack = 1
+    _health = 3
+    _level = 3
+    _tribes = {Tribe.EVIL, Tribe.QUEEN}
 
     def buff(self, target_character):
         # Instantiate queen buff

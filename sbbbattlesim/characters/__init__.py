@@ -30,8 +30,16 @@ class Character(EventManager):
     slay = False
     quest = False
     last_breath = False
+    flying = False
+    ranged = False
 
-    def __init__(self, owner, position, attack, health, golden, keywords, tribes, cost, *args, **kwargs):
+    # TEMPLATE STATS
+    _attack = 0
+    _health = 0
+    _level = 0
+    _tribes = set()
+
+    def __init__(self, owner, position, attack, health, golden, tribes, cost, *args, **kwargs):
         super().__init__()
         self.owner = owner
 
@@ -39,7 +47,6 @@ class Character(EventManager):
         self._base_attack = attack
         self._base_health = health
         self.golden = golden
-        self.keywords = {Keyword(kw) for kw in keywords}
         self.tribes = {Tribe(tribe) for tribe in tribes}
         self.cost = cost
 
@@ -52,11 +59,27 @@ class Character(EventManager):
 
         self.stat_history = []
 
+    @classmethod
+    def new(cls, owner, position, golden):
+        return cls(
+            owner=owner,
+            position=position,
+            golden=golden,
+            attack=cls._attack,
+            health=cls._health,
+            tribes=cls._tribes,
+            cost=cls._level
+        )
+
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
         return f'''{self.display_name} pos:{self.position} gold:{self.golden} ({self.attack}/{self.health})'''
+
+    @classmethod
+    def valid(cls):
+        assert cls._attack != 0 or cls._health != 0 or cls._level != 0
 
     def buff(self, target_character):
         raise NotImplementedError
@@ -135,6 +158,11 @@ class Registry(object):
         if not character:
             class NewCharacter(Character):
                 display_name = item
+
+                _attack = 1
+                _health = 1
+                _level = 1
+                _tribes = set()
 
             character = NewCharacter
             # print(f'Creating Generic Character for {item}')

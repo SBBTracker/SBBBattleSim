@@ -2,7 +2,7 @@ import collections
 
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
 class CharacterType(Character):
@@ -13,6 +13,11 @@ class CharacterType(Character):
     last_breath = True
 
     puffbuffs = collections.defaultdict(int)
+
+    _attack = 7
+    _health = 7
+    _level = 4
+    _tribes = {Tribe.GOOD, Tribe.PUFF_PUFF}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

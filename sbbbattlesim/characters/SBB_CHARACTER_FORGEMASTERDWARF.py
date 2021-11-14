@@ -2,12 +2,17 @@ from sbbbattlesim.characters import Character
 import logging
 
 from sbbbattlesim.events import OnStart
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 logger = logging.getLogger(__name__)
 
 class CharacterType(Character):
     display_name = 'Lordy'
+
+    _attack = 7
+    _health = 7
+    _level = 6
+    _tribes = {Tribe.DWARF}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

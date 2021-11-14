@@ -3,10 +3,17 @@ from sbbbattlesim.combat import attack
 from sbbbattlesim.events import OnStart
 import logging
 
+from sbbbattlesim.utils import Tribe
+
 logger = logging.getLogger(__name__)
 
 class CharacterType(Character):
     display_name = 'Lightning Dragon'
+
+    _attack = 10
+    _health = 1
+    _level = 4
+    _tribes = {Tribe.DRAGON}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

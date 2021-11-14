@@ -1,10 +1,15 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnPreAttack
-from sbbbattlesim.utils import get_behind_targets
+from sbbbattlesim.utils import get_behind_targets, Tribe
 
 
 class CharacterType(Character):
     display_name = 'The White Stag'
+
+    _attack = 3
+    _health = 3
+    _level = 3
+    _tribes = {Tribe.GOOD, Tribe.ANIMAL}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

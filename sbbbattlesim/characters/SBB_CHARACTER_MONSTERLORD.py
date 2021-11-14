@@ -2,12 +2,18 @@ from sbbbattlesim.characters import Character
 import logging
 
 from sbbbattlesim.events import OnPreAttack
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
 class CharacterType(Character):
     display_name = 'Oni King'
     aura = True
+
+    _attack = 13
+    _health = 13
+    _level = 6
+    _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

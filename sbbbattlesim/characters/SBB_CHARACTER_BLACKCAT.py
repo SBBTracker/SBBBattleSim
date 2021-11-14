@@ -2,11 +2,17 @@ import sbbbattlesim
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDeath
+from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):
     display_name = 'Black Cat'
     last_breath = True
+
+    _attack = 1
+    _health = 1
+    _level = 2
+    _tribes = {Tribe.EVIL, Tribe.ANIMAL}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

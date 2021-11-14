@@ -1,11 +1,16 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSlay, OnBuff
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
 class CharacterType(Character):
     display_name = 'Shadow Assassin'
     aura = True
+
+    _attack = 2
+    _health = 1
+    _level = 3
+    _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

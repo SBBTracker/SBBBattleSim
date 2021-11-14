@@ -2,12 +2,17 @@ from sbbbattlesim.characters import Character
 import logging
 
 from sbbbattlesim.events import OnStart
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 logger = logging.getLogger(__name__)
 
 class CharacterType(Character):
     display_name = 'Shoulder Faeries'
+
+    _attack = 1
+    _health = 1
+    _level = 5
+    _tribes = {Tribe.FAIRY}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -2,11 +2,17 @@ import sbbbattlesim
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDeath
+from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):
     display_name = 'Tweedle Dee'
     last_breath = True
+
+    _attack = 3
+    _health = 2
+    _level = 3
+    _tribes = {Tribe.DWARF}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

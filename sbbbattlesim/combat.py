@@ -60,15 +60,13 @@ def fight(attacker, defender, turn=0, limit=None, **kwargs):
 
 
 def attack(attack_position, attacker, defender, **kwargs):
-    attack_character = attacker.characters.get(attack_position)
-
     # Fliers target back first
     # everyone else targets front first
     front = (1, 2, 3, 4)
     back = (5, 6, 7)
     front_characters = defender.valid_characters(_lambda=lambda char: char.position in front)
     back_characters = defender.valid_characters(_lambda=lambda char: char.position in back)
-    if Keyword.FLYING in attacker.characters.get(attack_position).keywords:
+    if attacker.characters.get(attack_position).flying:
         if any(back_characters):
             valid_defenders = back_characters
         else:
@@ -107,7 +105,7 @@ def attack(attack_position, attacker, defender, **kwargs):
     attack_character = attacker.characters.get(attack_position)
     defend_character = defender.characters.get(defend_position)
 
-    if 'ranged' not in attack_character.keywords:
+    if not attack_character.ranged:
         attack_character.change_stats(damage=defend_character.attack, reason=StatChangeCause.DAMAGE_WHILE_ATTACKING, source=defend_character)
     defend_character.change_stats(damage=attack_character.attack, reason=StatChangeCause.DAMAGE_WHILE_DEFENDING, source=attack_character)
 

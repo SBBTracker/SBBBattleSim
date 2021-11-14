@@ -1,11 +1,16 @@
 from sbbbattlesim import utils
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
 class CharacterType(Character):
     display_name = 'Ashwood Elm'
+
+    _attack = 0
+    _health = 20
+    _level = 6
+    _tribes = {Tribe.EVIL, Tribe.TREANT}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

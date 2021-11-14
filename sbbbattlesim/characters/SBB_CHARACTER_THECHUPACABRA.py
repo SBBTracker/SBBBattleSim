@@ -1,11 +1,16 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnAttackAndKill
-from sbbbattlesim.utils import get_behind_targets, StatChangeCause
+from sbbbattlesim.utils import get_behind_targets, StatChangeCause, Tribe
 
 
 class CharacterType(Character):
     display_name = 'The Chupacabra'
     slay = True
+
+    _attack = 7
+    _health = 5
+    _level = 4
+    _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

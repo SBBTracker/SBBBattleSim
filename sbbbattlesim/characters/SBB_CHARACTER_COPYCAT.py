@@ -1,10 +1,15 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnPreAttack
-from sbbbattlesim.utils import get_behind_targets
+from sbbbattlesim.utils import get_behind_targets, Tribe
 
 
 class CharacterType(Character):
     display_name = 'Copycat'
+
+    _attack = 2
+    _health = 12
+    _level = 4
+    _tribes = {Tribe.ANIMAL}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

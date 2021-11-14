@@ -5,11 +5,18 @@ from sbbbattlesim.characters import registry as character_registry
 
 import random
 
+from sbbbattlesim.utils import Tribe
+
 JULIET_ID = 'SBB_CHARACTER_JULIET'
 
 class CharacterType(Character):
     display_name = 'Romeo'
     last_breath = True
+
+    _attack = 5
+    _health = 3
+    _level = 3
+    _tribes = {Tribe.GOOD, Tribe.PRINCE}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

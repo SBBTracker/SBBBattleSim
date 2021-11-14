@@ -1,10 +1,16 @@
 from sbbbattlesim import utils
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
+from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):
     display_name = 'Prince Arthur'
+
+    _attack = 5
+    _health = 5
+    _level = 4
+    _tribes = {Tribe.GOOD, Tribe.PRINCE}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

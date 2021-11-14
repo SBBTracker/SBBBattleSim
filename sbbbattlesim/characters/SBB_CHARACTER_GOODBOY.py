@@ -2,7 +2,7 @@ from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 import logging
 
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 logger = logging.getLogger(__name__)
 
@@ -10,6 +10,11 @@ logger = logging.getLogger(__name__)
 class CharacterType(Character):
     display_name = 'Good Boy'
     last_breath = True
+
+    _attack = 2
+    _health = 2
+    _level = 6
+    _tribes = {Tribe.GOOD, Tribe.ANIMAL}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

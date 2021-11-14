@@ -1,10 +1,15 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
 class CharacterType(Character):
     display_name = 'Bossy'
     aura = True
+
+    _attack = 4
+    _health = 4
+    _level = 4
+    _tribes = {Tribe.DWARF}
 
     def buff(self, target_character):
         if 'dwarf' in target_character.tribes and target_character != self:

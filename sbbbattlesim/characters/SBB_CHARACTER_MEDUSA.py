@@ -1,6 +1,6 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnPreAttack
-from sbbbattlesim.utils import get_behind_targets
+from sbbbattlesim.utils import get_behind_targets, Tribe
 from sbbbattlesim.characters import registry as character_registry
 import logging
 
@@ -10,6 +10,11 @@ STATUE_ID = 'SBB_CHARACTER_STATUE'
 
 class CharacterType(Character):
     display_name = 'Medusa'
+
+    _attack = 3
+    _health = 3
+    _level = 4
+    _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
