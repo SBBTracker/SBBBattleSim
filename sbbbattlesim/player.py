@@ -30,7 +30,6 @@ class Player(EventManager):
 
         for char_data in characters:
             char = character_registry[char_data['id']](owner=self, **char_data)
-            char.valid()
             self.characters[char.position] = char
 
         self._attack_slot = 1

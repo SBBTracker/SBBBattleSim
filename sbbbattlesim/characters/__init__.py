@@ -79,7 +79,7 @@ class Character(EventManager):
 
     @classmethod
     def valid(cls):
-        assert cls._attack != 0 or cls._health != 0 or cls._level != 0
+        return cls._attack != 0 or cls._health != 0 or cls._level != 0
 
     def buff(self, target_character):
         raise NotImplementedError
@@ -177,6 +177,9 @@ class Registry(object):
 
     def __contains__(self, item):
         return item in self.characters
+
+    def get(self, _lambda=lambda char_cls: True):
+        return [char_cls for char_cls in self.characters.values() if _lambda(char_cls)]
 
     def register(self, name, character):
         assert name not in self.characters, 'Character is already registered.'

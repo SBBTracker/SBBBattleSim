@@ -4,6 +4,16 @@ from sbbbattlesim import Board
 from sbbbattlesim.utils import Keyword, Tribe, StatChangeCause
 from tests import make_character, make_player, get_characters
 
+from sbbbattlesim.characters import registry as character_registry
+
+
+@pytest.mark.parametrize('char', get_characters())
+def test_valid_character(char):
+    char = character_registry[char]
+    assert char.valid()
+    assert char.display_name
+    assert next((False for char_cls in character_registry.get() if char_cls != char and char.display_name == char_cls.display_name), True)
+
 
 @pytest.mark.parametrize('attack', (True, False))
 @pytest.mark.parametrize('golden', (True, False))
@@ -118,3 +128,45 @@ def test_soltak():
     player = board.p1
 
     assert player.characters[5] is None and winner is player
+
+
+def test_trojan_donkey():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_TROJANDONKEY', position=1, attack=1, health=2)
+        ],
+        level=3
+    )
+    enemy = make_player(
+        characters=[make_character()],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+    assert player.characters[2] is not None
+
+
+def test_wombats_in_disguise():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_WOMBATSINDISGUISE')
+        ],
+        level=3
+    )
+    enemy = make_player(
+        characters=[make_character()],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+    wombat_spawn = player.characters.get(1)
+
+    assert wombat_spawn
+    assert wombat_spawn.stat_history[0].reason[0] == StatChangeCause.WOMBATS_IN_DISGUISE_BUFF
+

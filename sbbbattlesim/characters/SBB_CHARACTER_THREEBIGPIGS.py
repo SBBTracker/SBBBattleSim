@@ -1,3 +1,5 @@
+import logging
+
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDeath
