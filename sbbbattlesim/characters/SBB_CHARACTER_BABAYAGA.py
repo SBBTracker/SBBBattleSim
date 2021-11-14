@@ -11,8 +11,7 @@ class CharacterType(Character):
 
         class BabaYagaOnSlayBuff(OnSlay):
             baba_yaga = self
-            def handle(self, *args, **kwargs):
-                source = kwargs['source']
+            def handle(self, source, *args, **kwargs):
                 for _ in range(2 if self.baba_yaga.golden else 1):
                     source(*args, **kwargs)
 

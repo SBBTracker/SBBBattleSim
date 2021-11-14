@@ -5,16 +5,6 @@ import inspect
 logger = logging.getLogger(__name__)
 
 
-class EventResponse:
-    def __init__(self, event, source, *args, **kwargs):
-        self.event = event
-        self.source = source
-        self.args = args
-        self.kwargs
-
-
-
-
 class SSBBSEvent:
     priority = 0
     def __init__(self, manager):
@@ -53,6 +43,8 @@ class OnDeath(SSBBSEvent):
 
 class OnLastBreath(SSBBSEvent):
     '''A character last a last breath'''
+    def handle(self, source, *args, **kwargs):
+        raise NotImplementedError
 
 
 class OnPreAttack(SSBBSEvent):
@@ -105,6 +97,8 @@ class OnAttackAndKill(SSBBSEvent):
 
 class OnSlay(SSBBSEvent):
     '''A character has triggered a slay'''
+    def handle(self, source, *args, **kwargs):
+        raise NotImplementedError
 
 
 class OnSpellCast(SSBBSEvent):
@@ -160,7 +154,7 @@ class EventManager:
             [evts.remove(evt) for evt in evts if evt_check(evt)]
 
     def get(self, event):
-        return self._temp.get(event, []) + self._events.get(event, [])
+        return sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True)
 
     def clear_temp(self):
         self._temp = collections.defaultdict(list)
@@ -168,15 +162,17 @@ class EventManager:
     def __call__(self, event, *args, **kwargs):
         logger.debug(f'{self} triggered event {event}')
         reactions = []
-        for evt in sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True):
-            logger.debug(f'Firing {evt} with {args} and {kwargs}')
+        for evt in self.get(event):
+            logger.debug(f'Firing {evt} with {args} {kwargs}')
             reaction = evt(*args, **kwargs)
             if reaction:
                 reactions.append((*reaction, evt))
 
         for (react, evt_args, evt_kwargs, source) in reactions:
-            logger.info(f'Reaction to {event} {reaction}')
-            self(react, *evt_args, *args, **evt_kwargs, **kwargs, source=source)
+            # evt_args += args
+            evt_kwargs.update({'source': source, **kwargs})
+            logger.info(f'{react} reacting to {event} with source={source} ({evt_args} {evt_kwargs})')
+            self(react, *evt_args, **evt_kwargs)
 
     def event_type_is_registered(self, type):
         """

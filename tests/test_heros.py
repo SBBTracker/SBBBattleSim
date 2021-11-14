@@ -335,3 +335,23 @@ def test_fallen_angel(tribes, attack, health):
             assert char.health == health
             assert char.attack == attack
 
+
+def test_muerte():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_BLACKCAT')
+        ],
+        hero='SBB_HERO_MUERTE',
+    )
+
+    enemy = make_player(
+        characters=[make_character(id='GENERIC', position=1)],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+    assert player.characters[1].id == 'Cat'
+    assert player.characters[2].id == 'Cat'

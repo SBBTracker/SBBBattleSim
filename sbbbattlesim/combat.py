@@ -113,7 +113,7 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     # SLAY TRIGGER
     if defend_character.dead:
-        attack_character('OnAttackAndKill', defend_character, **kwargs)
+        attack_character('OnAttackAndKill', killed_character=defend_character, **kwargs)
 
     # Post Damage Event
     attack_character('OnPostAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)

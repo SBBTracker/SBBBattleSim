@@ -24,11 +24,8 @@ def test_treasure(treasure, mimic):
 def test_ring_of_revenge():
     player = make_player(
         characters=[
-            make_character(id='SBB_CHARACTER_PRINCESSPEEP'),
-            make_character(position=2),
-            make_character(position=3),
-            make_character(position=4),
-
+            make_character(position=1),
+            make_character(position=5),
         ],
         treasures=[
             'SBB_TREASURE_RINGOFREVENGE',
@@ -43,5 +40,4 @@ def test_ring_of_revenge():
 
     player = board.p1
 
-    assert player.characters[1].attack == 1
     assert player.characters[5].attack == 2
