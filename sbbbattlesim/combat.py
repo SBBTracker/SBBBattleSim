@@ -42,8 +42,8 @@ def fight(attacker, defender, turn=0, limit=None, **kwargs):
         logger.debug(f'NO ATTACKER')
 
     # Try to figure out if there is a winner
-    attacker_no_characters_left = next((False for c in attacker.characters.values() if c is not None), True)
-    defender_no_characters_left = next((False for c in defender.characters.values() if c is not None), True)
+    attacker_no_characters_left = not bool(attacker.valid_characters())
+    defender_no_characters_left = not bool(defender.valid_characters())
 
     if attacker_no_characters_left and defender_no_characters_left:
         return None, None
@@ -51,6 +51,8 @@ def fight(attacker, defender, turn=0, limit=None, **kwargs):
         return defender, attacker
     elif defender_no_characters_left:
         return attacker, defender
+    elif not (attacker.valid_characters(_lambda=lambda char: char.attack > 0) + defender.valid_characters(_lambda=lambda char: char.attack > 0)):
+        return None, None
 
     return fight(
         attacker=defender,

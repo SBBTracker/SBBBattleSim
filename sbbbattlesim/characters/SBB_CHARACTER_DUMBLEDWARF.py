@@ -16,15 +16,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.DublyOnBuff)
 
-    class DublyOnBuff(OnBuff):
-        def handle(self, attack_buff=0, health_buff=0, temp=False, *args, **kwargs):
-            golden_multiplier = 2 if self.manager.golden else 1
-            self.manager.change_stats(
-                health=health_buff * golden_multiplier,
-                attack=attack_buff * golden_multiplier,
-                temp=temp,
-                reason=StatChangeCause.DOUBLEY_BUFF,
-                source=self
-            )
+    def change_stats(self, attack=0, health=0, *args, **kwargs):
+        golden_multiplier = 2 if self.golden else 1
+        super().change_stats(attack=attack * golden_multiplier, health=health * golden_multiplier, *args, **kwargs)

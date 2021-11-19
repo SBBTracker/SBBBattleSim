@@ -20,7 +20,7 @@ class CharacterType(Character):
 
             def handle(self, killed_character, *args, **kwargs):
                 stats = 2 if self.riverwish_mermaid.golden else 1
-                self.manager.change_stats(attack=stats, health=stats, temp=False, reason=StatChangeCause.SUPPORT_BUFF, source=self)
+                self.manager.change_stats(attack=stats, health=stats, temp=False, reason=StatChangeCause.SUPPORT_BUFF, source=self.riverwish_mermaid)
 
         target_character.register(RiverwishMermaidBuff, temp=True)
 

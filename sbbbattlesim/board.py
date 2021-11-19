@@ -14,6 +14,7 @@ class Board(EventManager):
     def __init__(self, data):
         super().__init__()
         assert isinstance(data, dict)
+        logger.debug(data)
         p1id, p2id = list(data)
         p1data, p2data = data[p1id], data[p2id]
 
@@ -24,6 +25,12 @@ class Board(EventManager):
 
         self.p1.opponent = self.p2
         self.p2.opponent = self.p1
+
+    def get_player(self, id):
+        if self.p1.id == id:
+            return self.p1
+        if self.p2.id == id:
+            return self.p2
 
     def fight(self, limit=None):
         HERMES_BOOTS = '''SBB_TREASURE_HERMES'BOOTS'''

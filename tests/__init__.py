@@ -17,7 +17,6 @@ CHARACTER = {
     "health": 1,
     "golden": False,
     "cost": 0,
-    "level": 0,
     "position": 1,
     "keywords": [],
     "tribes": []

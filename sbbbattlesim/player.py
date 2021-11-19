@@ -49,7 +49,7 @@ class Player(EventManager):
         for spl in spells:
             class CastSpellOnStart(OnStart):
                 def handle(self, *args, **kwargs):
-                    self.manager.cast_spell(spl)
+                    self.manager.cast_spell(spl, on_start=True)
 
             self.register(CastSpellOnStart)
 
@@ -92,7 +92,7 @@ class Player(EventManager):
 
         # If we are advancing the attack slot do it here
         found_attacker = False
-        for _ in range(7):
+        for _ in range(8):
             character = self.characters.get(self._attack_slot)
             if character is not None:
                 if character.attack > 0:
@@ -215,7 +215,7 @@ class Player(EventManager):
 
         return [char for char in self.characters.values() if base_lambda(char) and _lambda(char)]
 
-    def cast_spell(self, spell_id):
+    def cast_spell(self, spell_id, on_start=False):
         spell = spell_registry[spell_id]
         if spell is None:
             return
@@ -226,7 +226,9 @@ class Player(EventManager):
             if valid_targets:
                 target = random.choice(valid_targets)
 
-        # If a spell requires a valid target and the spells filter specifies valid tags to search for
+        if on_start is True and target is None:
+            return
+
         spell.cast(player=self, target=target)
 
         resolve_damage(attacker=self, defender=self.opponent)

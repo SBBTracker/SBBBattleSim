@@ -2,7 +2,7 @@ from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnBuff
 import logging
 
-from sbbbattlesim.utils import Tribe
+from sbbbattlesim.utils import Tribe, StatChangeCause
 
 logger = logging.getLogger(__name__)
 

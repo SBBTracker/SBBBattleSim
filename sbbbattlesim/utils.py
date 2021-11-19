@@ -72,6 +72,9 @@ class StatChangeCause(enum.Enum):
     WIZARDS_FAMILIAR = 122
     BROC_LEE_BUFF = 123
     WOMBATS_IN_DISGUISE_BUFF = 124
+    ECHOWOOD_BUFF = 125
+    DARKWOOD_CREEPER_BUFF = 126
+    THE_WHITE_STAG_BUFF = 127
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202
@@ -165,10 +168,10 @@ def get_support_targets(position, horn=False):
 
 def get_behind_targets(position):
     return {
-        1: (5,),
+        1: (5, ),
         2: (5, 6),
         3: (6, 7),
-        4: (7)
+        4: (7, )
     }.get(position, ())
 
 

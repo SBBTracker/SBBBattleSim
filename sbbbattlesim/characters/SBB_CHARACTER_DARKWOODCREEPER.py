@@ -1,6 +1,6 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDamagedAndSurvived
-from sbbbattlesim.utils import Tribe
+from sbbbattlesim.utils import Tribe, StatChangeCause
 
 
 class CharacterType(Character):
@@ -12,11 +12,9 @@ class CharacterType(Character):
     _tribes = {Tribe.EVIL, Tribe.TREANT}
 
     def buff(self, target_character):
-
         class DarkwoodCreeperOnDamage(OnDamagedAndSurvived):
-            def __call__(self, **kwargs):
-                attack_buff = 2 if self.character.golden else 1
-                self.character.attack += attack_buff
-                return 'OnBuff', {'attack_buff': attack_buff}
+            darkwood = self
+            def handle(self, *args, **kwargs):
+                self.manager.change_stats(attack=2 if self.character.golden else 1, reason=StatChangeCause.DARKWOOD_CREEPER_BUFF, source=self.darkwood)
 
-        target_character.register(DarkwoodCreeperOnDamage, temp=True)
+        target_character.register(DarkwoodCreeperOnDamage)
