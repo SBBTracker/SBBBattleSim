@@ -106,6 +106,7 @@ class StatChangeCause(enum.Enum):
     TELL_TALE_QUIVER = 231
     TREE_OF_LIFE = 232
     SPEAR_OF_ACHILLES = 233
+    SUMMONING_PORTAL = 234
 
     EVELLA_BUFF = 301
     MERLIN_BUFF = 302
