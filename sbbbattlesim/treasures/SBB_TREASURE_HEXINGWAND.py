@@ -1,5 +1,4 @@
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.events import OnStart
 from sbbbattlesim.utils import StatChangeCause
 
 
@@ -13,4 +12,5 @@ class TreasureType(Treasure):
 
     def buff(self, target_character):
         if self.monkey_paw:
-            target_character.change_stats(attack=6, health=6, reason=StatChangeCause.MONKEYS_PAW, source=self, temp=True)
+            for _ in range(self.mimic + 1):
+                target_character.change_stats(attack=6, health=6, reason=StatChangeCause.MONKEYS_PAW, source=self, temp=True)

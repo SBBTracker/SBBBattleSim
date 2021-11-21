@@ -1131,7 +1131,7 @@ def test_helm_of_the_ugly_gosling(mimic):
 def test_monkeys_paw(trigger, mimic):
     player = make_player(
         characters=[
-            make_character(position=i) for i in range(8 - trigger)
+            make_character(position=i) for i in range(7 - trigger)
         ],
         treasures=[
             'SBB_TREASURE_HEXINGWAND',
@@ -1149,7 +1149,7 @@ def test_monkeys_paw(trigger, mimic):
 
 
     for char in player.valid_characters():
-        if trigger:
+        if not trigger:
             assert char.attack == 1 and char.health == 1
         else:
             if mimic:
