@@ -1052,7 +1052,6 @@ def test_draculas_saber(mimic):
 
     enemy = make_player(
         characters=[make_character(id='Enemy', attack=0)],
-        spells=['SBB_SPELL_FALLINGSTARS']
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
@@ -1077,29 +1076,20 @@ def test_exploding_mittens(mimic):
             make_character(attack=0),
         ],
         treasures=[
-            '''SBB_TREASURE_DRACULA'SSABER''',
+            'SBB_TREASURE_EXPLODINGMITTENS',
             'SBB_TREASURE_TREASURECHEST' if mimic else ''
         ]
     )
 
     enemy = make_player(
-        characters=[make_character(id='Enemy', attack=0)],
-        spells=['SBB_SPELL_FALLINGSTARS']
+        characters=[make_character(id='Enemy', attack=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
 
-    player = board.p1
-    char = player.characters[1]
+    enemy = board.p2
 
-    assert char
-
-    if mimic:
-        assert char.attack == 5
-        assert char.health == 3
-    else:
-        assert char.attack == 3
-        assert char.health == 2
+    assert not enemy.valid_characters()
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -1110,7 +1100,7 @@ def test_helm_of_the_ugly_gosling(mimic):
             make_character(attack=1),
         ],
         treasures=[
-            '''SBB_TREASURE_DRACULA'SSABER''',
+            '''SBB_TREASURE_HELMOFTHEUGLYGOSLING''',
             'SBB_TREASURE_TREASURECHEST' if mimic else ''
         ]
     )
