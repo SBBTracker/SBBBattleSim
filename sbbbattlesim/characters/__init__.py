@@ -138,7 +138,7 @@ class Character(EventManager):
 
         logger.debug(f'{self.pretty_print()} finishsed stat change')
 
-        self.stat_history.append(self.StatChange(reason=reason, source=source, attack_change=attack, health_change=health, damage_change=damage, heal=heal, temp=temp))
+        self.stat_history.append(self.StatChange(reason=reason, source=source, attack=attack, health=health, damage=damage, heal=heal, temp=temp))
 
     def clear_temp(self):
         super().clear_temp()
