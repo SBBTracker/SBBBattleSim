@@ -5,8 +5,7 @@ from sbbbattlesim.utils import StatChangeCause
 
 class TreasureType(Treasure):
     display_name = 'Monkey\'s Paw'
-
-    # todo make enum for stateful effects
+    aura = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

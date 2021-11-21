@@ -4,6 +4,7 @@ from sbbbattlesim.utils import StatChangeCause
 
 class TreasureType(Treasure):
     display_name = 'Sword of Fire and Ice'
+    aura = True
 
     def buff(self, target_character):
         if 4 <= target_character.position:

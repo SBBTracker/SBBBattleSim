@@ -5,6 +5,7 @@ from sbbbattlesim.utils import StatChangeCause
 
 class TreasureType(Treasure):
     display_name = 'Spear of Achilles'
+    aura = True
 
     def buff(self, target_character):
         class SpearOfAchillesAttack(OnPreAttack):
