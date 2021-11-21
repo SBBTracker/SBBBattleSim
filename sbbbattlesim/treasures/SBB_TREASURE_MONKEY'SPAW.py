@@ -29,5 +29,7 @@ class TreasureType(Treasure):
                 self.coin.coin_trigger = True
 
                 self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin)
+                if self.coin.mimic:
+                    self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin)
 
         target_character.register(CoinOfCharonOnDeath)

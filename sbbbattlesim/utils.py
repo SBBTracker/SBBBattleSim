@@ -35,7 +35,7 @@ class Tribe(enum.Enum):
     MONSTER = 'monster'
     PRINCE = 'prince'
     PRINCESS = 'princess'
-    PUFF_PUFF = 'puff puff'
+    PUFF_PUFF = 'puff'
     QUEEN = 'queen'
     TREANT = 'treant'
 
@@ -110,6 +110,11 @@ class StatChangeCause(enum.Enum):
     TREE_OF_LIFE = 232
     SPEAR_OF_ACHILLES = 233
     SUMMONING_PORTAL = 234
+    MONSTER_MANUAL_BUFF = 235
+    EYE_OF_ARES_BUFF = 236
+    MOONSONG_HORN_BUFF = 237
+    SUMMONING_PORTA = 238
+    EXPLODING_MITTENS_DAMAGE = 239
 
     EVELLA_BUFF = 301
     MERLIN_BUFF = 302

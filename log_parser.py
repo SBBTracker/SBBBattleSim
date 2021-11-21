@@ -305,6 +305,7 @@ class Action:
                 self.zone = cardinfo['Zone']
                 self.cost = cardinfo['Cost']
                 self.level = cardinfo['Level']
+                self.subtypes = cardinfo['Subtypes']
                 self.content_id = cardinfo['ContentId']
                 self.attrs = ['cardname', 'cardattack', 'cardhealth', 'is_golden', 'slot', 'zone', 'cost', 'level', 'content_id']
 

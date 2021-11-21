@@ -4,6 +4,8 @@ from sbbbattlesim.utils import StatChangeCause
 
 class TreasureType(Treasure):
     display_name = 'Dancing Sword'
+    aura = True
 
     def buff(self, target_character):
-        target_character.change_stats(attack=1, reason=StatChangeCause.DANCING_SWORD, source=self, temp=True)
+        for _ in range(self.mimic + 1):
+            target_character.change_stats(attack=1, reason=StatChangeCause.DANCING_SWORD, source=self, temp=True)

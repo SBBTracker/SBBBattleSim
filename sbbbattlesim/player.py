@@ -7,14 +7,14 @@ from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.utils import resolve_damage
 from sbbbattlesim.events import EventManager, OnStart
 from sbbbattlesim.heros import registry as hero_registry
-from sbbbattlesim.spells import registry as spell_registry
+from sbbbattlesim.spells import registry as spell_registry, NonTargetedSpell, TargetedSpell
 from sbbbattlesim.treasures import registry as treasure_registry
 
 logger = logging.getLogger(__name__)
 
 
 class Player(EventManager):
-    def __init__(self, characters, id, board, treasures=[], hero='', hand=[], spells=[], level=0, raw=False, *args, **kwargs):
+    def __init__(self, characters, id, board, treasures, hero, hand, spells, level=0, raw=False, *args, **kwargs):
         super().__init__()
         # Board is board
         self.board = board
@@ -30,6 +30,7 @@ class Player(EventManager):
 
         for char_data in characters:
             char = character_registry[char_data['id']](owner=self, **char_data)
+            logger.debug(f'{self.id} registering character {char}')
             self.characters[char.position] = char
 
         self._attack_slot = 1
@@ -37,14 +38,14 @@ class Player(EventManager):
         self.graveyard = []
 
         self.treasures = {}
-        mimic = 'SBB_TREASURE_TREASURECHEST' in treasures
+        mimic = sum(['SBB_TREASURE_TREASURECHEST' in treasures, hero == 'SBB_HERO_THECOLLECTOR'])
         for tres in treasures:
             treasure = treasure_registry[tres]
+            logger.debug(f'{self.id} Registering Treasure {tres} {treasure}')
             self.treasures[treasure.id] = treasure(self, mimic)
 
-        logger.debug(hero_registry[hero])
-
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
+        logger.debug(f'{self.id} registering hero {self.hero}')
 
         for spl in spells:
             class CastSpellOnStart(OnStart):
@@ -61,12 +62,8 @@ class Player(EventManager):
                     char._base_health -= char._temp_health
                     char._base_attack -= char._temp_attack
 
-
-    def __str__(self):
-        return self.__repr__()
-
-    def __repr__(self):
-        return f'{self.id} {", ".join([char.__repr__() for char in self.characters.values()])}'
+    def pretty_print(self):
+        return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
 
     #TODO Make a pretty print for player
 
@@ -154,6 +151,8 @@ class Player(EventManager):
             for target in self.valid_characters():
                 self.hero.buff(target)
 
+        self('OnResolveBoard')
+
 
     def resolve_damage(self, *args, **kwargs):
         action_taken = False
@@ -194,7 +193,7 @@ class Player(EventManager):
 
             char.position = pos
             self.characters[pos] = char
-            summoned_characters.append(char)
+            summoned_characters.append(self.characters[pos])
             logger.info(f'Spawning {char} in {pos} position')
 
         # Now that we have summoned units, make sure they have the buffs they should
@@ -220,13 +219,15 @@ class Player(EventManager):
         if spell is None:
             return
 
+        logger.debug(f'{self.id} casting {spell}')
+
         target = None
         if spell.targeted:
             valid_targets = self.valid_characters(_lambda=spell.filter)
             if valid_targets:
                 target = random.choice(valid_targets)
 
-        if on_start is True and target is None:
+        if isinstance(spell, TargetedSpell) and target is None:
             return
 
         spell.cast(player=self, target=target)

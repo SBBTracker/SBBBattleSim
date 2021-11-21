@@ -4,12 +4,15 @@ from sbbbattlesim.utils import StatChangeCause, Tribe
 
 class TreasureType(Treasure):
     display_name = 'Corrupted Heartwood'
+    aura = True
 
     def buff(self, target_character):
-        if 'animal' in target_character.tribes or 'treant' in target_character.tribes:
-            target_character.change_stats(attack=1, reason=StatChangeCause.CORRUPTED_HEARTWOOD, source=self, temp=True)
+        if Tribe.ANIMAL in target_character.tribes or Tribe.TREANT in target_character.tribes:
+
+            for _ in range(self.mimic + 1):
+                target_character.change_stats(attack=1, reason=StatChangeCause.CORRUPTED_HEARTWOOD, source=self, temp=True)
 
             if Tribe.GOOD in target_character.tribes:
-                target_character.remove(Tribe.GOOD)
+                target_character.tribes.remove(Tribe.GOOD)
             if Tribe.EVIL not in target_character.tribes:
-                target_character.append(Tribe.EVIL)
+                target_character.tribes.add(Tribe.EVIL)

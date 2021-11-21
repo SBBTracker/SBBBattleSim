@@ -1,6 +1,8 @@
 import logging
 import pkgutil
 from collections import OrderedDict
+from dataclasses import dataclass
+
 from sbbbattlesim.events import EventManager
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.spells import Spell
@@ -11,15 +13,7 @@ logger = logging.getLogger(__name__)
 
 logic_path = __path__
 
-class StatChange:
-    def __init__(self, reason, source, attack_change, health_change, damage_change, heal, temp):
-        self.reason = reason,
-        self.source = source
-        self.attack_change = attack_change
-        self.health_change = health_change
-        self.damage_change = damage_change
-        self.heal = heal
-        self.temp = temp
+
 
 
 class Character(EventManager):
@@ -38,6 +32,8 @@ class Character(EventManager):
     _health = 0
     _level = 0
     _tribes = set()
+
+
 
     def __init__(self, owner, position, attack, health, golden, tribes, cost, *args, **kwargs):
         super().__init__()
@@ -59,6 +55,18 @@ class Character(EventManager):
 
         self.stat_history = []
 
+        @dataclass
+        class StatChange:
+            reason: StatChangeCause
+            source: (Character, Treasure, Hero, Spell)
+            attack: int
+            health: int
+            damage: int
+            heal: int
+            temp: bool
+
+        self.StatChange = StatChange
+
     @classmethod
     def new(cls, owner, position, golden):
         return cls(
@@ -71,10 +79,7 @@ class Character(EventManager):
             cost=cls._level
         )
 
-    def __str__(self):
-        return self.__repr__()
-
-    def __repr__(self):
+    def pretty_print(self):
         return f'''{self.display_name} pos:{self.position} gold:{self.golden} ({self.attack}/{self.health})'''
 
     @classmethod
@@ -97,9 +102,7 @@ class Character(EventManager):
         return self._base_health + self._temp_health
 
     def change_stats(self, reason, source, attack=0, health=0, damage=0, heal=0, temp=True):
-        assert isinstance(reason, StatChangeCause)
-        assert isinstance(source, (Character, Treasure, Hero, Spell))
-        logger.debug(f'{self} stat change b/c {reason} (attack={attack}, health={health}, damage={damage}, heal={heal}, temp={temp})')
+        logger.debug(f'{self.pretty_print()} stat change b/c {reason} (attack={attack}, health={health}, damage={damage}, heal={heal}, temp={temp})')
 
         if temp:
             self._temp_attack += attack
@@ -118,7 +121,7 @@ class Character(EventManager):
             self._damage += damage
             if self.health <= 0:
                 self.dead = True
-                logger.debug(f'{self} marked for death')
+                logger.debug(f'{self.pretty_print()} marked for death')
             else:
                 # On Damage and Survived Trigger
                 # TODO Maybe add more args if needed
@@ -133,10 +136,9 @@ class Character(EventManager):
         if attack > 0 or health > 0:
             self('OnBuff', attack_buff=attack, health_buff=health, damage=damage, reason=reason, temp=temp)
 
-        logger.debug(f'{self} finishsed stat change')
+        logger.debug(f'{self.pretty_print()} finishsed stat change')
 
-        self.stat_history.append(StatChange(reason=reason, source=source, attack_change=attack,
-                                            health_change=health, damage_change=damage, heal=heal, temp=temp))
+        self.stat_history.append(self.StatChange(reason=reason, source=source, attack_change=attack, health_change=health, damage_change=damage, heal=heal, temp=temp))
 
     def clear_temp(self):
         super().clear_temp()

@@ -1,7 +1,7 @@
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.events import OnDeath
 import random
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
 class TreasureType(Treasure):
@@ -9,19 +9,17 @@ class TreasureType(Treasure):
     aura = True
 
     def buff(self, target_character):
-        if 'evil' in target_character.tribes:
+        if Tribe.EVIL in target_character.tribes:
+
             class AncientSarcophagusOnDeath(OnDeath):
                 ancient_sarcophagus = self
+                last_breath = False
 
                 def handle(self, *args, **kwargs):
-                    itr = 1  # TODO this may be useful when dealing with mimic
-
-                    for _ in range(itr):
+                    for _ in range(self.ancient_sarcophagus.mimic + 1):
                         valid_targets = self.manager.owner.opponent.valid_characters()
-
                         if valid_targets:
                             target = random.choice(valid_targets)
-                            target.changestats(damage=3, reason=StatChangeCause.ANCIENT_SARCOPHAGUS,
-                                               source=self.ancient_sarcophagus)
+                            target.change_stats(damage=3, reason=StatChangeCause.ANCIENT_SARCOPHAGUS, source=self.ancient_sarcophagus)
 
             target_character.register(AncientSarcophagusOnDeath, temp=True)

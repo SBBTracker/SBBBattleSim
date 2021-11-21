@@ -79,7 +79,7 @@ def attack(attack_position, attacker, defender, **kwargs):
         else:
             valid_defenders = back_characters
 
-    logger.debug(f'VALID DEFENDERS ({valid_defenders})')
+    logger.debug(f'VALID DEFENDERS ({[valid.pretty_print() for valid in valid_defenders]})')
 
     if not valid_defenders:
         return
@@ -91,7 +91,7 @@ def attack(attack_position, attacker, defender, **kwargs):
     # The characters in attack and defend slots may change after this point so
     # before each event attack_character and defend character is set again
 
-    logger.info(f'{attacker.characters.get(attack_position)} -> {defender.characters.get(defend_position)}')
+    logger.info(f'{attacker.characters.get(attack_position).pretty_print()} -> {defender.characters.get(defend_position).pretty_print()}')
 
     # Pre Damage Event
     # These functions can change the characters in given positions like Medusa

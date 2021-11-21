@@ -1,5 +1,0 @@
-Ordering: Highest to Lowest
-
-OnStart
-Heartwood Elder Buff
-Shoulder Faires Buff

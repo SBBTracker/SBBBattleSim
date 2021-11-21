@@ -118,24 +118,33 @@ class OnSupport(SSBBSEvent):
         raise NotImplementedError
 
 
+class OnResolveBoard(SSBBSEvent):
+    '''Triggers when a player attempts to resolve the board'''
+    def handle(self, *args, **kwargs):
+        raise NotImplementedError
+
+
 class EventManager:
     def __init__(self):
         self._temp = collections.defaultdict(list)
         self._events = collections.defaultdict(list)
+
+    def pretty_print(self):
+        return self.__repr__()
 
     def register(self, event, temp=False):
         event_base = inspect.getmro(event)[1].__name__
         event = event(manager=self)
 
         if not event.is_valid():
-            logger.debug(f'{self} found invalid event {event_base} - {event.__class__.__name__}')
+            logger.debug(f'{self.pretty_print()} found invalid event {event_base} - {event.__class__.__name__}')
             raise NotImplementedError
 
         if temp:
             self._temp[event_base].append(event)
         else:
             self._events[event_base].append(event)
-        logger.debug(f'{self} Registered {event_base} - {event.__class__.__name__}')
+        logger.debug(f'{self.pretty_print()} Registered {event_base} - {event.__class__.__name__}')
 
     def unregister(self, event):
         logger.debug(f'UNREGISTERING {event} {type(event)}')
@@ -160,7 +169,7 @@ class EventManager:
         self._temp = collections.defaultdict(list)
 
     def __call__(self, event, *args, **kwargs):
-        logger.debug(f'{self} triggered event {event}')
+        logger.debug(f'{self.pretty_print()} triggered event {event}')
         reactions = []
         for evt in self.get(event):
             logger.debug(f'Firing {evt} with {args} {kwargs}')
