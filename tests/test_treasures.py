@@ -1101,3 +1101,189 @@ def test_exploding_mittens(mimic):
     else:
         assert char.attack == 3
         assert char.health == 2
+
+
+@pytest.mark.parametrize('mimic', (True, False))
+def test_helm_of_the_ugly_gosling(mimic):
+    player = make_player(
+        characters=[
+            make_character(attack=0),
+            make_character(attack=1),
+        ],
+        treasures=[
+            '''SBB_TREASURE_DRACULA'SSABER''',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character(id='Enemy', attack=0)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+    char = player.characters[1]
+
+    assert char
+
+    assert char.attack == 15
+    assert char.health == 16
+
+    if mimic:
+        char = player.characters[2]
+
+        assert char.attack == 15
+        assert char.health == 16
+
+
+@pytest.mark.parametrize('mimic', (True, False))
+@pytest.mark.parametrize('trigger', (True, False))
+def test_monkeys_paw(trigger, mimic):
+    player = make_player(
+        characters=[
+            make_character(position=i) for i in range(8 - trigger)
+        ],
+        treasures=[
+            'SBB_TREASURE_HEXINGWAND',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character(id='Enemy', attack=0)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+
+    for char in player.valid_characters():
+        if trigger:
+            assert char.attack == 1 and char.health == 1
+        else:
+            if mimic:
+                assert char.attack == 13 and char.health == 13
+            else:
+                assert char.attack == 7 and char.health == 7
+
+
+@pytest.mark.parametrize('mimic', (True, False))
+def test_sword_of_fire_and_ice(mimic):
+    player = make_player(
+        characters=[
+            make_character(position=1),
+            make_character(position=5)
+
+        ],
+        treasures=[
+            'SBB_TREASURE_SWORDOFFIREANDICE',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character(id='Enemy', attack=0)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+    front = player.characters[1]
+    assert front
+    back = player.characters[5]
+    assert back
+
+    buff = 12 if mimic else 6
+
+    assert front.health == 1 + buff
+    assert back.attack == 1 + buff
+
+
+@pytest.mark.parametrize('mimic', (True, False))
+def test_ninth_book_of_merlin(mimic):
+    player = make_player(
+        characters=[
+            make_character(tribe=['mage']),
+            make_character(position=2),
+        ],
+        treasures=[
+            'SBB_TREASURE_THENINTHBOOKOFMERLIN',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character(id='Enemy', attack=0)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+    mage = player.characters[1]
+    assert mage
+    not_mage = player.characters[2]
+    assert not_mage
+
+    assert mage.last_breath
+    assert len([evt for evt in mage.get('OnDeath') if evt.last_breath]) == 1 + mimic
+
+    assert not not_mage.last_breath
+    assert len([evt for evt in not_mage.get('OnDeath') if evt.last_breath]) == 0
+
+
+@pytest.mark.parametrize('mimic', (True, False))
+def test_ivory_owl(mimic):
+    player = make_player(
+        characters=[
+            make_character(),
+        ],
+        treasures=[
+            'SBB_TREASURE_IVORYOWL',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character(id='Enemy', attack=0)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+    char = player.characters[1]
+
+    buff = 2 * (1 + mimic)
+
+    assert char
+    assert char.attack == 1 + buff
+    assert char.health == 1 + buff
+
+
+@pytest.mark.parametrize('mimic', (True, False))
+def test_spear_of_achilies(mimic):
+    player = make_player(
+        characters=[
+            make_character(),
+        ],
+        treasures=[
+            'SBB_TREASURE_SPEAROFACHILIES',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character(id='Enemy', attack=0)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+    char = player.characters[1]
+
+    buff = 2 * (1 + mimic)
+
+    assert char
+    assert char.attack == 1 + buff
+    assert char.health == 1 + buff

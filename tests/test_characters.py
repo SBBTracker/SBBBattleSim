@@ -58,7 +58,7 @@ def test_support(char, golden):
     if char in SUPPORT_EXCLUSION:
         return
 
-    assert board.p1.characters[1].stat_history[0].reason[0] == StatChangeCause.SUPPORT_BUFF
+    assert board.p1.characters[1].stat_history[0].reason == StatChangeCause.SUPPORT_BUFF
 
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -168,5 +168,5 @@ def test_wombats_in_disguise():
     wombat_spawn = player.characters.get(1)
 
     assert wombat_spawn
-    assert wombat_spawn.stat_history[0].reason[0] == StatChangeCause.WOMBATS_IN_DISGUISE_BUFF
+    assert wombat_spawn.stat_history[0].reason == StatChangeCause.WOMBATS_IN_DISGUISE_BUFF
 
