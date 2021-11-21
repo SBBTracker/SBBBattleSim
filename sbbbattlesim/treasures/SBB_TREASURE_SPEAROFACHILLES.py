@@ -9,10 +9,9 @@ class TreasureType(Treasure):
 
     def buff(self, target_character):
         class SpearOfAchillesAttack(OnPreAttack):
-            character = self
-
+            spear = self
             def handle(self, *args, **kwargs):
-                self.character.change_stats(health=7, attack=7, reason=StatChangeCause.SPEAR_OF_ACHILLES, SOURCE=self,
-                                            temp=True)
+                for _ in range(1 + bool(self.spear.mimic)):
+                    self.manager.change_stats(health=7, attack=7, reason=StatChangeCause.SPEAR_OF_ACHILLES, source=self, temp=True)
 
-        self.register(SpearOfAchillesAttack, temp=True)
+        target_character.register(SpearOfAchillesAttack, temp=True)

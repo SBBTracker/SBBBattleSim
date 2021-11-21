@@ -1096,8 +1096,8 @@ def test_exploding_mittens(mimic):
 def test_helm_of_the_ugly_gosling(mimic):
     player = make_player(
         characters=[
-            make_character(attack=0),
-            make_character(attack=1),
+            make_character(position=1),
+            make_character(position=2),
         ],
         treasures=[
             '''SBB_TREASURE_HELMOFTHEUGLYGOSLING''',
@@ -1116,13 +1116,13 @@ def test_helm_of_the_ugly_gosling(mimic):
 
     assert char
 
-    assert char.attack == 15
+    assert char.attack == 16
     assert char.health == 16
 
     if mimic:
         char = player.characters[2]
 
-        assert char.attack == 15
+        assert char.attack == 16
         assert char.health == 16
 
 
@@ -1257,7 +1257,7 @@ def test_spear_of_achilies(mimic):
             make_character(),
         ],
         treasures=[
-            'SBB_TREASURE_SPEAROFACHILIES',
+            'SBB_TREASURE_SPEAROFACHILLES',
             'SBB_TREASURE_TREASURECHEST' if mimic else ''
         ]
     )
@@ -1271,7 +1271,7 @@ def test_spear_of_achilies(mimic):
     player = board.p1
     char = player.characters[1]
 
-    buff = 2 * (1 + mimic)
+    buff = 7 * (1 + mimic)
 
     assert char
     assert char.attack == 1 + buff
