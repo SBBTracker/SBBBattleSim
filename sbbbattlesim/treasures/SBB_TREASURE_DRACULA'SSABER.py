@@ -11,6 +11,7 @@ class TreasureType(Treasure):
 
         class DraculasSaberOnDeath(OnDeath):
             saber = self
+            last_breath = False
 
             def handle(self, *args, **kwargs):
                 for char in self.saber.player.valid_characters():

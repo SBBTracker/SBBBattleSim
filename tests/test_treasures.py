@@ -932,7 +932,7 @@ def test_sky_castle(mimic):
 
     final = 5
     if mimic:
-        final = 10
+        final = 9
 
     assert char.attack == final
     assert char.health == final
@@ -1021,7 +1021,6 @@ def test_tree_of_life():
         ],
         treasures=[
             'SBB_TREASURE_CIRCLEOFLIFE',
-            'SBB_TREASURE_TREASURECHEST' if mimic else ''
         ]
     )
 
@@ -1033,7 +1032,7 @@ def test_tree_of_life():
     winner, loser = board.fight()
 
     player = board.p1
-    char = player.valid_characters()[1]
+    char = player.valid_characters()[0]
 
     assert char
     assert char.health == 2
@@ -1287,3 +1286,4 @@ def test_spear_of_achilies(mimic):
     assert char
     assert char.attack == 1 + buff
     assert char.health == 1 + buff
+    

@@ -10,8 +10,9 @@ class TreasureType(Treasure):
     def buff(self, target_character):
         class TreeOfLifeHeal(OnDeath):
             tree = self
+            last_breath = False
             def handle(self, *args, **kwargs):
                 for char in self.manager.owner.valid_characters():
-                    char.change_stats(heal=self.character.health, temp=False, reason=StatChangeCause.TREE_OF_LIFE, source=self.tree)
+                    char.change_stats(heal=char.health, temp=False, reason=StatChangeCause.TREE_OF_LIFE, source=self.tree)
 
         target_character.register(TreeOfLifeHeal, temp=True)
