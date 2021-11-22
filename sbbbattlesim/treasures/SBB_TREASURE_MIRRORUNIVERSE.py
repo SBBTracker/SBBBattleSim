@@ -10,9 +10,10 @@ class TreasureType(Treasure):
 
         class MirrorMirrorOnDeath(OnDeath):
             mirror = self
+            last_breath = False
 
             def handle(self, *args, **kwargs):
-                copies = [self.manager.__class__.__init__(
+                copies = [self.manager.__class__(
                     owner=self.manager.owner,
                     position=self.manager.position,
                     attack=1,

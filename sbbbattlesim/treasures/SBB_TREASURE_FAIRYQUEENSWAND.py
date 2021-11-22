@@ -4,7 +4,9 @@ from sbbbattlesim.utils import StatChangeCause
 
 class TreasureType(Treasure):
     display_name = 'Fairy Queen\'s Wand'
+    aura = True
 
     def buff(self, target_character):
-        target_character.change_stats(health=5, attack=5, reason=StatChangeCause.FAIRY_QUEENS_WAND, source=self,
+        for _ in range(bool(self.mimic) + 1):
+            target_character.change_stats(health=5, attack=5, reason=StatChangeCause.FAIRY_QUEENS_WAND, source=self,
                                       temp=True)

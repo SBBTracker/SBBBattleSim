@@ -23,7 +23,10 @@ LOKI_SPELLS = (
     '''SBB_SPELL_KNIGHTHOOD''',  # Knighthood
     '''SBB_SPELL_TESTYOURMIGHT''',  # Evil Twin
 )
-
+#combat spells could be used and shared between deck, book of merlin and monster book
+COMBAT_SPELLS = (
+    ''''''
+)
 
 class Tribe(enum.Enum):
     ANIMAL = 'animal'

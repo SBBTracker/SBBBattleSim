@@ -3,7 +3,7 @@ import random
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.treasures import Treasure
 
-
+#todo can only cast spells of current level or below
 class TreasureType(Treasure):
     display_name = 'Deck of Many Things'
 
