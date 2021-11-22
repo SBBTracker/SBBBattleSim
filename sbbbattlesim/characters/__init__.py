@@ -53,15 +53,17 @@ class Character(EventManager):
 
         self.stat_history = []
 
-    @dataclass
-    class StatChange:
-        reason: StatChangeCause
-        source: (Character, Treasure, Hero, Spell)
-        attack: int
-        health: int
-        damage: int
-        heal: int
-        temp: bool
+        @dataclass
+        class StatChange:
+            reason: StatChangeCause
+            source: (Character, Treasure, Hero, Spell)
+            attack: int
+            health: int
+            damage: int
+            heal: int
+            temp: bool
+
+        self.StatChange = StatChange
 
     @classmethod
     def new(cls, owner, position, golden):
