@@ -6,6 +6,7 @@ from sbbbattlesim.utils import StatChangeCause, Tribe
 
 logger = logging.getLogger(__name__)
 
+#aka doubly
 class CharacterType(Character):
     display_name = 'Dubly'
 

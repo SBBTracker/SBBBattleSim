@@ -1364,3 +1364,48 @@ def test_mirror_mirror(mimic):
         assert char
         assert char.attack == 1
         assert char.health == 1
+
+@pytest.mark.parametrize('mimic', (True, False))
+def test_round_table(mimic):
+    player = make_player(
+        characters=[
+            make_character(attack=0),
+        ],
+        treasures=[
+            'SBB_TREASURE_THEROUNDTABLE',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character()],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+    char = player.characters[1]
+
+    assert char.attack ==1
+
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_DUMBLEDWARF',attack=0),
+        ],
+        treasures=[
+            'SBB_TREASURE_THEROUNDTABLE',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character()],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+    char = player.characters[1]
+    assert char.attack == 2
+    if mimic:
+        assert char.health == 3
