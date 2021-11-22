@@ -33,8 +33,6 @@ class Character(EventManager):
     _level = 0
     _tribes = set()
 
-
-
     def __init__(self, owner, position, attack, health, golden, tribes, cost, *args, **kwargs):
         super().__init__()
         self.owner = owner
@@ -55,17 +53,15 @@ class Character(EventManager):
 
         self.stat_history = []
 
-        @dataclass
-        class StatChange:
-            reason: StatChangeCause
-            source: (Character, Treasure, Hero, Spell)
-            attack: int
-            health: int
-            damage: int
-            heal: int
-            temp: bool
-
-        self.StatChange = StatChange
+    @dataclass
+    class StatChange:
+        reason: StatChangeCause
+        source: (Character, Treasure, Hero, Spell)
+        attack: int
+        health: int
+        damage: int
+        heal: int
+        temp: bool
 
     @classmethod
     def new(cls, owner, position, golden):

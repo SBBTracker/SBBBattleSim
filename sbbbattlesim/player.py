@@ -153,7 +153,6 @@ class Player(EventManager):
 
         self('OnResolveBoard')
 
-
     def resolve_damage(self, *args, **kwargs):
         action_taken = False
 

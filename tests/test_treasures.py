@@ -1276,4 +1276,91 @@ def test_spear_of_achilies(mimic):
     assert char
     assert char.attack == 1 + buff
     assert char.health == 1 + buff
-    
+
+
+
+@pytest.mark.parametrize('mimic', (True, False))
+def test_fairy_queens_wand(mimic):
+    player = make_player(
+        characters=[
+            make_character(),
+        ],
+        treasures=[
+            'SBB_TREASURE_POWERSTONE',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character(id='Enemy', attack=0)]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+    char = player.characters[1]
+
+    buff = 10 if mimic else 5
+
+    assert char
+    assert char.attack == 1 + buff
+    assert char.health == 1 + buff
+
+
+@pytest.mark.parametrize('mimic', (True, False))
+def test_magic_sword_100(mimic):
+    player = make_player(
+        characters=[
+            make_character(),
+        ],
+        treasures=[
+            'SBB_TREASURE_MAGICSWORD+100',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character(attack=0)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+    char = player.characters[1]
+
+    buff = 200 if mimic else 100
+
+    assert char.attack == 1 + buff
+
+
+@pytest.mark.parametrize('mimic', (True, False))
+def test_mirror_mirror(mimic):
+    player = make_player(
+        characters=[
+            make_character(),
+        ],
+        treasures=[
+            'SBB_TREASURE_MIRRORUNIVERSE',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character()],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+    char = player.characters[1]
+
+    assert char
+    assert char.attack == 1
+    assert char.health == 1
+
+    if mimic:
+        char = player.characters[2]
+
+        assert char
+        assert char.attack == 1
+        assert char.health == 1
