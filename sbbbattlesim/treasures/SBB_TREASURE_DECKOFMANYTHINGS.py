@@ -2,6 +2,7 @@ import random
 
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.treasures import Treasure
+from sbbbattlesim.utils import COMBAT_SPELLS
 
 #todo can only cast spells of current level or below
 class TreasureType(Treasure):

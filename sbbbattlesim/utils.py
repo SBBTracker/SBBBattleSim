@@ -25,7 +25,32 @@ LOKI_SPELLS = (
 )
 #combat spells could be used and shared between deck, book of merlin and monster book
 COMBAT_SPELLS = (
-    ''''''
+    '''SBB_SPELL_FALLINGSTARS''',
+    '''SBB_SPELL_EARTHQUAKE''',
+    '''SBB_SPELL_RIDEOFTHEVALKYRIES''',
+    '''SBB_SPELL_ANGEL'SBLESSING''',
+    '''SBB_SPELL_LIGHTNINGBOLT''',
+    '''SBB_SPELL_FIREBALL''',
+    '''SBB_SPELL_ENFEEBLEMENT''',
+    '''SBB_SPELL_POISONAPPLE''',
+    '''SBB_SPELL_DISINTEGRATE''',
+    '''SBB_SPELL_PIGOMORPH''',
+)
+
+START_OF_FIGHT_SPELLS = (
+    '''SBB_SPELL_FALLINGSTARS''',
+    '''SBB_SPELL_EARTHQUAKE''',
+    '''SBB_SPELL_RIDEOFTHEVALKYRIES''',
+    '''SBB_SPELL_ANGEL'SBLESSING''',
+    '''SBB_SPELL_LIGHTNINGBOLT''',
+    '''SBB_SPELL_FIREBALL''',
+    '''SBB_SPELL_ENFEEBLEMENT''',
+    '''SBB_SPELL_POISONAPPLE''',
+    '''SBB_SPELL_DISINTEGRATE''',
+    '''SBB_SPELL_PIGOMORPH''',
+    '''SBB_SPELL_BEASTWITHIN''',
+    '''SBB_SPELL_MENAGRIE'''
+
 )
 
 class Tribe(enum.Enum):

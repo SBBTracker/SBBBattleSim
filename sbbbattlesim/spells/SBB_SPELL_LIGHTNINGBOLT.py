@@ -6,7 +6,7 @@ from sbbbattlesim.utils import StatChangeCause
 
 class SpellType(NonTargetedSpell):
     display_name = 'Lightning Bolt'
-    level = 0
+    level = 4
 
     def cast(self, player, *args, **kwargs):
         valid_targets = player.opponent.valid_characters(_lambda=lambda char: char.position in (5, 6, 7))

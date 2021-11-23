@@ -6,7 +6,7 @@ class SpellType(TargetedSpell):
     display_name = 'Worm Root'
 
     def cast(self, target, *args, **kwargs):
-        target.change_stats(attack=10, temp=False, reason=StatChangeCause.WORM_ROOT, source=self)
+        target.change_stats(attack=3, health=3, temp=False, reason=StatChangeCause.WORM_ROOT, source=self)
 
     def filter(self, char):
         return Tribe.MONSTER in char.tribes

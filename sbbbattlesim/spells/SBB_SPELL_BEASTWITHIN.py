@@ -7,7 +7,7 @@ from sbbbattlesim.characters import registry as character_registry
 
 class SpellType(NonTargetedSpell):
     display_name = '''Cat's Call'''
-    level = 0
+    level = 4
 
     def cast(self, player, *args, **kwargs):
         class CatsCallOnDeath(OnDeath):
