@@ -1,7 +1,7 @@
 import enum
 import logging
-import random
-
+from random import choice
+from sbbbattlesim.spells import Registry as spell_registry
 
 logger = logging.getLogger(__name__)
 
@@ -226,8 +226,9 @@ def get_spawn_positions(position):
     return spawn_order.get(position, ())
 
 
-def random_spells(source):
-    pass
+def random_combat_spell(level):
+
+    return spell_registry.get(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in COMBAT_SPELLS)
 
 
 #TODO are these the same across different effects (robin wood, helm of the gosling, juliets in graveyards)
@@ -242,7 +243,7 @@ def find_stat_extreme_character(player, strongest=True):
     func = max if strongest else min
     sub_char = func(valid_characters, key=lambda char: (char.attack, char.cost))
     sub_chars = list(filter(lambda char: char.attack == sub_char.attack and char.cost == sub_char.cost, valid_characters))
-    return random.choice(sub_chars)
+    return choice(sub_chars)
 
 
 def find_strongest_character(player):

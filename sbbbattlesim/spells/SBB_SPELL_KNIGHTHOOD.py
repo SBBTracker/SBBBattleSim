@@ -1,9 +1,9 @@
 from sbbbattlesim.spells import TargetedSpell
-from sbbbattlesim.utils import StatChangeCause
 
 
 class SpellType(TargetedSpell):
-    display_name = 'Hugeify'
+    display_name = 'Knighthood'
+    _level = 6
 
     def cast(self, target, *args, **kwargs):
         target.golden = True
