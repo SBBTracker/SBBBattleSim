@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 import threading
@@ -21,13 +22,13 @@ if __name__ == '__main__':
         job = update.job
         state = update.state
         if job == log_parser.JOB_BOARDINFO:
-            k = 1000
-            sim_results = simulate_from_state(state, k=k)
+            t = 4
+            k = 250
+            sim_results = simulate_from_state(state, t=t, k=k)
 
             logger.error(f'Simulation Results ({sim_results.run_time})')
             logger.error(f'{sim_results.starting_board.p1}')
             logger.error(f'{sim_results.starting_board.p2}')
-
 
             p1id, p2id = list(state)
 
@@ -41,7 +42,7 @@ if __name__ == '__main__':
 
                 return damage
 
-            win_perc = {pid: round(((len(sim_results.results[pid]) / k) * 100), 2) for pid in (p1id, p2id, None)}
+            win_perc = {pid: round(((len(sim_results.results[pid]) / (k*t)) * 100), 2) for pid in (p1id, p2id, None)}
 
             avg_damage = {}
             for pid in (p1id, p2id, None):

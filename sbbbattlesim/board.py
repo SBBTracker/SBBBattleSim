@@ -10,11 +10,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class Board(EventManager):
     def __init__(self, data):
         super().__init__()
-        assert isinstance(data, dict)
         logger.debug(data)
+        assert isinstance(data, dict)
         p1id, p2id = list(data)
         p1data, p2data = data[p1id], data[p2id]
 

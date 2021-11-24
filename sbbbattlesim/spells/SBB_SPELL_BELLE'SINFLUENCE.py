@@ -14,4 +14,4 @@ class SpellType(TargetedSpell):
         target.tribes.add(Tribe.GOOD)
 
     def filter(self, char):
-        return Tribe.ANIMAL in char.tribes
+        return Tribe.EVIL in char.tribes
