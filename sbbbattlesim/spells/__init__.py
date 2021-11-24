@@ -1,6 +1,5 @@
 import logging
 import pkgutil
-import random
 from collections import OrderedDict
 
 logger = logging.getLogger(__name__)
@@ -68,6 +67,10 @@ class Registry(object):
     def __contains__(self, item):
         return item in self.spells
 
+    @classmethod
+    def valid(cls):
+        return cls._level != 0
+
     def register(self, name, spell):
         assert name not in self.spells, 'Character is already registered.'
         self.spells[name] = spell
@@ -86,6 +89,8 @@ class Registry(object):
             except Exception as exc:
                 logger.exception('Error loading spells: {}'.format(name))
 
+    def get(self, _lambda= lambda spell_cls: True):
+        return [spell_cls for spell_cls in self.spells.values() if _lambda(spell_cls)]
 
 registry = Registry()
 registry.autoregister()

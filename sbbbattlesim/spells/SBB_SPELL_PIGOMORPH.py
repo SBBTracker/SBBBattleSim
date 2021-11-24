@@ -1,14 +1,14 @@
 import random
 
-from sbbbattlesim.spells import NonTargetedSpell
 from sbbbattlesim.characters import registry as character_registry
-
+from sbbbattlesim.spells import NonTargetedSpell
 
 PIGOMORPH_ID = 'SBB_CHARACTER_PIG'
 
 
 class SpellType(NonTargetedSpell):
     display_name = 'Pigomorph'
+    _level = 6
 
     def cast(self, player, *args, **kwargs):
         target = random.choice(player.opponent.valid_characters())

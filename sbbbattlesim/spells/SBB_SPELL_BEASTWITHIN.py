@@ -1,13 +1,11 @@
-import random
-
+from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.spells import NonTargetedSpell
-from sbbbattlesim.characters import registry as character_registry
 
 
 class SpellType(NonTargetedSpell):
     display_name = '''Cat's Call'''
-    level = 4
+    _level = 4
 
     def cast(self, player, *args, **kwargs):
         class CatsCallOnDeath(OnDeath):

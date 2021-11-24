@@ -1,5 +1,6 @@
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.events import OnDeath
+from sbbbattlesim.utils import COMBAT_SPELLS
 
 #todo update spell list
 class TreasureType(Treasure):

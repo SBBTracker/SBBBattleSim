@@ -7,7 +7,7 @@ from sbbbattlesim.utils import StatChangeCause
 
 class SpellType(NonTargetedSpell):
     display_name = 'Fireball'
-    level = 4
+    _level = 4
 
     def cast(self, player, *args, **kwargs):
         valid_targets = player.opponent.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4))
