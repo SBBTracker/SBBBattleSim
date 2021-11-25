@@ -8,9 +8,9 @@ from sbbbattlesim.characters import registry as character_registry
 
 
 
-@pytest.mark.parametrize('char', character_registry.keys())
+@pytest.mark.parametrize('char', character_registry.filter())
 def test_valid_character(char):
-    char = character_registry[char]
+    char = character_registry[char.id]
     assert char.valid()
     assert char.display_name
     assert next(character_registry.filter(_lambda=lambda char_cls: char_cls.id != char.id and char_cls.display_name == char.display_name), True)
@@ -18,9 +18,9 @@ def test_valid_character(char):
 
 @pytest.mark.parametrize('attack', (True, False))
 @pytest.mark.parametrize('golden', (True, False))
-@pytest.mark.parametrize('char', character_registry.keys())
+@pytest.mark.parametrize('char', character_registry.filter())
 def test_character(char, attack, golden):
-    char = make_character(id=char, golden=golden)
+    char = make_character(id=char.id, golden=golden)
     generic_char = make_character(position=7, tribes=[tribe.value for tribe in Tribe])
     player = make_player(
         characters=[char, generic_char],
