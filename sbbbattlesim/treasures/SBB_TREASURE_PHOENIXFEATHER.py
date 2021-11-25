@@ -15,6 +15,7 @@ class TreasureType(Treasure):
         class PhoenixFeatherOnDeath(OnDeath):
             feather = self
             last_breath = False
+            priority = 1000
 
             def handle(self, *args, **kwargs):
                 if not self.feather.feather_used:
@@ -22,6 +23,8 @@ class TreasureType(Treasure):
                     all_characters = self.manager.owner.valid_characters() + [self.manager]
                     max_attack = max(all_characters, key=lambda x: x.attack).attack
                     if self.manager.attack >= max_attack:
+                        self.manager._damage = 0
+                        self.manager.dead = False
                         self.manager.owner.graveyard.remove(self.manager)
                         self.manager.owner.summon(self.manager.position, self.manager)
 
@@ -37,6 +40,8 @@ class TreasureType(Treasure):
                             )
 
                             self.manager.owner.summon(self.manager.position, new_char)
+
+                        self.feather.feather_used = True
 
         target_character.register(PhoenixFeatherOnDeath, temp=True)
 

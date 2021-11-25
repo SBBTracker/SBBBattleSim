@@ -115,6 +115,7 @@ class Character(EventManager):
 
         if damage > 0:
             if self.invincible and reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:
+                self('OnDamagedAndSurvived', damage=0)
                 return
             self._damage += damage
 

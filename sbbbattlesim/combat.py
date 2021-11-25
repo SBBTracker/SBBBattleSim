@@ -108,12 +108,14 @@ def attack(attack_position, attacker, defender, **kwargs):
     attack_character = attacker.characters.get(attack_position)
     defend_character = defender.characters.get(defend_position)
 
-    attacker_damage = Damage(
-        x=defend_character.attack if not attack_character.ranged else 0,
-        reason=StatChangeCause.DAMAGE_WHILE_ATTACKING,
-        source=defend_character,
-        targets=[attack_character]
-    )
+    if not attack_character.ranged:
+        attacker_damage = Damage(
+            x=defend_character.attack,
+            reason=StatChangeCause.DAMAGE_WHILE_ATTACKING,
+            source=defend_character,
+            targets=[attack_character]
+        )
+
     defender_damage = Damage(
         x=attack_character.attack,
         reason=StatChangeCause.DAMAGE_WHILE_DEFENDING,
@@ -125,9 +127,10 @@ def attack(attack_position, attacker, defender, **kwargs):
     if defend_character.dead:
         attack_character('OnAttackAndKill', killed_character=defend_character, **kwargs)
 
+    if not attack_character.ranged:
+        attacker_damage.resolve()
+    defender_damage.resolve()
+
     # Post Damage Event
     attack_character('OnPostAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
     defend_character('OnPostDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
-
-    attacker_damage.resolve()
-    defender_damage.resolve()

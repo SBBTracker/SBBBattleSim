@@ -19,7 +19,6 @@ class Damage:
                 if char.dead:
                     self.killed_characters.append(char)
 
-
     def __repr__(self):
         return f'<<DAMAGE: Reason: {self.reason} Amount: {self.x} Source: {self.source} Targets: {[t.pretty_print() for t in self.targets]}>>'
 

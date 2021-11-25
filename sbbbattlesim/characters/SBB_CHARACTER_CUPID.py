@@ -14,11 +14,15 @@ class CharacterType(Character):
     _level = 5
     _tribes = {Tribe.GOOD, Tribe.FAIRY}
 
+    flying = True
+    ranged = True
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.register(self.CupidOnPreAttack)
 
     class CupidOnPreAttack(OnPostAttack):
+        priority = 10
         def handle(self, attack_position, defend_position, *args, **kwargs):
 
             defend_character = self.manager.owner.opponent.characters.get(defend_position)
