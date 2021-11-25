@@ -67,8 +67,10 @@ def attack(attack_position, attacker, defender, **kwargs):
     # everyone else targets front first
     front = (1, 2, 3, 4)
     back = (5, 6, 7)
-    front_characters = defender.valid_characters(_lambda=lambda char: char.position in front)
-    back_characters = defender.valid_characters(_lambda=lambda char: char.position in back)
+
+    attack_char = attacker.characters.get(attack_position)
+    front_characters = defender.valid_characters(_lambda=lambda char: char.position in front and char is not attack_char)
+    back_characters = defender.valid_characters(_lambda=lambda char: char.position in back and char is not attack_char)
     if attacker.characters.get(attack_position).flying:
         if any(back_characters):
             valid_defenders = back_characters
@@ -98,7 +100,7 @@ def attack(attack_position, attacker, defender, **kwargs):
     # These functions can change the characters in given positions like Medusa
     attack_character = attacker.characters.get(attack_position)
     if attack_character:
-        attack_character('OnPreAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
+        attack_character('OnPreAttack', attack_position=attack_position, defend_position=defend_position, defend_player=defender, **kwargs)
 
     defend_character = defender.characters.get(defend_position)
     if defend_character:

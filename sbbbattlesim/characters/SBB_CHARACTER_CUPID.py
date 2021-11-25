@@ -1,7 +1,8 @@
 from sbbbattlesim.utils import StatChangeCause, Tribe
 from sbbbattlesim.characters import Character
 from sbbbattlesim.combat import attack
-from sbbbattlesim.events import OnDamagedAndSurvived, OnDeath, OnPostAttack
+from sbbbattlesim.events import OnDamagedAndSurvived, OnDeath, OnPostDefend, OnPreAttack
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -21,18 +22,26 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         self.register(self.CupidOnPreAttack)
 
-    class CupidOnPreAttack(OnPostAttack):
-        priority = 10
-        def handle(self, attack_position, defend_position, *args, **kwargs):
+    class CupidOnPreAttack(OnPreAttack):
 
-            defend_character = self.manager.owner.opponent.characters.get(defend_position)
+        def handle(self, attack_position, defend_position, defend_player, *args, **kwargs):
+
+            class CupidOnPostDefend(OnPostDefend):
+                def __init__(self, *_args, **_kwargs):
+                    super().__init__(*_args, **_kwargs)
+                    self.used = False
+
+                def handle(self, *_args, **_kwargs):
+
+                    if not self.used:
+                        if not self.manager.dead:
+                            attack(
+                                attack_position=self.manager.position,
+                                attacker=self.manager.owner,
+                                defender=self.manager.owner
+                            )
+                            self.used = True
+
+            defend_character = defend_player.characters.get(defend_position)
             if defend_character is not None:
-                if not defend_character.dead:
-
-                    opponent = self.manager.owner.opponent
-
-                    attack(
-                        attack_position=defend_position,
-                        attacker=opponent,
-                        defender=opponent
-                    )
+                defend_character.register(CupidOnPostDefend)
