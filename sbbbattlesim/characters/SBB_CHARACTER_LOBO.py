@@ -31,4 +31,3 @@ class CharacterType(Character):
             chars = chars*modifier
 
             self.manager.owner.summon(self.manager.position, *chars)
-            return 'OnLastBreath', [chars], {}

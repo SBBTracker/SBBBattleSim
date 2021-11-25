@@ -20,6 +20,7 @@ def test_valid_character(char):
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('char', character_registry.filter())
 def test_character(char, attack, golden):
+    '''Run a combat, results dont matter. This will either crash or pass'''
     char = make_character(id=char.id, golden=golden)
     generic_char = make_character(position=7, tribes=[tribe.value for tribe in Tribe])
     player = make_player(
@@ -43,6 +44,7 @@ SUPPORT_EXCLUSION = (
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: char.support is True))
 def test_support(char, golden):
+    '''Support units that apply buffs get tested to make sure that literally any buff is getting applied'''
     # Riverwish is a support but doesn't give stats so it won't be tested here
     if char.id in SUPPORT_EXCLUSION:
         return
@@ -66,23 +68,31 @@ def test_support(char, golden):
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: char.slay is True))
 def test_slay(char, golden):
-    slay = make_character(id=char, position=1, golden=golden)
+    '''Triggers a slay, checks success by measuring against a shadow assassin. Liable to fail in the future... '''
+
     player = make_player(
-        characters=[slay],
+        characters=[
+            make_character(id=char.id, position=1, golden=golden),
+            make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7, golden=False, attack=2, health=1),
+        ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
-        characters=[make_character(position=i) for i in range(1, 5)],
+        characters=[make_character(position=1, attack=0, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    winner, loser = board.fight(limit=None)
+
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (3, 2)
 
 
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: char.last_breath is True))
 def test_last_breath(char, golden):
-    last_breath = make_character(id=char, position=1, attack=0, health=1, golden=golden)
+    '''Loads in every last breath and makes sure it triggers muerte'''
+    last_breath = make_character(id=char.id, position=1, attack=0, health=1, golden=golden)
     player = make_player(
+        hero='SBB_HERO_MUERTE',
         characters=[last_breath],
     )
     enemy = make_player(
@@ -91,6 +101,8 @@ def test_last_breath(char, golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+
+    assert board.p1.hero.triggered
 
 
 @pytest.mark.parametrize('golden', (True, False))

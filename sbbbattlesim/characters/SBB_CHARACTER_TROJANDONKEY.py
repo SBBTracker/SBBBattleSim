@@ -13,12 +13,11 @@ logger = logging.getLogger(__name__)
 
 class CharacterType(Character):
     display_name = 'Trojan Donkey'
-    last_breath = True
 
     _attack = 15
     _health = 15
     _level = 6
-    _tribes = {Tribe.EVIL, Tribe.ANIMAL}
+    _tribes = {Tribe.ANIMAL}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

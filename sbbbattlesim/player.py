@@ -123,13 +123,21 @@ class Player(EventManager):
         # Iterate over buff targets and auras then apply them to all necessary targets
         # Support & Aura Targeting
         # This does talk about buffs, but it is for buffs that can only be changed by board state
+        support_itr = 1
+        if "SBB_TREASURE_HELMOFCOMMAND" in self.treasures:
+            if "SBB_TREASURE_TREASURECHEST" in self.treasures:
+                support_itr = 3  # mimic and evil eye
+            else:
+                support_itr = 2  # evil eye but not mimic
+
         for char in self.valid_characters():
             if char.support:
-                for target_position in utils.get_support_targets(position=char.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures):
-                    target = self.characters.get(target_position)
-                    if target:
-                        char.buff(target)
-                        char('OnSupport', buffed=target, support=char)
+                for _ in range(support_itr):  # my commit but blame regi
+                    for target_position in utils.get_support_targets(position=char.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures):
+                        target = self.characters.get(target_position)
+                        if target:
+                            char.buff(target)
+                            char('OnSupport', buffed=target, support=char)
 
             elif char.aura:
                 for target in self.valid_characters():

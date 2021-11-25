@@ -9,7 +9,6 @@ from sbbbattlesim.utils import Tribe, StatChangeCause
 
 class CharacterType(Character):
     display_name = 'Broc Lee'
-    last_breath = True
 
     _attack = 0
     _health = 15

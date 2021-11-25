@@ -39,6 +39,13 @@ class OnDeath(SSBBSEvent):
     def is_valid(self):
         return self.last_breath is True or self.last_breath is False
 
+    def __call__(self, *args, **kwargs):
+        response = self.handle(*args, **kwargs)
+
+        if self.last_breath and not response:
+            return 'OnLastBreath', [], {}
+
+        return response
 
 
 class OnLastBreath(SSBBSEvent):
@@ -169,6 +176,8 @@ class EventManager:
         self._temp = collections.defaultdict(list)
 
     def __call__(self, event, *args, **kwargs):
+        # This is so hugely sensitive with regards to changes to Baba Yaga
+        # if you can't update baba yaga while updating this code then you shouldn't change either
         logger.debug(f'{self.pretty_print()} triggered event {event}')
         reactions = []
         for evt in self.get(event):

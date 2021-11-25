@@ -4,20 +4,41 @@ from sbbbattlesim.events import OnDeath
 
 class TreasureType(Treasure):
     display_name = 'Phoenix Feather'
+    aura = True
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.feather_used = False
 
-        class PhoenixFeatherSummon(OnDeath):
+    def buff(self, target_character):
+
+        class PhoenixFeatherOnDeath(OnDeath):
             feather = self
             last_breath = False
 
             def handle(self, *args, **kwargs):
-                if not self.feather.feather_used and self.manager.attack == sorted(self.manager.owner.board, key=lambda char: char.attack, reverse=True)[0]:
-                    self.manager.owner.graveyard.remove(self.manager)
-                    self.manager.owner.summon(self.manager.position, self.manager)
-        self.player.register(PhoenixFeatherSummon)
+                if not self.feather.feather_used:
+
+                    all_characters = self.manager.owner.valid_characters() + [self.manager]
+                    max_attack = max(all_characters, key=lambda x: x.attack).attack
+                    if self.manager.attack >= max_attack:
+                        self.manager.owner.graveyard.remove(self.manager)
+                        self.manager.owner.summon(self.manager.position, self.manager)
+
+                        if self.feather.mimic:
+                            new_char = self.manager.__class__(
+                                self.manager.owner,
+                                self.manager.position,
+                                self.manager.attack,
+                                self.manager.health,
+                                golden=self.manager.golden,
+                                tribes=self.manager.tribes,
+                                cost=self.manager.cost
+                            )
+
+                            self.manager.owner.summon(self.manager.position, new_char)
+
+        target_character.register(PhoenixFeatherOnDeath, temp=True)
 
 
 

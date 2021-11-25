@@ -24,3 +24,6 @@ class CharacterType(Character):
         # Give evil minions the buff
         if 'evil' in target_character.tribes and target_character is not self:
             target_character.register(EvilQueenOnDeath, temp=True)
+
+
+        # TODO fix evil tribe
