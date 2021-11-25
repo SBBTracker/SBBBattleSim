@@ -2,16 +2,16 @@ import pytest
 
 from sbbbattlesim import Board
 from sbbbattlesim.utils import Keyword, Tribe
-from tests import make_character, make_player, get_treasures
+from sbbbattlesim.treasures import registry as treasure_registry
+from tests import make_character, make_player
 
 
 @pytest.mark.parametrize('mimic', (True, False))
 @pytest.mark.parametrize('tiger', (True, False))
-@pytest.mark.parametrize('treasure', get_treasures())
+@pytest.mark.parametrize('treasure', treasure_registry.keys())
 def test_treasure(treasure, mimic, tiger):
     player = make_player(
-        characters=[make_character(position=i, keywords=[kw for kw in Keyword], tribes=[tribe for tribe in Tribe]) for i
-                    in range(1, 8)],
+        characters=[make_character(position=i, keywords=[kw for kw in Keyword], tribes=[tribe for tribe in Tribe]) for i in range(1, 8)],
         treasures=[treasure]
     )
 
@@ -1194,7 +1194,7 @@ def test_sword_of_fire_and_ice(mimic):
 def test_ninth_book_of_merlin(mimic):
     player = make_player(
         characters=[
-            make_character(tribe=['mage']),
+            make_character(tribes=['mage']),
             make_character(position=2),
         ],
         treasures=[

@@ -1,7 +1,7 @@
 import enum
 import logging
-from random import choice
-from sbbbattlesim.spells import Registry as spell_registry
+import random
+from sbbbattlesim.spells import registry as spell_registry
 
 logger = logging.getLogger(__name__)
 
@@ -185,14 +185,6 @@ class StatChangeCause(enum.Enum):
     POISON_APPLE = 456
 
 
-def resolve_damage(attacker, defender, **kwargs):
-    logger.debug(f'Resolving Damage for {attacker.id}')
-    attack_action = attacker.resolve_damage()
-
-    if attack_action is True:
-        resolve_damage(attacker=defender, defender=attacker, **kwargs)
-
-
 def get_support_targets(position, horn=False):
     if horn:
         return [1, 2, 3, 4]
@@ -227,8 +219,9 @@ def get_spawn_positions(position):
 
 
 def random_combat_spell(level):
-
-    return spell_registry.get(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in COMBAT_SPELLS)
+    valid_spells = [*spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in COMBAT_SPELLS)]
+    if valid_spells:
+        return random.choice(valid_spells)
 
 
 #TODO are these the same across different effects (robin wood, helm of the gosling, juliets in graveyards)
@@ -243,7 +236,7 @@ def find_stat_extreme_character(player, strongest=True):
     func = max if strongest else min
     sub_char = func(valid_characters, key=lambda char: (char.attack, char.cost))
     sub_chars = list(filter(lambda char: char.attack == sub_char.attack and char.cost == sub_char.cost, valid_characters))
-    return choice(sub_chars)
+    return random.choice(sub_chars)
 
 
 def find_strongest_character(player):

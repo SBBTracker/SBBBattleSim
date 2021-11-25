@@ -1,7 +1,7 @@
 import random
 
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.spells import NonTargetedSpell
+from sbbbattlesim.spells import TargetedSpell, NonTargetedSpell
 
 PIGOMORPH_ID = 'SBB_CHARACTER_PIG'
 
@@ -11,8 +11,9 @@ class SpellType(NonTargetedSpell):
     _level = 6
 
     def cast(self, player, *args, **kwargs):
-        target = random.choice(player.opponent.valid_characters())
-        if target is not None:
-            pig = character_registry[PIGOMORPH_ID](player.opponent, target.position, 10, 10, golden=False, keywords=[], tribes=[], cost=1)
-            player.characters[target.position] = pig
-            player.opponent.resolve_board()
+        valid_targets = player.opponent.valid_characters()
+        if valid_targets:
+            target = random.choice(valid_targets)
+            pig = character_registry[PIGOMORPH_ID](target.owner, target.position, 10, 10, golden=False, keywords=[], tribes=[], cost=1)
+            target.owner.characters[target.position] = pig
+            target.owner.opponent.resolve_board()

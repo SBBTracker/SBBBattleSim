@@ -14,6 +14,18 @@ logger = logging.getLogger(__name__)
 logic_path = __path__
 
 
+@dataclass
+class StatChange:
+    reason: StatChangeCause
+    source: ('Character', Treasure, Hero, Spell)
+    attack: int
+    health: int
+    damage: int
+    heal: int
+    temp: bool
+
+    def __repr__(self):
+        return f'{self.reason} (attack={self.attack}, health={self.health}, damage={self.damage}, heal={self.heal}, temp={self.temp})'
 
 
 class Character(EventManager):
@@ -53,18 +65,6 @@ class Character(EventManager):
 
         self.stat_history = []
 
-        @dataclass
-        class StatChange:
-            reason: StatChangeCause
-            source: (Character, Treasure, Hero, Spell)
-            attack: int
-            health: int
-            damage: int
-            heal: int
-            temp: bool
-
-        self.StatChange = StatChange
-
     @classmethod
     def new(cls, owner, position, golden):
         return cls(
@@ -100,30 +100,23 @@ class Character(EventManager):
         return self._base_health + self._temp_health
 
     def change_stats(self, reason, source, attack=0, health=0, damage=0, heal=0, temp=True):
-        logger.debug(f'{self.pretty_print()} stat change b/c {reason} (attack={attack}, health={health}, damage={damage}, heal={heal}, temp={temp})')
+        stat_change = StatChange(reason=reason, source=source, attack=attack, health=health, damage=damage, heal=heal, temp=temp)
+        logger.debug(f'{self.pretty_print()} stat change b/c {stat_change}')
 
-        if temp:
-            self._temp_attack += attack
-            self._temp_health += health
-        else:
-            self._base_attack += attack
-            self._base_health += health
+        if attack > 0 or health > 0:
+            if temp:
+                self._temp_attack += attack
+                self._temp_health += health
+            else:
+                self._base_attack += attack
+                self._base_health += health
+
+            self('OnBuff', attack_buff=attack, health_buff=health, damage=damage, reason=reason, temp=temp)
 
         if damage > 0:
-
-            # ONLY FOR SOLTAK ATM
             if self.invincible and reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:
-                logger.debug('SOLTAK PREVENTED DAMAGE')
                 return
-
             self._damage += damage
-            if self.health <= 0:
-                self.dead = True
-                logger.debug(f'{self.pretty_print()} marked for death')
-            else:
-                # On Damage and Survived Trigger
-                # TODO Maybe add more args if needed
-                self('OnDamagedAndSurvived', damage=damage)
 
         if heal > 0:
             if heal < self._damage:
@@ -131,14 +124,17 @@ class Character(EventManager):
             else:
                 self._damage = 0
 
-        if attack > 0 or health > 0:
-            self('OnBuff', attack_buff=attack, health_buff=health, damage=damage, reason=reason, temp=temp)
-
         logger.debug(f'{self.pretty_print()} finishsed stat change')
+        self.stat_history.append(stat_change)
 
-        self.stat_history.append(self.StatChange(reason=reason, source=source, attack=attack, health=health, damage=damage, heal=heal, temp=temp))
+        if self.health <= 0:
+            self.dead = True
+            logger.debug(f'{self.pretty_print()} marked for death')
+        elif damage > 0:
+            self('OnDamagedAndSurvived', damage=damage)
 
     def clear_temp(self):
+        logger.debug(f'{self.pretty_print()} clearing temp')
         super().clear_temp()
 
         self._temp_attack = 0
@@ -146,31 +142,16 @@ class Character(EventManager):
         self.invincible = False
 
 
+CHARACTER_EXCLUSION = (
+    'SBB_CHARACTER_CAPTAINCROC',
+)
+
 
 class Registry(object):
     characters = OrderedDict()
 
     def __getitem__(self, item):
-        character = self.characters.get(item)
-        if not character:
-            character = {char.display_name: char for char in self.characters.values()}.get(item)
-
-        if not character:
-            class NewCharacter(Character):
-                display_name = item
-
-                _attack = 1
-                _health = 1
-                _level = 1
-                _tribes = set()
-
-            character = NewCharacter
-            # print(f'Creating Generic Character for {item}')
-
-        # Set the id for reference
-        character.id = item
-
-        return character
+        return self.characters.get(item, self._base_character(item))
 
     def __getattr__(self, item):
         return getattr(self.characters, item)
@@ -178,13 +159,14 @@ class Registry(object):
     def __contains__(self, item):
         return item in self.characters
 
-    def get(self, _lambda=lambda char_cls: True):
-        return [char_cls for char_cls in self.characters.values() if _lambda(char_cls)]
-
     def register(self, name, character):
         assert name not in self.characters, 'Character is already registered.'
+        character.id = name
         self.characters[name] = character
         logger.debug(f'Registered {name} - {character}')
+
+    def filter(self, _lambda=lambda char_cls: True):
+        return (char_cls for id, char_cls in self.characters.items() if id not in CHARACTER_EXCLUSION and _lambda(char_cls))
 
     def unregister(self, name):
         self.characters.pop(name, None)
@@ -198,6 +180,11 @@ class Registry(object):
                 logger.exception('Error loading characters: {}'.format(name))
                 raise exc
 
+    def _base_character(self, name):
+        class TempCharacter(Character):
+            display_name = name
+            id = name
+        return TempCharacter
+
 
 registry = Registry()
-registry.autoregister()

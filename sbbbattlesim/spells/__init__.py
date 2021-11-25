@@ -13,9 +13,6 @@ class Spell:
     level = 0
     targeted = True
 
-    def __init__(self):
-        pass
-
     def cast(self, *args, **kwargs):
         raise NotImplementedError
 
@@ -47,22 +44,10 @@ class Registry(object):
     spells = OrderedDict()
 
     def __getitem__(self, item):
-        spell = self.spells.get(item, lambda: None)
-        spell.id = item
-        return spell()
+        return self.spells.get(item, Spell)
 
     def __getattr__(self, item):
-        spell = getattr(self.spells, item)
-
-        if spell is None:
-            class NewSpell(Spell):
-                display_name = item
-
-            spell = NewSpell
-
-        spell.id = item
-
-        return spell
+        return getattr(self.spells, item)
 
     def __contains__(self, item):
         return item in self.spells
@@ -72,9 +57,13 @@ class Registry(object):
         return cls._level != 0
 
     def register(self, name, spell):
-        assert name not in self.spells, 'Character is already registered.'
+        assert name not in self.spells
+        spell.id = name
         self.spells[name] = spell
         logger.debug(f'Registered {name} - {spell}')
+
+    def filter(self, _lambda=lambda spell_cls: True):
+        return (spell_cls for spell_cls in self.spells.values() if _lambda(spell_cls))
 
     def unregister(self, name):
         self.spells.pop(name, None)
@@ -89,8 +78,6 @@ class Registry(object):
             except Exception as exc:
                 logger.exception('Error loading spells: {}'.format(name))
 
-    def get(self, _lambda= lambda spell_cls: True):
-        return [spell_cls for spell_cls in self.spells.values() if _lambda(spell_cls)]
+
 
 registry = Registry()
-registry.autoregister()

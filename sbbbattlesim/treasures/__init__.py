@@ -26,17 +26,7 @@ class Registry(object):
     treasures = OrderedDict()
 
     def __getitem__(self, item):
-        treasure = self.treasures.get(item)
-
-        if treasure is None:
-            class NewTreasure(Treasure):
-                display_name = item
-
-            treasure = NewTreasure
-
-        treasure.id = item
-
-        return treasure
+        return self.treasures.get(item, Treasure)
 
     def __getattr__(self, item):
         return getattr(self.treasures, item)
@@ -45,10 +35,13 @@ class Registry(object):
         return item in self.treasures
 
     def register(self, name, treasure):
-        assert name not in self.treasures, 'Integration is already registered.'
-        treasure.display_name = name
+        assert name not in self.treasures
+        treasure.id = name
         self.treasures[name] = treasure
         logger.debug(f'Registered {name} - {treasure}')
+
+    def filter(self, _lambda=lambda treasure_cls: True):
+        return (treasure_cls for treasure_cls in self.values() if _lambda(treasure_cls))
 
     def unregister(self, name):
         self.treasures.pop(name, None)
@@ -65,4 +58,3 @@ class Registry(object):
 
 
 registry = Registry()
-registry.autoregister()

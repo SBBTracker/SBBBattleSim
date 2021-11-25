@@ -17,8 +17,11 @@ class CharacterType(Character):
 
         class MonsterBookOnDeath(OnDeath):
             last_breath = True
+            monster_book = self
 
             def handle(self, *args, **kwargs):
-                random_combat_spell(self.owner.level).cast()
+                spell = random_combat_spell(self.monster_book.owner.level)
+                if spell:
+                    self.manager.owner.cast(spell)
 
         self.register(MonsterBookOnDeath)

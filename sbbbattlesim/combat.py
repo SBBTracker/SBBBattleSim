@@ -3,7 +3,8 @@ import random
 import sys
 from functools import lru_cache, cache
 
-from sbbbattlesim.utils import StatChangeCause, Keyword, resolve_damage
+from sbbbattlesim.damage import Damage
+from sbbbattlesim.utils import StatChangeCause
 
 sys.setrecursionlimit(500)
 
@@ -107,9 +108,18 @@ def attack(attack_position, attacker, defender, **kwargs):
     attack_character = attacker.characters.get(attack_position)
     defend_character = defender.characters.get(defend_position)
 
-    if not attack_character.ranged:
-        attack_character.change_stats(damage=defend_character.attack, reason=StatChangeCause.DAMAGE_WHILE_ATTACKING, source=defend_character)
-    defend_character.change_stats(damage=attack_character.attack, reason=StatChangeCause.DAMAGE_WHILE_DEFENDING, source=attack_character)
+    attacker_damage = Damage(
+        x=defend_character.attack if not attack_character.ranged else 0,
+        reason=StatChangeCause.DAMAGE_WHILE_ATTACKING,
+        source=defend_character,
+        targets=[attack_character]
+    )
+    defender_damage = Damage(
+        x=attack_character.attack,
+        reason=StatChangeCause.DAMAGE_WHILE_DEFENDING,
+        source=attack_character,
+        targets=[defend_character]
+    )
 
     # SLAY TRIGGER
     if defend_character.dead:
@@ -119,5 +129,5 @@ def attack(attack_position, attacker, defender, **kwargs):
     attack_character('OnPostAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
     defend_character('OnPostDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
 
-    resolve_damage(attacker=attacker, defender=defender, **kwargs)
-    resolve_damage(attacker=defender, defender=attacker, **kwargs)
+    attacker_damage.resolve()
+    defender_damage.resolve()

@@ -2,6 +2,7 @@ import random
 
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.damage import Damage
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
@@ -24,6 +25,9 @@ class CharacterType(Character):
         def handle(self, *args, **kwargs):
             valid_targets = self.manager.owner.opponent.valid_characters()
             if valid_targets:
-                target = random.choice(valid_targets)
-                target.change_stats(damage=self.manager.attack, reason=StatChangeCause.WRETCHED_MUMMY_EXPLOSION, source=self.manager)
-    #todo add golden effect
+                Damage(
+                    self.manager.attack * (1 + bool(self.manager.golden)),
+                    reason=StatChangeCause.WRETCHED_MUMMY_EXPLOSION,
+                    source=self.manager,
+                    targets=[random.choice(valid_targets)]
+                ).resolve()

@@ -41,6 +41,7 @@ class Board(EventManager):
         elif self.p2.treasures.get(HERMES_BOOTS) and not self.p1.treasures.get(HERMES_BOOTS):
             attacking, defending = self.p2, self.p1
         else:
+            logger.debug(f'Random Attacker/Defender')
             attacking, defending = random.sample((self.p1, self.p2), 2)
 
         return fight_initialization(attacker=attacking, defender=defending, limit=limit, board=self)

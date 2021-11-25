@@ -12,11 +12,26 @@ from sbbbattlesim.board import Board
 
 from sbbbattlesim.config import configure_logging
 
+from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.heros import registry as hero_registry
+from sbbbattlesim.spells import registry as spell_registry
+from sbbbattlesim.treasures import registry as treasure_registry
+
 SUMMONING_PRIORITY = 10
 
-configure_logging()
 
 logger = logging.getLogger(__name__)
+
+
+def setup():
+    configure_logging()
+    character_registry.autoregister()
+    hero_registry.autoregister()
+    spell_registry.autoregister()
+    treasure_registry.autoregister()
+
+
+setup()
 
 
 @dataclass

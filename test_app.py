@@ -6,12 +6,15 @@ from queue import Queue
 
 import numpy as numpy
 
-from sbbbattlesim import simulate_from_state
+from sbbbattlesim import configure_logging, simulate_from_state
 import log_parser
+
+configure_logging()
 
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
+    logger.debug(f'Starting...')
     queue = Queue()
     threading.Thread(target=log_parser.run,
                      args=(queue,),

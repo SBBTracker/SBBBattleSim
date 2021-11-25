@@ -33,15 +33,3 @@ def make_character(**kwargs):
     character = CHARACTER.copy()
     character.update(kwargs)
     return character
-
-
-def get_characters(_lambda=lambda char: True):
-    return [key for key, char in character_registry.characters.items() if _lambda(char)]
-
-
-def get_spells(_lambda=lambda spell: True):
-    return [key for key, spell in spell_registry.spells.items() if _lambda(spell)]
-
-
-def get_treasures(_lambda=lambda treasure: True):
-    return [key for key, treasure in treasure_registry.treasures.items() if _lambda(treasure)]

@@ -23,17 +23,7 @@ class Registry(object):
     heros = OrderedDict()
 
     def __getitem__(self, item):
-        hero = self.heros.get(item)
-
-        if hero is None:
-            class NewHero(Hero):
-                display_name = item
-
-            hero = NewHero
-
-        hero.id = item
-
-        return hero
+        return self.heros.get(item, Hero)
 
     def __getattr__(self, item):
         return getattr(self.heros, item)
@@ -42,7 +32,8 @@ class Registry(object):
         return item in self.heros
 
     def register(self, name, hero):
-        assert name not in self.heros, 'Character is already registered.'
+        assert name not in self.heros
+        hero.id = name
         self.heros[name] = hero
         logger.debug(f'Registered {name} - {hero}')
 
@@ -61,4 +52,3 @@ class Registry(object):
 
 
 registry = Registry()
-registry.autoregister()

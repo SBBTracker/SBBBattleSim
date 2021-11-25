@@ -1,5 +1,3 @@
-from random import choice
-
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause

@@ -4,7 +4,6 @@ from collections import OrderedDict
 
 from sbbbattlesim import utils
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.utils import resolve_damage
 from sbbbattlesim.events import EventManager, OnStart
 from sbbbattlesim.heros import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry, NonTargetedSpell, TargetedSpell
@@ -41,7 +40,7 @@ class Player(EventManager):
         mimic = sum(['SBB_TREASURE_TREASURECHEST' in treasures, hero == 'SBB_HERO_THECOLLECTOR'])
         for tres in treasures:
             treasure = treasure_registry[tres]
-            logger.debug(f'{self.id} Registering Treasure {tres} {treasure}')
+            logger.debug(f'{self.id} Registering treasure {treasure}')
             self.treasures[treasure.id] = treasure(self, mimic)
 
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
@@ -109,16 +108,12 @@ class Player(EventManager):
         return self._attack_slot
 
     def resolve_board(self):
-
-        self.resolve_damage()
-
         # Remove all bonuses
         # these need to be prior so that there is not
         # wonky ordering issues with clearing buffs
         # and units that give secondary units buffs that buff
         # arbitrary units
         self.clear_temp()
-
         for pos, char in self.characters.items():
             if char is None:
                 continue
@@ -153,34 +148,6 @@ class Player(EventManager):
 
         self('OnResolveBoard')
 
-    def resolve_damage(self, *args, **kwargs):
-        action_taken = False
-
-        # TODO Remove all characters before death triggers
-
-        # Resolve Character Deaths
-        dead_characters = []
-
-        logger.debug(f'RESOLVING DAMAGE FOR {self}')
-
-        for pos, char in self.characters.items():
-            if char is None:
-                continue
-
-            if char.dead:
-                dead_characters.append(char)
-                action_taken = True
-
-                self.graveyard.append(char)
-                self.characters[pos] = None
-
-                logger.info(f'{char} died')
-
-        for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
-            char('OnDeath', *args,  **kwargs)
-
-        return action_taken
-
     def summon(self, pos, *characters):
         summoned_characters = []
         spawn_order = utils.get_spawn_positions(pos)
@@ -214,7 +181,7 @@ class Player(EventManager):
         return [char for char in self.characters.values() if base_lambda(char) and _lambda(char)]
 
     def cast_spell(self, spell_id, on_start=False):
-        spell = spell_registry[spell_id]
+        spell = spell_registry[spell_id]()
         if spell is None:
             return
 
@@ -230,8 +197,5 @@ class Player(EventManager):
             return
 
         spell.cast(player=self, target=target)
-
-        resolve_damage(attacker=self, defender=self.opponent)
-        resolve_damage(attacker=self.opponent, defender=self)
 
         self('OnSpellCast', caster=self, spell=spell, target=target)

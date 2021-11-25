@@ -2,22 +2,23 @@ import pytest
 
 from sbbbattlesim import Board
 from sbbbattlesim.utils import Keyword, Tribe, StatChangeCause
-from tests import make_character, make_player, get_characters
+from tests import make_character, make_player
 
 from sbbbattlesim.characters import registry as character_registry
 
 
-@pytest.mark.parametrize('char', get_characters())
+
+@pytest.mark.parametrize('char', character_registry.keys())
 def test_valid_character(char):
     char = character_registry[char]
     assert char.valid()
     assert char.display_name
-    assert next((False for char_cls in character_registry.get() if char_cls != char and char.display_name == char_cls.display_name), True)
+    assert next(character_registry.filter(_lambda=lambda char_cls: char_cls.id != char.id and char_cls.display_name == char.display_name), True)
 
 
 @pytest.mark.parametrize('attack', (True, False))
 @pytest.mark.parametrize('golden', (True, False))
-@pytest.mark.parametrize('char', get_characters())
+@pytest.mark.parametrize('char', character_registry.keys())
 def test_character(char, attack, golden):
     char = make_character(id=char, golden=golden)
     generic_char = make_character(position=7, tribes=[tribe.value for tribe in Tribe])
@@ -40,12 +41,17 @@ SUPPORT_EXCLUSION = (
 )
 
 @pytest.mark.parametrize('golden', (True, False))
-@pytest.mark.parametrize('char', get_characters(_lambda=lambda char: char.support is True))
+@pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: char.support is True))
 def test_support(char, golden):
-    support = make_character(id=char, position=5, golden=golden)
-    generic_char = make_character(tribes=[tribe.value for tribe in Tribe])
+    # Riverwish is a support but doesn't give stats so it won't be tested here
+    if char.id in SUPPORT_EXCLUSION:
+        return
+
     player = make_player(
-        characters=[support, generic_char],
+        characters=[
+            make_character(id=char.id, position=5, golden=golden),
+            make_character(tribes=[tribe.value for tribe in Tribe])
+        ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
@@ -54,15 +60,11 @@ def test_support(char, golden):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
 
-    # Riverwish is a support but doesn't give stats so it won't be tested here
-    if char in SUPPORT_EXCLUSION:
-        return
-
     assert board.p1.characters[1].stat_history[0].reason == StatChangeCause.SUPPORT_BUFF
 
 
 @pytest.mark.parametrize('golden', (True, False))
-@pytest.mark.parametrize('char', get_characters(_lambda=lambda char: char.slay is True))
+@pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: char.slay is True))
 def test_slay(char, golden):
     slay = make_character(id=char, position=1, golden=golden)
     player = make_player(
@@ -77,7 +79,7 @@ def test_slay(char, golden):
 
 
 @pytest.mark.parametrize('golden', (True, False))
-@pytest.mark.parametrize('char', get_characters(_lambda=lambda char: char.last_breath is True))
+@pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: char.last_breath is True))
 def test_last_breath(char, golden):
     last_breath = make_character(id=char, position=1, attack=0, health=1, golden=golden)
     player = make_player(
@@ -93,10 +95,11 @@ def test_last_breath(char, golden):
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_baba_yaga(golden):
-    lance = make_character(id='SBB_CHARACTER_LANCELOT', position=1, attack=1, health=1)
-    baba = make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=0, health=1, golden=golden)
     player = make_player(
-        characters=[lance, baba],
+        characters=[
+            make_character(id='SBB_CHARACTER_LANCELOT', position=1, attack=1, health=1),
+            make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=0, health=1, golden=golden)
+        ],
     )
     enemy = make_player(
         characters=[make_character(attack=0, health=1)],

@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.damage import Damage
 from sbbbattlesim.spells import NonTargetedSpell
 from sbbbattlesim.utils import StatChangeCause
 
@@ -11,5 +12,5 @@ class SpellType(NonTargetedSpell):
     _level = 3
 
     def cast(self, player, *args, **kwargs):
-        for char in player.opponent.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4)):
-            char.change_stats(damage=1, reason=StatChangeCause.EARTHQUAKE, source=self)
+        targets = player.opponent.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4)) 
+        Damage(1, reason=StatChangeCause.EARTHQUAKE,  source=self, targets=targets).resolve()

@@ -1,3 +1,4 @@
+from sbbbattlesim.damage import Damage
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.events import OnDeath
 import random
@@ -19,7 +20,7 @@ class TreasureType(Treasure):
                     for _ in range(self.ancient_sarcophagus.mimic + 1):
                         valid_targets = self.manager.owner.opponent.valid_characters()
                         if valid_targets:
-                            target = random.choice(valid_targets)
-                            target.change_stats(damage=3, reason=StatChangeCause.ANCIENT_SARCOPHAGUS, source=self.ancient_sarcophagus)
+                            Damage(3, reason=StatChangeCause.ANCIENT_SARCOPHAGUS, source=self.ancient_sarcophagus,
+                                   targets=[random.choice(valid_targets)]).resolve()
 
             target_character.register(AncientSarcophagusOnDeath, temp=True)
