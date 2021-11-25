@@ -19,5 +19,5 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
 
     def change_stats(self, attack=0, health=0, *args, **kwargs):
-        golden_multiplier = 2 if self.golden else 1
+        golden_multiplier = 3 if self.golden else 2
         super().change_stats(attack=attack * golden_multiplier, health=health * golden_multiplier, *args, **kwargs)
