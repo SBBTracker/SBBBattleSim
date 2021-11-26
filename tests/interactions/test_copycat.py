@@ -50,6 +50,8 @@ def test_muerte_single_goodboy(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     if golden:
         final_stats = (27, 27)
@@ -77,6 +79,8 @@ def test_copycat_queenofhearts():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     assert len([evt for evt in board.p1.characters[5].get('OnDeath') if evt.__class__.__name__ == 'EvilQueenOnDeath']) == 1
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1,1)

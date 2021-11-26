@@ -17,6 +17,8 @@ def test_mittens_phoenixfeather():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     assert board.p1.characters[1] is None
     assert board.p1.characters[5] is not None and board.p1.characters[5].attack == 1

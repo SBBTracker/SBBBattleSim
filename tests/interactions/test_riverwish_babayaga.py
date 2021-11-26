@@ -24,6 +24,8 @@ def test_advanced_slay(golden, mimic, evil_eye):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     yaga_multiplier = 2 if golden else 1
     evil_eye_additor = yaga_multiplier if evil_eye else 0

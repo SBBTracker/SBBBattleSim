@@ -15,6 +15,8 @@ def test_mittens_smallblackcat():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     assert board.p1.characters[1].id == 'Cat'
 
@@ -32,6 +34,8 @@ def test_mimic_mittens_smallblackcat():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     assert board.p1.characters[1].id == 'Cat'
 
@@ -49,5 +53,7 @@ def test_mimic_mittens_bigblackcat():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     assert board.p1.characters[1] is None

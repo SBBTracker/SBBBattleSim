@@ -20,7 +20,8 @@ def test_echowood_queenofhearts():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     golden_final_stats = (9, 9)
 
@@ -47,6 +48,8 @@ def test_echowood_supported_token():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 4)
 
