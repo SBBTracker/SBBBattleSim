@@ -6,6 +6,8 @@ class TreasureType(Treasure):
     display_name = 'Crown of Atlas'
     aura = True
 
+    _level = 2
+
     def buff(self, target_character):
         if Tribe.ANIMAL in target_character.tribes:
 

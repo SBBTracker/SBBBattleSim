@@ -56,11 +56,9 @@ def test_support(char, golden):
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    enemy = make_player(
-        characters=[make_character(attack=50, health=50)],
-    )
+    enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    winner, loser = board.fight(limit=0)
 
     assert board.p1.characters[1].stat_history[0].reason == StatChangeCause.SUPPORT_BUFF
 
@@ -81,7 +79,7 @@ def test_slay(char, golden):
         characters=[make_character(position=1, attack=0, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=None)
+    winner, loser = board.fight(limit=-1)
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (3, 2)
 

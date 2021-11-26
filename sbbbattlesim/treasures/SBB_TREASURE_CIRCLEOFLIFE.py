@@ -7,6 +7,8 @@ class TreasureType(Treasure):
     display_name = 'Tree of Life'
     aura = True
 
+    _level = 5
+
     def buff(self, target_character):
         class TreeOfLifeHeal(OnDeath):
             tree = self

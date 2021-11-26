@@ -16,7 +16,7 @@ def test_mittens_phoenixfeather():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''', "SBB_TREASURE_EXPLODINGMITTENS"]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=None)
+    winner, loser = board.fight(limit=-1)
 
     assert board.p1.characters[1] is None
     assert board.p1.characters[5] is not None and board.p1.characters[5].attack == 1

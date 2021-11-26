@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 class TreasureType(Treasure):
     display_name = 'Summoning Portal'
 
+    _level = 4
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.buff_count = 0

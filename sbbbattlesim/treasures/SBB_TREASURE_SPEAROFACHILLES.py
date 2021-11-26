@@ -7,6 +7,8 @@ class TreasureType(Treasure):
     display_name = 'Spear of Achilles'
     aura = True
 
+    _level = 6
+
     def buff(self, target_character):
         class SpearOfAchillesAttack(OnPreAttack):
             spear = self

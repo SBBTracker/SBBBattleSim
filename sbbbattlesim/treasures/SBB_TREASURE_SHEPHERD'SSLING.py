@@ -6,6 +6,8 @@ class TreasureType(Treasure):
     display_name = 'Sheperd\'s Sling'
     aura = True
 
+    _level = 3
+
     def buff(self, target_character):
         if target_character._level <= 3:
             for _ in range(self.mimic + 1):

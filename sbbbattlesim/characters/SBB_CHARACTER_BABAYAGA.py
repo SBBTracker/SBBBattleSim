@@ -15,21 +15,17 @@ class CharacterType(Character):
     _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
     def buff(self, target_character):
-
-        # NOTE: this is so HUGELY fragile based on fundamental changes to the event manager
-        # frankly if you can't fix this while updating the event manager then you shouldn't change either
         class BabaYagaOnSlayBuff(OnSlay):
             baba_yaga = self
-            def handle(self, source, *args, **kwargs):
-                if isinstance(source, BabaYagaOnSlayBuff):
+
+            def handle(self, source, stack, *args, **kwargs):
+                logger.debug(f'BABA SOURCE CHECK {source} {isinstance(source, OnSlay)}')
+                if isinstance(source, OnSlay):
                     return
 
                 for _ in range(2 if self.baba_yaga.golden else 1):
-                    reaction = source(*args, **kwargs, source=source)
-                    if reaction:
-                        react, evt_args, evt_kwargs = reaction
-
-                        logger.info(f'Baba Yaga Event Manager handling: {react} reacting to {self} with source={self} ({evt_args} {evt_kwargs})')
-                        self.manager(react, *evt_args, **evt_kwargs, source=self)
+                    with stack.open(source=self):
+                        logger.debug(f'Baba Yaga Triggering OnAttackAndKill {source} ({args} {kwargs})')
+                        stack.execute(source, *args, **kwargs)
 
         target_character.register(BabaYagaOnSlayBuff, temp=True)

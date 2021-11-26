@@ -6,6 +6,8 @@ class TreasureType(Treasure):
     display_name = 'Monkey\'s Paw'
     aura = True
 
+    _level = 5
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.monkey_paw = len(self.player.valid_characters()) <= 6

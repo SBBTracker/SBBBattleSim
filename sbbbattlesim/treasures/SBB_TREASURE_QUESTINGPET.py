@@ -6,6 +6,8 @@ class TreasureType(Treasure):
     display_name = 'Noble Steed'
     aura = True
 
+    _level = 2
+
     def buff(self, target_character):
         if target_character.quest:
             for _ in range(self.mimic + 1):

@@ -12,6 +12,8 @@ class TreasureType(Treasure):
     display_name = 'The Ninth Book of Merlin'
     aura = True
 
+    _level = 5
+
     def buff(self, target_character):
         logger.debug(f'{target_character.pretty_print()} Is this a mage??? {target_character.tribes} {Tribe.MAGE in target_character.tribes}')
         if Tribe.MAGE in target_character.tribes:

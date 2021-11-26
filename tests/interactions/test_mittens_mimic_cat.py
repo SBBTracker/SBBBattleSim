@@ -14,7 +14,7 @@ def test_mittens_smallblackcat():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''', "SBB_TREASURE_EXPLODINGMITTENS"]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=None)
+    winner, loser = board.fight(limit=-1)
 
     assert board.p1.characters[1].id == 'Cat'
 
@@ -31,7 +31,7 @@ def test_mimic_mittens_smallblackcat():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''', "SBB_TREASURE_EXPLODINGMITTENS", "SBB_TREASURE_TREASURECHEST"]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=None)
+    winner, loser = board.fight(limit=-1)
 
     assert board.p1.characters[1].id == 'Cat'
 
@@ -48,6 +48,6 @@ def test_mimic_mittens_bigblackcat():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''', "SBB_TREASURE_EXPLODINGMITTENS", "SBB_TREASURE_TREASURECHEST"]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=None)
+    winner, loser = board.fight(limit=-1)
 
     assert board.p1.characters[1] is None

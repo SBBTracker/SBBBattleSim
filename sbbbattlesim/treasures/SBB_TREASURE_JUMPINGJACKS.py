@@ -12,6 +12,8 @@ class TreasureType(Treasure):
     display_name = 'Other Hand of Vekna'
     aura = True
 
+    _level = 4
+
     def buff(self, target_character):
         class OtherHandOfVekna(OnDeath):
             last_breath = False

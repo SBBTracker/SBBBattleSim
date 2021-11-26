@@ -6,6 +6,8 @@ class TreasureType(Treasure):
     display_name = 'Phoenix Feather'
     aura = True
 
+    _level = 6
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.feather_used = False

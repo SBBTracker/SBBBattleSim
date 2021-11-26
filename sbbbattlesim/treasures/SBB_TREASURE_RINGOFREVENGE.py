@@ -8,6 +8,8 @@ class TreasureType(Treasure):
     name = 'Ring of Revenge'
     aura = True
 
+    _level = 3
+
     def buff(self, target_character):
         if target_character.position in range(1, 5):
 

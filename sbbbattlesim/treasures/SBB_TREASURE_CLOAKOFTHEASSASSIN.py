@@ -11,6 +11,8 @@ class TreasureType(Treasure):
     display_name = 'Cloak of the Assassin'
     aura = True
 
+    _level = 3
+
     def buff(self, target_character):
         logger.debug(f'IS THIS A SLAY??? {target_character}  {target_character.slay}')
         if target_character.slay:

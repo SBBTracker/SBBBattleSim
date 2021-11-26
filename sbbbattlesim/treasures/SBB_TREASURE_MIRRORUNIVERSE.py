@@ -5,6 +5,8 @@ from sbbbattlesim.events import OnDeath
 class TreasureType(Treasure):
     display_name = 'Mirror Mirror'
 
+    _level = 7
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

@@ -14,9 +14,14 @@ class Treasure(EventManager):
     id = ''
     aura = False
 
+    _level = 0
+
     def __init__(self, player, mimic):
         self.player = player
         self.mimic = mimic
+
+    def valid(self):
+        return self._level != 0
 
     def buff(self, target_character):
         raise NotImplementedError(self.display_name)
@@ -42,9 +47,6 @@ class Registry(object):
 
     def filter(self, _lambda=lambda treasure_cls: True):
         return (treasure_cls for treasure_cls in self.values() if _lambda(treasure_cls))
-
-    def unregister(self, name):
-        self.treasures.pop(name, None)
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):

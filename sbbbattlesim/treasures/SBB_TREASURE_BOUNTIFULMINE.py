@@ -6,6 +6,8 @@ class TreasureType(Treasure):
     display_name = 'Deepstone Mine'
     aura = True
 
+    _level = 3
+
     def buff(self, target_character):
         if Tribe.DWARF in target_character.tribes:
             for _ in range(self.mimic + 1):

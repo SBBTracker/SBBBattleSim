@@ -12,6 +12,8 @@ class TreasureType(Treasure):
     name = 'Coin of Charon'
     aura = True
 
+    _level = 4
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.coin_trigger = False

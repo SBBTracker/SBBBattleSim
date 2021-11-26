@@ -9,6 +9,8 @@ class TreasureType(Treasure):
     display_name = 'Ancient Sarcophagus'
     aura = True
 
+    _level = 3
+
     def buff(self, target_character):
         if Tribe.EVIL in target_character.tribes:
 

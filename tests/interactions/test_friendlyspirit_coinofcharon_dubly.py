@@ -17,7 +17,7 @@ def test_friendlyspirit_coinofcharon_dubly(golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=None)
+    winner, loser = board.fight(limit=-1)
 
     if golden:
         final_stats = (55, 55)

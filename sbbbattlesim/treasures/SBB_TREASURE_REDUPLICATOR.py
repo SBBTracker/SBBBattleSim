@@ -5,6 +5,8 @@ from sbbbattlesim.events import OnSummon
 class TreasureType(Treasure):
     display_name = 'Reduplicator'
 
+    _level = 4
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triggered = False

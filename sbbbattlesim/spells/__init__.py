@@ -65,9 +65,6 @@ class Registry(object):
     def filter(self, _lambda=lambda spell_cls: True):
         return (spell_cls for spell_cls in self.spells.values() if _lambda(spell_cls))
 
-    def unregister(self, name):
-        self.spells.pop(name, None)
-
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
             try:

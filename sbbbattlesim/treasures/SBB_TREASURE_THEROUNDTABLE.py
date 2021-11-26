@@ -6,6 +6,8 @@ from sbbbattlesim.events import OnStart
 class TreasureType(Treasure):
     display_name = 'The Round Table'
 
+    _level = 7
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

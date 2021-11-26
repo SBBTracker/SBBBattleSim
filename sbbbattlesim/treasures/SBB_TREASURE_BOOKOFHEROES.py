@@ -11,6 +11,8 @@ class TreasureType(Treasure):
     display_name = '''Book of Heroes'''
     aura = True
 
+    _level = 2
+
     def buff(self, target_character):
         if Tribe.GOOD in target_character.tribes:
             class BookOfHeroesOnAttackAndKillBuff(OnAttackAndKill):

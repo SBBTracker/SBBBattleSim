@@ -6,6 +6,8 @@ class TreasureType(Treasure):
     display_name = 'Dragon Nest'
     aura = True
 
+    _level = 2
+
     def buff(self, target_character):
         if Tribe.DRAGON in target_character.tribes:
             for _ in range(self.mimic + 1):

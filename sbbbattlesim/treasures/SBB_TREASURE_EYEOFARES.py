@@ -6,6 +6,8 @@ from sbbbattlesim.utils import StatChangeCause
 class TreasureType(Treasure):
     display_name = 'Eye of Ares'
 
+    _level = 3
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

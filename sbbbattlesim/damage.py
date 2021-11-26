@@ -11,7 +11,7 @@ class Damage:
         self.targets = targets
         self.killed_characters = []  # This is because a nested damage effect might kill the target, comunging data
 
-        logger.debug(f'New Damage Instance ({x}, {reason}, {source}, {targets})')
+        logger.debug(f'New {self}')
 
         for char in targets:
             if not char.dead:
@@ -20,7 +20,7 @@ class Damage:
                     self.killed_characters.append(char)
 
     def __repr__(self):
-        return f'<<DAMAGE: Reason: {self.reason} Amount: {self.x} Source: {self.source} Targets: {[t.pretty_print() for t in self.targets]}>>'
+        return f'DAMAGE: Reason: {self.reason} Amount: {self.x} Source: {self.source} Targets: {[t.pretty_print() for t in self.targets]}>>'
 
     def __str__(self):
         return self.__repr__()

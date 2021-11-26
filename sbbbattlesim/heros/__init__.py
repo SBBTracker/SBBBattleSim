@@ -37,9 +37,6 @@ class Registry(object):
         self.heros[name] = hero
         logger.debug(f'Registered {name} - {hero}')
 
-    def unregister(self, name):
-        self.heros.pop(name, None)
-
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
             try:

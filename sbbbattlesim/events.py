@@ -1,6 +1,10 @@
 import collections
+import json
 import logging
 import inspect
+from dataclasses import dataclass, field
+from queue import Queue
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +18,8 @@ class SSBBSEvent:
         # TODO Add more logging???
         return self.handle(*args, **kwargs)
 
-    def is_valid(self):
+    @classmethod
+    def is_valid(cls):
         return True
 
     def handle(self, *args, **kwargs):
@@ -36,8 +41,9 @@ class OnDeath(SSBBSEvent):
     '''A character dies'''
     last_breath = None
 
-    def is_valid(self):
-        return self.last_breath is True or self.last_breath is False
+    @classmethod
+    def is_valid(cls):
+        return cls.last_breath is True or cls.last_breath is False
 
     def __call__(self, *args, **kwargs):
         response = self.handle(*args, **kwargs)
@@ -50,7 +56,7 @@ class OnDeath(SSBBSEvent):
 
 class OnLastBreath(SSBBSEvent):
     '''A character last a last breath'''
-    def handle(self, source, *args, **kwargs):
+    def handle(self, source, stack, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -94,17 +100,17 @@ class OnAttackAndKill(SSBBSEvent):
 
         return response
 
-
     def handle(self, killed_character, *args, **kwargs):
         raise NotImplementedError
 
-    def is_valid(self):
-        return self.slay is True or self.slay is False
+    @classmethod
+    def is_valid(cls):
+        return cls.slay is True or cls.slay is False
 
 
 class OnSlay(SSBBSEvent):
     '''A character has triggered a slay'''
-    def handle(self, source, *args, **kwargs):
+    def handle(self, source, stack, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -119,6 +125,7 @@ class OnBuff(SSBBSEvent):
     def handle(self, attack=0, health=0, damage=0, reason='', temp=True):
         raise NotImplementedError
 
+
 class OnSupport(SSBBSEvent):
     '''Triggered when something '''
     def handle(self, buffed, support, *args, **kwargs):
@@ -131,6 +138,57 @@ class OnResolveBoard(SSBBSEvent):
         raise NotImplementedError
 
 
+@dataclass
+class EventStack:
+    manager: 'EventManager'
+    stack: List[SSBBSEvent] = field(default_factory=list)
+
+    _react_buffer: List[tuple] = field(default_factory=list)
+    _args_buffer: list = field(default_factory=list)
+    _kwargs_buffer: dict = field(default_factory=dict)
+
+    def append(self, item):
+        self.stack.append(item)
+
+    def __getitem__(self, item):
+        return self.stack[item]
+
+    def __iter__(self):
+        return self.stack.__iter__()
+
+    def __contains__(self, item):
+        return item in self.stack
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        reactions = self._react_buffer
+        args = self._args_buffer
+        kwargs = self._kwargs_buffer
+
+        self._args_buffer = []
+        self._kwargs_buffer = {}
+        self._react_buffer = []
+
+        for (react, rargs, rkwargs, source) in reactions:
+            rkwargs.update({'source': source, **kwargs})
+            logger.info(f'{source} reaction {react} ({rargs} {rkwargs})')
+            self.manager(react, stack=self, *rargs, **rkwargs)
+
+    def open(self, *args, **kwargs):
+        self._args_buffer.extend(args)
+        self._kwargs_buffer.update(kwargs)
+        return self
+
+    def execute(self, event, *args, **kwargs):
+        response = event(stack=self, *args, **kwargs)
+        self.stack.append(event)
+
+        if response:
+            self._react_buffer.append((*response, event))
+
+
 class EventManager:
     def __init__(self):
         self._temp = collections.defaultdict(list)
@@ -140,34 +198,13 @@ class EventManager:
         return self.__repr__()
 
     def register(self, event, temp=False):
-        event_base = inspect.getmro(event)[1].__name__
-        event = event(manager=self)
-
         if not event.is_valid():
-            logger.debug(f'{self.pretty_print()} found invalid event {event_base} - {event.__class__.__name__}')
+            logger.debug(f'{self.pretty_print()} can not register invalid event {event.__name__}')
             raise NotImplementedError
 
-        if temp:
-            self._temp[event_base].append(event)
-        else:
-            self._events[event_base].append(event)
-        logger.debug(f'{self.pretty_print()} Registered {event_base} - {event.__class__.__name__}')
-
-    def unregister(self, event):
-        logger.debug(f'UNREGISTERING {event} {type(event)}')
-        if isinstance(event, str):
-            evt_check = lambda evt: evt.__class__.__name__ == event
-        elif isinstance(event, SSBBSEvent):
-            evt_check = lambda evt: evt == event
-        elif issubclass(event, SSBBSEvent):
-            evt_check = lambda evt: evt.__class__ == event
-        else:
-            return
-
-        for event_base, evts in self._events.items():
-            [evts.remove(evt) for evt in evts if evt_check(evt)]
-        for event_base, evts in self._temp.items():
-            [evts.remove(evt) for evt in evts if evt_check(evt)]
+        event_base = inspect.getmro(event)[1].__name__
+        (self._temp if temp else self._events)[event_base].append(event(manager=self))
+        logger.debug(f'{self.pretty_print()} Registered {event_base} - {event.__name__}')
 
     def get(self, event):
         return sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True)
@@ -175,29 +212,13 @@ class EventManager:
     def clear_temp(self):
         self._temp = collections.defaultdict(list)
 
-    def __call__(self, event, *args, **kwargs):
-        # This is so hugely sensitive with regards to changes to Baba Yaga
-        # if you can't update baba yaga while updating this code then you shouldn't change either
+    def __call__(self, event, stack=None, *args, **kwargs):
         logger.debug(f'{self.pretty_print()} triggered event {event}')
-        reactions = []
-        for evt in self.get(event):
-            logger.debug(f'Firing {evt} with {args} {kwargs}')
-            reaction = evt(*args, **kwargs)
-            if reaction:
-                reactions.append((*reaction, evt))
 
-        for (react, evt_args, evt_kwargs, source) in reactions:
-            # evt_args += args
-            evt_kwargs.update({'source': source, **kwargs})
-            logger.info(f'{react} reacting to {event} with source={source} ({evt_args} {evt_kwargs})')
-            self(react, *evt_args, **evt_kwargs)
+        # If an event stack already exists use it otherwise make a new stack
+        stack = stack or EventStack(self)
 
-    def event_type_is_registered(self, type):
-        """
-        Does not check for specific events like polywoggle slay
-        instead checks for thigns like OnBuff
-        """
-        if not isinstance(type, str):
-            type = inspect.getmro(type)[1].__name__
-
-        return type in self._temp or type in self._events
+        with stack.open(*args, **kwargs):
+            for evt in self.get(event):
+                logger.debug(f'Firing {evt} with {args} {kwargs}')
+                stack.execute(evt, *args, **kwargs)

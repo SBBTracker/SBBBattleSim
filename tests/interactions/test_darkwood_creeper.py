@@ -15,7 +15,7 @@ def test_darkwood_ranged():
         characters=[make_character(attack=1, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=None)
+    winner, loser = board.fight(limit=-1)
 
     assert board.p1.characters[1].attack == 1
 

@@ -21,11 +21,9 @@ def fight_initialization(attacker, defender, limit=None, **kwargs):
     return fight(attacker, defender, limit=limit, **kwargs)
 
 @lru_cache(maxsize=512)
-def fight(attacker, defender, turn=0, limit=None, **kwargs):
-
-    if limit is not None:
-        if turn > limit:
-            return None, None
+def fight(attacker, defender, turn=0, limit=-1, **kwargs):
+    if limit > 0 and turn >= limit:
+        return None, None
 
     logger.debug(f'********************NEW ROUND OF COMBAT: turn={turn}')
 

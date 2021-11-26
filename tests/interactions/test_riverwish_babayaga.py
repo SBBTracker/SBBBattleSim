@@ -17,11 +17,10 @@ def test_advanced_slay(golden, mimic, evil_eye):
         treasures= [
             'SBB_TREASURE_HELMOFCOMMAND' if evil_eye else '',
             'SBB_TREASURE_TREASURECHEST' if mimic else '',
-            '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
     enemy = make_player(
-        characters=[make_character(attack=0, health=1)],
+        characters=[make_character(id='MONSTAR', attack=0, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
@@ -30,9 +29,14 @@ def test_advanced_slay(golden, mimic, evil_eye):
     evil_eye_additor = yaga_multiplier if evil_eye else 0
     mimic_multiplier = 2 if mimic else 1
 
-    slay_count = 1 + yaga_multiplier + evil_eye_additor * mimic_multiplier
+    slay_multiplyer = 1 + yaga_multiplier + evil_eye_additor * mimic_multiplier
+    slay_count = 1
+    if mimic and evil_eye:
+        slay_count = 3
+    elif evil_eye:
+        slay_count = 2
 
-    final_stat = 1 + slay_count*(3 if mimic and evil_eye else 2 if evil_eye else 1)
+    final_stat = 1 + slay_count * slay_multiplyer
     final_stats = (final_stat, final_stat)
 
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == final_stats

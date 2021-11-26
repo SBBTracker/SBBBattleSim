@@ -8,6 +8,8 @@ from sbbbattlesim.utils import COMBAT_SPELLS
 class TreasureType(Treasure):
     display_name = 'Deck of Many Things'
 
+    _level = 4
+
     spell_list = (
         '''SBB_SPELL_FALLINGSTARS''',
         '''SBB_SPELL_EARTHQUAKE''',

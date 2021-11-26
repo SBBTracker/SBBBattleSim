@@ -6,6 +6,8 @@ class TreasureType(Treasure):
     display_name = 'Magic Sword +100'
     aura = True
 
+    _level = 7
+
     def buff(self, target_character):
         if 1 == target_character.position:
             for _ in range(bool(self.mimic) + 1):

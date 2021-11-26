@@ -33,7 +33,7 @@ class Board(EventManager):
         if self.p2.id == id:
             return self.p2
 
-    def fight(self, limit=None):
+    def fight(self, limit=-1):
         HERMES_BOOTS = '''SBB_TREASURE_HERMES'BOOTS'''
         # Determine Setup and Turn Order
         if self.p1.treasures.get(HERMES_BOOTS) and not self.p2.treasures.get(HERMES_BOOTS):

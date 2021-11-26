@@ -8,6 +8,8 @@ class TreasureType(Treasure):
     display_name = 'Exploding Mittens'
     aura = True
 
+    _level = 5
+
     def buff(self, target_character):
         class ExplodingMittensOnDeath(OnDeath):
             mitten = self

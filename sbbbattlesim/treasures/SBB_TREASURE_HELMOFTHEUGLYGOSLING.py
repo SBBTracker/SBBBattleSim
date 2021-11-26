@@ -6,6 +6,8 @@ from sbbbattlesim.utils import StatChangeCause
 class TreasureType(Treasure):
     display_name = 'Helm of the Ugly Gosling'
 
+    _level = 5
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

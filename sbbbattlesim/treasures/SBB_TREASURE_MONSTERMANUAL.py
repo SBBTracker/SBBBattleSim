@@ -7,6 +7,8 @@ class TreasureType(Treasure):
     display_name = 'Monster Manual'
     aura = True
 
+    _level = 2
+
     def buff(self, target_character):
 
         class MonsterManualOnDeath(OnDeath):

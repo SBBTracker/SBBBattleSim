@@ -161,16 +161,13 @@ class Registry(object):
         return item in self.characters
 
     def register(self, name, character):
-        assert name not in self.characters, 'Character is already registered.'
+        assert name not in self.characters
         character.id = name
         self.characters[name] = character
         logger.debug(f'Registered {name} - {character}')
 
     def filter(self, _lambda=lambda char_cls: True):
         return (char_cls for id, char_cls in self.characters.items() if id not in CHARACTER_EXCLUSION and _lambda(char_cls))
-
-    def unregister(self, name):
-        self.characters.pop(name, None)
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):

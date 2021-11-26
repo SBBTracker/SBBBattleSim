@@ -6,6 +6,8 @@ class TreasureType(Treasure):
     display_name = 'Sword of Fire and Ice'
     aura = True
 
+    _level = 5
+
     def buff(self, target_character):
         if target_character.position <= 4:
             for _ in range(bool(self.mimic) + 1):

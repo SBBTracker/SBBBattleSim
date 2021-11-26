@@ -37,11 +37,11 @@ class Player(EventManager):
         self.graveyard = []
 
         self.treasures = {}
-        mimic = sum(['SBB_TREASURE_TREASURECHEST' in treasures, hero == 'SBB_HERO_THECOLLECTOR'])
+        mimic = 'SBB_TREASURE_TREASURECHEST' in treasures
         for tres in treasures:
             treasure = treasure_registry[tres]
             logger.debug(f'{self.id} Registering treasure {treasure}')
-            self.treasures[treasure.id] = treasure(self, mimic)
+            self.treasures[treasure.id] = treasure(self, mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0))
 
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
         logger.debug(f'{self.id} registering hero {self.hero}')
