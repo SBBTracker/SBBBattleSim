@@ -15,6 +15,7 @@ class TreasureType(Treasure):
 
             def handle(self, source, stack, *args, **kwargs):
                 for _ in range(self.bad_moon.mimic + 1):
-                    self.manager.change_stats(attack=1, health=2, reason=StatChangeCause.BAD_MOON, source=self.bad_moon)
+                    self.manager.change_stats(attack=1, health=2, reason=StatChangeCause.BAD_MOON,
+                                              source=self.bad_moon, temp=False)
 
         target_character.register(BadMoonSlayBuff, temp=True)

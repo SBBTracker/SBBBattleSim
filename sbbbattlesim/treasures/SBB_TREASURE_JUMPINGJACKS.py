@@ -22,8 +22,10 @@ class TreasureType(Treasure):
             def handle(self, *args, **kwargs):
                 positions = (1, 2, 3, 4) if self.manager.position in (1, 2, 3, 4) else (5, 6, 7)
                 for char in self.manager.owner.valid_characters(_lambda=lambda char: char.position in positions):
-                    char.change_stats(health=1, attack=1, reason=StatChangeCause.OTHER_HAND_OF_VEKNA, source=self.vekna)
+                    char.change_stats(health=1, attack=1, reason=StatChangeCause.OTHER_HAND_OF_VEKNA,
+                                      source=self.vekna, temp=False)
                     if self.vekna.mimic:
-                        char.change_stats(health=1, attack=1, reason=StatChangeCause.OTHER_HAND_OF_VEKNA, source=self.vekna)
+                        char.change_stats(health=1, attack=1, reason=StatChangeCause.OTHER_HAND_OF_VEKNA,
+                                          source=self.vekna, temp=False)
 
         target_character.register(OtherHandOfVekna, temp=True)

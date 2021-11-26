@@ -10,6 +10,8 @@ class CharacterType(Character):
     display_name = 'Court Wizard'
     aura = True
 
+    ranged = True
+
     _attack = 4
     _health = 2
     _level = 4
@@ -23,10 +25,11 @@ class CharacterType(Character):
                 last_breath = False
 
                 def handle(self, attack_buff=0, health_buff=0, temp=False, *args, **kwargs):
-                    death_reason = next(reason for (reason, _, _, damage, _, _) in reversed(self.manager.stat_history) if damage > 0)
+                    death_reason = next((stat_history_element.reason for stat_history_element in reversed(self.manager.stat_history) if stat_history_element.damage > 0))
+
                     if death_reason == StatChangeCause.DAMAGE_WHILE_DEFENDING:
                         attack(
-                            attack_character=self.court_wizard,
+                            attack_position=self.court_wizard.position,
                             attacker=self.manager.owner,
                             defender=self.manager.owner.opponent,
                             **kwargs

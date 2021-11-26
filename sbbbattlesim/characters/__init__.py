@@ -89,7 +89,7 @@ class Character(EventManager):
 
     @property
     def attack(self):
-        return self._base_attack + self._temp_attack
+        return max(self._base_attack + self._temp_attack, 0)
 
     @property
     def health(self):

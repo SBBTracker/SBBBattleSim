@@ -14,6 +14,6 @@ class TreasureType(Treasure):
             spear = self
             def handle(self, *args, **kwargs):
                 for _ in range(1 + bool(self.spear.mimic)):
-                    self.manager.change_stats(health=7, attack=7, reason=StatChangeCause.SPEAR_OF_ACHILLES, source=self, temp=True)
+                    self.manager.change_stats(health=7, attack=7, reason=StatChangeCause.SPEAR_OF_ACHILLES, source=self, temp=False)
 
         target_character.register(SpearOfAchillesAttack, temp=True)

@@ -22,7 +22,7 @@ def fight_initialization(attacker, defender, limit=None, **kwargs):
 
 @lru_cache(maxsize=512)
 def fight(attacker, defender, turn=0, limit=-1, **kwargs):
-    if limit > 0 and turn >= limit:
+    if limit > -1 and turn >= limit:
         return None, None
 
     logger.debug(f'********************NEW ROUND OF COMBAT: turn={turn}')
@@ -56,7 +56,8 @@ def fight(attacker, defender, turn=0, limit=-1, **kwargs):
     return fight(
         attacker=defender,
         defender=attacker,
-        turn=turn+1
+        turn=turn+1,
+        limit=limit
     )
 
 

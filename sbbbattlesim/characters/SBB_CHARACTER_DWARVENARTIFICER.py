@@ -3,7 +3,7 @@ from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
 class CharacterType(Character):
-    display_name = 'Crafy'
+    display_name = 'Crafty'
 
     _attack = 1
     _health = 1

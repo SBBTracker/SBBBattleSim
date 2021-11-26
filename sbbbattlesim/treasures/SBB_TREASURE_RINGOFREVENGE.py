@@ -22,6 +22,7 @@ class TreasureType(Treasure):
                         char = self.manager.owner.characters.get(pos)
                         if char:
                             for _ in range(self.ring_of_revenge.mimic + 1):
-                                char.change_stats(health=1, attack=1, reason=StatChangeCause.RING_OF_REVENGE, source=self.ring_of_revenge)
+                                char.change_stats(health=1, attack=1, reason=StatChangeCause.RING_OF_REVENGE,
+                                                  source=self.ring_of_revenge, temp=False)
 
             target_character.register(RingOfRevengeBuff, temp=True)
