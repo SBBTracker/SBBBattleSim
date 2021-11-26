@@ -103,7 +103,7 @@ class Character(EventManager):
         stat_change = StatChange(reason=reason, source=source, attack=attack, health=health, damage=damage, heal=heal, temp=temp)
         logger.debug(f'{self.pretty_print()} stat change b/c {stat_change}')
 
-        if attack > 0 or health > 0:
+        if attack != 0 or health != 0:
             if temp:
                 self._temp_attack += attack
                 self._temp_health += health
