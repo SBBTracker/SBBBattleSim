@@ -20,7 +20,7 @@ def test_advanced_slay(golden, mimic, evil_eye):
         ]
     )
     enemy = make_player(
-        characters=[make_character(attack=0, health=1), make_character(attack=0, health=1, position=2)],
+        characters=[make_character(attack=0, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)

@@ -3,13 +3,18 @@ from tests import make_character, make_player
 from sbbbattlesim.utils import Tribe
 import pytest
 
-def test_simple_drac_sabre():
+@pytest.mark.parametrize('mimic', (True, False))
+def test_simple_drac_sabre(mimic):
     player = make_player(
         characters=[
             make_character(position=2, attack=5, health=5),
             make_character(position=6, attack=1, health=1),
         ],
-        treasures=['''SBB_TREASURE_HERMES'BOOTS''', '''SBB_TREASURE_DRACULA'SSABER''']
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS''',
+            '''SBB_TREASURE_DRACULA'SSABER''',
+            "SBB_TREASURE_TREASURECHEST" if mimic else ''
+        ]
     )
     enemy = make_player(
         characters=[
@@ -19,8 +24,10 @@ def test_simple_drac_sabre():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=3)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
-    final_stats = (5, 3)
+    final_stats = (9, 5) if mimic else (5, 3)
 
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats
 
@@ -45,6 +52,8 @@ def test_proc_order_drac_sabre(direction):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (4, 1)
 

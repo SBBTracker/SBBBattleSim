@@ -41,9 +41,12 @@ SUPPORT_EXCLUSION = (
     'SBB_CHARACTER_BABAYAGA'
 )
 
+# TODO write tests that iterate over SUPPORT_EXCLUSION for sanitys sake
+
 @pytest.mark.parametrize('golden', (True, False))
+@pytest.mark.parametrize('horn', (True, False))
 @pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: char.support is True))
-def test_support(char, golden):
+def test_support(char, golden, horn):
     '''Support units that apply buffs get tested to make sure that literally any buff is getting applied'''
     # Riverwish is a support but doesn't give stats so it won't be tested here
     if char.id in SUPPORT_EXCLUSION:
@@ -51,10 +54,13 @@ def test_support(char, golden):
 
     player = make_player(
         characters=[
-            make_character(id=char.id, position=5, golden=golden),
+            make_character(id=char.id, position=7 if horn else 5, golden=golden),
             make_character(tribes=[tribe.value for tribe in Tribe])
         ],
-        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS''',
+            "SBB_TREASURE_BANNEROFCOMMAND" if horn else '',
+        ]
     )
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
