@@ -28,6 +28,6 @@ class CharacterType(Character):
             health_buff = (self.manager._base_health + self.manager._temp_health) * golden_multiplyer
 
             for char in self.manager.owner.valid_characters():
-                if 'good' in char.tribes:
+                if Tribe.GOOD in char.tribes:
                     char.change_stats(attack=attack_buff, health=health_buff, temp=False,
                                       reason=StatChangeCause.GOODBOY_BUFF, source=self.manager)

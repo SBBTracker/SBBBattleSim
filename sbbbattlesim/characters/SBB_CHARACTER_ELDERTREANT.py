@@ -23,7 +23,7 @@ class CharacterType(Character):
                 for pos in utils.get_support_targets(self.heartwood.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.manager.treasures):
                     char = self.manager.characters[pos]
                     if char is not None:
-                         if 'treant' in char.tribes:
+                         if Tribe.TREANT in char.tribes:
                              char.change_stats(attack=stat_change, health=stat_change, temp=False,
                                                reason=StatChangeCause.HEARTWOOD_BUFF, source=self)
 

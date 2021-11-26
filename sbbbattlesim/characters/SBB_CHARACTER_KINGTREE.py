@@ -22,7 +22,9 @@ class CharacterType(Character):
                 modifier = 2 if self.ashwood.golden else 1
                 attack_change = base_attack_change*modifier
 
-                for char in self.manager.valid_characters(_lambda=lambda char: 'treant' in char.tribes):
-                    char.change_stats(attack=attack_change, temp=False, reasos=StatChangeCause.ASHWOOD_ELM_BUFF, source=self.ashwood)
+                for char in self.manager.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes):
+                    char.change_stats(
+                        attack=attack_change, temp=False, reason=StatChangeCause.ASHWOOD_ELM_BUFF, source=self.ashwood
+                    )
 
         self.owner.register(AshwoodElmOnStart)

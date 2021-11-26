@@ -200,7 +200,7 @@ class EventManager:
     def register(self, event, temp=False):
         if not event.is_valid():
             logger.debug(f'{self.pretty_print()} can not register invalid event {event.__name__}')
-            raise NotImplementedError
+            raise ValueError
 
         event_base = inspect.getmro(event)[1].__name__
         (self._temp if temp else self._events)[event_base].append(event(manager=self))

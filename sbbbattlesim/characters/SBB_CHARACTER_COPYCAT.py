@@ -1,7 +1,9 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnPreAttack
+from sbbbattlesim.events import OnPostAttack, OnDeath
 from sbbbattlesim.utils import get_behind_targets, Tribe
+import logging
 
+logger = logging.getLogger(__name__)
 
 class CharacterType(Character):
     display_name = 'Copycat'
@@ -15,15 +17,17 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         self.register(self.CopycatOnPreAttack)
 
-    class CopycatOnPreAttack(OnPreAttack):
+    class CopycatOnPreAttack(OnPostAttack):
         def handle(self, stack, *args, **kwargs):
             behind_targets = get_behind_targets(self.manager.position)
             targetted_chars = [c for c in self.manager.owner.valid_characters() if c.position in behind_targets]
 
             itr = 2 if self.manager.golden else 1
             for _ in range(itr):
+                with stack.open(source=self):
+                    for char in targetted_chars:
+                        last_breaths = [evt for evt in char.get('OnDeath') if evt.last_breath]
 
-                for char in targetted_chars:
-                    char('OnDeath', *args, **kwargs)
-                    #TODO instead of calling ondeath create an ephemeral event manager to handle both events with a custom stack
-
+                        for lb in last_breaths:
+                            logger.debug(f'Copycat Triggering LastBreath({args} {kwargs})')
+                            stack.execute(lb, *args, **kwargs)

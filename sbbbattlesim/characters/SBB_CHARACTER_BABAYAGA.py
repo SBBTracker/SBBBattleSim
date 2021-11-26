@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 class CharacterType(Character):
     display_name = 'Baba Yaga'
     support = True
+    ranged = True
 
     _attack = 3
     _health = 6

@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.events import OnDeath
+from sbbbattlesim.events import OnLastBreath
 from sbbbattlesim.heros import Hero
 
 
@@ -19,12 +19,12 @@ class HeroType(Hero):
         if self.triggered:
             return
 
-        class MeurteDoubleLastBreath(OnDeath):
+        class MeurteDoubleLastBreath(OnLastBreath):
             meurte = self
-            priority = -999
+            priority = 999
             last_breath = False
 
-            def handle(self, stack, *args, **kwargs):
+            def handle(self, source, stack, *args, **kwargs):
                 if self.meurte.triggered:
                     return
 

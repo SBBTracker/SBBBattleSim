@@ -24,7 +24,7 @@ class CharacterType(Character):
             chars = [character_registry[killed_character.id](self.manager.owner, self.manager.position,
                                                              killed_character.attack, killed_character.max_health,
                                                              golden=killed_character.golden,
-                                                             tribes=killed_character.tribes, #TODO get base tribes instead of discovered tribes
+                                                             tribes=killed_character.tribes,
                                                              cost=killed_character.cost
                                                              )
                     ]

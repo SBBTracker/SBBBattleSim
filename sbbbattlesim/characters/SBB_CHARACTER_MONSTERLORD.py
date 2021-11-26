@@ -19,7 +19,7 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
 
     def buff(self, target_character):
-        if 'monster' in target_character.tribes:
+        if Tribe.MONSTER in target_character.tribes:
 
             class OniKingOnMonsterAttack(OnPreAttack):
                 oni_king = self

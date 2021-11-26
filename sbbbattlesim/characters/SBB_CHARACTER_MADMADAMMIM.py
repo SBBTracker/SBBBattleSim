@@ -12,4 +12,8 @@ class CharacterType(Character):
     _tribes = {Tribe.EVIL, Tribe.MAGE}
 
     def buff(self, target_character):
-        target_character.change_stats(attack=6 if self.golden else 3, temp=True, reason=StatChangeCause.SUPPORT_BUFF, source=self)
+        target_character.change_stats(
+            attack=6 if self.golden else 3,
+            temp=True,
+            reason=StatChangeCause.SUPPORT_BUFF, source=self
+        )

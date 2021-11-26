@@ -2,7 +2,7 @@ import logging
 
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSummon
-from sbbbattlesim.utils import Tribe
+from sbbbattlesim.utils import Tribe, StatChangeCause
 
 logger = logging.getLogger(__name__)
 
@@ -14,18 +14,20 @@ class CharacterType(Character):
     _level = 4
     _tribes = {Tribe.GOOD, Tribe.ANIMAL}
 
-    # TODO FIX THIS
-
     def buff_player(self, player):
         class HungryHungryHippocampusOnSummon(OnSummon):
             hungry_hungry_hippocampus = self
 
             def handle(self, summoned_characters, *args, **kwargs):
-                num_animals = len(list(filter(lambda char: 'animal' in char.tribes, summoned_characters)))
+                num_animals = len(list(filter(lambda char: Tribe.ANIMAL in char.tribes, summoned_characters)))
                 modifier = 4 if self.hungry_hungry_hippocampus.golden else 2
 
                 if self.hungry_hungry_hippocampus in self.manager.characters.values():
-                    self.hungry_hungry_hippocampus.change_stats(health=num_animals*modifier, temp=False,
-                                                                reason=f'{self.manager} gets health from summoned animals')
+                    self.hungry_hungry_hippocampus.change_stats(
+                        health=num_animals*modifier,
+                        temp=False,
+                        source=self.hungry_hungry_hippocampus,
+                        reason=StatChangeCause.HUNGRYHUNGRYHIPPOCAMPUS_BUFF
+                    )
 
         player.register(HungryHungryHippocampusOnSummon, temp=True)

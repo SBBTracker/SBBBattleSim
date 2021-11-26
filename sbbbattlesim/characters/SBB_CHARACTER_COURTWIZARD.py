@@ -16,10 +16,12 @@ class CharacterType(Character):
     _tribes = {Tribe.GOOD, Tribe.MAGE}
 
     def buff(self, target_character):
-        if 'princess' in target_character.tribes or 'prince' in target_character.tribes:
+        if Tribe.PRINCESS in target_character.tribes or Tribe.PRINCE in target_character.tribes:
 
             class CourtWizardOnDeatheBuff(OnDeath):
                 court_wizard = self
+                last_breath = False
+
                 def handle(self, attack_buff=0, health_buff=0, temp=False, *args, **kwargs):
                     death_reason = next(reason for (reason, _, _, damage, _, _) in reversed(self.manager.stat_history) if damage > 0)
                     if death_reason == StatChangeCause.DAMAGE_WHILE_DEFENDING:

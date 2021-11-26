@@ -20,10 +20,15 @@ class CharacterType(Character):
 
             class EchoWoodBuff(OnBuff):
                 echo_wood = self
+                gold_multiplier = 2 if echo_wood.golden else 1
                 def handle(self, attack_buff=0, health_buff=0, temp=False, *args, **kwargs):
                     if not temp:
-                        self.echo_wood.change_stats(attack=attack_buff, health=health_buff, temp=False,
-                                                    reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager)
+                        self.echo_wood.change_stats(
+                            attack=self.gold_multiplier*attack_buff,
+                            health=self.gold_multiplier*health_buff,
+                            temp=False,
+                            reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager
+                        )
 
             target_character.register(EchoWoodBuff, temp=True)
 

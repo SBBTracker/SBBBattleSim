@@ -1,0 +1,29 @@
+from sbbbattlesim import Board
+from tests import make_character, make_player
+from sbbbattlesim.utils import Tribe
+import pytest
+
+@pytest.mark.parametrize('golden', (True, False))
+def test_queenofhearts(golden):
+    player = make_player(
+        hero = "SBB_HERO_MUERTE",
+        characters=[
+            make_character(id="SBB_CHARACTER_BLACKCAT",position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
+            make_character(id="SBB_CHARACTER_QUEENOFHEARTS", position=6, attack=1, health=1, golden=golden),
+        ],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    enemy = make_player(
+        characters=[
+            make_character(health=2)
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=2)
+
+    if golden:
+        final_stats = (9, 9)
+    else:
+        final_stats = (5, 5)
+
+    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats

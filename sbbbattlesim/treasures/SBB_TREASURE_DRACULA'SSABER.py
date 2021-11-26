@@ -17,10 +17,11 @@ class TreasureType(Treasure):
 
             def handle(self, *args, **kwargs):
                 for char in self.saber.player.valid_characters():
-                    char.change_stats(attack=2, health=1, reason=StatChangeCause.DRACULAS_SABER_BUFF, source=self.saber)
+                    char.change_stats(attack=2, health=1, reason=StatChangeCause.DRACULAS_SABER_BUFF, source=self.saber,
+                                      temp=False)
                     if self.saber.mimic:
                         char.change_stats(attack=2, health=1, reason=StatChangeCause.DRACULAS_SABER_BUFF,
-                                          source=self.saber)
+                                          source=self.saber, temp=False)
 
         class DraculasSaberOnResolveBoard(OnResolveBoard):
             def handle(self, *args, **kwargs):

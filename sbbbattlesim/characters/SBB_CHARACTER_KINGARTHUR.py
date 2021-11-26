@@ -20,7 +20,7 @@ class CharacterType(Character):
 
             def handle(self, *args, **kwargs):
                 stat_change = 4 if self.arthur.golden else 2
-                royals = self.manager.valid_characters(_lambda=lambda char: char.golden and ('prince' in char.tribes or 'princess' in char.tribes))
+                royals = self.manager.valid_characters(_lambda=lambda char: char.golden and (Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes))
                 for char in royals:
                     char.change_stats(attack=stat_change, health=stat_change, temp=False, reason=f'{self.arthur} Onstart Royal Buff')
 

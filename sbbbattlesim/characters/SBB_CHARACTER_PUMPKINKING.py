@@ -20,12 +20,19 @@ class CharacterType(Character):
         class PumpkinKingOnDeath(OnDeath):
             def handle(self, *args, **kwargs):
                 summons = []
-                dead_in_order = sorted([char for char in self.manager.graveyard if Tribe.EVIL in char], key=lambda char: char._level, reverse=True)
+                dead_in_order = sorted(
+                    [char for char in self.manager.graveyard if Tribe.EVIL in char],
+                    key=lambda char: char._level, reverse=True
+                )
                 for dead in dead_in_order[:7]:
-                    summons.append(random.choice(character_registry.get(_lambda=lambda char: char._level == dead._level-1 and Tribe.EVIL in char._tribes)).new(
-                        owner=self.manager.owner,
-                        position=self.manager.position,
-                        golden=self.manager.golden
-                    ))
+                    summon_choices = character_registry.get(
+                        _lambda=lambda char: char._level == dead._level-1 and Tribe.EVIL in char._tribes
+                    )
+                    if summon_choices:
+                        summons.append(random.choice(summon_choices).new(
+                            owner=self.manager.owner,
+                            position=self.manager.position,
+                            golden=self.manager.golden
+                        ))
 
                 self.manager.owner.summon(self.manager.position, *summons)

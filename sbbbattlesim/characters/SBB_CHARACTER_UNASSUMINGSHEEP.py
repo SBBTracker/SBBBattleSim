@@ -26,5 +26,10 @@ class CharacterType(Character):
 
         def handle(self, *args, **kwargs):
             stat = 12 if self.manager.golden else 6
-            sheep = [character_registry['Sheep'](self.manager.owner, self.manager.position, stat, stat, golden=False, keywords=[], tribes=['evil', 'animal'], cost=1)]
+            sheep = [
+                character_registry['Sheep'](
+                    self.manager.owner, self.manager.position, stat, stat,
+                    golden=False, keywords=[], tribes=['evil', 'animal'], cost=1
+                )
+            ]
             self.manager.owner.summon(self.manager.position, *sheep)

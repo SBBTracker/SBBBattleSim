@@ -13,7 +13,10 @@ def test_friendlyspirit_coinofcharon_dubly(golden):
         treasures=['''SBB_TREASURE_MONKEY'SPAW''']
     )
     enemy = make_player(
-        characters=[make_character(attack=5, health=5)],
+        characters=[
+            make_character(attack=5, health=5),
+            make_character(position=7, attack=0, health=3)
+        ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})

@@ -9,3 +9,5 @@ class CharacterType(Character):
     _health = 1
     _level = 2
     _tribes = {Tribe.DWARF}
+
+    # TODO needs temp calculated stats

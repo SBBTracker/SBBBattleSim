@@ -20,4 +20,7 @@ class CharacterType(Character):
         slay = True
         def handle(self, killed_character, *args, **kwargs):
             modifier = 40 if self.manager.golden else 20
-            self.manager.change_stats(attack=modifier, health=modifier, temp=False, reason=StatChangeCause.SLAY, source=self.manager)
+            self.manager.change_stats(
+                attack=modifier, health=modifier, temp=False,
+                reason=StatChangeCause.SLAY, source=self.manager
+            )

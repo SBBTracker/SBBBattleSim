@@ -31,7 +31,10 @@ class CharacterType(Character):
                     attack_buff = self.manager.attack * (2 if self.manager.golden else 1)
                     health_buff = self.manager.health * (2 if self.manager.golden else 1)
 
-                    summon.change_stats(attack=attack_buff, health=health_buff, reason=StatChangeCause.WOMBATS_IN_DISGUISE_BUFF, source=self.manager)
+                    summon.change_stats(
+                        attack=attack_buff, health=health_buff,
+                        reason=StatChangeCause.WOMBATS_IN_DISGUISE_BUFF, source=self.manager
+                    )
 
                     self.manager.owner.summon(self.manager.position, summon)
 
