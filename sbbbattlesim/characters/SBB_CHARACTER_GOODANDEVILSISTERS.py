@@ -23,8 +23,8 @@ class CharacterType(Character):
                 highest_attack_evil = max([char.attack for char in self.manager.valid_characters(_lambda=lambda char: Tribe.EVIL in char.tribes)] + [0])
                 highest_health_good = max([char.health for char in self.manager.valid_characters() if Tribe.GOOD in char.tribes] + [0])
                 self.shoulder_faeries.change_stats(
-                    attack=highest_attack_evil,
-                    health=highest_health_good,
+                    attack=highest_attack_evil * (2 if self.shoulder_faeries.golden else 1),
+                    health=highest_health_good * (2 if self.shoulder_faeries.golden else 1),
                     temp=False,
                     reason=StatChangeCause.SHOULDER_FAIRY_BUFF,
                     source=self.shoulder_faeries

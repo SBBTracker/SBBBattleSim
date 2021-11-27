@@ -22,6 +22,9 @@ class CharacterType(Character):
             def handle(self, *args, **kwargs):
                 stat_change = 4 if self.manager.golden else 2
                 for dwarf in self.manager.owner.valid_characters(_lambda=lambda char: Tribe.DWARF in char.tribes):
-                    dwarf.change_stats(attack=stat_change, health=stat_change, temp=False, reason=StatChangeCause.ANGRY_BUFF)
+                    dwarf.change_stats(
+                        attack=stat_change, health=stat_change, source=self,
+                        temp=False, reason=StatChangeCause.ANGRY_BUFF
+                    )
 
         self.register(AngryBuff)

@@ -17,10 +17,11 @@ class CharacterType(Character):
 
     def buff(self, target_character):
         # Give animals minions the buff
-        if 'good' in target_character.tribes:  # Distinctly Fairy Godmother works on self
+        if Tribe.GOOD in target_character.tribes:  # Distinctly Fairy Godmother works on self
 
             class FairyGodmotherOnDeath(OnDeath):
                 fairy_godmother = self
+                last_breath = False
 
                 def handle(self, *args, **kwargs):
                     stat_change = 4 if self.fairy_godmother.golden else 2

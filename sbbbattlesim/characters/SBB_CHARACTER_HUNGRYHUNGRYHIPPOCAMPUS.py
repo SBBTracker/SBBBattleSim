@@ -9,12 +9,14 @@ logger = logging.getLogger(__name__)
 class CharacterType(Character):
     display_name = 'Hungry Hungry Hippocampus'
 
+    aura = True
+
     _attack = 10
     _health = 1
     _level = 4
     _tribes = {Tribe.GOOD, Tribe.ANIMAL}
 
-    def buff_player(self, player):
+    def buff(self, target_character, *args, **kwargs):
         class HungryHungryHippocampusOnSummon(OnSummon):
             hungry_hungry_hippocampus = self
 
@@ -30,4 +32,5 @@ class CharacterType(Character):
                         reason=StatChangeCause.HUNGRYHUNGRYHIPPOCAMPUS_BUFF
                     )
 
-        player.register(HungryHungryHippocampusOnSummon, temp=True)
+        if target_character is self:
+            self.owner.register(HungryHungryHippocampusOnSummon, temp=True)
