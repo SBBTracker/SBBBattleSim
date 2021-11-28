@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 from sbbbattlesim import utils
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.events import EventManager, OnStart
+from sbbbattlesim.events import EventManager, OnStart, OnSpellCast
 from sbbbattlesim.heros import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry, NonTargetedSpell, TargetedSpell
 from sbbbattlesim.treasures import registry as treasure_registry
@@ -204,6 +204,6 @@ class Player(EventManager):
         if isinstance(spell, TargetedSpell) and target is None:
             return
 
+        self('OnSpellCast', caster=self, spell=spell, target=target)
         spell.cast(player=self, target=target)
 
-        self('OnSpellCast', caster=self, spell=spell, target=target)

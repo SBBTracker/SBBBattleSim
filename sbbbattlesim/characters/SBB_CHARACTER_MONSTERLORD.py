@@ -2,7 +2,7 @@ from sbbbattlesim.characters import Character
 import logging
 
 from sbbbattlesim.events import OnPreAttack
-from sbbbattlesim.utils import Tribe
+from sbbbattlesim.utils import Tribe, StatChangeCause
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +25,9 @@ class CharacterType(Character):
                 oni_king = self
                 def handle(self, *args, **kwargs):
                     stat_change = 20 if self.oni_king.golden else 10
-                    self.manager.change_stats(attack=stat_change, health=stat_change, temp=False, reason=f'{self.oni_king} on attack buff')
+                    self.manager.change_stats(
+                        attack=stat_change, health=stat_change, temp=False,
+                        source=self.oni_king, reason=StatChangeCause.ONIKING_BUFF
+                    )
 
             target_character.register(OniKingOnMonsterAttack)

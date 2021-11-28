@@ -9,6 +9,7 @@ from tests import make_player, make_character
 @pytest.mark.parametrize('attack', (True, False))
 def test_combat(attack_postition, defend_postition, attack):
     player = make_player(
+        level=2,
         characters=[make_character(position=attack_postition)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if attack else []
     )

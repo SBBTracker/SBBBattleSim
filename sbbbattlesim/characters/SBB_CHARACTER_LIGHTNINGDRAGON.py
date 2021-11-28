@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 class CharacterType(Character):
     display_name = 'Lightning Dragon'
 
+    flying = True
+
     _attack = 10
     _health = 1
     _level = 4

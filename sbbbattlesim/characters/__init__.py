@@ -71,8 +71,8 @@ class Character(EventManager):
             owner=owner,
             position=position,
             golden=golden,
-            attack=cls._attack,
-            health=cls._health,
+            attack=cls._attack * (2 if golden else 1),
+            health=cls._health * (2 if golden else 1),
             tribes=cls._tribes,
             cost=cls._level
         )

@@ -20,5 +20,6 @@ class CharacterType(Character):
 
     class LuckyLastBreath(OnDeath):
         last_breath = True
+
         def handle(self, *args, **kwargs):
             pass  # this is only relevant for things like trophy hunter

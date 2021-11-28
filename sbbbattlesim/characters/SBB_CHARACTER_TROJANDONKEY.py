@@ -22,15 +22,21 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        class TrojanDonkeySummon(OnDamagedAndSurvived):
-            def handle(self, *args, **kwargs):
-                valid_summons = [*character_registry.filter(_lambda=lambda char: char._level == self.manager.owner.level)]
-                if valid_summons:
-                    summon = random.choice(valid_summons).new(
-                        owner=self.manager.owner,
-                        position=self.manager.position,
-                        golden=self.manager.golden
-                    )
-                    self.manager.owner.summon(self.manager.position, summon)
+        self.register(self.TrojanDonkeySummon)
 
-        self.register(TrojanDonkeySummon)
+    class TrojanDonkeySummon(OnDamagedAndSurvived):
+
+        def handle(self, *args, **kwargs):
+            if self.manager.golden:
+                _lambda = lambda char: char._level == self.manager.owner.level
+            else:
+                _lambda = lambda char: char._level <= self.manager.owner.level
+
+            valid_summons = [*character_registry.filter(_lambda=_lambda)]
+            if valid_summons:
+                summon = random.choice(valid_summons).new(
+                    owner=self.manager.owner,
+                    position=self.manager.position,
+                    golden=self.manager.golden
+                )
+                self.manager.owner.summon(self.manager.position, summon)

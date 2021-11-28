@@ -20,4 +20,5 @@ class CharacterType(Character):
         slay = True
         def handle(self, killed_character, *args, **kwargs):
             # TODO Summon random character or don't do this
+            # TODO write any tests for this at all
             pass

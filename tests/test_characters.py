@@ -24,6 +24,7 @@ def test_character(char, attack, golden):
     char = make_character(id=char.id, golden=golden)
     generic_char = make_character(position=7, tribes=[tribe.value for tribe in Tribe])
     player = make_player(
+        level=2,
         characters=[char, generic_char],
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if attack else []
     )
@@ -75,6 +76,7 @@ def test_slay(char, golden):
     '''Triggers a slay, checks success by measuring against a shadow assassin. Liable to fail in the future... '''
 
     player = make_player(
+        level=2,
         characters=[
             make_character(id=char.id, position=1, golden=golden),
             make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7, golden=False, attack=2, health=1),
