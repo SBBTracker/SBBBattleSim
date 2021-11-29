@@ -4,7 +4,9 @@ from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import StatChangeCause, Tribe
 from sbbbattlesim.characters import registry as character_registry
+import logging
 
+logger = logging.getLogger(__name__)
 
 class CharacterType(Character):
     display_name = 'Great Pumpkin King'
@@ -18,21 +20,25 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
 
         class PumpkinKingOnDeath(OnDeath):
+            last_breath = True
+
             def handle(self, *args, **kwargs):
                 summons = []
                 dead_in_order = sorted(
-                    [char for char in self.manager.graveyard if Tribe.EVIL in char],
+                    [char for char in self.manager.owner.graveyard if Tribe.EVIL in char.tribes],
                     key=lambda char: char._level, reverse=True
                 )
                 for dead in dead_in_order[:7]:
-                    summon_choices = character_registry.get(
+                    summon_choices = list(character_registry.filter(
                         _lambda=lambda char: char._level == dead._level-1 and Tribe.EVIL in char._tribes
-                    )
+                    ))
                     if summon_choices:
                         summons.append(random.choice(summon_choices).new(
                             owner=self.manager.owner,
-                            position=self.manager.position,
+                            position=dead.position,
                             golden=self.manager.golden
                         ))
 
-                self.manager.owner.summon(self.manager.position, *summons)
+                self.manager.owner.summon_from_different_locations(*summons)
+
+        self.register(PumpkinKingOnDeath)

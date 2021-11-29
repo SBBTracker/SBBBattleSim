@@ -156,7 +156,19 @@ class Player(EventManager):
 
         self('OnResolveBoard')
 
-    def summon(self, pos, *characters):
+    def summon_from_different_locations(self, *characters):
+        '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be
+        able to summon from multiple points at once before running the onsummon stack. This may be useful
+        for other things too'''
+        summoned_characters = []
+        for char in characters:
+            summoned_characters.extend(self.summon(char.position, char, trigger_onsummon=False))
+
+        self('OnSummon', summoned_characters=summoned_characters)
+
+        return summoned_characters
+
+    def summon(self, pos, *characters, trigger_onsummon=True):
         summoned_characters = []
         spawn_order = utils.get_spawn_positions(pos)
         for char in characters:
@@ -174,7 +186,8 @@ class Player(EventManager):
         self.resolve_board()
 
         # The player handles on-summon effects
-        self('OnSummon', summoned_characters=summoned_characters)
+        if trigger_onsummon:
+            self('OnSummon', summoned_characters=summoned_characters)
 
         return summoned_characters
 

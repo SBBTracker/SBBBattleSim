@@ -9,17 +9,18 @@ def test_queenofhearts(golden):
         hero = "SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_BLACKCAT",position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
+            make_character(position=1, attack=1, health=1),
             make_character(id="SBB_CHARACTER_QUEENOFHEARTS", position=6, attack=1, health=1, golden=golden),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
         characters=[
-            make_character(health=2)
+            make_character(health=3)
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    winner, loser = board.fight(limit=3)
     board.p1.resolve_board()
     board.p2.resolve_board()
 

@@ -20,7 +20,10 @@ class CharacterType(Character):
         class WombatsInDisguiseOnDeath(OnDeath):
             last_breath = True
             def handle(self, *args, **kwargs):
-                valid_summons = [*character_registry.filter()]
+
+                _lambda = lambda char: char._level <= self.manager.owner.level
+                valid_summons = [*character_registry.filter(_lambda=_lambda)]
+
                 if valid_summons:
                     summon = random.choice(valid_summons).new(
                         owner=self.manager.owner,

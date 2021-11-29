@@ -38,6 +38,7 @@ class CharacterType(Character):
                 # QUESTION Does juliet pick the biggest attack & health one or does it sort on golden as well
                 # ANSWER it picks highest attack juliet, does not care about golden
                 #todo we need to use stat change on summon so that echowood gets the buff
+                # TODO test with phoenix feather to make sure eyeee
                 modifier = 14 if self.manager.golden else 7
                 j_attack, j_health = juliet.attack + modifier, juliet.health + modifier
 

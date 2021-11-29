@@ -21,7 +21,8 @@ class CharacterType(Character):
         class BrocLeeOnDamageAndSurvived(OnDamagedAndSurvived):
             def handle(self, *args, **kwargs):
                 self.manager.change_stats(
-                    attack=20 if self.manager.golden else 10, reason=StatChangeCause.BROC_LEE_BUFF, source=self.manager
+                    attack=20 if self.manager.golden else 10, temp=False,
+                    reason=StatChangeCause.BROC_LEE_BUFF, source=self.manager
                 )
 
         self.register(BrocLeeOnDamageAndSurvived)
