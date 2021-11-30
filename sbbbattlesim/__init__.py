@@ -110,10 +110,8 @@ def simulate_from_state(state, t=1, k=1):
     starting_board = Board(deepcopy(sim_data))
 
     return SimulationResult(
-            hash_id=hashlib.sha256(f'{starting_board.p1}{starting_board.p2}'.encode('utf-8')),
-            results=results,
-            run_time=time.perf_counter() - start,
-            starting_board=starting_board
-        )
-
-
+        hash_id=hashlib.sha256(f'{starting_board.p1}{starting_board.p2}'.encode('utf-8')),
+        results=results,
+        run_time=time.perf_counter() - start,
+        starting_board=starting_board
+    )
