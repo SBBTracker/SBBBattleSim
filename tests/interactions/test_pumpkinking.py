@@ -3,11 +3,12 @@ from tests import make_character, make_player
 import pytest
 from sbbbattlesim.utils import Tribe
 
-def test_lonely_pumpkin_dying():
+@pytest.mark.parametrize('golden', (True, False))
+def test_lonely_pumpkin_dying(golden):
 
     player = make_player(
         characters=[
-            make_character(id='SBB_CHARACTER_PUMPKINKING', position=1, tribes=[Tribe.EVIL]),
+            make_character(id='SBB_CHARACTER_PUMPKINKING', position=1, tribes=[Tribe.EVIL], golden=golden),
         ],
     )
     enemy = make_player(
@@ -19,8 +20,12 @@ def test_lonely_pumpkin_dying():
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert board.p1.characters[1] is not pk
-    assert board.p1.characters[1]._level == 5
+    summoned_unit = board.p1.characters[1]
+    assert summoned_unit is not pk
+    assert summoned_unit._level == 5
+    if golden:
+        assert summoned_unit.attack == summoned_unit._attack * 2
+        assert summoned_unit.health == summoned_unit._health * 2
 
 
 def test_pumpkin_with_friends_dying():

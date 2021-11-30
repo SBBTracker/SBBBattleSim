@@ -2,11 +2,12 @@ from sbbbattlesim import Board
 from tests import make_character, make_player
 import pytest
 
-def test_peep_dying():
+@pytest.mark.parametrize('golden', (True, False))
+def test_peep_dying(golden):
 
     player = make_player(
         characters=[
-            make_character(id='SBB_CHARACTER_PRINCESSPEEP', position=1),
+            make_character(id='SBB_CHARACTER_PRINCESSPEEP', position=1, golden=golden),
         ],
     )
     enemy = make_player(
@@ -17,7 +18,8 @@ def test_peep_dying():
     board.p1.resolve_board()
     board.p2.resolve_board()
 
+    final_stats = (2, 2) if golden else (1, 1)
+    for i in [1, 2, 3]:
+        assert board.p1.characters[i].display_name == 'Sheep'
+        assert board.p1.characters[i].attack, board.p2.characters[i].health == final_stats
 
-    assert board.p1.characters[1].display_name == 'Sheep'
-    assert board.p1.characters[2].display_name == 'Sheep'
-    assert board.p1.characters[3].display_name == 'Sheep'

@@ -27,7 +27,7 @@ class CharacterType(Character):
         def handle(self, *args, **kwargs):
             stat = 12 if self.manager.golden else 6
             sheep = [
-                character_registry['Sheep'](
+                character_registry['MeanSheep'](
                     self.manager.owner, self.manager.position, stat, stat,
                     golden=False, keywords=[], tribes=['evil', 'animal'], cost=1
                 )

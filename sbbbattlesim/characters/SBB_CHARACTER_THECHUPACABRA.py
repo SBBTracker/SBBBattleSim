@@ -22,7 +22,7 @@ class CharacterType(Character):
             behind_targets = get_behind_targets(self.manager.position)
             targetted_chars = [c for c in self.manager.owner.valid_characters() if c.position in behind_targets]
 
-            modifier = 2 if self.manager.golden else 2
+            modifier = 2 if self.manager.golden else 1
             for char in [self.manager, *targetted_chars]:
                 char.change_stats(attack=modifier, health=modifier, temp=False,
                                   reason=StatChangeCause.SLAY, source=self.manager, stack=stack)

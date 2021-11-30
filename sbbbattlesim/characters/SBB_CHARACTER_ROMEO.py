@@ -1,11 +1,11 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnDeath
+from sbbbattlesim.events import OnDeath, OnSummon
 import sbbbattlesim
 from sbbbattlesim.characters import registry as character_registry
 
 import random
 
-from sbbbattlesim.utils import Tribe
+from sbbbattlesim.utils import Tribe, StatChangeCause
 
 JULIET_ID = 'SBB_CHARACTER_JULIET'
 
@@ -20,12 +20,17 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.RomeoLastBreath.romeo = self
+
         self.register(self.RomeoLastBreath)
 
     class RomeoLastBreath(OnDeath):
         last_breath = True
+
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
+
             self.priority = sbbbattlesim.SUMMONING_PRIORITY
 
         def handle(self, *args, **kwargs):
@@ -35,15 +40,18 @@ class CharacterType(Character):
                 juliet = max(dead_juliets, key=lambda juliet : (juliet.attack, juliet.health))
                 juliet._damage = 0  # Reset damage dealt to this unit
 
-                # QUESTION Does juliet pick the biggest attack & health one or does it sort on golden as well
-                # ANSWER it picks highest attack juliet, does not care about golden
-                #todo we need to use stat change on summon so that echowood gets the buff
-                # TODO test with phoenix feather to make sure eyeee
-                modifier = 14 if self.manager.golden else 7
-                j_attack, j_health = juliet.attack + modifier, juliet.health + modifier
+                class RomeoOnSummon(OnSummon):
+                    romeo = self.romeo
 
-                juliets = [character_registry[JULIET_ID](self.manager.owner, self.manager.position, j_attack, j_health,
-                                                      golden=juliet.golden, keywords=[], tribes=['good', 'princess'],
-                                                      cost=juliet.cost)]
+                    def handle(self, summoned_characters, stack, *args, **kwargs):
+                        modifier = 14 if self.romeo.golden else 7
+                        self.juliet.change_stats(
+                            reason=StatChangeCause.ROMEO_BUFF, attack=modifier,
+                            health=modifier, temp=False, source=self.romeo
+                        )
 
-                self.manager.owner.summon(self.manager.position, *juliets)
+                RomeoOnSummon.juliet = juliet
+
+                juliet.owner.register(RomeoOnSummon)
+                self.manager.owner.summon(self.manager.position, [juliet])
+

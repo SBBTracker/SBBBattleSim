@@ -15,9 +15,9 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.CopycatOnPreAttack)
+        self.register(self.CopycatOnPostAttack)
 
-    class CopycatOnPreAttack(OnPostAttack):
+    class CopycatOnPostAttack(OnPostAttack):
         def handle(self, stack, *args, **kwargs):
             behind_targets = get_behind_targets(self.manager.position)
             targetted_chars = [c for c in self.manager.owner.valid_characters() if c.position in behind_targets]

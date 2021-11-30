@@ -115,6 +115,7 @@ class StatChangeCause(enum.Enum):
     PRINCEARTHUR_BUFF = 137
     ONIKING_BUFF = 138
     BEARSTINE_BUFF = 139
+    ROMEO_BUFF = 140
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202

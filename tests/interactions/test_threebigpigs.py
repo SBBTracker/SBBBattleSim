@@ -3,11 +3,11 @@ from tests import make_character, make_player
 import pytest
 
 @pytest.mark.parametrize('golden', (True, False))
-def test_black_cat_dying(golden):
+def test_threebigpigs(golden):
 
     player = make_player(
         characters=[
-            make_character(id='SBB_CHARACTER_BLACKCAT', position=6),
+            make_character(id='SBB_CHARACTER_THREEBIGPIGS', position=1, golden=golden),
         ],
     )
     enemy = make_player(
@@ -19,5 +19,7 @@ def test_black_cat_dying(golden):
     board.p2.resolve_board()
 
     final_stats = (2, 2) if golden else (1, 1)
-    assert board.p1.characters[6].display_name == 'Cat'
-    assert board.p1.characters[6].attack, board.p1.characters[6].health == final_stats
+    for i in [1, 2, 3]:
+        assert board.p1.characters[i].display_name == 'Pig'
+        assert board.p1.characters[i].attack, board.p2.characters[i].health == final_stats
+
