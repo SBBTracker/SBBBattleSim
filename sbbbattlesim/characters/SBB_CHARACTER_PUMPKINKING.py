@@ -29,9 +29,7 @@ class CharacterType(Character):
                     key=lambda char: char._level, reverse=True
                 )
                 for dead in dead_in_order[:7]:
-                    summon_choices = list(character_registry.filter(
-                        _lambda=lambda char: char._level == dead._level-1 and Tribe.EVIL in char._tribes
-                    ))
+                    summon_choices = list(character_registry.filter(_lambda=lambda char: char._level == dead._level-1 and Tribe.EVIL in char._tribes))
                     if summon_choices:
                         summons.append(random.choice(summon_choices).new(
                             owner=self.manager.owner,
@@ -39,6 +37,6 @@ class CharacterType(Character):
                             golden=self.manager.golden
                         ))
 
-                self.manager.owner.summon_from_different_locations(*summons)
+                self.manager.owner.summon_from_different_locations(summons)
 
         self.register(PumpkinKingOnDeath)

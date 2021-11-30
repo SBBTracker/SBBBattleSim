@@ -7,7 +7,7 @@ class HeroType(Hero):
     display_name = 'Pup the Magic Dragon'
     aura = True
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         class PupSupportBuff(OnSupport):
             pup = self
             def handle(self, buffed, support, *args, **kwargs):

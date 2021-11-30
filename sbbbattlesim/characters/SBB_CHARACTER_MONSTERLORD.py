@@ -18,16 +18,17 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if Tribe.MONSTER in target_character.tribes:
 
             class OniKingOnMonsterAttack(OnPreAttack):
                 oni_king = self
-                def handle(self, *args, **kwargs):
+                def handle(self, stack, *args, **kwargs):
                     stat_change = 20 if self.oni_king.golden else 10
                     self.manager.change_stats(
                         attack=stat_change, health=stat_change, temp=False,
-                        source=self.oni_king, reason=StatChangeCause.ONIKING_BUFF
+                        source=self.oni_king, reason=StatChangeCause.ONIKING_BUFF,
+                        stack=stack
                     )
 
             target_character.register(OniKingOnMonsterAttack)

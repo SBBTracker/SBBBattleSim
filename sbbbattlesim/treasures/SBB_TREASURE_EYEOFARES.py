@@ -14,10 +14,10 @@ class TreasureType(Treasure):
         class EyeOfAresAura(OnResolveBoard):
             eye_of_ares = self
 
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 for _ in range(self.eye_of_ares.mimic + 1):
                     for char in self.manager.valid_characters():
-                        char.change_stats(attack=5, reason=StatChangeCause.EYE_OF_ARES_BUFF, source=self.eye_of_ares, temp=True)
+                        char.change_stats(attack=5, reason=StatChangeCause.EYE_OF_ARES_BUFF, source=self.eye_of_ares, temp=True, stack=stack)
 
         class EyeOnStart(OnStart):
             def handle(self, *args, **kwargs):

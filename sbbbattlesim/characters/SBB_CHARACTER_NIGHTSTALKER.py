@@ -18,14 +18,15 @@ class CharacterType(Character):
         class VainPireSlay(OnAttackAndKill):
             slay = True
 
-            def handle(self, killed_character, *args, **kwargs):
+            def handle(self, killed_character, stack, *args, **kwargs):
                 stat_buff = 2 if self.manager.golden else 1
                 self.manager.change_stats(
                     attack=stat_buff,
                     health=stat_buff,
                     temp=False,
                     reason=StatChangeCause.SLAY,
-                    source=self.manager
+                    source=self.manager,
+                    stack=stack
                 )
 
         self.register(VainPireSlay)

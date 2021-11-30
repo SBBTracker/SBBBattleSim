@@ -37,7 +37,7 @@ def test_muerte_single_goodboy(golden):
     player = make_player(
         hero = "SBB_HERO_MUERTE",
         characters=[
-            make_character(id="SBB_CHARACTER_COPYCAT",position=2, attack=1, health=5, golden=golden),
+            make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5, golden=golden),
             make_character(id="SBB_CHARACTER_GOODBOY", position=5, attack=1, health=1, tribes=[Tribe.GOOD], golden=True),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']

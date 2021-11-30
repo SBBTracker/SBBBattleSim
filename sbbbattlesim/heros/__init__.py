@@ -15,7 +15,7 @@ class Hero:
     def __init__(self, player):
         self.player = player
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         raise NotImplementedError
 
 

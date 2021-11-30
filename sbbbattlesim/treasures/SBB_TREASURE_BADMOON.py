@@ -9,13 +9,13 @@ class TreasureType(Treasure):
 
     _level = 3
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         class BadMoonSlayBuff(OnSlay):
             bad_moon = self
 
             def handle(self, source, stack, *args, **kwargs):
                 for _ in range(self.bad_moon.mimic + 1):
                     self.manager.change_stats(attack=1, health=2, reason=StatChangeCause.BAD_MOON,
-                                              source=self.bad_moon, temp=False)
+                                              source=self.bad_moon, temp=False, stack=stack)
 
         target_character.register(BadMoonSlayBuff, temp=True)

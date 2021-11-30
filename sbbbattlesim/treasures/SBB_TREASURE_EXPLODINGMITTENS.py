@@ -10,7 +10,7 @@ class TreasureType(Treasure):
 
     _level = 5
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         class ExplodingMittensOnDeath(OnDeath):
             mitten = self
             last_breath = False

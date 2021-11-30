@@ -13,15 +13,15 @@ class TreasureType(Treasure):
 
     _level = 2
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if Tribe.GOOD in target_character.tribes:
             class BookOfHeroesOnAttackAndKillBuff(OnAttackAndKill):
                 book = self
                 slay = False
-                def handle(self, killed_character, *args, **kwargs):
+                def handle(self, killed_character, stack, *args, **kwargs):
                     logger.debug(f'BOOK KILLED {killed_character.tribes} MIMIC {self.book.mimic}')
                     if Tribe.EVIL in killed_character.tribes:
                         for _ in range(self.book.mimic+1):
-                            target_character.change_stats(attack=1, health=2, reason=StatChangeCause.BOOK_OF_HEROES, source=self.book, temp=False)
+                            target_character.change_stats(attack=1, health=2, reason=StatChangeCause.BOOK_OF_HEROES, source=self.book, temp=False, stack=stack)
 
             target_character.register(BookOfHeroesOnAttackAndKillBuff, temp=True)

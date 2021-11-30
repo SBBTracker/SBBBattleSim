@@ -10,6 +10,7 @@ sys.setrecursionlimit(500)
 
 logger = logging.getLogger(__name__)
 
+
 def fight_initialization(attacker, defender, limit=None, **kwargs):
     attacker.resolve_board()
     defender.resolve_board()
@@ -19,6 +20,7 @@ def fight_initialization(attacker, defender, limit=None, **kwargs):
     defender('OnStart', **kwargs)
 
     return fight(attacker, defender, limit=limit, **kwargs)
+
 
 @lru_cache(maxsize=512)
 def fight(attacker, defender, turn=0, limit=-1, **kwargs):

@@ -15,7 +15,7 @@ class CharacterType(Character):
     _level = 4
     _tribes = {Tribe.GOOD, Tribe.FAIRY}
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         # Give animals minions the buff
         if Tribe.GOOD in target_character.tribes:  # Distinctly Fairy Godmother works on self
 
@@ -23,11 +23,12 @@ class CharacterType(Character):
                 fairy_godmother = self
                 last_breath = False
 
-                def handle(self, *args, **kwargs):
+                def handle(self, stack, *args, **kwargs):
                     stat_change = 4 if self.fairy_godmother.golden else 2
                     for char in self.manager.owner.valid_characters():
                         if Tribe.GOOD in char.tribes:
                             char.change_stats(health=stat_change, temp=False,
-                                              reason=StatChangeCause.FAIRY_GODMOTHER_BUFF, source=self.manager)
+                                              reason=StatChangeCause.FAIRY_GODMOTHER_BUFF, source=self.manager,
+                                              stack=stack)
 
             target_character.register(FairyGodmotherOnDeath, temp=True)

@@ -32,4 +32,4 @@ class CharacterType(Character):
                     golden=False, keywords=[], tribes=['dwarf'], cost=1
                 )
             ]
-            self.manager.owner.summon(self.manager.position, *tweedle_dum)
+            self.manager.owner.summon(self.manager.position, tweedle_dum)

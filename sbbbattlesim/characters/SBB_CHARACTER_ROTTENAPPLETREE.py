@@ -16,12 +16,8 @@ class CharacterType(Character):
         self.register(self.RottenAppletreeOnPreDefend)
 
     class RottenAppletreeOnPreDefend(OnPreDefend):
-        def handle(self, attack_position, defend_position, *args, **kwargs):
+        def handle(self, attack_position, defend_position, stack, *args, **kwargs):
             appled_enemy = self.manager.owner.opponent.characters[defend_position]
             if appled_enemy:
-                appled_enemy.change_stats(
-                    health=1 - appled_enemy.health,
-                    reason=StatChangeCause.ROTTEN_APPLE_TREE_HEALTH,
-                    source=self.manager
-                )
-
+                appled_enemy.change_stats(health=1 - appled_enemy.health, reason=StatChangeCause.ROTTEN_APPLE_TREE_HEALTH,
+                                          source=self.manager, stack=stack)

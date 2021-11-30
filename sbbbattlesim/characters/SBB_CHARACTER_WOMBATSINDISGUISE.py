@@ -19,7 +19,7 @@ class CharacterType(Character):
 
         class WombatsInDisguiseOnDeath(OnDeath):
             last_breath = True
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
 
                 _lambda = lambda char: char._level <= self.manager.owner.level
                 valid_summons = [*character_registry.filter(_lambda=_lambda)]
@@ -36,9 +36,10 @@ class CharacterType(Character):
 
                     summon.change_stats(
                         attack=attack_buff, health=health_buff,
-                        reason=StatChangeCause.WOMBATS_IN_DISGUISE_BUFF, source=self.manager
+                        reason=StatChangeCause.WOMBATS_IN_DISGUISE_BUFF, source=self.manager,
+                        stack=stack
                     )
 
-                    self.manager.owner.summon(self.manager.position, summon)
+                    self.manager.owner.summon(self.manager.position, [summon])
 
         self.register(WombatsInDisguiseOnDeath)

@@ -8,6 +8,6 @@ class TreasureType(Treasure):
 
     _level = 2
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         for _ in range(self.mimic + 1):
-            target_character.change_stats(attack=1, reason=StatChangeCause.DANCING_SWORD, source=self, temp=True)
+            target_character.change_stats(attack=1, reason=StatChangeCause.DANCING_SWORD, source=self, temp=True, *args, **kwargs)

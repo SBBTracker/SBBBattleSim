@@ -8,7 +8,7 @@ class TreasureType(Treasure):
 
     _level = 7
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         for _ in range(bool(self.mimic) + 1):
             target_character.change_stats(health=5, attack=5, reason=StatChangeCause.FAIRY_QUEENS_WAND, source=self,
-                                      temp=True)
+                                          temp=True, *args, **kwargs)

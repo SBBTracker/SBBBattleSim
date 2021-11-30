@@ -84,7 +84,7 @@ class Character(EventManager):
     def valid(cls):
         return cls._attack != 0 or cls._health != 0 or cls._level != 0
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         raise NotImplementedError
 
     @property
@@ -99,7 +99,7 @@ class Character(EventManager):
     def max_health(self):
         return self._base_health + self._temp_health
 
-    def change_stats(self, reason, source, attack=0, health=0, damage=0, heal=0, temp=True):
+    def change_stats(self, reason, source, attack=0, health=0, damage=0, heal=0, temp=True, *args, **kwargs):
         stat_change = StatChange(reason=reason, source=source, attack=attack, health=health, damage=damage, heal=heal, temp=temp)
         logger.debug(f'{self.pretty_print()} stat change b/c {stat_change}')
 
@@ -111,11 +111,11 @@ class Character(EventManager):
                 self._base_attack += attack
                 self._base_health += health
 
-            self('OnBuff', attack_buff=attack, health_buff=health, damage=damage, reason=reason, temp=temp)
+            self('OnBuff', attack=attack, health=health, damage=damage, reason=reason, temp=temp, *args, **kwargs)
 
         if damage > 0:
             if self.invincible and reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:
-                self('OnDamagedAndSurvived', damage=0)
+                self('OnDamagedAndSurvived', damage=0, *args, **kwargs)
                 return
             self._damage += damage
 
@@ -132,7 +132,7 @@ class Character(EventManager):
             self.dead = True
             logger.debug(f'{self.pretty_print()} marked for death')
         elif damage > 0:
-            self('OnDamagedAndSurvived', damage=damage)
+            self('OnDamagedAndSurvived', damage=damage, *args, **kwargs)
 
     def clear_temp(self):
         logger.debug(f'{self.pretty_print()} clearing temp')

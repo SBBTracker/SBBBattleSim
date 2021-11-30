@@ -17,12 +17,12 @@ class HeroType(Hero):
 
         class MerlinOnSpellCast(OnSpellCast):
             merlin = self
-            def handle(self, caster, spell, target, *args, **kwargs):
+            def handle(self, caster, spell, target, stack, *args, **kwargs):
                 logger.debug(f'ON CAST {caster} {spell} {target}')
                 valid_targets = self.manager.valid_characters()
                 logger.debug(f'MERLIN TARGET {valid_targets}')
                 if valid_targets:
                     target_character = random.choice(valid_targets)
-                    target_character.change_stats(attack=2, health=1, reason=StatChangeCause.MERLIN_BUFF, source=self.merlin, temp=False)
+                    target_character.change_stats(attack=2, health=1, reason=StatChangeCause.MERLIN_BUFF, source=self.merlin, temp=False, stack=stack)
 
         self.player.register(MerlinOnSpellCast)

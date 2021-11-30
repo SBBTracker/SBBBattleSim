@@ -18,7 +18,7 @@ class CharacterType(Character):
     _level = 4
     _tribes = {Tribe.GOOD, Tribe.TREANT}
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         behind = utils.get_behind_targets(self.position)
         if target_character.position in behind:
             logger.debug(f'{self.pretty_print()} is protecting {target_character.pretty_print()}')

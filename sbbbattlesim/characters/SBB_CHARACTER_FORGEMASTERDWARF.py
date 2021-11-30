@@ -19,13 +19,13 @@ class CharacterType(Character):
 
         class LordyBuffOnStart(OnStart):
             lordy = self
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 dwarfes = self.manager.valid_characters(
                     _lambda=lambda char: Tribe.DWARF in char.tribes or char.id == 'SBB_CHARACTER_PRINCESSNIGHT'
                 )
                 stat_change = len(dwarfes) * (4 if self.lordy.golden else 2)
                 for dwarf in dwarfes:
                     dwarf.change_stats(attack=stat_change, health=stat_change, temp=False,
-                                       reason=StatChangeCause.LORDY_BUFF, source=self.lordy)
+                                       reason=StatChangeCause.LORDY_BUFF, source=self.lordy, stack=stack)
 
         self.owner.register(LordyBuffOnStart)

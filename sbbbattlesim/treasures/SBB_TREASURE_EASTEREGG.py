@@ -7,6 +7,6 @@ class TreasureType(Treasure):
 
     _level = 2
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if target_character.golden:
-            target_character.change_stats(attack=3, health=3, reason=StatChangeCause.EASTER_EGG, source=self, temp=True)
+            target_character.change_stats(attack=3, health=3, reason=StatChangeCause.EASTER_EGG, source=self, temp=True, *args, **kwargs)

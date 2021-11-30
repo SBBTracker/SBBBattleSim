@@ -15,7 +15,7 @@ class CharacterType(Character):
     _level = 4
     _tribes = {Tribe.EVIL, Tribe.ANIMAL}
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         class BeardedVultureOnDeath(OnDeath):
             bearded_vulture = self
             last_breath = False

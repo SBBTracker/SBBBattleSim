@@ -19,10 +19,11 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
 
         class BrocLeeOnDamageAndSurvived(OnDamagedAndSurvived):
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 self.manager.change_stats(
                     attack=20 if self.manager.golden else 10, temp=False,
-                    reason=StatChangeCause.BROC_LEE_BUFF, source=self.manager
+                    reason=StatChangeCause.BROC_LEE_BUFF, source=self.manager,
+                    stack=stack
                 )
 
         self.register(BrocLeeOnDamageAndSurvived)

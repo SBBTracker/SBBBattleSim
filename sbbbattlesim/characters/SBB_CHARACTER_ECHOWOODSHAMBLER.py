@@ -1,5 +1,5 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnBuff
+from sbbbattlesim.events import OnBuff, OnSummon
 import logging
 
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -15,19 +15,23 @@ class CharacterType(Character):
     _level = 6
     _tribes = {Tribe.TREANT}
 
-    def buff(self, target_character):
-        if target_character.id != self.id:
+    def buff(self, target_character, *args, **kwargs):
+        if target_character.id is not self.id:
 
             class EchoWoodBuff(OnBuff):
                 echo_wood = self
-                gold_multiplier = 2 if echo_wood.golden else 1
-                def handle(self, attack_buff=0, health_buff=0, temp=False, *args, **kwargs):
-                    if not temp:
+
+                def handle(self, stack, force_echowood=None, attack=0, health=0, damage=0, reason='', temp=True, *args, **kwargs):
+                    if not temp or force_echowood:
+
+                        gold_multiplier = 2 if self.echo_wood.golden else 1
+
                         self.echo_wood.change_stats(
-                            attack=self.gold_multiplier*attack_buff,
-                            health=self.gold_multiplier*health_buff,
+                            attack=gold_multiplier * attack,
+                            health=gold_multiplier * health,
                             temp=False,
-                            reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager
+                            reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager,
+                            stack=stack
                         )
 
             target_character.register(EchoWoodBuff, temp=True)

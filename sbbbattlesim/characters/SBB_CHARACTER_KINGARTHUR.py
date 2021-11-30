@@ -18,7 +18,7 @@ class CharacterType(Character):
         class PrinceArthurOnStart(OnStart):
             arthur = self
 
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 stat_change = 4 if self.arthur.golden else 2
                 royals = self.manager.valid_characters(
                     _lambda=lambda char: char.golden and (Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes)
@@ -26,7 +26,7 @@ class CharacterType(Character):
                 for char in royals:
                     char.change_stats(
                         attack=stat_change, health=stat_change, source=self.arthur,
-                        temp=False, reason=StatChangeCause.PRINCEARTHUR_BUFF
+                        temp=False, reason=StatChangeCause.PRINCEARTHUR_BUFF, stack=stack
                     )
 
         self.owner.register(PrinceArthurOnStart)

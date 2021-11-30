@@ -2,25 +2,28 @@ from sbbbattlesim.events import OnDeath
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import StatChangeCause
 
-CHARON_STR = 'SBB_HER_CHARON'
-
 class HeroType(Hero):
     display_name = 'Charon'
     aura = True
 
-    def buff(self, target_character):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.triggered = False
+
+    def buff(self, target_character, *args, **kwargs):
+
         class CharonOnDeath(OnDeath):
             priority = 999
             last_breath = False
             charon = self
 
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 # This should only proc once per combat
-                if self.manager.owner.stateful_effects.get(CHARON_STR, False):
+                if self.charon.triggered:
                     return  # This has already procced
-                self.manager.owner.stateful_effects[CHARON_STR] = True
+                self.charon.triggered = True
 
-                self.manager.change_stats(attack=2, health=1, reason=StatChangeCause.CHARON_BUFF, source=self.charon)
+                self.manager.change_stats(attack=2, health=1, reason=StatChangeCause.CHARON_BUFF, source=self.charon, stack=stack)
 
         target_character.register(CharonOnDeath)
 

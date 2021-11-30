@@ -14,14 +14,14 @@ class TreasureType(Treasure):
         class RoundTableBuff(OnStart):
             table = self
 
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 for _ in range(bool(self.table.mimic) + 1):
                     for char in self.manager.valid_characters():
                         if char.attack > char.health:
                             char.change_stats(health=char.attack - char.health, reason=StatChangeCause.ROUND_TABLE_BUFF,
-                                              source=self.table, temp=False)
+                                              source=self.table, temp=False, stack=stack)
                         else:
                             char.change_stats(attack=char.health - char.attack, reason=StatChangeCause.ROUND_TABLE_BUFF,
-                                              source=self.table, temp=False)
+                                              source=self.table, temp=False, stack=stack)
 
         self.player.register(RoundTableBuff)

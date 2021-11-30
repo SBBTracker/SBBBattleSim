@@ -20,7 +20,7 @@ class CharacterType(Character):
         class HungryHungryHippocampusOnSummon(OnSummon):
             hungry_hungry_hippocampus = self
 
-            def handle(self, summoned_characters, *args, **kwargs):
+            def handle(self, summoned_characters, stack, *args, **kwargs):
                 num_animals = len(list(filter(lambda char: Tribe.ANIMAL in char.tribes, summoned_characters)))
                 modifier = 4 if self.hungry_hungry_hippocampus.golden else 2
 
@@ -29,7 +29,8 @@ class CharacterType(Character):
                         health=num_animals*modifier,
                         temp=False,
                         source=self.hungry_hungry_hippocampus,
-                        reason=StatChangeCause.HUNGRYHUNGRYHIPPOCAMPUS_BUFF
+                        reason=StatChangeCause.HUNGRYHUNGRYHIPPOCAMPUS_BUFF,
+                        stack=stack
                     )
 
         if target_character is self:

@@ -25,13 +25,6 @@ class Player(EventManager):
         self._attack_chain = 0
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
-        self.stateful_effects = {}
-
-        for char_data in characters:
-            char = character_registry[char_data['id']](owner=self, **char_data)
-            logger.debug(f'{self.id} registering character {char}')
-            self.characters[char.position] = char
-
         self._attack_slot = 1
         self.hand = [character_registry[char_data['id']](owner=self, **char_data) for char_data in hand]
         self.graveyard = []
@@ -53,6 +46,11 @@ class Player(EventManager):
 
             self.register(CastSpellOnStart)
 
+        for char_data in characters:
+            char = character_registry[char_data['id']](owner=self, **char_data)
+            logger.debug(f'{self.id} registering character {char}')
+            self.characters[char.position] = char
+
         # This is designed to remove temp buffs that were passed in
         if raw:
             self.resolve_board()
@@ -63,16 +61,6 @@ class Player(EventManager):
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
-
-    #TODO Make a pretty print for player
-
-    @property
-    def front(self):
-        return dict(list(self.characters.items())[:4])
-
-    @property
-    def back(self):
-        return dict(list(self.characters.items())[4:])
 
     @property
     def attack_slot(self):
@@ -107,7 +95,7 @@ class Player(EventManager):
 
         return self._attack_slot
 
-    def resolve_board(self):
+    def resolve_board(self, *args, **kwargs):
         # Remove all bonuses
         # these need to be prior so that there is not
         # wonky ordering issues with clearing buffs
@@ -118,6 +106,10 @@ class Player(EventManager):
             if char is None:
                 continue
             char.clear_temp()
+
+        # If a stack was passed in through kwargs it will return
+        # If a stack wasn't passed it will be generated and returned
+        kwargs['stack'] = self('OnResolveBoard', *args, **kwargs)
 
         # CHARACTER BUFFS
         # Iterate over buff targets and auras then apply them to all necessary targets
@@ -131,44 +123,55 @@ class Player(EventManager):
                 support_itr = 2  # evil eye but not mimic
 
         for char in self.valid_characters():
+            if char.aura:
+                for target in self.valid_characters():
+                    char.buff(target, *args, **kwargs)
+
+        for char in self.valid_characters():
             if char.support:
                 for _ in range(support_itr):  # my commit but blame regi
                     for target_position in utils.get_support_targets(position=char.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures):
                         target = self.characters.get(target_position)
                         if target:
-                            char.buff(target)
-                            char('OnSupport', buffed=target, support=char)
-
-            elif char.aura:
-                for target in self.valid_characters():
-                    char.buff(target)
+                            char.buff(target, *args, **kwargs)
+                            char('OnSupport', buffed=target, support=char, *args, **kwargs)
 
         # TREASURE BUFFS
         for treasure in self.treasures.values():
             if treasure.aura:
                 for target in self.valid_characters():
-                    treasure.buff(target)
+                    treasure.buff(target, *args, **kwargs)
 
         # HERO BUFFS:
         if self.hero.aura:
             for target in self.valid_characters():
-                self.hero.buff(target)
+                self.hero.buff(target, *args, **kwargs)
 
-        self('OnResolveBoard')
-
-    def summon_from_different_locations(self, *characters):
+    def summon_from_different_locations(self, characters, *args, **kwargs):
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be
         able to summon from multiple points at once before running the onsummon stack. This may be useful
         for other things too'''
         summoned_characters = []
         for char in characters:
-            summoned_characters.extend(self.summon(char.position, char, trigger_onsummon=False))
+            pos = char.position
+            pos = next((pos for pos in utils.get_spawn_positions(pos) if self.characters.get(pos) is None), None)
+            if pos is None:
+                break
 
+            char.position = pos
+            self.characters[pos] = char
+            summoned_characters.append(self.characters[pos])
+            logger.info(f'Spawning {char} in {pos} position')
+
+        # Now that we have summoned units, make sure they have the buffs they should
+        self.resolve_board(force_echowood=True, *args, **kwargs)
+
+        # The player handles on-summon effects
         self('OnSummon', summoned_characters=summoned_characters)
 
         return summoned_characters
 
-    def summon(self, pos, *characters, trigger_onsummon=True):
+    def summon(self, pos, characters, *args, **kwargs):
         summoned_characters = []
         spawn_order = utils.get_spawn_positions(pos)
         for char in characters:
@@ -183,11 +186,10 @@ class Player(EventManager):
             logger.info(f'Spawning {char} in {pos} position')
 
         # Now that we have summoned units, make sure they have the buffs they should
-        self.resolve_board()
+        self.resolve_board(force_echowood=True, *args, **kwargs)
 
         # The player handles on-summon effects
-        if trigger_onsummon:
-            self('OnSummon', summoned_characters=summoned_characters)
+        stack = self('OnSummon', summoned_characters=summoned_characters)
 
         return summoned_characters
 
@@ -217,6 +219,6 @@ class Player(EventManager):
         if isinstance(spell, TargetedSpell) and target is None:
             return
 
-        self('OnSpellCast', caster=self, spell=spell, target=target)
-        spell.cast(player=self, target=target)
+        stack = self('OnSpellCast', caster=self, spell=spell, target=target)
+        spell.cast(player=self, target=target, stack=stack)
 

@@ -15,7 +15,7 @@ class Damage:
 
         for char in targets:
             if not char.dead:
-                char.change_stats(damage=self.x, reason=self.reason, source=self.source)
+                char.change_stats(damage=self.x, reason=self.reason, source=self.source, stack=None)
                 if char.dead:
                     self.killed_characters.append(char)
 
@@ -32,7 +32,7 @@ class Damage:
             dead_characters.append(char)
             char.owner.graveyard.append(char)
             char.owner.characters[char.position] = None
-            logger.info(f'{char} died')
+            logger.info(f'{char.pretty_print()} died')
 
         logger.info(f'These are the dead characters: {dead_characters}')
         for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):

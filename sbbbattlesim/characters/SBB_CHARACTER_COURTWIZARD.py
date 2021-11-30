@@ -17,7 +17,7 @@ class CharacterType(Character):
     _level = 4
     _tribes = {Tribe.GOOD, Tribe.MAGE}
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if Tribe.PRINCESS in target_character.tribes or Tribe.PRINCE in target_character.tribes:
 
             class CourtWizardOnDeatheBuff(OnDeath):

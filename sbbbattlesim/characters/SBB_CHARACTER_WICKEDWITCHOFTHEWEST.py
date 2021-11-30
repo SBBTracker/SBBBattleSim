@@ -11,7 +11,7 @@ class CharacterType(Character):
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.MAGE}
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if Tribe.EVIL in target_character.tribes:
             golden_multiplyer = 2 if self.golden else 1
             target_character.change_stats(
@@ -19,5 +19,6 @@ class CharacterType(Character):
                 health=2*golden_multiplyer,
                 temp=True,
                 reason=StatChangeCause.SUPPORT_BUFF,
-                source=self
+                source=self,
+                *args, ** kwargs
             )

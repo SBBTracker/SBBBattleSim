@@ -18,14 +18,16 @@ class CharacterType(Character):
             priority = 50
             robin_wood = self
 
-            def handle(self, *_args, **_kwargs):
+            def handle(self, stack, *args, **kwargs):
                 strongest_enemy_char = find_strongest_character(self.manager.opponent)
                 weakest_allied_char = find_weakest_character(self.manager)
 
                 strongest_enemy_char.change_stats(attack=-30 if self.robin_wood.golden else -15, temp=False,
-                                                  reason=StatChangeCause.ROBIN_WOOD_DEBUFF, source=self.robin_wood)
+                                                  reason=StatChangeCause.ROBIN_WOOD_DEBUFF, source=self.robin_wood,
+                                                  stack=stack)
                 weakest_allied_char.change_stats(attack=30 if self.robin_wood.golden else 15, temp=False,
-                                                 reason=StatChangeCause.ROBIN_WOOD_BUFF, source=self.robin_wood)
+                                                 reason=StatChangeCause.ROBIN_WOOD_BUFF, source=self.robin_wood,
+                                                 stack=stack)
 
         self.owner.register(RobinWoodOnFightStart)
 

@@ -13,7 +13,7 @@ class TreasureType(Treasure):
 
     _level = 3
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if target_character.position == 1:
             for _ in range(self.mimic + 1):
-                target_character.change_stats(attack=10, reason=StatChangeCause.STING, source=self, temp=True)
+                target_character.change_stats(attack=10, reason=StatChangeCause.STING, source=self, temp=True, *args, **kwargs)

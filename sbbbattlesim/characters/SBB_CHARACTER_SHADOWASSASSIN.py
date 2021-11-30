@@ -12,15 +12,14 @@ class CharacterType(Character):
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         class ShadowAssassinOnSlay(OnSlay):
             shadow_assassin = self
             def handle(self, source, stack, *args, **kwargs):
                 attack_buff, health_buff = (2, 2) if self.shadow_assassin.golden else (1, 1)
-                self.shadow_assassin.change_stats(
-                    attack=attack_buff, health=health_buff, temp=False,
-                    reason=StatChangeCause.SHADOW_ASSASSIN_ON_SLAY_BUFF, source=self.shadow_assassin
-                )
+                self.shadow_assassin.change_stats(attack=attack_buff, health=health_buff, temp=False,
+                                                  reason=StatChangeCause.SHADOW_ASSASSIN_ON_SLAY_BUFF,
+                                                  source=self.shadow_assassin, stack=stack)
 
         target_character.register(ShadowAssassinOnSlay, temp=True)
 

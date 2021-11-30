@@ -13,7 +13,7 @@ class HeroType(Hero):
     display_name = 'Trophy Hunter'
     aura = True
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         for on_death_event in target_character.get('OnDeath'):
             if on_death_event.last_breath:
 

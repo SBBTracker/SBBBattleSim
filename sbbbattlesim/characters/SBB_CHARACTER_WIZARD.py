@@ -17,12 +17,13 @@ class CharacterType(Character):
         class WizardFamiliarOnSpell(OnSpellCast):
             wizard_familiar = self
 
-            def handle(self, caster, spell, target, *args, **kwargs):
+            def handle(self, caster, spell, target, stack, *args, **kwargs):
                 stat_gain = (2 if self.wizard_familiar.golden else 1)
                 if not self.wizard_familiar.dead:
                     self.wizard_familiar.change_stats(
                         attack=stat_gain, health=stat_gain, reason=StatChangeCause.WIZARDS_FAMILIAR,
-                        source=self.wizard_familiar
+                        source=self.wizard_familiar,
+                        stack=stack,
                     )
 
         self.owner.register(WizardFamiliarOnSpell)

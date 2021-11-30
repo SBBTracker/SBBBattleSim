@@ -9,6 +9,6 @@ class TreasureType(Treasure):
     _level = 2
 
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         for _ in range(self.mimic + 1):
-            target_character.change_stats(health=1, reason=StatChangeCause.FOUNTAIN_OF_YOUTH, source=self, temp=True)
+            target_character.change_stats(health=1, reason=StatChangeCause.FOUNTAIN_OF_YOUTH, source=self, temp=True, *args, **kwargs)

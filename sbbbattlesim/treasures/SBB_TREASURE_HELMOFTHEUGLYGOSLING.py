@@ -13,9 +13,9 @@ class TreasureType(Treasure):
 
         class HelmOfTheUglyGoslingBeansOnStartBuff(OnStart):
             gosling = self
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 for _ in range(bool(self.gosling.mimic) + 1):
                     weakest = sorted(self.manager.valid_characters(), key=lambda char: char.attack)[0]
-                    weakest.change_stats(attack=15, health=15, reason=StatChangeCause.HELM_OF_THE_UGLY_GOSLING, source=self.gosling, temp=False)
+                    weakest.change_stats(attack=15, health=15, reason=StatChangeCause.HELM_OF_THE_UGLY_GOSLING, source=self.gosling, temp=False, stack=stack)
 
         self.player.register(HelmOfTheUglyGoslingBeansOnStartBuff)

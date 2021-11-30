@@ -114,6 +114,7 @@ class StatChangeCause(enum.Enum):
     FAIRY_GODMOTHER_BUFF = 136
     PRINCEARTHUR_BUFF = 137
     ONIKING_BUFF = 138
+    BEARSTINE_BUFF = 139
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202
@@ -230,11 +231,9 @@ def get_spawn_positions(position):
 
 
 def random_combat_spell(level):
-    valid_spells = list(spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in COMBAT_SPELLS))
+    valid_spells = [*spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in COMBAT_SPELLS)]
     if valid_spells:
-        random_spell = random.choice(valid_spells)
-        logger.info(f'Casting random combat spell {random_spell}')
-        return random_spell
+        return random.choice(valid_spells)
 
 
 #TODO are these the same across different effects (robin wood, helm of the gosling, juliets in graveyards)

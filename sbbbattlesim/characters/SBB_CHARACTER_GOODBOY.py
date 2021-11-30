@@ -22,7 +22,7 @@ class CharacterType(Character):
 
     class GoodBoyDeath(OnDeath):
         last_breath = True
-        def handle(self, *args, **kwargs):
+        def handle(self, stack, *args, **kwargs):
             golden_multiplyer = 2 if self.manager.golden else 1
             attack_buff = self.manager.attack * golden_multiplyer
             health_buff = (self.manager._base_health + self.manager._temp_health) * golden_multiplyer
@@ -30,4 +30,4 @@ class CharacterType(Character):
             for char in self.manager.owner.valid_characters():
                 if Tribe.GOOD in char.tribes:
                     char.change_stats(attack=attack_buff, health=health_buff, temp=False,
-                                      reason=StatChangeCause.GOODBOY_BUFF, source=self.manager)
+                                      reason=StatChangeCause.GOODBOY_BUFF, source=self.manager, stack=stack)

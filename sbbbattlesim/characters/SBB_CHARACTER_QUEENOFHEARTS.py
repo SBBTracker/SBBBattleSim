@@ -12,15 +12,15 @@ class CharacterType(Character):
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.QUEEN}
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         # Instantiate queen buff
         class EvilQueenOnDeath(OnDeath):
             last_breath = False
             evil_queen = self
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 stat_change = 4 if self.evil_queen.golden else 2
                 self.evil_queen.change_stats(attack=stat_change, health=stat_change, temp=False,
-                                             source=self.evil_queen, reason=StatChangeCause.EVILQUEEN_BUFF)
+                                             source=self.evil_queen, reason=StatChangeCause.EVILQUEEN_BUFF, stack=stack)
 
         # Give evil minions the buff
         if Tribe.EVIL in target_character.tribes and target_character is not self:

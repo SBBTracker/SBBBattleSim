@@ -11,6 +11,7 @@ class CharacterType(Character):
     _level = 2
     _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if Tribe.EVIL in target_character.tribes and target_character != self:
-            target_character.change_stats(attack=2 if self.golden else 1, temp=True, reason=StatChangeCause.AURA_BUFF, source=self)
+            target_character.change_stats(attack=2 if self.golden else 1, temp=True, reason=StatChangeCause.AURA_BUFF,
+                                          source=self, *args, **kwargs)

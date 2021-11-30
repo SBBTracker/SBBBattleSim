@@ -18,20 +18,20 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         self.coin_trigger = False
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         class CoinOfCharonOnDeath(OnDeath):
             priority = 999
             last_breath = False
             coin = self
 
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 # This should only proc once per combat
                 if self.coin.coin_trigger:
                     return  # This has already procced
                 self.coin.coin_trigger = True
 
-                self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin)
+                self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin, stack=stack)
                 if self.coin.mimic:
-                    self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin)
+                    self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin, stack=stack)
 
         target_character.register(CoinOfCharonOnDeath)

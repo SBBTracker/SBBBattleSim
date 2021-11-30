@@ -9,6 +9,7 @@ class CharacterType(Character):
     # PUFF PUFF VARIABLE
     # Store the global Puff Puff buff
     # THIS IS WRONG
+    # TODO This is broken
     display_name = 'PUFF PUFF'
     last_breath = True
 
@@ -28,27 +29,14 @@ class CharacterType(Character):
 
         class PuffPuffDeath(OnDeath):
             last_breath = True
+            puff = self
 
-            def handle(self, *args, **kwargs):
-                self.manager.change_stats(puffpuffbuff=2 if self.manager.golden else 1,
-                                          reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.manager)
+            def handle(self, stack, *args, **kwargs):
+                for char in self.manager.owner.valid_characters(_lambda=lambda char: char.id == self.puff.id):
+                    buff = 4 if self.puff.golden else 2
+                    char.change_stats(attack=buff, health=buff, reason=StatChangeCause.PUFF_PUFF_BUFF,
+                                      source=self.puff, stack=stack)
+                    self.puff.puffbuffs[self.puff.owner.id] += buff
 
         self.register(PuffPuffDeath)
 
-    @property
-    def attack(self):
-        return super().attack + self.puffbuffs[self.owner.id]
-
-    @property
-    def health(self):
-        return super().health + self.puffbuffs[self.owner.id]
-
-    def change_stats(self, puffpuffbuff=0, *args, **kwargs):
-        super().change_stats(*args, **kwargs)
-
-        if puffpuffbuff > 0:
-            self.puffbuffs[self.owner.id] += puffpuffbuff
-
-            total_stat_change = len(self.owner.valid_characters(_lambda=lambda char: char.id == self.id)) * puffpuffbuff
-
-            self('OnBuff', attack_buff=total_stat_change, health_buff=total_stat_change, reason=f'PuffPuffBuff', temp=False)

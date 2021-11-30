@@ -8,7 +8,7 @@ class TreasureType(Treasure):
 
     _level = 3
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if target_character._level <= 3:
             for _ in range(self.mimic + 1):
-                target_character.change_stats(health=1, attack=1, reason=StatChangeCause.SHEPHERDS_SLING, source=self, temp=True)
+                target_character.change_stats(health=1, attack=1, reason=StatChangeCause.SHEPHERDS_SLING, source=self, temp=True, *args, **kwargs)

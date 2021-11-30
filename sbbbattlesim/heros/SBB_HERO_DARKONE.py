@@ -11,7 +11,7 @@ class HeroType(Hero):
         super().__init__(*args, **kwargs)
         self.animal_deaths = 0
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
 
         if Tribe.ANIMAL in target_character.tribes:
             class EvellaAura(OnDeath):
@@ -24,4 +24,4 @@ class HeroType(Hero):
             target_character.register(EvellaAura, temp=True)
 
         if Tribe.EVIL in target_character.tribes:
-            target_character.change_stats(attack=self.animal_deaths, reason=StatChangeCause.EVELLA_BUFF, source=self, temp=True)
+            target_character.change_stats(attack=self.animal_deaths, reason=StatChangeCause.EVELLA_BUFF, source=self, temp=True, *args, **kwargs)

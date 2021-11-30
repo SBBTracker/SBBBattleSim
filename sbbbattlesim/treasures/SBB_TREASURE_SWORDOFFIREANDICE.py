@@ -8,12 +8,12 @@ class TreasureType(Treasure):
 
     _level = 5
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if target_character.position <= 4:
             for _ in range(bool(self.mimic) + 1):
                 target_character.change_stats(health=6, reason=StatChangeCause.SWORD_OF_FIRE_AND_ICE, source=self,
-                                              temp=True)
+                                              temp=True, *args, **kwargs)
         else:
             for _ in range(bool(self.mimic) + 1):
                 target_character.change_stats(attack=6, reason=StatChangeCause.SWORD_OF_FIRE_AND_ICE, source=self,
-                                              temp=True)
+                                              temp=True, *args, **kwargs)

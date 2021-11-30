@@ -32,4 +32,4 @@ class CharacterType(Character):
                     golden=False, keywords=[], tribes=['evil', 'animal'], cost=1
                 )
             ]
-            self.manager.owner.summon(self.manager.position, *sheep)
+            self.manager.owner.summon(self.manager.position, sheep)

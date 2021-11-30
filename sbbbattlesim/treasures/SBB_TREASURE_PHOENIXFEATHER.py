@@ -12,7 +12,7 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         self.feather_used = False
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
 
         class PhoenixFeatherOnDeath(OnDeath):
             feather = self
@@ -28,7 +28,7 @@ class TreasureType(Treasure):
                         self.manager._damage = 0
                         self.manager.dead = False
                         self.manager.owner.graveyard.remove(self.manager)
-                        self.manager.owner.summon(self.manager.position, self.manager)
+                        self.manager.owner.summon(self.manager.position, [self.manager])
 
                         if self.feather.mimic:
                             new_char = self.manager.__class__(
@@ -41,7 +41,7 @@ class TreasureType(Treasure):
                                 cost=self.manager.cost
                             )
 
-                            self.manager.owner.summon(self.manager.position, new_char)
+                            self.manager.owner.summon(self.manager.position, [new_char])
 
                         self.feather.feather_used = True
 

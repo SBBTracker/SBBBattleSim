@@ -15,9 +15,9 @@ class TreasureType(Treasure):
 
         class JacksJumpingBeansOnStartBuff(OnStart):
             beans = self
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 for _ in range(self.beans.mimic + 1):
                     target_character = random.choice(self.manager.valid_characters())
-                    target_character.change_stats(attack=4, health=4, reason=StatChangeCause.JACKS_JUMPING_BEANS, source=self.beans, temp=False)
+                    target_character.change_stats(attack=4, health=4, reason=StatChangeCause.JACKS_JUMPING_BEANS, source=self.beans, temp=False, stack=stack)
 
         self.player.register(JacksJumpingBeansOnStartBuff)

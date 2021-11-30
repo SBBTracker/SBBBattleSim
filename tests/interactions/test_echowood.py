@@ -33,17 +33,17 @@ def test_echowood_queenofhearts():
 
 def test_echowood_supported_token():
     player = make_player(
-        hero = "SBB_HERO_MUERTE",
+        # hero = "SBB_HERO_MUERTE",
         characters=[
-            make_character(id="SBB_CHARACTER_BLACKCAT",position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
+            make_character(id="SBB_CHARACTER_BLACKCAT", position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
             make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=0, health=1),
-            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER",position=7, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=7, attack=1, health=1),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
         characters=[
-            make_character(health=2)
+            make_character(attack=10, health=2)
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})

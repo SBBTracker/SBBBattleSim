@@ -13,16 +13,17 @@ class CharacterType(Character):
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.TREANT}
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
 
         class DarkwoodCreeperOnDamage(OnDamagedAndSurvived):
             darkwood = self
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 self.manager.change_stats(
                     attack=2 if self.darkwood.golden else 1,
                     temp=False,
                     reason=StatChangeCause.DARKWOOD_CREEPER_BUFF,
-                    source=self.darkwood
+                    source=self.darkwood,
+                    stack=stack
                 )
 
         target_character.register(DarkwoodCreeperOnDamage, temp=True)

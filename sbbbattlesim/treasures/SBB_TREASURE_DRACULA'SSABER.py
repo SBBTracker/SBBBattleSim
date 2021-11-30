@@ -15,13 +15,11 @@ class TreasureType(Treasure):
             saber = self
             last_breath = False
 
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 for char in self.saber.player.valid_characters():
-                    char.change_stats(attack=2, health=1, reason=StatChangeCause.DRACULAS_SABER_BUFF, source=self.saber,
-                                      temp=False)
-                    if self.saber.mimic:
+                    for _ in range(self.saber.mimic + 1):
                         char.change_stats(attack=2, health=1, reason=StatChangeCause.DRACULAS_SABER_BUFF,
-                                          source=self.saber, temp=False)
+                                          source=self.saber, temp=False, stack=stack)
 
         class DraculasSaberOnResolveBoard(OnResolveBoard):
             def handle(self, *args, **kwargs):

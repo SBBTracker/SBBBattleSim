@@ -24,10 +24,10 @@ class CharacterType(Character):
 
             itr = 2 if self.manager.golden else 1
             for _ in range(itr):
-                with stack.open(source=self):
+                with stack.open(source=self) as executor:
                     for char in targetted_chars:
                         last_breaths = [evt for evt in char.get('OnDeath') if evt.last_breath]
 
                         for lb in last_breaths:
                             logger.debug(f'Copycat Triggering LastBreath({args} {kwargs})')
-                            stack.execute(lb, *args, **kwargs)
+                            executor.execute(lb, *args, **kwargs)

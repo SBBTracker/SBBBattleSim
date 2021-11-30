@@ -39,4 +39,4 @@ class CharacterType(Character):
                     position=self.manager.position,
                     golden=self.manager.golden
                 )
-                self.manager.owner.summon(self.manager.position, summon)
+                self.manager.owner.summon(self.manager.position, [summon])

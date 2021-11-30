@@ -18,9 +18,9 @@ class TreasureType(Treasure):
 
         class IvoryOwlOnStartOnStartBuff(OnStart):
             owl = self
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 for _ in range(bool(self.owl.mimic) + 1):
                     for char in self.manager.valid_characters():
-                        char.change_stats(attack=2, health=2, reason=StatChangeCause.IVORY_OWL_BUFF, source=self.owl, temp=False)
+                        char.change_stats(attack=2, health=2, reason=StatChangeCause.IVORY_OWL_BUFF, source=self.owl, temp=False, stack=stack)
 
         self.player.register(IvoryOwlOnStartOnStartBuff)

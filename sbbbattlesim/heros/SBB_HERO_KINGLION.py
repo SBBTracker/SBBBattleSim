@@ -13,6 +13,6 @@ class HeroType(Hero):
         super().__init__(*args, **kwargs)
         self.mirhi_buff = mirhi_buff
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if Tribe.PRINCE in target_character.tribes or Tribe.PRINCESS in target_character.tribes:
-            target_character.change_stats(attack=1*self.mirhi_buff, health=2*self.mirhi_buff, reason=StatChangeCause.MIRHI_BUFF, source=self)
+            target_character.change_stats(attack=1*self.mirhi_buff, health=2*self.mirhi_buff, reason=StatChangeCause.MIRHI_BUFF, source=self, *args, **kwargs)

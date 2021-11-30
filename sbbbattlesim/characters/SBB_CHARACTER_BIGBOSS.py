@@ -11,7 +11,7 @@ class CharacterType(Character):
     _level = 4
     _tribes = {Tribe.DWARF}
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if Tribe.DWARF in target_character.tribes and target_character != self:
             modifier = 4 if self.golden else 2
-            target_character.change_stats(attack=modifier, health=modifier, temp=True, reason=StatChangeCause.AURA_BUFF, source=self)
+            target_character.change_stats(attack=modifier, health=modifier, temp=True, reason=StatChangeCause.AURA_BUFF, source=self, *args, **kwargs)

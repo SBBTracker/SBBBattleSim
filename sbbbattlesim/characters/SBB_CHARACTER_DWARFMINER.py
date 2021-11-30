@@ -19,12 +19,13 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
 
         class AngryBuff(OnDamagedAndSurvived):
-            def handle(self, *args, **kwargs):
+            def handle(self, stack, *args, **kwargs):
                 stat_change = 4 if self.manager.golden else 2
                 for dwarf in self.manager.owner.valid_characters(_lambda=lambda char: Tribe.DWARF in char.tribes):
                     dwarf.change_stats(
                         attack=stat_change, health=stat_change, source=self,
-                        temp=False, reason=StatChangeCause.ANGRY_BUFF
+                        temp=False, reason=StatChangeCause.ANGRY_BUFF,
+                        stack=stack,
                     )
 
         self.register(AngryBuff)

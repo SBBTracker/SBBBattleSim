@@ -1,3 +1,4 @@
+from sbbbattlesim.events import OnStart
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
 
@@ -10,9 +11,16 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.monkey_paw = len(self.player.valid_characters()) <= 6
+        self.active = False
 
-    def buff(self, target_character):
-        if self.monkey_paw:
+        class MonkeysPawOnStart(OnStart):
+            monkey = self
+            def handle(self, *args, **kwargs):
+                self.monkey.active = len(self.manager.valid_characters()) <= 6
+
+        self.player.register(MonkeysPawOnStart)
+
+    def buff(self, target_character, *args, **kwargs):
+        if self.active:
             for _ in range(self.mimic + 1):
-                target_character.change_stats(attack=6, health=6, reason=StatChangeCause.MONKEYS_PAW, source=self, temp=True)
+                target_character.change_stats(attack=6, health=6, reason=StatChangeCause.MONKEYS_PAW, source=self, temp=True, *args, **kwargs)

@@ -20,7 +20,7 @@ class CharacterType(Character):
 
     class FriendlySpiritLastBreath(OnDeath):
         last_breath = True
-        def handle(self, *args, **kwargs):
+        def handle(self, stack, *args, **kwargs):
             chars = self.manager.owner.valid_characters()
             if not chars:
                 return
@@ -33,5 +33,6 @@ class CharacterType(Character):
                 health=self.manager.max_health * golden_multiplyer,
                 temp=False,
                 reason=StatChangeCause.FRIENDLY_SPIRIT_BUFF,
-                source=self.manager
+                source=self.manager,
+                stack=stack
             )

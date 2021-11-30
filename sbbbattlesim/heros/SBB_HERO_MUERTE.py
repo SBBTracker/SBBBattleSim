@@ -15,7 +15,7 @@ class HeroType(Hero):
         super().__init__(*args, **kwargs)
         self.triggered = False
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if self.triggered:
             return
 
@@ -28,10 +28,10 @@ class HeroType(Hero):
                 if self.meurte.triggered:
                     return
 
-                last_breaths = [evt for evt in stack if evt.last_breath]
+                last_breaths = [evt for evt in stack if getattr(evt, 'last_breath', False)]
                 if last_breaths:
                     self.meurte.triggered = True
-                    with stack.open(*args, **kwargs):
-                        stack.execute(last_breaths[-1])
+                    with stack.open(*args, **kwargs) as executor:
+                        executor.execute(last_breaths[-1])
 
         target_character.register(MeurteDoubleLastBreath)

@@ -14,7 +14,7 @@ class TreasureType(Treasure):
 
     _level = 5
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         logger.debug(f'{target_character.pretty_print()} Is this a mage??? {target_character.tribes} {Tribe.MAGE in target_character.tribes}')
         if Tribe.MAGE in target_character.tribes:
             class NinthBookOnDeath(OnDeath):

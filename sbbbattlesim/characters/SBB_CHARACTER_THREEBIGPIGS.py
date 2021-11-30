@@ -29,9 +29,8 @@ class CharacterType(Character):
         def handle(self, *args, **kwargs):
             stat = 10 if self.manager.golden else 5
 
-            sheep = []
-            for _ in range(3):
-                sheep.append(character_registry['Pig'](
+            sheep = [
+                character_registry['Pig'](
                     owner=self.manager.owner,
                     position=self.manager.position,
                     attack=stat,
@@ -40,6 +39,7 @@ class CharacterType(Character):
                     keywords=[],
                     tribes=['evil', 'animal'],
                     cost=1
-                ))
+                ) for _ in range(3)
+            ]
 
-            self.manager.owner.summon(self.manager.position, *sheep)
+            self.manager.owner.summon(self.manager.position, sheep)

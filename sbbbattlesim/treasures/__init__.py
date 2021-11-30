@@ -23,7 +23,7 @@ class Treasure(EventManager):
     def valid(self):
         return self._level != 0
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         raise NotImplementedError(self.display_name)
 
 

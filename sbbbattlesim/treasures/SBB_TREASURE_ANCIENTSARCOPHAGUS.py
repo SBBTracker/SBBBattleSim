@@ -11,7 +11,7 @@ class TreasureType(Treasure):
 
     _level = 3
 
-    def buff(self, target_character):
+    def buff(self, target_character, *args, **kwargs):
         if Tribe.EVIL in target_character.tribes:
 
             class AncientSarcophagusOnDeath(OnDeath):

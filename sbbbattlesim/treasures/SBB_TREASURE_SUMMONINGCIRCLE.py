@@ -18,15 +18,13 @@ class TreasureType(Treasure):
 
         class SummoningPortalBuff(OnSummon):
             portal = self
-            def handle(self, summoned_characters, *args, **kwargs):
+            def handle(self, summoned_characters, stack, *args, **kwargs):
                 for char in sorted(summoned_characters, key=lambda char: char.position, reverse=True):
                     logger.debug(f'IS CHARACTER THE CHARACTER {char is self.manager.characters[char.position]}')
                     self.portal.buff_count += 1
-                    char.change_stats(attack=self.portal.buff_count, health=self.portal.buff_count,
-                                      reason=StatChangeCause.SUMMONING_PORTA, source=self.portal, temp=False)
-                    if self.portal.mimic:
+                    for _ in range(self.portal.mimic + 1):
                         char.change_stats(attack=self.portal.buff_count, health=self.portal.buff_count,
-                                          reason=StatChangeCause.SUMMONING_PORTA, source=self.portal, temp=False)
+                                          reason=StatChangeCause.SUMMONING_PORTA, source=self.portal, temp=False, stack=stack)
 
         self.player.register(SummoningPortalBuff)
 
