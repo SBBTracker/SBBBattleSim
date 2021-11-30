@@ -8,4 +8,4 @@ class SpellType(NonTargetedSpell):
 
     def cast(self, player, *args, **kwargs):
         for char in player.valid_characters():
-            char.change_stats(attack=1, health=1, temp=False, reason=StatChangeCause.BLESSING_OF_ATHENA, source=self, stack=None)
+            char.change_stats(attack=1, health=1, temp=False, reason=StatChangeCause.BLESSING_OF_ATHENA, source=self, *args, **kwargs)

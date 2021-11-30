@@ -7,4 +7,4 @@ class SpellType(TargetedSpell):
     _level = 6
 
     def cast(self, target, *args, **kwargs):
-        target.change_stats(health=10, temp=False, reason=StatChangeCause.GIGANTIFY, source=self, stack=None)
+        target.change_stats(health=10, temp=False, reason=StatChangeCause.GIGANTIFY, source=self, *args, **kwargs)

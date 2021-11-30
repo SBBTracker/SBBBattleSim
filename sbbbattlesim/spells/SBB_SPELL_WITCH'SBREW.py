@@ -7,7 +7,7 @@ class SpellType(TargetedSpell):
     _level = 2
 
     def cast(self, target, *args, **kwargs):
-        target.change_stats(health=1, attack=1, temp=False, reason=StatChangeCause.WITCHS_BREW, source=self, stack=None)
+        target.change_stats(health=1, attack=1, temp=False, reason=StatChangeCause.WITCHS_BREW, source=self, *args, **kwargs)
 
     def filter(self, char):
         return Tribe.EVIL in char.tribes

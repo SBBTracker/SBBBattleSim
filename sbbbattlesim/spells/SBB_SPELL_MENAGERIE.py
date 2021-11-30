@@ -12,5 +12,5 @@ class SpellType(TargetedSpell):
         valid_targets = player.valid_characters()
         targets = random.sample(valid_targets, min(len(valid_targets), 2))
         for target in targets:
-            target.change_stats(health=2, attack=2, temp=False, reason=StatChangeCause.WITCHS_BREW, source=self, stack=None)
+            target.change_stats(health=2, attack=2, temp=False, reason=StatChangeCause.WITCHS_BREW, source=self, *args, **kwargs)
 
