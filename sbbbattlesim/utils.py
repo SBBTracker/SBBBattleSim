@@ -187,6 +187,7 @@ class StatChangeCause(enum.Enum):
     BEAUTYS_INFLUENCE = 411
     MERLINS_TEST = 412
     QUEENS_GRACE = 413
+    FLOURISH = 414
 
     SMITE = 450
     EARTHQUAKE = 451

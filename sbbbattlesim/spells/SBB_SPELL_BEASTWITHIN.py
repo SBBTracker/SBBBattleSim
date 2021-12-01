@@ -10,6 +10,7 @@ class SpellType(NonTargetedSpell):
     def cast(self, player, *args, **kwargs):
         class CatsCallOnDeath(OnDeath):
             last_breath = False
+            priority = 1000
             def handle(self, *args, **kwargs):
                 if not player.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4)):
                     for pos in (1, 2, 3, 4):

@@ -7,6 +7,7 @@ class SpellType(TargetedSpell):
 
     def cast(self, target, *args, **kwargs):
         target.golden = True
+        # TODO base stats need to increase, i dont think it buffs echowood
 
     def filter(self, char):
         return not char.golden

@@ -1,7 +1,7 @@
 import random
 
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnDeath
+from sbbbattlesim.events import OnDeath, OnSummon
 from sbbbattlesim.utils import StatChangeCause, Tribe
 from sbbbattlesim.characters import registry as character_registry
 
@@ -16,6 +16,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
 
         class WombatsInDisguiseOnDeath(OnDeath):
             last_breath = True

@@ -20,7 +20,7 @@ class TreasureType(Treasure):
 
     def buff(self, target_character, *args, **kwargs):
         class CoinOfCharonOnDeath(OnDeath):
-            priority = 999
+            priority = 400
             last_breath = False
             coin = self
 

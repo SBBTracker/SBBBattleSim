@@ -7,7 +7,7 @@ class SpellType(TargetedSpell):
     _level = 3
 
     def cast(self, target, *args, **kwargs):
-        target.change_stats(health=7, temp=False, reason=StatChangeCause.STONE_SKIN, source=self, *args, **kwargs)
+        target.change_stats(health=7, temp=False, reason=StatChangeCause.FLOURISH, source=self, *args, **kwargs)
 
     def filter(self, char):
         return Tribe.TREANT in char.tribes

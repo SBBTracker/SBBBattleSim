@@ -7,4 +7,5 @@ class SpellType(TargetedSpell):
     _level = 2
 
     def cast(self, target, *args, **kwargs):
+        # TODO wtf
         target.change_stats(attack=10, temp=False, reason=StatChangeCause.HUGEIFY, source=self, *args, **kwargs)

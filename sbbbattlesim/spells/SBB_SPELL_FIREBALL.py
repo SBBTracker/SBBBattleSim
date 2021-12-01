@@ -20,4 +20,4 @@ class SpellType(NonTargetedSpell):
                 if char:
                     targets.append(char)
 
-            Damage(10, reason=StatChangeCause.FIREBALL, source=self, targets=targets).resolve()
+            Damage(4, reason=StatChangeCause.FIREBALL, source=self, targets=targets).resolve()

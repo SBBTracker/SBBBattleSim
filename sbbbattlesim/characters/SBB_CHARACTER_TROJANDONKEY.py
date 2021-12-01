@@ -16,7 +16,7 @@ class CharacterType(Character):
 
     _attack = 15
     _health = 15
-    _level = 6
+    _level = 3
     _tribes = {Tribe.ANIMAL}
 
     def __init__(self, *args, **kwargs):
