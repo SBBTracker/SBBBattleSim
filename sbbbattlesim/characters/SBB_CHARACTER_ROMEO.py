@@ -29,6 +29,7 @@ class CharacterType(Character):
                 if dead_juliets:
                     juliet = max(dead_juliets, key=lambda juliet: (juliet.attack, juliet.health))
                     juliet._damage = 0  # Reset damage dealt to this unit
+                    juliet.dead = False
                     self.manager.owner.summon(self.manager.position, [juliet])
 
         self.register(RomeoLastBreath)

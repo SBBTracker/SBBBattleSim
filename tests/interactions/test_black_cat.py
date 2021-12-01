@@ -7,7 +7,7 @@ def test_black_cat_dying(golden):
 
     player = make_player(
         characters=[
-            make_character(id='SBB_CHARACTER_BLACKCAT', position=6),
+            make_character(id='SBB_CHARACTER_BLACKCAT', position=6, golden=golden),
         ],
     )
     enemy = make_player(

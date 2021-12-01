@@ -26,13 +26,17 @@ class CharacterType(Character):
 
                         gold_multiplier = 2 if self.echo_wood.golden else 1
 
-                        self.echo_wood.change_stats(
-                            attack=gold_multiplier * attack,
-                            health=gold_multiplier * health,
-                            temp=False,
-                            reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager,
-                            stack=stack
-                        )
+                        attack_change = max(0, gold_multiplier*attack)
+                        health_change = max(0, gold_multiplier*health)
+
+                        if attack_change > 0 or health_change > 0:
+                            self.echo_wood.change_stats(
+                                attack=gold_multiplier * attack,
+                                health=gold_multiplier * health,
+                                temp=False,
+                                reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager,
+                                stack=stack
+                            )
 
             target_character.register(EchoWoodBuff, temp=True)
 

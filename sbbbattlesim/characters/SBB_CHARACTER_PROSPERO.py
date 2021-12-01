@@ -8,6 +8,8 @@ from sbbbattlesim.utils import Tribe, StatChangeCause
 class CharacterType(Character):
     display_name = 'Bearstine'
 
+    aura = True
+
     _attack = 7
     _health = 10
     _level = 6
@@ -20,6 +22,9 @@ class CharacterType(Character):
             bearstine = self
             def handle(self, summoned_characters, stack, *args, **kwargs):
                 for char in summoned_characters:
+                    if Tribe.ANIMAL not in char.tribes:
+                        continue
+
                     stat_multplier = 2 if self.bearstine.golden else 1
 
                     previous_bearstine_buffs = [stat_change for stat_change in char.stat_history if stat_change.reason == StatChangeCause.BEARSTINE_BUFF]
@@ -33,3 +38,11 @@ class CharacterType(Character):
                                       source=self.bearstine, temp=False, stack=stack)
 
         self.owner.register(BearstineOnSummon)
+
+    def buff(self, target_character, *args, **kwargs):
+        if Tribe.ANIMAL in target_character.tribes and target_character != self:
+            modifier = 4 if self.golden else 2
+            target_character.change_stats(
+                attack=modifier, health=modifier, temp=True,
+                reason=StatChangeCause.AURA_BUFF, source=self, *args, **kwargs
+            )
