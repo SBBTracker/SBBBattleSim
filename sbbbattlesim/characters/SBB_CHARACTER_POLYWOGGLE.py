@@ -23,9 +23,9 @@ class CharacterType(Character):
             def handle(self, killed_character, *args, **kwargs):
                 _lambda = lambda char: char._level == min(self.manager.owner.level + 1, 6)
                 valid_chars = list(character_registry.filter(_lambda=_lambda))
-
-                char = random.choice(valid_chars)
-                # TODO lmao who knows
+                if valid_chars:
+                    char = random.choice(valid_chars)
+                    # TODO lmao who knows
 
         self.register(PolywoggleSlay)
 

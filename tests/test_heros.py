@@ -180,30 +180,6 @@ def test_merlin():
     assert generic.attack == 3 and generic.health == 2
 
 
-def test_potion_master():
-    player = make_player(
-        characters=[
-            make_character(id='GENERIC', position=1, keywords=[kw.value for kw in Keyword], tribes=[tribe.value for tribe in Tribe])
-        ],
-        hero='SBB_HERO_POTIONMASTER',
-        spells=[
-            'SBB_SPELL_TESTYOURMIGHT'
-        ]
-    )
-    enemy = make_player(
-        characters=[make_character(id='GENERIC', position=1)],
-    )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
-
-    player = board.p1
-
-    generic = player.characters.get(1)
-
-    assert generic
-    assert generic.attack == 4 and generic.health == 3
-
-
 def test_jacks_giant():
     player = make_player(
         characters=[

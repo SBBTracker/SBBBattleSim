@@ -40,11 +40,12 @@ class Player(EventManager):
         logger.debug(f'{self.id} registering hero {self.hero}')
 
         for spl in spells:
-            class CastSpellOnStart(OnStart):
-                def handle(self, *args, **kwargs):
-                    self.manager.cast_spell(spl, on_start=True)
+            if spl in utils.START_OF_FIGHT_SPELLS:
+                class CastSpellOnStart(OnStart):
+                    def handle(self, *args, **kwargs):
+                        self.manager.cast_spell(spl, on_start=True)
 
-            self.register(CastSpellOnStart)
+                self.register(CastSpellOnStart)
 
         for char_data in characters:
             char = character_registry[char_data['id']](owner=self, **char_data)

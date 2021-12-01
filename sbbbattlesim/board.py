@@ -15,7 +15,7 @@ class Board(EventManager):
     def __init__(self, data):
         super().__init__()
         logger.debug(data)
-        assert isinstance(data, dict)
+        assert isinstance(data, dict), data
         p1id, p2id = list(data)
         p1data, p2data = data[p1id], data[p2id]
 
@@ -26,6 +26,9 @@ class Board(EventManager):
 
         self.p1.opponent = self.p2
         self.p2.opponent = self.p1
+
+        self.winner = None
+        self.loser = None
 
     def get_player(self, id):
         if self.p1.id == id:
@@ -44,4 +47,7 @@ class Board(EventManager):
             logger.debug(f'Random Attacker/Defender')
             attacking, defending = random.sample((self.p1, self.p2), 2)
 
-        return fight_initialization(attacker=attacking, defender=defending, limit=limit, board=self)
+        winner, loser = fight_initialization(attacker=attacking, defender=defending, limit=limit, board=self)
+        self.winner = winner
+        self.loser = loser
+        return winner, loser

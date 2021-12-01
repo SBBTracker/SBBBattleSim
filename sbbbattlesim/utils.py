@@ -50,7 +50,6 @@ START_OF_FIGHT_SPELLS = (
     '''SBB_SPELL_PIGOMORPH''',
     '''SBB_SPELL_BEASTWITHIN''',
     '''SBB_SPELL_MENAGRIE'''
-
 )
 
 class Tribe(enum.Enum):

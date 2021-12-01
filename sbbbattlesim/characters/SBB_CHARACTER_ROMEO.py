@@ -21,37 +21,28 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.RomeoLastBreath.romeo = self
+        class RomeoLastBreath(OnDeath):
+            last_breath = True
 
-        self.register(self.RomeoLastBreath)
+            def handle(self, *args, **kwargs):
+                dead_juliets = [j for j in self.manager.owner.graveyard if j.id == JULIET_ID]
+                if dead_juliets:
+                    juliet = max(dead_juliets, key=lambda juliet: (juliet.attack, juliet.health))
+                    juliet._damage = 0  # Reset damage dealt to this unit
+                    self.manager.owner.summon(self.manager.position, [juliet])
 
-    class RomeoLastBreath(OnDeath):
-        last_breath = True
+        self.register(RomeoLastBreath)
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
+        class RomeoOnSummon(OnSummon):
+            romeo = self
 
-            self.priority = sbbbattlesim.SUMMONING_PRIORITY
-
-        def handle(self, *args, **kwargs):
-            dead_juliets = [j for j in self.manager.owner.graveyard if j.id == JULIET_ID]
-            if dead_juliets:
-
-                juliet = max(dead_juliets, key=lambda juliet : (juliet.attack, juliet.health))
-                juliet._damage = 0  # Reset damage dealt to this unit
-
-                class RomeoOnSummon(OnSummon):
-                    romeo = self.romeo
-
-                    def handle(self, summoned_characters, stack, *args, **kwargs):
+            def handle(self, summoned_characters, stack, *args, **kwargs):
+                for char in summoned_characters:
+                    if char.id == JULIET_ID:
                         modifier = 14 if self.romeo.golden else 7
-                        self.juliet.change_stats(
+                        char.change_stats(
                             reason=StatChangeCause.ROMEO_BUFF, attack=modifier,
                             health=modifier, temp=False, source=self.romeo
                         )
 
-                RomeoOnSummon.juliet = juliet
-
-                juliet.owner.register(RomeoOnSummon)
-                self.manager.owner.summon(self.manager.position, [juliet])
-
+        self.owner.register(RomeoOnSummon)

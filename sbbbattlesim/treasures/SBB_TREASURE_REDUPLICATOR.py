@@ -16,7 +16,7 @@ class TreasureType(Treasure):
 
             def handle(self, summoned_characters, *args, **kwargs):
                 if not self.reduplicator.triggered:
-                    if len(self.player.valid_characters()) != 7:
+                    if len(self.manager.valid_characters()) != 7:
                         self.reduplicator.triggered = True
                         copied_character = summoned_characters[0]
                         new_character = copied_character.__class__.__init__(owner=copied_character.owner,
@@ -26,6 +26,6 @@ class TreasureType(Treasure):
                                                                             golden=copied_character.golden,
                                                                             tribes=copied_character.tribes,
                                                                             cost=copied_character.cost)
-                        self.player.summon(new_character.position, new_character)
+                        self.manager.summon(new_character.position, new_character)
 
         self.player.register(ReduplicatorOnSummon)
