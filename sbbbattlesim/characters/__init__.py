@@ -104,11 +104,18 @@ class Character(EventManager):
         logger.debug(f'{self.pretty_print()} stat change b/c {stat_change}')
 
         if attack != 0 or health != 0:
+            attack_multiplier = 1
+            if '''SBB_TREASURE_WHIRLINGBLADES''' in self.owner.treasures:
+                if '''SBB_TREASURE_TREASURECHEST''' in self.owner.treasures:
+                    attack_multiplier = 4
+                else:
+                    attack_multiplier = 2
+
             if temp:
-                self._temp_attack += attack
+                self._temp_attack += attack * (attack_multiplier if attack > 0 else 1)
                 self._temp_health += health
             else:
-                self._base_attack += attack
+                self._base_attack += attack * (attack_multiplier if attack > 0 else 1)
                 self._base_health += health
 
             self('OnBuff', attack=attack, health=health, damage=damage, reason=reason, temp=temp, *args, **kwargs)
