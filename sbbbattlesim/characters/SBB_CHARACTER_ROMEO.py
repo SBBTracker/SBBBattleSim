@@ -34,7 +34,7 @@ class CharacterType(Character):
 
                     new_juliet = character_registry[juliet.id](
                         attack=juliet._base_attack,
-                        health=min(juliet._base_health, 1),
+                        health=max(juliet._base_health, 1),
                         tribes=juliet.tribes,
                         golden=juliet.golden,
                         position=self.romeo.position,
