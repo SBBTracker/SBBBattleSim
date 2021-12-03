@@ -16,13 +16,15 @@ class CharacterType(Character):
     _tribes = {Tribe.TREANT}
 
     def buff(self, target_character, *args, **kwargs):
-        if target_character.id is not self.id:
 
+        if target_character is not self:
             class EchoWoodBuff(OnBuff):
                 echo_wood = self
 
-                def handle(self, stack, force_echowood=None, attack=0, health=0, damage=0, reason='', temp=True, *args, **kwargs):
-                    if not temp or force_echowood:
+                def handle(self, stack, force_echowood=None, is_from_echowood=False, attack=0, health=0, damage=0,
+                           reason='', temp=True, *args, **kwargs):
+
+                    if (not temp or force_echowood) and not is_from_echowood:
 
                         gold_multiplier = 2 if self.echo_wood.golden else 1
 
@@ -35,7 +37,8 @@ class CharacterType(Character):
                                 health=gold_multiplier * health,
                                 temp=False,
                                 reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager,
-                                stack=stack
+                                stack=stack,
+                                is_from_echowood=True
                             )
 
             target_character.register(EchoWoodBuff, temp=True)

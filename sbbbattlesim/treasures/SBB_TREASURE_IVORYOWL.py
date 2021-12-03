@@ -17,7 +17,9 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
 
         class IvoryOwlOnStartOnStartBuff(OnStart):
+            priority=120
             owl = self
+
             def handle(self, stack, *args, **kwargs):
                 for _ in range(bool(self.owl.mimic) + 1):
                     for char in self.manager.valid_characters():

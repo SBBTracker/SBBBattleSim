@@ -12,7 +12,9 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
 
         class HelmOfTheUglyGoslingBeansOnStartBuff(OnStart):
+            priority=50
             gosling = self
+
             def handle(self, stack, *args, **kwargs):
                 for _ in range(bool(self.gosling.mimic) + 1):
                     weakest = sorted(self.manager.valid_characters(), key=lambda char: char.attack)[0]
