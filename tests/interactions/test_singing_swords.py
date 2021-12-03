@@ -163,3 +163,53 @@ def test_singingswords_mimic_roundtable():
 
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (9, 9)
+
+
+
+def test_backline_blackcat():
+    player = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_BLACKCAT",position=5, attack=1, health=1),
+        ],
+        treasures=[
+            "SBB_TREASURE_WHIRLINGBLADES"
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=5, attack=1, health=1),
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS''',
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (1, 1)
+
+def test_multiple_echowoods():
+    player = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=2, attack=2, health=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=3, attack=2, health=1),
+            make_character(id="SBB_CHARACTER_BLACKCAT", position=1, attack=2, health=1),
+        ],
+        treasures=[
+            "SBB_TREASURE_WHIRLINGBLADES",
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=5, attack=1, health=1),
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (4, 1)

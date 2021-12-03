@@ -113,7 +113,13 @@ class Player(EventManager):
         kwargs['stack'] = self('OnResolveBoard', *args, **kwargs)
 
         # TREASURE BUFFS
-        for treasure in self.treasures.values():
+        # we need to apply singing swords first
+        if "SBB_TREASURE_WHIRLINGBLADES" in self.treasures:
+            for target in self.valid_characters():
+                self.treasures["SBB_TREASURE_WHIRLINGBLADES"].buff(target, *args, **kwargs)
+        for t, treasure in self.treasures.items():
+            if t == "SBB_TREASURE_WHIRLINGBLADES":
+                continue
             if treasure.aura:
                 for target in self.valid_characters():
                     treasure.buff(target, *args, **kwargs)
@@ -164,6 +170,9 @@ class Player(EventManager):
             summoned_characters.append(self.characters[pos])
             logger.info(f'Spawning {char} in {pos} position')
 
+        # Now that we have summoned units, make sure they have the buffs they should
+        self.resolve_board(force_echowood=True, *args, **kwargs)
+
         # summoned units need buffed attack and it needs to affect echowood
         if '''SBB_TREASURE_WHIRLINGBLADES''' in self.treasures:
             multiplier = 1
@@ -176,10 +185,9 @@ class Player(EventManager):
                         source=self,
                         reason=utils.StatChangeCause.SINGINGSWORD_BUFF,
                         temp=False,
+                        force_echowood=True,
                     )
 
-        # Now that we have summoned units, make sure they have the buffs they should
-        self.resolve_board(force_echowood=True, *args, **kwargs)
 
         # The player handles on-summon effects
         self('OnSummon', summoned_characters=summoned_characters)
@@ -200,6 +208,9 @@ class Player(EventManager):
             summoned_characters.append(self.characters[pos])
             logger.info(f'Spawning {char} in {pos} position')
 
+        # Now that we have summoned units, make sure they have the buffs they should
+        self.resolve_board(force_echowood=True, *args, **kwargs)
+
         # Summoned units need buffed attack and it needs to buff echowood
         if '''SBB_TREASURE_WHIRLINGBLADES''' in self.treasures:
             multiplier = 1
@@ -212,10 +223,9 @@ class Player(EventManager):
                         source=self,
                         reason=utils.StatChangeCause.SINGINGSWORD_BUFF,
                         temp=False,
+                        force_echowood=True,
                     )
 
-        # Now that we have summoned units, make sure they have the buffs they should
-        self.resolve_board(force_echowood=True, *args, **kwargs)
 
         # The player handles on-summon effects
         stack = self('OnSummon', summoned_characters=summoned_characters)

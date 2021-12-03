@@ -99,7 +99,7 @@ class Character(EventManager):
     def max_health(self):
         return self._base_health + self._temp_health
 
-    def change_stats(self, reason, source, attack=0, health=0, damage=0, heal=0, temp=True, from_singing_swords=False, *args, **kwargs):
+    def change_stats(self, reason, source, attack=0, health=0, damage=0, heal=0, temp=True, *args, **kwargs):
         stat_change = StatChange(reason=reason, source=source, attack=attack, health=health, damage=damage, heal=heal, temp=temp)
         logger.debug(f'{self.pretty_print()} stat change b/c {stat_change}')
 
