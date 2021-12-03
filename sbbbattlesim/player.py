@@ -26,7 +26,6 @@ class Player(EventManager):
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
         self._attack_slot = 1
-        self.hand = [character_registry[char_data['id']](owner=self, **char_data) for char_data in hand]
         self.graveyard = []
 
         self.treasures = {}
@@ -36,6 +35,7 @@ class Player(EventManager):
             logger.debug(f'{self.id} Registering treasure {treasure}')
             self.treasures[treasure.id] = treasure(self, mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0))
 
+        self.hand = [character_registry[char_data['id']](owner=self, **char_data) for char_data in hand]
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
         logger.debug(f'{self.id} registering hero {self.hero}')
 
@@ -112,6 +112,12 @@ class Player(EventManager):
         # If a stack wasn't passed it will be generated and returned
         kwargs['stack'] = self('OnResolveBoard', *args, **kwargs)
 
+        # TREASURE BUFFS
+        for treasure in self.treasures.values():
+            if treasure.aura:
+                for target in self.valid_characters():
+                    treasure.buff(target, *args, **kwargs)
+
         # CHARACTER BUFFS
         # Iterate over buff targets and auras then apply them to all necessary targets
         # Support & Aura Targeting
@@ -137,12 +143,6 @@ class Player(EventManager):
                             char.buff(target, *args, **kwargs)
                             char('OnSupport', buffed=target, support=char, *args, **kwargs)
 
-        # TREASURE BUFFS
-        for treasure in self.treasures.values():
-            if treasure.aura:
-                for target in self.valid_characters():
-                    treasure.buff(target, *args, **kwargs)
-
         # HERO BUFFS:
         if self.hero.aura:
             for target in self.valid_characters():
@@ -163,6 +163,20 @@ class Player(EventManager):
             self.characters[pos] = char
             summoned_characters.append(self.characters[pos])
             logger.info(f'Spawning {char} in {pos} position')
+
+        # summoned units need buffed attack and it needs to affect echowood
+        if '''SBB_TREASURE_WHIRLINGBLADES''' in self.treasures:
+            multiplier = 1
+            if "SBB_TREASURE_TREASURECHEST" in self.treasures:
+                multiplier = 2
+            for sc in summoned_characters:
+                if sc.position in [1, 2, 3, 4]:
+                    sc.change_stats(
+                        attack=sc._base_attack * multiplier,
+                        source=self,
+                        reason=utils.StatChangeCause.SINGINGSWORD_BUFF,
+                        temp=False,
+                    )
 
         # Now that we have summoned units, make sure they have the buffs they should
         self.resolve_board(force_echowood=True, *args, **kwargs)
@@ -185,6 +199,20 @@ class Player(EventManager):
             self.characters[pos] = char
             summoned_characters.append(self.characters[pos])
             logger.info(f'Spawning {char} in {pos} position')
+
+        # Summoned units need buffed attack and it needs to buff echowood
+        if '''SBB_TREASURE_WHIRLINGBLADES''' in self.treasures:
+            multiplier = 1
+            if "SBB_TREASURE_TREASURECHEST" in self.treasures:
+                multiplier = 2
+            for sc in summoned_characters:
+                if sc.position in [1, 2, 3, 4]:
+                    sc.change_stats(
+                        attack=sc._base_attack * multiplier,
+                        source=self,
+                        reason=utils.StatChangeCause.SINGINGSWORD_BUFF,
+                        temp=False,
+                    )
 
         # Now that we have summoned units, make sure they have the buffs they should
         self.resolve_board(force_echowood=True, *args, **kwargs)

@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 class CharacterType(Character):
     display_name = 'Trojan Donkey'
 
-    _attack = 15
-    _health = 15
+    _attack = 1
+    _health = 5
     _level = 3
     _tribes = {Tribe.ANIMAL}
 
@@ -37,6 +37,6 @@ class CharacterType(Character):
                 summon = random.choice(valid_summons).new(
                     owner=self.manager.owner,
                     position=self.manager.position,
-                    golden=self.manager.golden
+                    golden=False
                 )
                 self.manager.owner.summon(self.manager.position, [summon])

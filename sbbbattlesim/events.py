@@ -77,7 +77,7 @@ class OnPostAttack(SSBBSEvent):
 
 class OnPreDefend(SSBBSEvent):
     '''A defending character is attacked'''
-    def handle(self, attack_position, defend_position, stack, *args, **kwargs):
+    def handle(self, attack_position, defend_position, defender, stack, *args, **kwargs):
         raise NotImplementedError
 
 

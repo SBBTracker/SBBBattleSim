@@ -29,6 +29,12 @@ class CharacterType(Character):
 
                     previous_bearstine_buffs = [stat_change for stat_change in char.stat_history if stat_change.reason == StatChangeCause.BEARSTINE_BUFF]
                     previous_bearstine_attack_buffs = sum(stat_change.attack for stat_change in previous_bearstine_buffs)
+                    if "SBB_TREASURE_WHIRLINGBLADES" in self.manager.treasures:
+                        if '''SBB_TREASURE_TREASURECHEST''' in self.manager.treasures:
+                            previous_bearstine_attack_buffs *= 3
+                        else:
+                            previous_bearstine_attack_buffs *= 2
+
                     previous_bearstine_health_buffs = sum(stat_change.health for stat_change in previous_bearstine_buffs)
 
                     attack_buff = (char.attack - previous_bearstine_attack_buffs) * stat_multplier

@@ -8,19 +8,25 @@ def test_fanny(golden):
     player = make_player(
         characters=[
             make_character(id="SBB_CHARACTER_ANGRYDWARF",position=5, attack=1, health=1, golden=golden),
-            make_character(position=1, attack=1, health=1, tribes=[Tribe.DWARF]),
+            make_character(position=1, attack=5, health=5, tribes=[Tribe.DWARF]),
             make_character(position=2, attack=1, health=1)
-        ],
-        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+        ]
     )
-    enemy = make_player()
+    enemy = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_BABYDRAGON", position=5, attack=1, health=1),
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS''',
+        ]
+    )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
     board.p1.resolve_board()
     board.p2.resolve_board()
 
     if golden:
-        final_stats = (5, 5)
+        final_stats = (1, 1)
     else:
         final_stats = (3, 3)
 

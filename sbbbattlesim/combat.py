@@ -2,6 +2,7 @@ import logging
 import random
 import sys
 from functools import lru_cache, cache
+import copy
 
 from sbbbattlesim.damage import Damage
 from sbbbattlesim.utils import StatChangeCause
@@ -12,8 +13,21 @@ logger = logging.getLogger(__name__)
 
 
 def fight_initialization(attacker, defender, limit=None, **kwargs):
+    copychars = {}
+    for player in [attacker, defender]:
+        copychars[player] = copy.deepcopy(player.characters)
+
     attacker.resolve_board()
     defender.resolve_board()
+
+    for player in [attacker, defender]:
+        for pos, char in player.characters.items():
+            if char is None:
+                continue
+
+            char._base_attack -= (char.attack - copychars[player][pos]._base_attack)
+            char._base_health -= (char.health - copychars[player][pos]._base_health)
+
 
     ### TODO test who's events trigger in which order
     attacker('OnStart', **kwargs)
@@ -105,7 +119,7 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     defend_character = defender.characters.get(defend_position)
     if defend_character:
-        defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
+        defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position, defend_position=defend_position, attack_player=attacker, **kwargs)
 
     # We are pulling the latest attack_character and defend character incase they changed
     attack_character = attacker.characters.get(attack_position)

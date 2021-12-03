@@ -8,4 +8,5 @@ class SpellType(NonTargetedSpell):
     _level = 2
 
     def cast(self, player, *args, **kwargs):
+        targets = sorted(player.valid_characters(), key = lambda c : c.position)
         Damage(1, reason=StatChangeCause.FALLING_STARS, source=self, targets=player.valid_characters() + player.opponent.valid_characters()).resolve()
