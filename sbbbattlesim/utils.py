@@ -49,7 +49,7 @@ START_OF_FIGHT_SPELLS = (
     '''SBB_SPELL_DISINTEGRATE''',
     '''SBB_SPELL_PIGOMORPH''',
     '''SBB_SPELL_BEASTWITHIN''',
-    '''SBB_SPELL_MENAGRIE'''
+    '''SBB_SPELL_MENAGERIE'''
 )
 
 class Tribe(enum.Enum):
@@ -190,6 +190,7 @@ class StatChangeCause(enum.Enum):
     MERLINS_TEST = 412
     QUEENS_GRACE = 413
     FLOURISH = 414
+    TOIL_AND_TROUBLE = 415
 
     SMITE = 450
     EARTHQUAKE = 451

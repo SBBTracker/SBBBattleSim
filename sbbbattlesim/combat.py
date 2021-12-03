@@ -18,8 +18,8 @@ def fight_initialization(attacker, defender, limit=None, **kwargs):
     defender.resolve_board()
 
     ### TODO test who's events trigger in which order
-    attacker('OnStart', **kwargs)
-    defender('OnStart', **kwargs)
+    attacker('OnStart')
+    defender('OnStart')
 
     return fight(attacker, defender, limit=limit, **kwargs)
 

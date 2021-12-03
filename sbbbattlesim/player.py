@@ -114,6 +114,7 @@ class Player(EventManager):
 
         # TREASURE BUFFS
         # we need to apply singing swords first
+        # TODO Add priority to treasures and sort this loop by that priority
         if "SBB_TREASURE_WHIRLINGBLADES" in self.treasures:
             for target in self.valid_characters():
                 self.treasures["SBB_TREASURE_WHIRLINGBLADES"].buff(target, *args, **kwargs)
@@ -161,11 +162,6 @@ class Player(EventManager):
         summoned_characters = []
         for char in characters:
             pos = char.position
-            pos = next((pos for pos in utils.get_spawn_positions(pos) if self.characters.get(pos) is None), None)
-            if pos is None:
-                break
-
-            char.position = pos
             self.characters[pos] = char
             summoned_characters.append(self.characters[pos])
             logger.info(f'Spawning {char} in {pos} position')
@@ -187,7 +183,6 @@ class Player(EventManager):
                         temp=False,
                         force_echowood=True,
                     )
-
 
         # The player handles on-summon effects
         self('OnSummon', summoned_characters=summoned_characters)
@@ -226,7 +221,6 @@ class Player(EventManager):
                         force_echowood=True,
                     )
 
-
         # The player handles on-summon effects
         stack = self('OnSummon', summoned_characters=summoned_characters)
 
@@ -247,8 +241,6 @@ class Player(EventManager):
         if spell is None:
             return
 
-        logger.debug(f'{self.id} casting {spell}')
-
         target = None
         if spell.targeted:
             valid_targets = self.valid_characters(_lambda=spell.filter)
@@ -257,6 +249,8 @@ class Player(EventManager):
 
         if isinstance(spell, TargetedSpell) and target is None:
             return
+
+        logger.debug(f'{self.id} casting {spell}')
 
         stack = self('OnSpellCast', caster=self, spell=spell, target=target)
         spell.cast(player=self, target=target, stack=stack)

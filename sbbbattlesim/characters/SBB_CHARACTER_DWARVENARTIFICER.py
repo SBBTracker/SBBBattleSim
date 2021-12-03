@@ -10,4 +10,17 @@ class CharacterType(Character):
     _level = 2
     _tribes = {Tribe.DWARF}
 
-    # TODO needs temp calculated stats
+    def new(cls, owner, position, golden):
+        golden_multipler = 2 if golden else 1
+        attack = (cls._attack + (3 * owner.treasures)) * golden_multipler
+        health = (cls._health + (3 * owner.treasures)) * golden_multipler
+
+        return cls(
+            owner=owner,
+            position=position,
+            golden=golden,
+            attack=attack,
+            health=health,
+            tribes=cls._tribes,
+            cost=cls._level
+        )
