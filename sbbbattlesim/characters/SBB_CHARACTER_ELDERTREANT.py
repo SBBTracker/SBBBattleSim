@@ -17,7 +17,9 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
 
         class HeartWoodOnStart(OnStart):
+            priority=100
             heartwood = self
+
             def handle(self, stack, *args, **kwargs):
                 stat_change = 4 if self.heartwood.golden else 2
                 for pos in utils.get_support_targets(self.heartwood.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.manager.treasures):

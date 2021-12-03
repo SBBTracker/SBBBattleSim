@@ -18,7 +18,9 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
 
         class LordyBuffOnStart(OnStart):
+            priority=90
             lordy = self
+
             def handle(self, stack, *args, **kwargs):
                 dwarfes = self.manager.valid_characters(
                     _lambda=lambda char: Tribe.DWARF in char.tribes or char.id == 'SBB_CHARACTER_PRINCESSNIGHT'

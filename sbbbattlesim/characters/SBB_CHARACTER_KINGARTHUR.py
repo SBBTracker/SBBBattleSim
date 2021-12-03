@@ -16,6 +16,7 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
 
         class PrinceArthurOnStart(OnStart):
+            priority=80
             arthur = self
 
             def handle(self, stack, *args, **kwargs):

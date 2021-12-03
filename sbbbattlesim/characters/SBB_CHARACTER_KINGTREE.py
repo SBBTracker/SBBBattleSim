@@ -16,7 +16,9 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
 
         class AshwoodElmOnStart(OnStart):
+            priority=70
             ashwood = self
+
             def handle(self, stack, *args, **kwargs):
                 base_attack_change = self.ashwood.health
                 modifier = 2 if self.ashwood.golden else 1

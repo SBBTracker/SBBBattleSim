@@ -1479,6 +1479,41 @@ def test_round_table(mimic):
     assert char.attack == 1
 
 @pytest.mark.parametrize('mimic', (True, False))
+def test_round_table_echowood(mimic):
+    player = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", attack=11, health=1, position=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", attack=1, health=1, position=2),
+        ],
+        treasures=[
+            'SBB_TREASURE_THEROUNDTABLE',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character(attack=0)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    player = board.p1
+    e1 = player.characters[1]
+    e2 = player.characters[2]
+
+    if mimic:
+        assert (e1.attack, e1.health) == (21, 11)
+    else:
+        assert (e1.attack, e1.health) == (11, 11)
+
+    if mimic:
+        assert (e2.attack, e2.health) == (11, 11)
+    else:
+        assert (e2.attack, e2.health) == (1, 11)
+
+@pytest.mark.parametrize('mimic', (True, False))
 def test_phoenix_feather(mimic):
 
     player = make_player(
