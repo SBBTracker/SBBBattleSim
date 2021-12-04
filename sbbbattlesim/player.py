@@ -42,6 +42,8 @@ class Player(EventManager):
         for spl in spells:
             if spl in utils.START_OF_FIGHT_SPELLS:
                 class CastSpellOnStart(OnStart):
+                    priority = spell_registry[spl]().priority
+
                     def handle(self, *args, **kwargs):
                         self.manager.cast_spell(spl, on_start=True)
 

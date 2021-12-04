@@ -28,6 +28,8 @@ class TreasureType(Treasure):
                     source=self,
                     reason=StatChangeCause.SINGINGSWORD_BUFF,
                     temp=temp,
+                    *args,
+                    **kwargs
                 )
 
         if target_character.position in [1, 2, 3, 4]:

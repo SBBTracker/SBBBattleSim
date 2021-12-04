@@ -116,6 +116,7 @@ class StatChangeCause(enum.Enum):
     BEARSTINE_BUFF = 139
     ROMEO_BUFF = 140
     SPELL_WEAVER = 141
+    CRAFTY_BUFF = 142
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202

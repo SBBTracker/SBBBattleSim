@@ -17,7 +17,7 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
 
         class IvoryOwlOnStartOnStartBuff(OnStart):
-            priority=120
+            priority = 120
             owl = self
 
             def handle(self, stack, *args, **kwargs):

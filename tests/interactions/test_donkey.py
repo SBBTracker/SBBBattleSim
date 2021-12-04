@@ -4,7 +4,7 @@ import pytest
 
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('level', (2, 3, 4, 5, 6))
-@pytest.mark.parametrize('repeat', range(3))
+@pytest.mark.parametrize('repeat', range(30))
 def test_donkey_surviving(golden, level, repeat):
 
     player = make_player(

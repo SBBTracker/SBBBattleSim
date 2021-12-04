@@ -12,6 +12,7 @@ class Spell:
     id = ''
     level = 0
     targeted = True
+    priority = 0
 
     def cast(self, *args, **kwargs):
         raise NotImplementedError

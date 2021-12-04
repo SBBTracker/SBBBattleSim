@@ -34,7 +34,8 @@ class CharacterType(Character):
 
             valid_summons = [*character_registry.filter(_lambda=_lambda)]
             if valid_summons:
-                summon = random.choice(valid_summons).new(
+                _summon = random.choice(valid_summons)
+                summon = _summon.new(
                     owner=self.manager.owner,
                     position=self.manager.position,
                     golden=False

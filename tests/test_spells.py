@@ -20,26 +20,46 @@ def test_spell(spell):
 
 def test_falling_stars():
     player = make_player(
-        characters=[make_character()],
+        characters=[
+            make_character(position=1),
+            make_character(position=2),
+            make_character(position=3),
+            make_character(position=4),
+            make_character(position=5),
+            make_character(position=6),
+            make_character(position=7),
+
+        ],
         spells=['''SBB_SPELL_FALLINGSTARS''',]
     )
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
 
-    char = board.p1.graveyard[0]
-    assert char.stat_history[0].reason == StatChangeCause.FALLING_STARS
+    for pos in range(1, 8):
+        assert board.p1.characters[pos] is None
 
+    for char in board.p1.graveyard:
+        assert char.stat_history[0].reason == StatChangeCause.FALLING_STARS
 
-def test_lightning_bolt():
+    assert len(board.p1.graveyard) == 7
+
+@pytest.mark.parametrize('repeat', range(30))
+def test_lightning_bolt(repeat):
     player = make_player(
         spells=['''SBB_SPELL_LIGHTNINGBOLT''', ]
     )
     enemy = make_player(
-        characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=5, attack=1, health=10)],
+        characters=[
+            make_character(position=5, attack=1, health=10),
+            make_character(position=1, attack=1, health=10)
+        ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
+
+    board.p1.characters[5] is None
+    board.p1.characters[1] is not None
 
     char = board.p2.graveyard[0]
     assert char.stat_history[0].reason == StatChangeCause.LIGHTNING_BOLT
@@ -53,7 +73,8 @@ def test_fire_ball():
         characters=[
             make_character(position=2, health=4),
             make_character(position=5, health=4),
-            make_character(position=6, health=5)
+            make_character(position=6, health=5),
+            make_character(position=7),
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -70,6 +91,26 @@ def test_fire_ball():
     char = board.p2.characters[6]
     assert char.stat_history[0].reason == StatChangeCause.FIREBALL
 
+    for pos in [7]:
+        char = board.p2.characters[pos]
+        assert char is not None
+        assert char._damage == 0
+
+def test_fire_ball_backline():
+    player = make_player(
+        spells=['''SBB_SPELL_FIREBALL''', ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=6, health=5),
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=-1)
+
+    char = board.p2.characters[6]
+    assert char.stat_history[0].reason == StatChangeCause.FIREBALL
+
 
 def test_shrivel():
     player = make_player(
@@ -82,12 +123,59 @@ def test_shrivel():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     char = board.p2.characters[1]
     assert char
     assert char.stat_history[0].reason == StatChangeCause.SHRIVEL
     assert char.attack == 0 and char.health == 1
 
+
+@pytest.mark.parametrize('survives', (True, False))
+def test_shrivel_speed(survives):
+    player = make_player(
+        spells=['''SBB_SPELL_ENFEEBLEMENT''', ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(attack=0, health=(13 if survives else 11)),
+        ],
+        treasures=[
+            "SBB_TREASURE_IVORYOWL"
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=-1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    char = board.p2.characters[1]
+    if survives:
+        assert char is not None
+    else:
+        assert char is None
+
+@pytest.mark.parametrize('survives', (True, False))
+def test_shrivel_speed2(survives):
+    player = make_player(
+        spells=['''SBB_SPELL_ENFEEBLEMENT''', ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_KINGARTHUR", attack=0, health=(13 if survives else 11), golden=True, tribes=[Tribe.PRINCE]),
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=-1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    char = board.p2.characters[1]
+    if survives:
+        assert char is not None
+    else:
+        assert char is None
 
 def test_earthquake():
     player = make_player(

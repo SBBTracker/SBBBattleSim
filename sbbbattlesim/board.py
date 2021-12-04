@@ -37,17 +37,39 @@ class Board(EventManager):
             return self.p2
 
     def fight(self, limit=-1):
-        HERMES_BOOTS = '''SBB_TREASURE_HERMES'BOOTS'''
-        # Determine Setup and Turn Order
-        if self.p1.treasures.get(HERMES_BOOTS) and not self.p2.treasures.get(HERMES_BOOTS):
-            attacking, defending = self.p1, self.p2
-        elif self.p2.treasures.get(HERMES_BOOTS) and not self.p1.treasures.get(HERMES_BOOTS):
-            attacking, defending = self.p2, self.p1
-        else:
-            logger.debug(f'Random Attacker/Defender')
-            attacking, defending = random.sample((self.p1, self.p2), 2)
+
+        attacking, defending = who_goes_first(self.p1, self.p2)
 
         winner, loser = fight_initialization(attacker=attacking, defender=defending, limit=limit, board=self)
         self.winner = winner
         self.loser = loser
         return winner, loser
+
+def who_goes_first(p1, p2):
+    p1cnt = _who_goes_first(p1)
+    p2cnt = _who_goes_first(p2)
+
+    if p1cnt > p2cnt:
+        attacking, defending = p1, p2
+    elif p2cnt > p1cnt:
+        defending, attacking = p1, p2
+    else:
+        attacking, defending = random.sample((p1, p2), 2)
+
+    return attacking, defending
+
+
+def _who_goes_first(player):
+    HERMES_BOOTS = '''SBB_TREASURE_HERMES'BOOTS'''
+    TIGER = '''SBB_HERO_THECOLLECTOR'''
+    MIMIC = '''SBB_TREASURE_TREASURECHEST'''
+
+    cnt = 0
+    if player.treasures.get(HERMES_BOOTS):
+        cnt += 1
+        if player.treasures.get(MIMIC):
+            cnt += 1
+        if player.hero.id == TIGER:
+            cnt += 1
+
+    return cnt

@@ -1,7 +1,9 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.events import OnSummon
 
-
+# NOTE: crafty does not work without raw=true for being on the default board with treasures
+# this may be common with other calculated effects
 class CharacterType(Character):
     display_name = 'Crafty'
 
@@ -10,12 +12,29 @@ class CharacterType(Character):
     _level = 2
     _tribes = {Tribe.DWARF}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        class CraftyOnSummon(OnSummon):
+            crafty = self
+
+            def handle(self, summoned_characters, stack, *args, **kwargs):
+
+                golden_multipler = 2 if self.crafty.golden else 1
+                crafty_buff = 3*len(self.manager.treasures) * golden_multipler
+                self.crafty.change_stats(attack=crafty_buff, health=crafty_buff, temp=False,
+                                          reason=StatChangeCause.CRAFTY_BUFF, source=self)
+
+        self.owner.register(CraftyOnSummon)
+
+
+    @classmethod
     def new(cls, owner, position, golden):
         golden_multipler = 2 if golden else 1
-        attack = (cls._attack + (3 * owner.treasures)) * golden_multipler
-        health = (cls._health + (3 * owner.treasures)) * golden_multipler
+        attack = cls._attack * golden_multipler
+        health = cls._health * golden_multipler
 
-        return cls(
+        crafty = cls(
             owner=owner,
             position=position,
             golden=golden,
@@ -24,3 +43,5 @@ class CharacterType(Character):
             tribes=cls._tribes,
             cost=cls._level
         )
+
+        return crafty

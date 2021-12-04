@@ -12,7 +12,7 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
 
         class RoundTableBuff(OnStart):
-            priority=-10
+            priority=30
             table = self
 
             def handle(self, stack, *args, **kwargs):

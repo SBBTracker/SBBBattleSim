@@ -12,6 +12,9 @@ class SpellType(NonTargetedSpell):
 
     def cast(self, player, *args, **kwargs):
         valid_targets = player.opponent.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4))
+        if not valid_targets:
+            valid_targets = player.opponent.valid_characters(_lambda=lambda char: char.position in (5, 6, 7))
+
         if valid_targets:
             target = random.choice(valid_targets)
             targets = [target]

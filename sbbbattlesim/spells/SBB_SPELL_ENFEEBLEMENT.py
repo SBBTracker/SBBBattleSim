@@ -8,6 +8,8 @@ class SpellType(NonTargetedSpell):
     display_name = 'Shrivel'
     _level = 5
 
+    priority = 130
+
     def cast(self, player, *args, **kwargs):
         valid_targets = player.opponent.valid_characters()
         if valid_targets:
