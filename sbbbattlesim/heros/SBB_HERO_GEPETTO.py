@@ -1,6 +1,4 @@
-import random
-
-from sbbbattlesim.events import OnDeath, OnSummon
+from sbbbattlesim.events import OnSummon
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import StatChangeCause
 

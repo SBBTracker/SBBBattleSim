@@ -1,9 +1,8 @@
 import logging
 
-from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.events import OnDeath
+from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import random_combat_spell, Tribe
-
 
 logger = logging.getLogger(__name__)
 

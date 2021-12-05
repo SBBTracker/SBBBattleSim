@@ -1,8 +1,7 @@
 import logging
 
-from sbbbattlesim import utils
+from sbbbattlesim.events import OnStart
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.events import OnDeath, OnStart
 from sbbbattlesim.utils import StatChangeCause
 
 logger = logging.getLogger(__name__)
@@ -22,7 +21,7 @@ class TreasureType(Treasure):
 
             def handle(self, stack, *args, **kwargs):
                 for _ in range(bool(self.owl.mimic) + 1):
-                    for char in self.manager.valid_characters():
+                    for char in self.owl.player.valid_characters():
                         char.change_stats(attack=2, health=2, reason=StatChangeCause.IVORY_OWL_BUFF, source=self.owl, temp=False, stack=stack)
 
-        self.player.register(IvoryOwlOnStartOnStartBuff)
+        self.player.board.register(IvoryOwlOnStartOnStartBuff)

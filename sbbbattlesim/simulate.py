@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from typing import Dict, List
 
 from sbbbattlesim import Board
-from sbbbattlesim.stats import win_rate, average_damage, SimulationStats
+from sbbbattlesim.stats import SimulationStats
 
 logger = logging.getLogger(__name__)
 

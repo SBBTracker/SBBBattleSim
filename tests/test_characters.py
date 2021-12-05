@@ -1,11 +1,9 @@
 import pytest
 
 from sbbbattlesim import Board
-from sbbbattlesim.utils import Keyword, Tribe, StatChangeCause
-from tests import make_character, make_player
-
 from sbbbattlesim.characters import registry as character_registry
-
+from sbbbattlesim.utils import Tribe, StatChangeCause
+from tests import make_character, make_player
 
 
 @pytest.mark.parametrize('char', character_registry.filter())

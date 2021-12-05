@@ -1,6 +1,7 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.utils import StatChangeCause, Tribe
 from sbbbattlesim.events import OnSummon
+from sbbbattlesim.utils import StatChangeCause, Tribe
+
 
 # NOTE: crafty does not work without raw=true for being on the default board with treasures
 # this may be common with other calculated effects

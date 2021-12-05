@@ -1,8 +1,7 @@
-from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.events import OnDeath
-import random
 import logging
 
+from sbbbattlesim.events import OnDeath
+from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
 
 logger = logging.getLogger(__name__)

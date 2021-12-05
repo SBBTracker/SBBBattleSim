@@ -1,10 +1,10 @@
+import logging
 import random
 
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnDeath
-from sbbbattlesim.utils import StatChangeCause, Tribe
 from sbbbattlesim.characters import registry as character_registry
-import logging
+from sbbbattlesim.events import OnDeath
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 

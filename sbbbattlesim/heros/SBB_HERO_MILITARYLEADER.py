@@ -1,10 +1,7 @@
 import logging
-import random
 
-from sbbbattlesim.events import OnDeath, OnSpellCast, OnAttackAndKill
+from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.heros import Hero
-from sbbbattlesim.utils import Tribe, StatChangeCause
-
 
 logger = logging.getLogger(__name__)
 

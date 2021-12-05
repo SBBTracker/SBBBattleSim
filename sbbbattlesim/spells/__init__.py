@@ -20,6 +20,10 @@ class Spell:
     def filter(self, char):
         return True
 
+    @classmethod
+    def valid(cls):
+        return cls._level != 0
+
     def __str__(self):
         return self.__repr__()
 
@@ -53,12 +57,9 @@ class Registry(object):
     def __contains__(self, item):
         return item in self.spells
 
-    @classmethod
-    def valid(cls):
-        return cls._level != 0
-
     def register(self, name, spell):
-        assert name not in self.spells
+        assert name not in self.spells, name
+        assert spell.valid(), name
         spell.id = name
         self.spells[name] = spell
         logger.debug(f'Registered {name} - {spell}')

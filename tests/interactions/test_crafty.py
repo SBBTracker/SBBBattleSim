@@ -1,10 +1,9 @@
+import pytest
+
 from sbbbattlesim import Board
-from sbbbattlesim.characters import Character
-from tests import make_character, make_player
-from sbbbattlesim.utils import Tribe
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived
-import pytest
+from tests import make_character, make_player
 
 
 @pytest.mark.parametrize('num_treasures', (0, 1, 2, 3))

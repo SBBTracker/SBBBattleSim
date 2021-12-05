@@ -1,8 +1,8 @@
+import logging
+
 from sbbbattlesim.characters import Character
 from sbbbattlesim.combat import attack
 from sbbbattlesim.events import OnStart
-import logging
-
 from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
@@ -25,9 +25,9 @@ class CharacterType(Character):
             def handle(self, *args, **kwargs):
                 attack(
                     attack_position=self.lightning_dragon.position,
-                    attacker=self.manager,
-                    defender=self.manager.opponent,
+                    attacker=self.lightning_dragon.owner,
+                    defender=self.lightning_dragon.owner.opponent,
                 )
 
-        self.owner.register(LightningDragonOnStart)
+        self.owner.board.register(LightningDragonOnStart)
 

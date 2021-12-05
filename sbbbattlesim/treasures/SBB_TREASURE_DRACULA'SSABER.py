@@ -27,7 +27,8 @@ class TreasureType(Treasure):
                     char.register(DraculasSaberOnDeath, temp=True)
 
         class DraculasSaberOnStart(OnStart):
+            saber = self
             def handle(self, *args, **kwargs):
-                self.manager.opponent.register(DraculasSaberOnResolveBoard)
+                self.saber.player.opponent.register(DraculasSaberOnResolveBoard)
 
-        self.player.register(DraculasSaberOnStart)
+        self.player.board.register(DraculasSaberOnStart)

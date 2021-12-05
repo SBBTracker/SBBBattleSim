@@ -1,6 +1,7 @@
 from sbbbattlesim import Board
-from tests import make_character, make_player
 from sbbbattlesim.utils import Tribe
+from tests import make_character, make_player
+
 
 def test_complex_trees():
     player = make_player(

@@ -1,7 +1,6 @@
 import random
 
 from sbbbattlesim.characters import Character
-from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.damage import Damage
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import StatChangeCause, Tribe

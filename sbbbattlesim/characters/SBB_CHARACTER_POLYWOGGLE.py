@@ -1,8 +1,10 @@
+import random
+
 from sbbbattlesim.characters import Character
+from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.utils import Tribe
-from sbbbattlesim.characters import registry as character_registry
-import random
+
 
 class CharacterType(Character):
     display_name = 'Polywoggle'

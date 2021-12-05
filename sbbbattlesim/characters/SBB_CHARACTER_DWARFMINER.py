@@ -1,7 +1,7 @@
-from sbbbattlesim.characters import Character
 import logging
 
-from sbbbattlesim.events import OnStart, OnDamagedAndSurvived
+from sbbbattlesim.characters import Character
+from sbbbattlesim.events import OnDamagedAndSurvived
 from sbbbattlesim.utils import Tribe, StatChangeCause
 
 logger = logging.getLogger(__name__)

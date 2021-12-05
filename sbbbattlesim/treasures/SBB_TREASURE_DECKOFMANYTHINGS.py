@@ -2,7 +2,7 @@ import random
 
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import COMBAT_SPELLS
+
 
 #todo can only cast spells of current level or below
 class TreasureType(Treasure):
@@ -30,8 +30,8 @@ class TreasureType(Treasure):
             deck = self
 
             def handle(self, *args, **kwargs):
-                self.manager.cast_spell(random.choice(self.deck.spell_list))
+                self.deck.player.cast_spell(random.choice(self.deck.spell_list))
                 if self.deck.mimic:
-                    self.manager.cast_spell(random.choice(self.deck.spell_list))
+                    self.deck.player.cast_spell(random.choice(self.deck.spell_list))
 
-        self.player.register(DeckOfManyThingsOnStart)
+        self.player.board.register(DeckOfManyThingsOnStart)

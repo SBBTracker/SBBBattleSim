@@ -1,5 +1,5 @@
-from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.events import OnSlay
+from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
 
 

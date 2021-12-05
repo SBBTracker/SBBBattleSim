@@ -1,5 +1,5 @@
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause, Keyword
+from sbbbattlesim.utils import StatChangeCause
 
 
 class TreasureType(Treasure):

@@ -1,6 +1,6 @@
 from sbbbattlesim import Board
 from tests import make_character, make_player
-import pytest
+
 
 def test_lightning_dragon():
 

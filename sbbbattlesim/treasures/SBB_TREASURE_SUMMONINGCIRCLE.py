@@ -1,7 +1,7 @@
 import logging
 
-from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.events import OnSummon
+from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
 
 logger = logging.getLogger(__name__)

@@ -16,9 +16,9 @@ class TreasureType(Treasure):
         class MonkeysPawOnStart(OnStart):
             monkey = self
             def handle(self, *args, **kwargs):
-                self.monkey.active = len(self.manager.valid_characters()) <= 6
+                self.monkey.active = len(self.monkey.player.valid_characters()) <= 6
 
-        self.player.register(MonkeysPawOnStart)
+        self.player.board.register(MonkeysPawOnStart)
 
     def buff(self, target_character, *args, **kwargs):
         if self.active:

@@ -4,9 +4,9 @@ from collections import OrderedDict
 
 from sbbbattlesim import utils
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.events import EventManager, OnStart, OnSpellCast
+from sbbbattlesim.events import EventManager, OnStart
 from sbbbattlesim.heros import registry as hero_registry
-from sbbbattlesim.spells import registry as spell_registry, NonTargetedSpell, TargetedSpell
+from sbbbattlesim.spells import registry as spell_registry, TargetedSpell
 from sbbbattlesim.treasures import registry as treasure_registry
 
 logger = logging.getLogger(__name__)
@@ -23,6 +23,10 @@ class Player(EventManager):
         self.level = level
         self._last_attacker = None
         self._attack_chain = 0
+
+        #TODO Make a better implementation of this later
+        self._spells_cast = 0
+
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
         self._attack_slot = 1
@@ -62,12 +66,13 @@ class Player(EventManager):
 
     def _register_spell(self, spl):
         class CastSpellOnStart(OnStart):
+            player = self
             priority = spell_registry[spl]().priority
 
             def handle(self, *args, **kwargs):
-                self.manager.cast_spell(spl, on_start=True)
+                self.player.cast_spell(spl, on_start=True)
 
-        self.register(CastSpellOnStart)
+        self.board.register(CastSpellOnStart)
 
     @property
     def attack_slot(self):
@@ -270,7 +275,7 @@ class Player(EventManager):
             return
 
         logger.debug(f'{self.id} casting {spell}')
-
+        self._spells_cast += 1
         stack = self('OnSpellCast', caster=self, spell=spell, target=target)
         spell.cast(player=self, target=target, stack=stack)
 

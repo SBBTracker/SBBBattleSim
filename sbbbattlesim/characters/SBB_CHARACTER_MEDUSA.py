@@ -1,8 +1,9 @@
-from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnPreAttack
-from sbbbattlesim.utils import get_behind_targets, Tribe
-from sbbbattlesim.characters import registry as character_registry
 import logging
+
+from sbbbattlesim.characters import Character
+from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.events import OnPreAttack
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 

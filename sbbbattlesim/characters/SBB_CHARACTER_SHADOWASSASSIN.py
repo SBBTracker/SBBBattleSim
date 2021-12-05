@@ -1,5 +1,5 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnSlay, OnBuff
+from sbbbattlesim.events import OnSlay
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
 

@@ -1,10 +1,6 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnDeath, OnSummon
-import sbbbattlesim
 from sbbbattlesim.characters import registry as character_registry
-
-import random
-
+from sbbbattlesim.events import OnDeath, OnSummon
 from sbbbattlesim.utils import Tribe, StatChangeCause
 
 JULIET_ID = 'SBB_CHARACTER_JULIET'

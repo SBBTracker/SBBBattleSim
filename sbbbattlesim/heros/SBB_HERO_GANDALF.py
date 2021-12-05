@@ -1,6 +1,6 @@
-from sbbbattlesim.events import OnDeath, OnSupport
+from sbbbattlesim.events import OnSupport
 from sbbbattlesim.heros import Hero
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import StatChangeCause
 
 
 class HeroType(Hero):

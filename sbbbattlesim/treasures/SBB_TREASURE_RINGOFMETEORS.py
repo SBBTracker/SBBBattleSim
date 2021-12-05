@@ -16,7 +16,7 @@ class TreasureType(Treasure):
             ring = self
             def handle(self, *args, **kwargs):
                 for _ in range(self.ring.mimic + 1):
-                    targets = self.manager.valid_characters() + self.manager.opponent.valid_characters()
+                    targets = self.ring.player.valid_characters() + self.ring.player.opponent.valid_characters()
                     Damage(1, reason=StatChangeCause.RING_OF_METEORS, source=self.ring, targets=targets).resolve()
 
-        self.player.register(RingOfMeteorsActivation)
+        self.player.board.register(RingOfMeteorsActivation)

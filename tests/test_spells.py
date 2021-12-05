@@ -1,9 +1,10 @@
 import pytest
 
 from sbbbattlesim import Board
-from sbbbattlesim.utils import Keyword, Tribe, StatChangeCause
 from sbbbattlesim.spells import registry as spell_registry
+from sbbbattlesim.utils import Keyword, Tribe, StatChangeCause
 from tests import make_character, make_player
+
 
 @pytest.mark.parametrize('spell', spell_registry.keys())
 def test_spell(spell):

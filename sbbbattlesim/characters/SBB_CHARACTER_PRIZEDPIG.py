@@ -1,6 +1,5 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
-import random
 
 from sbbbattlesim.utils import Tribe
 

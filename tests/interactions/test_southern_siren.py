@@ -1,7 +1,9 @@
-from sbbbattlesim import Board
-from tests import make_character, make_player
 import pytest
+
+from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
+from tests import make_character, make_player
+
 
 @pytest.mark.parametrize('attacker_golden', (True, False))
 @pytest.mark.parametrize('defender_golden', (True, False))

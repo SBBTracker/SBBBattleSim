@@ -1,8 +1,8 @@
 import pytest
 
 from sbbbattlesim import Board
-from sbbbattlesim.utils import Keyword, Tribe
 from sbbbattlesim.treasures import registry as treasure_registry
+from sbbbattlesim.utils import Keyword, Tribe
 from tests import make_character, make_player
 
 

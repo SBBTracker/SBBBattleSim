@@ -1,5 +1,5 @@
-from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.events import OnDeath, OnStart
+from sbbbattlesim.treasures import Treasure
 
 
 class TreasureType(Treasure):
@@ -30,10 +30,11 @@ class TreasureType(Treasure):
                 self.manager.owner.summon(self.manager.position, copies)
 
         class MirrorMirrorOnStart(OnStart):
+            mirror = self
             def handle(self, *args, **kwargs):
-                for char in self.manager.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4)):
+                for char in self.mirror.player.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4)):
                     char.register(MirrorMirrorOnDeath)
 
-        self.player.register(MirrorMirrorOnStart)
+        self.player.board.register(MirrorMirrorOnStart)
 
 

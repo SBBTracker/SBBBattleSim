@@ -20,8 +20,9 @@ class TreasureType(Treasure):
                         char.change_stats(attack=5, reason=StatChangeCause.EYE_OF_ARES_BUFF, source=self.eye_of_ares, temp=True, stack=stack)
 
         class EyeOnStart(OnStart):
+            eye_of_ares = self
             def handle(self, *args, **kwargs):
-                self.manager.register(EyeOfAresAura)
-                self.manager.opponent.register(EyeOfAresAura)
+                self.eye_of_ares.player.register(EyeOfAresAura)
+                self.eye_of_ares.player.opponent.register(EyeOfAresAura)
 
-        self.player.register(EyeOnStart)
+        self.player.board.register(EyeOnStart)

@@ -1,10 +1,9 @@
 import logging
 import random
 
-from sbbbattlesim.events import OnDeath, OnSpellCast
+from sbbbattlesim.events import OnSpellCast
 from sbbbattlesim.heros import Hero
-from sbbbattlesim.utils import Tribe, StatChangeCause
-
+from sbbbattlesim.utils import StatChangeCause
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +18,7 @@ class HeroType(Hero):
             merlin = self
             def handle(self, caster, spell, target, stack, *args, **kwargs):
                 logger.debug(f'ON CAST {caster} {spell} {target}')
-                valid_targets = self.manager.valid_characters()
+                valid_targets = self.merlin.player.valid_characters()
                 logger.debug(f'MERLIN TARGET {valid_targets}')
                 if valid_targets:
                     target_character = random.choice(valid_targets)

@@ -4,7 +4,6 @@ from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.spells import NonTargetedSpell
 
-
 logger = logging.getLogger(__name__)
 
 

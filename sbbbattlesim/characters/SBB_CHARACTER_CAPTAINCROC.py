@@ -1,5 +1,4 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.exceptions import SBBSBCrocException
 from sbbbattlesim.utils import Tribe
 

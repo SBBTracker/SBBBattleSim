@@ -1,5 +1,6 @@
 import random
 
+from sbbbattlesim.damage import Damage
 from sbbbattlesim.spells import NonTargetedSpell
 from sbbbattlesim.utils import StatChangeCause
 
@@ -14,4 +15,13 @@ class SpellType(NonTargetedSpell):
         valid_targets = player.opponent.valid_characters()
         if valid_targets:
             target = random.choice(valid_targets)
-            target.change_stats(attack=-12, health=-12, temp=False, reason=StatChangeCause.SHRIVEL, source=self, *args, **kwargs)
+            # target.change_stats(attack=-12, health=-12, temp=False, reason=StatChangeCause.SHRIVEL, source=self, *args, **kwargs)
+            Damage(
+                0,
+                targets=[target],
+                reason=StatChangeCause.SHRIVEL,
+                source=self,
+                attack=-12,
+                health=-12,
+                *args, **kwargs
+            ).resolve()

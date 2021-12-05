@@ -1,10 +1,11 @@
+import pytest
+
 from sbbbattlesim import Board
-from sbbbattlesim.characters import Character
-from tests import make_character, make_player
-from sbbbattlesim.utils import Tribe
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived
-import pytest
+from sbbbattlesim.utils import Tribe
+from tests import make_character, make_player
+
 
 def test_angry_fallingstars():
     player = make_player(

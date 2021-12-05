@@ -1,7 +1,8 @@
-from sbbbattlesim.damage import Damage
-from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.events import OnDeath
 import random
+
+from sbbbattlesim.damage import Damage
+from sbbbattlesim.events import OnDeath
+from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
 

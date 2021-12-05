@@ -3,7 +3,6 @@ import logging
 from sbbbattlesim.events import OnLastBreath
 from sbbbattlesim.heros import Hero
 
-
 logger = logging.getLogger(__name__)
 
 

@@ -1,7 +1,7 @@
-from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnDeath
 import random
 
+from sbbbattlesim.characters import Character
+from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
 

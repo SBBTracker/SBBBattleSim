@@ -3,10 +3,8 @@ import random
 
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.events import OnDeath, OnDamagedAndSurvived
-import sbbbattlesim
+from sbbbattlesim.events import OnDamagedAndSurvived
 from sbbbattlesim.utils import Tribe
-
 
 logger = logging.getLogger(__name__)
 

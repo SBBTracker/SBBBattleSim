@@ -1,12 +1,9 @@
+import logging
 import random
-import time
-import traceback
-from copy import deepcopy
 
+from sbbbattlesim.combat import fight
 from sbbbattlesim.events import EventManager
 from sbbbattlesim.player import Player
-from sbbbattlesim.combat import fight_initialization
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -38,12 +35,19 @@ class Board(EventManager):
 
     def fight(self, limit=-1):
 
-        attacking, defending = who_goes_first(self.p1, self.p2)
+        attacker, defender = who_goes_first(self.p1, self.p2)
 
-        winner, loser = fight_initialization(attacker=attacking, defender=defending, limit=limit, board=self)
+        attacker.resolve_board()
+        defender.resolve_board()
+
+        ### TODO test who's events trigger in which order
+        self('OnStart')
+
+        winner, loser = fight(attacker, defender, limit=limit)
         self.winner = winner
         self.loser = loser
         return winner, loser
+
 
 def who_goes_first(p1, p2):
     p1cnt = _who_goes_first(p1)

@@ -1,7 +1,9 @@
-from sbbbattlesim import Board
-from tests import make_character, make_player
 import pytest
+
+from sbbbattlesim import Board
 from sbbbattlesim.utils import StatChangeCause
+from tests import make_character, make_player
+
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_monsterbook_wizard_familar(golden):

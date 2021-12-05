@@ -19,8 +19,8 @@ class CharacterType(Character):
             robin_wood = self
 
             def handle(self, stack, *args, **kwargs):
-                strongest_enemy_char = find_strongest_character(self.manager.opponent)
-                weakest_allied_char = find_weakest_character(self.manager)
+                strongest_enemy_char = find_strongest_character(self.robin_wood.owner.opponent)
+                weakest_allied_char = find_weakest_character(self.robin_wood.owner)
 
                 strongest_enemy_char.change_stats(attack=-30 if self.robin_wood.golden else -15, temp=False,
                                                   reason=StatChangeCause.ROBIN_WOOD_DEBUFF, source=self.robin_wood,
@@ -29,7 +29,7 @@ class CharacterType(Character):
                                                  reason=StatChangeCause.ROBIN_WOOD_BUFF, source=self.robin_wood,
                                                  stack=stack)
 
-        self.owner.register(RobinWoodOnFightStart)
+        self.owner.board.register(RobinWoodOnFightStart)
 
 
 

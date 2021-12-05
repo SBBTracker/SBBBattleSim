@@ -1,7 +1,6 @@
 from sbbbattlesim import Board
 from tests import make_character, make_player
-from sbbbattlesim.utils import Tribe
-import pytest
+
 
 def test_sureshot_ranged():
 

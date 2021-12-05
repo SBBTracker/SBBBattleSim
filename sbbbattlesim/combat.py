@@ -1,8 +1,7 @@
 import logging
 import random
 import sys
-from functools import lru_cache, cache
-import copy
+from functools import lru_cache
 
 from sbbbattlesim.damage import Damage
 from sbbbattlesim.utils import StatChangeCause
@@ -10,18 +9,6 @@ from sbbbattlesim.utils import StatChangeCause
 sys.setrecursionlimit(500)
 
 logger = logging.getLogger(__name__)
-
-
-def fight_initialization(attacker, defender, limit=None, **kwargs):
-
-    attacker.resolve_board()
-    defender.resolve_board()
-
-    ### TODO test who's events trigger in which order
-    attacker('OnStart')
-    defender('OnStart')
-
-    return fight(attacker, defender, limit=limit, **kwargs)
 
 
 @lru_cache(maxsize=512)

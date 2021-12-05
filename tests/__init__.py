@@ -1,7 +1,3 @@
-from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.spells import registry as spell_registry
-from sbbbattlesim.treasures import registry as treasure_registry
-
 PLAYER = {
     'characters': [],
     'treasures': [],

@@ -1,7 +1,9 @@
-from sbbbattlesim import Board
-from tests import make_character, make_player
-from sbbbattlesim.utils import Tribe
 import pytest
+
+from sbbbattlesim import Board
+from sbbbattlesim.utils import Tribe
+from tests import make_character, make_player
+
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_fanny(golden):

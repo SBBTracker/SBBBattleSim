@@ -1,6 +1,7 @@
 import enum
 import logging
 import random
+
 from sbbbattlesim.spells import registry as spell_registry
 
 logger = logging.getLogger(__name__)
@@ -117,6 +118,7 @@ class StatChangeCause(enum.Enum):
     ROMEO_BUFF = 140
     SPELL_WEAVER = 141
     CRAFTY_BUFF = 142
+    STORM_KING_BUFF = 143
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202

@@ -4,7 +4,7 @@ logger = logging.getLogger(__name__)
 
 
 class Damage:
-    def __init__(self, x, reason, source, targets):
+    def __init__(self, x, reason, source, targets, *args, **kwargs):
         self.x = x
         self.reason = reason
         self.source = source,
@@ -15,7 +15,8 @@ class Damage:
 
         for char in targets:
             if not char.dead:
-                char.change_stats(damage=self.x, reason=self.reason, source=self.source, stack=None)
+                kwargs.setdefault('stack', None)
+                char.change_stats(damage=self.x, reason=self.reason, source=self.source, *args, **kwargs)
                 if char.dead:
                     self.killed_characters.append(char)
 

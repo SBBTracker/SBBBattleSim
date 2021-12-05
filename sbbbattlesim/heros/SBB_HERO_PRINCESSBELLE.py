@@ -1,8 +1,5 @@
-import random
-
-from sbbbattlesim.events import OnDeath, OnSpellCast
 from sbbbattlesim.heros import Hero
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 
 class HeroType(Hero):

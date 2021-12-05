@@ -1,4 +1,3 @@
-from sbbbattlesim import utils
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -24,8 +23,8 @@ class CharacterType(Character):
                 modifier = 2 if self.ashwood.golden else 1
                 attack_change = base_attack_change*modifier
 
-                for char in self.manager.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes):
+                for char in self.ashwood.owner.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes):
                     char.change_stats(attack=attack_change, temp=False, reason=StatChangeCause.ASHWOOD_ELM_BUFF,
                                       source=self.ashwood, stack=stack)
 
-        self.owner.register(AshwoodElmOnStart)
+        self.owner.board.register(AshwoodElmOnStart)

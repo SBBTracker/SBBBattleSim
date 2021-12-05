@@ -5,7 +5,6 @@ from sbbbattlesim.heros import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
 
-
 logger = logging.getLogger(__name__)
 
 

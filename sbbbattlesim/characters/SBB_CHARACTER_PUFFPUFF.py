@@ -40,3 +40,19 @@ class CharacterType(Character):
 
         self.register(PuffPuffDeath)
 
+    @classmethod
+    def new(cls, *args, **kwargs):
+        self = super().new(*args, **kwargs)
+
+        self.owner.resolve_board()
+
+        stat_buff = cls.puffbuffs[self.owner.id]
+
+        self.change_stats(
+            attack=stat_buff,
+            health=stat_buff,
+            reason=StatChangeCause.PUFF_PUFF_BUFF,
+            source=self,
+        )
+
+        return self

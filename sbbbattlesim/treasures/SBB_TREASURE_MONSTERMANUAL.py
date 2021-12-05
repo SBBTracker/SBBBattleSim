@@ -1,4 +1,4 @@
-from sbbbattlesim.events import OnStart, OnDeath
+from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
 

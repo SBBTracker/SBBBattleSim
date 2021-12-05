@@ -1,7 +1,8 @@
+import pytest
+
 from sbbbattlesim import Board
 from tests import make_character, make_player
-from sbbbattlesim.utils import Tribe
-import pytest
+
 
 @pytest.mark.parametrize('mimic', (True, False))
 def test_simple_drac_sabre(mimic):

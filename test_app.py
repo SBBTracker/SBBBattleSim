@@ -1,13 +1,10 @@
 import asyncio
 import logging
-import os
 import threading
 from queue import Queue
 
-import numpy as numpy
-
-from sbbbattlesim import simulate
 import log_parser
+from sbbbattlesim import simulate
 
 logger = logging.getLogger(__name__)
 

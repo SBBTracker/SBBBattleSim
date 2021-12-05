@@ -1,7 +1,7 @@
 import random
 
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.spells import TargetedSpell, NonTargetedSpell
+from sbbbattlesim.spells import NonTargetedSpell
 from sbbbattlesim.utils import Tribe
 
 PIGOMORPH_ID = 'SBB_CHARACTER_PIG'

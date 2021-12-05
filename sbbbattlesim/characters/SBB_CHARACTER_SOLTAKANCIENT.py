@@ -2,9 +2,7 @@ import logging
 
 from sbbbattlesim import utils
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnPreAttack
-from sbbbattlesim.utils import get_behind_targets, Tribe
-
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 

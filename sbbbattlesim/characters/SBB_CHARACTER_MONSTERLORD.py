@@ -1,6 +1,6 @@
-from sbbbattlesim.characters import Character
 import logging
 
+from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnPreAttack
 from sbbbattlesim.utils import Tribe, StatChangeCause
 

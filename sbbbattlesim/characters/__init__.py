@@ -7,7 +7,7 @@ from sbbbattlesim.events import EventManager
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.spells import Spell
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause, Keyword, Tribe
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 logger = logging.getLogger(__name__)
 
@@ -161,7 +161,7 @@ class Registry(object):
         return item in self.characters
 
     def register(self, name, character):
-        assert name not in self.characters
+        assert name not in self.characters, name
         character.id = name
         self.characters[name] = character
         logger.debug(f'Registered {name} - {character}')

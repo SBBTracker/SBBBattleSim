@@ -1,7 +1,7 @@
 from sbbbattlesim import utils
-from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.events import OnDeath
-from sbbbattlesim.utils import get_behind_targets, StatChangeCause
+from sbbbattlesim.treasures import Treasure
+from sbbbattlesim.utils import StatChangeCause
 
 
 class TreasureType(Treasure):

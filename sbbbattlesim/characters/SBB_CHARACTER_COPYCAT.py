@@ -1,7 +1,8 @@
-from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnPostAttack, OnDeath
-from sbbbattlesim.utils import get_behind_targets, Tribe
 import logging
+
+from sbbbattlesim.characters import Character
+from sbbbattlesim.events import OnPostAttack
+from sbbbattlesim.utils import get_behind_targets, Tribe
 
 logger = logging.getLogger(__name__)
 

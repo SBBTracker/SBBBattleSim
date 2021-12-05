@@ -1,6 +1,8 @@
+import pytest
+
 from sbbbattlesim import Board
 from tests import make_character, make_player
-import pytest
+
 
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('level', (2, 3, 4, 5, 6))
