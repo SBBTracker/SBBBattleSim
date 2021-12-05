@@ -5,7 +5,6 @@ from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import random_start_combat_spell
 
 
-# todo can only cast spells of current level or below
 class TreasureType(Treasure):
     display_name = 'Deck of Many Things'
 
