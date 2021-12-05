@@ -11,17 +11,20 @@ config = {
 }
 
 def configure_logging():
-    program_logging_config = get_config('logging')
-    python_logging_config = program_logging_config['logging_conf']
-    python_logging_level = program_logging_config['logging_level']
+    try:
+        program_logging_config = get_config('logging')
+        python_logging_config = program_logging_config['logging_conf']
+        python_logging_level = program_logging_config['logging_level']
 
-    # Configure logging config
-    if python_logging_config is not None:
-        logging.config.fileConfig(python_logging_config, disable_existing_loggers=False)
+        # Configure logging config
+        if python_logging_config is not None:
+            logging.config.fileConfig(python_logging_config, disable_existing_loggers=False)
 
-    # Configure logging level
-    if python_logging_level:
-        logging.basicConfig(level=python_logging_level)
+        # Configure logging level
+        if python_logging_level:
+            logging.basicConfig(level=python_logging_level)
+    except:
+        pass
 
 def get_config(*args):
     current_config = config
