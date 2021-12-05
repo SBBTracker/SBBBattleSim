@@ -23,5 +23,6 @@ class SpellType(NonTargetedSpell):
                 source=self,
                 attack=-12,
                 health=-12,
+                temp=False,
                 *args, **kwargs
             ).resolve()
