@@ -2,6 +2,7 @@ import pytest
 
 from sbbbattlesim import Board
 from sbbbattlesim.utils import Keyword, Tribe
+from sbbbattlesim.events import OnStart
 from tests import make_character, make_player
 
 
@@ -204,7 +205,40 @@ def test_merlin():
     generic = player.characters.get(1)
 
     assert generic
+    assert generic.attack == 1 and generic.health == 1
+
+
+def test_merlin_activate():
+    player = make_player(
+        characters=[
+            make_character(id='GENERIC', position=1, keywords=[kw.value for kw in Keyword], tribes=[tribe.value for tribe in Tribe])
+        ],
+        hero='SBB_HERO_MERLIN'
+    )
+    enemy = make_player(
+        characters=[make_character(id='GENERIC', position=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+
+    class CastEarthquakeOnStart(OnStart):
+        player = board.p1
+
+        def handle(self, stack, *args, **kwargs):
+            self.player.cast_spell('SBB_SPELL_EARTHQUAKE')
+
+    board.register(CastEarthquakeOnStart)
+
+    winner, loser = board.fight(limit=0)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    player = board.p1
+
+    generic = player.characters.get(1)
+
+    assert generic
     assert generic.attack == 3 and generic.health == 2
+
 
 
 @pytest.mark.parametrize('on', (True, False))

@@ -2,7 +2,7 @@ import pytest
 
 from sbbbattlesim import Board
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.events import OnDamagedAndSurvived
+from sbbbattlesim.events import OnDamagedAndSurvived, OnStart
 from tests import make_character, make_player
 
 @pytest.mark.parametrize('r', range(5))
@@ -40,9 +40,6 @@ def test_stormking_spawn_with_spell(r, golden, raw):
         characters=[
             make_character(id="SBB_CHARACTER_THEGREATANDPOWERFUL", position=1, attack=s, health=s, golden=golden),
         ],
-        spells=[
-            'SBB_SPELL_FIREBALL'
-        ],
         treasures = [
             'SBB_TREASURE_MIRRORUNIVERSE'
         ],
@@ -54,6 +51,13 @@ def test_stormking_spawn_with_spell(r, golden, raw):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
+    class CastFireballOnStart(OnStart):
+        player = board.p1
+
+        def handle(self, stack, *args, **kwargs):
+            self.player.cast_spell('SBB_SPELL_FIREBALL')
+
+    board.register(CastFireballOnStart)
     winner, loser = board.fight(limit=1)
     board.p1.resolve_board()
     board.p2.resolve_board()
@@ -70,12 +74,17 @@ def test_stormking_cast_spell(r, golden, raw):
         characters=[
             make_character(id="SBB_CHARACTER_THEGREATANDPOWERFUL", position=1, attack=s, health=s, golden=golden),
         ],
-        spells=[
-            'SBB_SPELL_FIREBALL'
-        ]
     )
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
+
+    class CastFireballOnStart(OnStart):
+        player = board.p1
+
+        def handle(self, stack, *args, **kwargs):
+            self.player.cast_spell('SBB_SPELL_FIREBALL')
+
+    board.register(CastFireballOnStart)
 
     winner, loser = board.fight(limit=0)
     board.p1.resolve_board()
@@ -97,12 +106,18 @@ def test_many_stormking_cast_spell(r, golden, raw):
             make_character(id="SBB_CHARACTER_THEGREATANDPOWERFUL", position=4, attack=s, health=s, golden=golden),
 
         ],
-        spells=[
-            'SBB_SPELL_FIREBALL'
-        ]
     )
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
+
+
+    class CastFireballOnStart(OnStart):
+        player = board.p1
+
+        def handle(self, stack, *args, **kwargs):
+            self.player.cast_spell('SBB_SPELL_FIREBALL')
+
+    board.register(CastFireballOnStart)
 
     winner, loser = board.fight(limit=0)
     board.p1.resolve_board()

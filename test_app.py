@@ -38,4 +38,3 @@ if __name__ == '__main__':
             logger.error(f'{p2id} {simulation.stats.win_rate[p2id]}% {simulation.stats.avg_damage[p2id]}')
             logger.error(f'Tie {simulation.stats.win_rate[None]}%')
 
-            exit()

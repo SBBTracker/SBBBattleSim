@@ -76,7 +76,7 @@ class Player(EventManager):
             priority = spell_registry[spl]().priority
 
             def handle(self, *args, **kwargs):
-                self.player.cast_spell(spl, on_start=True)
+                self.player.cast_spell(spl, trigger_onspell=False)
 
         self.board.register(CastSpellOnStart)
 
@@ -284,7 +284,7 @@ class Player(EventManager):
 
         return [char for char in self.characters.values() if base_lambda(char) and _lambda(char)]
 
-    def cast_spell(self, spell_id, on_start=False):
+    def cast_spell(self, spell_id, trigger_onspell=True):
         spell = spell_registry[spell_id]()
         if spell is None:
             return
@@ -299,9 +299,14 @@ class Player(EventManager):
             return
 
         logger.debug(f'{self.id} casting {spell}')
-        if self._spells_cast is None:
-            self._spells_cast = 0
-        self._spells_cast += 1
-        stack = self('OnSpellCast', caster=self, spell=spell, target=target)
+
+        stack = None
+        if trigger_onspell:  # for spells in the passed-in list of spells cast, do not increment
+            if self._spells_cast is None:
+                self._spells_cast = 0
+            self._spells_cast += 1
+
+            stack = self('OnSpellCast', caster=self, spell=spell, target=target)
+
         spell.cast(player=self, target=target, stack=stack)
 

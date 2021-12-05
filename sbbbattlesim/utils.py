@@ -119,6 +119,7 @@ class StatChangeCause(enum.Enum):
     SPELL_WEAVER = 141
     CRAFTY_BUFF = 142
     STORM_KING_BUFF = 143
+    AON_BUFF = 144
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202

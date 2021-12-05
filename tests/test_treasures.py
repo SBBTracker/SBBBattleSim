@@ -2,7 +2,7 @@ import pytest
 
 from sbbbattlesim import Board
 from sbbbattlesim.treasures import registry as treasure_registry
-from sbbbattlesim.utils import Keyword, Tribe
+from sbbbattlesim.utils import Keyword, Tribe, StatChangeCause
 from tests import make_character, make_player
 
 
@@ -836,8 +836,9 @@ def test_tell_tale_quiver(mimic, tiger, ranged, back):
 @pytest.mark.parametrize('mimic', (True, False))
 def test_deck_of_many_things(mimic, _):
     player = make_player(
+        hero='SBB_HERO_MERLIN',
         characters=[
-            make_character(),
+            make_character(attack=100, health=100),
         ],
         treasures=[
             'SBB_TREASURE_DECKOFMANYTHINGS',
@@ -853,7 +854,15 @@ def test_deck_of_many_things(mimic, _):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    # TODO this isnt really implemented
+    wizardbuffs = [
+        r for r in board.p1.characters[1].stat_history if r.reason == StatChangeCause.MERLIN_BUFF
+    ]
+
+    if mimic:
+        assert len(wizardbuffs) == 2
+    else:
+        assert len(wizardbuffs) == 1
+
 
 @pytest.mark.parametrize('mimic', (True, False))
 @pytest.mark.parametrize('on', (True, False))
