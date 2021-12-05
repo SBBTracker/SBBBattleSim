@@ -247,6 +247,30 @@ def test_earthquake():
     assert char.health == 1
 
 
+def test_earthquake_peeps():
+    player = make_player(
+        spells=['''SBB_SPELL_EARTHQUAKE''', ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=1, health=1),
+            make_character(id="SBB_CHARACTER_PRINCESSPEEP", position=2,),
+            make_character(position=3, health=5),
+            make_character(position=4, health=5),
+            make_character(position=5, health=5),
+            make_character(position=6, health=5),
+            make_character(position=7, health=5),
+
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=-1)
+
+    for pos in [1, 2]:
+        char = board.p2.characters[pos]
+        assert char.id == "Sheep"
+
+
 def test_poison_apple():
     player = make_player(
         spells=['''SBB_SPELL_POISONAPPLE''', ]
