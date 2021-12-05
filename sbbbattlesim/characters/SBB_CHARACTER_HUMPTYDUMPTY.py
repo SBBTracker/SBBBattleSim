@@ -11,8 +11,6 @@ class CharacterType(Character):
     _level = 2
     _tribes = {Tribe.GOOD, Tribe.EGG}
 
-    #todo what priority is this supposed to be?
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
