@@ -1,6 +1,6 @@
 import logging
 import random
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from sbbbattlesim import utils
 from sbbbattlesim.characters import registry as character_registry
@@ -38,12 +38,12 @@ class Player(EventManager):
         self._attack_slot = 1
         self.graveyard = []
 
-        self.treasures = {}
+        self.treasures = defaultdict(list)
         mimic = 'SBB_TREASURE_TREASURECHEST' in treasures
         for tres in treasures:
             treasure = treasure_registry[tres]
             logger.debug(f'{self.id} Registering treasure {treasure}')
-            self.treasures[treasure.id] = treasure(self, mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0))
+            self.treasures[treasure.id].append(treasure(self, mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0)))
 
         self.hand = [character_registry[char_data['id']](owner=self, **char_data) for char_data in hand]
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
@@ -136,7 +136,7 @@ class Player(EventManager):
         # TODO Add priority to treasures and sort this loop by that priority
         if "SBB_TREASURE_WHIRLINGBLADES" in self.treasures:
             for target in self.valid_characters():
-                self.treasures["SBB_TREASURE_WHIRLINGBLADES"].buff(target, *args, **kwargs)
+                self.treasures["SBB_TREASURE_WHIRLINGBLADES"][0].buff(target, *args, **kwargs)
 
         # HERO BUFFS:
         if self.hero.id != "SBB_HERO_PRINCESSBELLE":
@@ -144,14 +144,15 @@ class Player(EventManager):
                 for target in self.valid_characters():
                     self.hero.buff(target, *args, **kwargs)
 
-        for t, treasure in self.treasures.items():
-            if t == "SBB_TREASURE_WHIRLINGBLADES":
-                continue
-            if t == "SBB_TREASURE_CLOAKOFTHEASSASSIN":
-                continue
-            if treasure.aura:
-                for target in self.valid_characters():
-                    treasure.buff(target, *args, **kwargs)
+        for t, treasure_ls in self.treasures.items():
+            for treasure in treasure_ls:
+                if t == "SBB_TREASURE_WHIRLINGBLADES":
+                    continue
+                if t == "SBB_TREASURE_CLOAKOFTHEASSASSIN":
+                    continue
+                if treasure.aura:
+                    for target in self.valid_characters():
+                        treasure.buff(target, *args, **kwargs)
 
         if self.hero.id == "SBB_HERO_PRINCESSBELLE":
             for target in self.valid_characters():
@@ -182,10 +183,10 @@ class Player(EventManager):
                             char.buff(target, *args, **kwargs)
                             char('OnSupport', buffed=target, support=char, *args, **kwargs)
 
-        cloak = self.treasures.get("SBB_TREASURE_CLOAKOFTHEASSASSIN", False)
-        if cloak:
+        cloak_ls = self.treasures.get("SBB_TREASURE_CLOAKOFTHEASSASSIN", False)
+        if cloak_ls:
             for target in self.valid_characters():
-                cloak.buff(target, *args, **kwargs)
+                cloak_ls[0].buff(target, *args, **kwargs)
 
 
         new_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}

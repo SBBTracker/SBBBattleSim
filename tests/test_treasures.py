@@ -32,6 +32,42 @@ def test_treasure(treasure, mimic, tiger):
 
 @pytest.mark.parametrize('mimic', (True, False))
 @pytest.mark.parametrize('tiger', (True, False))
+@pytest.mark.parametrize('on', (True, False))
+@pytest.mark.parametrize('num', (1, 2))
+def test_easter_egg(mimic, tiger, on, num):
+    treasures = [
+        'SBB_TREASURE_EASTEREGG',
+        'SBB_TREASURE_EASTEREGG',
+    ]
+    player = make_player(
+        characters=[
+            make_character(golden=True if on else False)
+        ],
+        treasures=treasures[:num]
+    )
+
+    if tiger:
+        player['hero'] = 'SBB_HERO_THECOLLECTOR'
+
+    if mimic:
+        player['treasures'].append('SBB_TREASURE_TREASURECHEST')
+
+    enemy = make_player()
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    player = board.p1
+    character = player.characters[1]
+
+    mimic_multiplyer = [mimic, tiger].count(True) + 1
+    stat_bonus = 3 * mimic_multiplyer
+
+    assert (character.attack, character.health) == ((1+stat_bonus*num, 1+stat_bonus*num) if on else (1, 1))
+
+@pytest.mark.parametrize('mimic', (True, False))
+@pytest.mark.parametrize('tiger', (True, False))
 @pytest.mark.parametrize('good', (True, False))
 @pytest.mark.parametrize('evil', (True, False))
 def test_book_of_heros(mimic, tiger, good, evil):
