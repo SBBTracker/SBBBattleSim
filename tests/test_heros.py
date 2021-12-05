@@ -7,11 +7,17 @@ from tests import make_character, make_player
 
 def test_charon():
     player = make_player(
-        characters=[make_character(id='TEST', position=1)],
+        characters=[
+            make_character(id='TEST', position=1),
+            make_character(position=5)
+        ],
         hero='SBB_HERO_CHARON'
     )
     enemy = make_player(
-        characters=[make_character(id='TEST', position=1)],
+        characters=[
+            make_character(id='TEST', position=1),
+            make_character(position=5)
+        ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -24,12 +30,18 @@ def test_charon():
     assert dead
     assert dead.attack == 3 and dead.health + dead._damage == 2
 
+    also_dead = player.graveyard[1]
+    assert also_dead
+    assert also_dead.attack == 1 and also_dead.health + dead._damage == 1
 
-def test_evella():
+
+@pytest.mark.parametrize('on', (True, False))
+@pytest.mark.parametrize('evil_back', (True, False))
+def test_evella(on, evil_back):
     player = make_player(
         characters=[
-            make_character(id='ANIMAL', position=1, tribes=['animal']),
-            make_character(id='EVIL', position=5, tribes=['evil'])
+            make_character(id='SBB_CHARACTER_BLACKCAT', position=1, tribes=['animal', 'evil'] if on else []),
+            make_character(id='EVIL', position=5, tribes=['evil'] if evil_back else [])
         ],
         hero='SBB_HERO_DARKONE'
     )
@@ -45,15 +57,18 @@ def test_evella():
     player = board.p1
 
     buffed_animal = player.characters.get(5)
+    buffed_cat = player.characters.get(1)
 
     assert buffed_animal
-    assert buffed_animal.attack == 2 and buffed_animal.health == 1
+    assert buffed_animal.attack == (2 if on and evil_back else 1) and buffed_animal.health == 1
+    assert buffed_cat
+    assert buffed_cat.attack == (2 if on else 1) and buffed_cat.health == 1
 
-
-def test_sad_dracula():
+@pytest.mark.parametrize('on', (True, False))
+def test_sad_dracula(on):
     player = make_player(
         characters=[
-            make_character(id='GENERIC', position=1),
+            make_character(id='GENERIC', position=1 if on else 2),
             make_character(id='SBB_CHARACTER_SHADOWASSASSIN', position=5)
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''],
@@ -72,19 +87,18 @@ def test_sad_dracula():
     shadow_assassin = player.characters.get(5)
 
     assert shadow_assassin
-    assert shadow_assassin.attack == 2 and shadow_assassin.health == 2
+    assert shadow_assassin.attack == (2 if on else 1) and shadow_assassin.health == (2 if on else 1)
 
 
-def test_fate():
+@pytest.mark.parametrize('on', (True, False))
+def test_fate(on):
     player = make_player(
         characters=[
-            make_character(id='GENERIC', position=1, golden=True),
+            make_character(id='GENERIC', position=1, golden=on),
         ],
         hero='SBB_HERO_FATE'
     )
-    enemy = make_player(
-        characters=[make_character(id='GENERIC', position=1)],
-    )
+    enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
     board.p1.resolve_board()
@@ -95,7 +109,7 @@ def test_fate():
     generic = player.characters.get(1)
 
     assert generic
-    assert generic.attack == 6 and generic.health == 5
+    assert generic.attack == (6 if on else 1) and generic.health == (6 if on else 1)
 
 
 def test_gepetto():
@@ -121,18 +135,16 @@ def test_gepetto():
     assert cat
     assert cat.attack == 4 and cat.health == 4
 
-
-def test_krampus():
+@pytest.mark.parametrize('on', (True, False))
+def test_krampus(on):
     player = make_player(
         characters=[
-            make_character(id='EVIL', position=1, tribes=['evil']),
+            make_character(id='EVIL', position=1, tribes=['evil'] if on else []),
         ],
         hero='SBB_HERO_KRAMPUS',
         level=3
     )
-    enemy = make_player(
-        characters=[make_character(id='GENERIC', position=1)],
-    )
+    enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
     board.p1.resolve_board()
@@ -143,20 +155,19 @@ def test_krampus():
     evil = player.characters.get(1)
 
     assert evil
-    assert evil.attack == 2 and evil.health == 1
+    assert evil.attack, evil.health == ((2, 2) if on else (1, 1))
 
 
-def test_mrsclaus():
+@pytest.mark.parametrize('on', (True, False))
+def test_mrsclaus(on):
     player = make_player(
         characters=[
-            make_character(id='GOOD', position=1, tribes=['good']),
+            make_character(id='GOOD', position=1, tribes=['good'] if on else []),
         ],
         hero='SBB_HERO_MRSCLAUS',
         level=3
     )
-    enemy = make_player(
-        characters=[make_character(id='GENERIC', position=1)],
-    )
+    enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
     board.p1.resolve_board()
@@ -167,7 +178,7 @@ def test_mrsclaus():
     good = player.characters.get(1)
 
     assert good
-    assert good.attack == 2 and good.health == 1
+    assert good.attack, good.health == ((2, 2) if on else (1, 1))
 
 
 def test_merlin():
@@ -196,16 +207,15 @@ def test_merlin():
     assert generic.attack == 3 and generic.health == 2
 
 
-def test_jacks_giant():
+@pytest.mark.parametrize('on', (True, False))
+def test_jacks_giant(on):
     player = make_player(
         characters=[
-            make_character(id='GENERIC', position=1)
+            make_character(id='GENERIC', position=1 if on else 5)
         ],
         hero='SBB_HERO_SIRPIPS-A-LOT',
     )
-    enemy = make_player(
-        characters=[make_character(id='GENERIC', position=1)],
-    )
+    enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
     board.p1.resolve_board()
@@ -213,24 +223,24 @@ def test_jacks_giant():
 
     player = board.p1
 
-    generic = player.characters.get(1)
+    generic = player.characters.get(1 if on else 5)
 
     assert generic
-    assert generic.health == 2
+    assert generic.health == (3 if on else 1)
 
 
-def test_mirhi():
+@pytest.mark.parametrize('on', (True, False))
+def test_mirhi(on):
     player = make_player(
         characters=[
-            make_character(id='ROYAL', position=1, tribes=['prince', 'princess'])
+            make_character(id='ROYAL', position=1, tribes=['prince'] if on else []),
+            make_character(id='ROYAL', position=2, tribes=['princess'] if on else [])
         ],
         hero='SBB_HERO_KINGLION',
         mirhi_buff=5
     )
 
-    enemy = make_player(
-        characters=[make_character(id='GENERIC', position=1)],
-    )
+    enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
     board.p1.resolve_board()
@@ -238,10 +248,11 @@ def test_mirhi():
 
     player = board.p1
 
-    royal = player.characters.get(1)
+    for pos in [1, 2]:
+        royal = player.characters.get(pos)
 
-    assert royal
-    assert royal.attack == 6 and royal.health == 10
+        assert royal
+        assert royal.attack == (6 if on else 1) and royal.health == (11 if on else 1)
 
 
 def test_trophy_hunter():
@@ -308,11 +319,12 @@ def test_modred():
     assert player.characters[1].id == 'TEST3'
 
 
-def test_beauty():
+@pytest.mark.parametrize('on', (True, False))
+def test_beauty(on):
     player = make_player(
         characters=[
-            make_character(position=1, tribes=['good']),
-            make_character(position=2, tribes=['evil'])
+            make_character(position=1, tribes=['good'] if on else []),
+            make_character(position=2, tribes=['evil'] if on else [])
         ],
         hero='SBB_HERO_PRINCESSBELLE',
         hand=[make_character(id=f'TEST{i}', attack=i) for i in range(4)]
@@ -327,14 +339,66 @@ def test_beauty():
 
     player = board.p1
 
-    assert Tribe.EVIL in player.characters[1].tribes
-    assert Tribe.GOOD in player.characters[2].tribes
+    t1 = player.characters[1].tribes
+    t2 = player.characters[2].tribes
+    tribe_set = {Tribe.EVIL, Tribe.GOOD}
+    assert t1 == tribe_set if on else t1 == set()
+    assert t2 == tribe_set if on else t2 == set()
 
+@pytest.mark.parametrize('treasure', ("SBB_TREASURE_CORRUPTEDHEARTWOOD", "SBB_TREASURE_CROWNOFATLAS"))
+def test_beauty_withtreasure(treasure):
+    player = make_player(
+        characters=[
+            make_character(position=1, tribes=[Tribe.ANIMAL]),
+        ],
+        treasures=[
+            treasure
+        ],
+        hero='SBB_HERO_PRINCESSBELLE',
+        hand=[make_character(id=f'TEST{i}', attack=i) for i in range(4)]
+    )
+
+    enemy = make_player()
+
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    player = board.p1
+
+    assert player.characters[1].tribes == {Tribe.GOOD, Tribe.EVIL, Tribe.ANIMAL}
+
+
+def test_beauty_spawnedanimal():
+    player = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_BLACKCAT", position=1, ),
+        ],
+        hero='SBB_HERO_PRINCESSBELLE',
+        hand=[make_character(id=f'TEST{i}', attack=i) for i in range(4)]
+    )
+
+    enemy = make_player(
+        characters=[
+            make_character()
+        ]
+    )
+
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    player = board.p1
+
+    assert player.characters[1].tribes == {Tribe.GOOD, Tribe.EVIL, Tribe.ANIMAL}
 
 FALLEN_ANGEL_TESTS = (
     (['good'], 1, 3),
     (['evil'], 3, 1),
-    (['good', 'evil'], 3, 3)
+    (['good', 'evil'], 3, 3),
+    ([], 1, 1)
 )
 
 @pytest.mark.parametrize('tribes, attack, health', FALLEN_ANGEL_TESTS)

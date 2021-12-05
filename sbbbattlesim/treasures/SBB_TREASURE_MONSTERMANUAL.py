@@ -1,6 +1,6 @@
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
 class TreasureType(Treasure):
@@ -18,4 +18,5 @@ class TreasureType(Treasure):
                 for _ in range(self.manual.mimic + 1):
                     self.manager.change_stats(attack=2, reason=StatChangeCause.MONSTER_MANUAL_BUFF, source=self.manual, stack=stack)
 
-        target_character.register(MonsterManualOnDeath, temp=True)
+        if Tribe.MONSTER in target_character.tribes:
+            target_character.register(MonsterManualOnDeath, temp=True)

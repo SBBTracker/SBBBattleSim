@@ -139,16 +139,23 @@ class Player(EventManager):
                 self.treasures["SBB_TREASURE_WHIRLINGBLADES"].buff(target, *args, **kwargs)
 
         # HERO BUFFS:
-        if self.hero.aura:
-            for target in self.valid_characters():
-                self.hero.buff(target, *args, **kwargs)
+        if self.hero.id != "SBB_HERO_PRINCESSBELLE":
+            if self.hero.aura:
+                for target in self.valid_characters():
+                    self.hero.buff(target, *args, **kwargs)
 
         for t, treasure in self.treasures.items():
             if t == "SBB_TREASURE_WHIRLINGBLADES":
                 continue
+            if t == "SBB_TREASURE_CLOAKOFTHEASSASSIN":
+                continue
             if treasure.aura:
                 for target in self.valid_characters():
                     treasure.buff(target, *args, **kwargs)
+
+        if self.hero.id == "SBB_HERO_PRINCESSBELLE":
+            for target in self.valid_characters():
+                self.hero.buff(target, *args, **kwargs)
 
         # CHARACTER BUFFS
         # Iterate over buff targets and auras then apply them to all necessary targets
@@ -174,6 +181,11 @@ class Player(EventManager):
                         if target:
                             char.buff(target, *args, **kwargs)
                             char('OnSupport', buffed=target, support=char, *args, **kwargs)
+
+        cloak = self.treasures.get("SBB_TREASURE_CLOAKOFTHEASSASSIN", False)
+        if cloak:
+            for target in self.valid_characters():
+                cloak.buff(target, *args, **kwargs)
 
 
         new_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}
