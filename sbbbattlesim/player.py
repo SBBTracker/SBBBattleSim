@@ -99,6 +99,8 @@ class Player(EventManager):
         return self._attack_slot
 
     def resolve_board(self, *args, **kwargs):
+        old_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}
+
         # Remove all bonuses
         # these need to be prior so that there is not
         # wonky ordering issues with clearing buffs
@@ -156,6 +158,17 @@ class Player(EventManager):
         if self.hero.aura:
             for target in self.valid_characters():
                 self.hero.buff(target, *args, **kwargs)
+
+        new_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}
+
+        for char, new_temp_health in new_temp_health_dt.items():
+            old_temp_health = old_temp_health_dt[char]
+
+            if new_temp_health < old_temp_health:
+                char._damage -= min(char._damage, old_temp_health - new_temp_health)
+
+
+
 
     def summon_from_different_locations(self, characters, *args, **kwargs):
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be
