@@ -330,6 +330,7 @@ def test_trophy_hunter_cloak():
 
     assert (player.characters[1].attack, player.characters[1].health) == (4, 4)
 
+
 def test_trophy_hunter_yaga():
     player = make_player(
         characters=[
@@ -337,6 +338,7 @@ def test_trophy_hunter_yaga():
             make_character(id="SBB_CHARACTER_BABAYAGA", position=5)
         ],
         hero='SBB_HERO_MILITARYLEADER',
+        treasures=['''SBB_TREASURE_HERMES'BOOTS'''],
     )
 
     enemy = make_player(
