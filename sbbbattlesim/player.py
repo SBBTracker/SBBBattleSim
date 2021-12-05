@@ -8,6 +8,7 @@ from sbbbattlesim.events import EventManager, OnStart
 from sbbbattlesim.heros import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry, TargetedSpell
 from sbbbattlesim.treasures import registry as treasure_registry
+from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,8 @@ class Player(EventManager):
         # Board is board
         self.board = board
 
+        self.stateful_effects = defaultdict(lambda : defaultdict(lambda : None))
+
         self.id = id
         self.opponent = None
         self.level = level
@@ -25,7 +28,10 @@ class Player(EventManager):
         self._attack_chain = 0
 
         #TODO Make a better implementation of this later
-        self._spells_cast = 0
+        if 'spells_cast' in kwargs:
+            self._spells_cast = kwargs['spells_cast']
+        else:
+            self._spells_cast = None
 
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
@@ -176,6 +182,10 @@ class Player(EventManager):
             if new_temp_health < old_temp_health:
                 char._damage -= min(char._damage, old_temp_health - new_temp_health)
 
+        for char in self.valid_characters():
+            if char.health < 0:
+                char.change_stats(damage=0, source=self, reason=None)
+
 
 
 
@@ -275,6 +285,8 @@ class Player(EventManager):
             return
 
         logger.debug(f'{self.id} casting {spell}')
+        if self._spells_cast is None:
+            self._spells_cast = 0
         self._spells_cast += 1
         stack = self('OnSpellCast', caster=self, spell=spell, target=target)
         spell.cast(player=self, target=target, stack=stack)

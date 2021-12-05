@@ -24,6 +24,7 @@ class TreasureType(Treasure):
                         golden=False,
                         tribes=self.manager.tribes,
                         cost=self.manager.cost,
+                        # TODO does this copy the tribes of the card or of the class
                     ) for _ in range(1 + bool(self.mirror.mimic))
                 ]
 
