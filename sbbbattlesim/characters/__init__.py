@@ -120,7 +120,9 @@ class Character(EventManager):
                 self._base_attack += attack
                 self._base_health += health
 
-            self('OnBuff', attack=attack, health=health, damage=damage, reason=reason, temp=temp, *args, **kwargs)
+            if 'origin' in kwargs:
+                del kwargs['origin']
+            self('OnBuff', attack=attack, health=health, damage=damage, reason=reason, temp=temp, origin=self,  *args, **kwargs)
 
         if damage > 0:
             if self.invincible and reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:

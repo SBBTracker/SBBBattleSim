@@ -23,4 +23,5 @@ class SpellType(NonTargetedSpell):
                 if char:
                     targets.append(char)
 
+            # TODO figure out if it goes left/right or right/left
             Damage(4, reason=StatChangeCause.FIREBALL, source=self, targets=targets).resolve()
