@@ -7,7 +7,7 @@ from sbbbattlesim.heros import registry as hero_registry
 from sbbbattlesim.simulate import simulate
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
-from sbbbattlesim.exceptions import SBBSBCrocException
+from sbbbattlesim.exceptions import SBBBSCrocException
 
 SUMMONING_PRIORITY = 10
 

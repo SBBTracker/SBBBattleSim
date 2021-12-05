@@ -4,7 +4,7 @@ import threading
 from queue import Queue
 
 import log_parser
-from sbbbattlesim import simulate, SBBSBCrocException
+from sbbbattlesim import simulate, SBBBSCrocException
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
             try:
                 simulation = asyncio.run(simulate(state, t=4, k=250, timeout=30))
-            except SBBSBCrocException:
+            except SBBBSCrocException:
                 exit()
 
             p1id, p2id = simulation.starting_board.p1.id, simulation.starting_board.p2.id

@@ -1,6 +1,6 @@
-class SBBSBException(Exception):
+class SBBBSException(Exception):
     '''A SBBSB Excepiton'''
 
 
-class SBBSBCrocException(SBBSBException):
+class SBBBSCrocException(SBBBSException):
     '''Raised when a croc is created'''

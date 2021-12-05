@@ -1,5 +1,5 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.exceptions import SBBSBCrocException
+from sbbbattlesim.exceptions import SBBBSCrocException
 from sbbbattlesim.utils import Tribe
 
 
@@ -13,4 +13,4 @@ class CharacterType(Character):
     _tribes = {Tribe.EVIL, Tribe.ANIMAL}
 
     def __init__(self, *args, **kwargs):
-        raise SBBSBCrocException
+        raise SBBBSCrocException
