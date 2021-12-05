@@ -39,15 +39,19 @@ class Player(EventManager):
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
         logger.debug(f'{self.id} registering hero {self.hero}')
 
+        import copy
         for spl in spells:
             if spl in utils.START_OF_FIGHT_SPELLS:
-                class CastSpellOnStart(OnStart):
-                    priority = spell_registry[spl]().priority
+                def _register_spell(obj, spl):
+                    class CastSpellOnStart(OnStart):
+                        priority = spell_registry[spl]().priority
 
-                    def handle(self, *args, **kwargs):
-                        self.manager.cast_spell(spl, on_start=True)
+                        def handle(self, *args, **kwargs):
+                            self.manager.cast_spell(spl, on_start=True)
 
-                self.register(CastSpellOnStart)
+                    obj.register(CastSpellOnStart)
+
+                _register_spell(self, spl)
 
         for char_data in characters:
             char = character_registry[char_data['id']](owner=self, **char_data)

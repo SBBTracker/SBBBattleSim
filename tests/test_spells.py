@@ -177,6 +177,28 @@ def test_shrivel_speed2(survives):
     else:
         assert char is None
 
+
+def test_spells_damaging_darkwood():
+    player = make_player(
+        spells=[
+            '''SBB_SPELL_ENFEEBLEMENT''',
+            '''SBB_SPELL_FALLINGSTARS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_DARKWOODCREEPER", attack=12, health=15),
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=-1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    char = board.p2.characters[1]
+    assert (char.attack, char.health) == (1, 2)
+
+
 def test_earthquake():
     player = make_player(
         spells=['''SBB_SPELL_EARTHQUAKE''', ]
