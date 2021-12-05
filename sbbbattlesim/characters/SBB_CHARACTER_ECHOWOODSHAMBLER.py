@@ -22,24 +22,25 @@ class CharacterType(Character):
                 echo_wood = self
 
                 def handle(self, stack, force_echowood=None, is_from_echowood=False, attack=0, health=0, damage=0,
-                           reason='', temp=True, *args, **kwargs):
+                           reason='', temp=True, source=None, origin=None, *args, **kwargs):
 
-                    if (not temp or force_echowood) and not is_from_echowood:
+                    if not origin.dead:
+                        if (not temp or force_echowood) and not is_from_echowood:
 
-                        gold_multiplier = 2 if self.echo_wood.golden else 1
+                            gold_multiplier = 2 if self.echo_wood.golden else 1
 
-                        attack_change = max(0, gold_multiplier*attack)
-                        health_change = max(0, gold_multiplier*health)
+                            attack_change = max(0, gold_multiplier*attack)
+                            health_change = max(0, gold_multiplier*health)
 
-                        if attack_change > 0 or health_change > 0:
-                            self.echo_wood.change_stats(
-                                attack=gold_multiplier * attack,
-                                health=gold_multiplier * health,
-                                temp=False,
-                                reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager,
-                                stack=stack,
-                                is_from_echowood=True
-                            )
+                            if attack_change > 0 or health_change > 0:
+                                self.echo_wood.change_stats(
+                                    attack=gold_multiplier * attack,
+                                    health=gold_multiplier * health,
+                                    temp=False,
+                                    reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager,
+                                    stack=stack,
+                                    is_from_echowood=True
+                                )
 
             target_character.register(EchoWoodBuff, temp=True)
 

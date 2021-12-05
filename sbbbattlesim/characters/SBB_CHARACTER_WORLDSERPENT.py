@@ -5,7 +5,6 @@ from sbbbattlesim.utils import StatChangeCause, Tribe
 
 class CharacterType(Character):
     display_name = 'Jormungandr'
-    slay = True
 
     _attack = 20
     _health = 20

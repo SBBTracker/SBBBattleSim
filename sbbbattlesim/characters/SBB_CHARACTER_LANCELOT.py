@@ -5,7 +5,6 @@ from sbbbattlesim.utils import StatChangeCause, Tribe
 
 class CharacterType(Character):
     display_name = 'Lancelot'
-    slay = True
     quest = True
 
     _attack = 7

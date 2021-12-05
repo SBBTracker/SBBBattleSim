@@ -6,7 +6,6 @@ from sbbbattlesim.utils import Tribe
 
 class CharacterType(Character):
     display_name = 'Southern Siren'
-    slay = True
 
     _attack = 10
     _health = 10

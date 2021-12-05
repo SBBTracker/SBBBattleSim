@@ -127,7 +127,7 @@ class OnSpellCast(SSBBSEvent):
 
 class OnBuff(SSBBSEvent):
     '''Triggered when something has a stat change'''
-    def handle(self, stack, attack=0, health=0, damage=0, reason='', temp=True, *args, **kwargs):
+    def handle(self, stack, attack=0, health=0, damage=0, reason='', temp=True, origin=None, *args, **kwargs):
         raise NotImplementedError
 
 

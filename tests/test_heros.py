@@ -16,6 +16,8 @@ def test_charon():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
     dead = player.graveyard[0]
@@ -37,6 +39,8 @@ def test_evella():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -60,6 +64,8 @@ def test_sad_dracula():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -81,6 +87,8 @@ def test_fate():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -103,6 +111,8 @@ def test_gepetto():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -125,6 +135,8 @@ def test_krampus():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -147,6 +159,8 @@ def test_mrsclaus():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -171,6 +185,8 @@ def test_merlin():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -192,6 +208,8 @@ def test_jacks_giant():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -215,6 +233,8 @@ def test_mirhi():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -238,11 +258,32 @@ def test_trophy_hunter():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
     assert player.characters[1].id == 'Cat'
     assert player.characters[2].id == 'Cat'
+
+def test_trophy_hunter():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_BLACKCAT')
+        ],
+        hero='SBB_HERO_MILITARYLEADER',
+        treasures=['''SBB_TREASURE_CLOAKOFTHEASSASSIN''']
+    )
+
+    enemy = make_player()
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    player = board.p1
+
+    assert (player.characters[1].attack, player.characters[1].health) == (4, 4)
 
 
 def test_modred():
@@ -259,6 +300,8 @@ def test_modred():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -279,6 +322,8 @@ def test_beauty():
 
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -303,6 +348,8 @@ def test_fallen_angel(tribes, attack, health):
 
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 
@@ -326,6 +373,8 @@ def test_muerte():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     player = board.p1
 

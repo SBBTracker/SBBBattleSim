@@ -5,7 +5,6 @@ from sbbbattlesim.utils import Tribe
 
 class CharacterType(Character):
     display_name = 'Kitty Cutpurse'
-    slay = True
 
     _attack = 1
     _health = 1

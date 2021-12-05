@@ -5,7 +5,6 @@ from sbbbattlesim.utils import get_behind_targets, StatChangeCause, Tribe
 
 class CharacterType(Character):
     display_name = 'The Chupacabra'
-    slay = True
 
     _attack = 7
     _health = 5
