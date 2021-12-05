@@ -24,7 +24,7 @@ class TreasureType(Treasure):
 
                     all_characters = self.manager.owner.valid_characters() + [self.manager]
                     max_attack = max(all_characters, key=lambda x: x.attack).attack
-                    if self.manager.attack >= max_attack:
+                    if self.manager.attack >= max_attack and self.manager in self.manager.owner.graveyard:
                         self.manager._damage = 0
                         self.manager.dead = False
                         self.manager.owner.graveyard.remove(self.manager)
