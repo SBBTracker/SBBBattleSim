@@ -199,6 +199,31 @@ def test_spells_damaging_darkwood():
     assert (char.attack, char.health) == (1, 2)
 
 
+def test_multiple_spells():
+    player = make_player(
+        spells=[
+            '''SBB_SPELL_FIREBALL''',
+            '''SBB_SPELL_LIGHTNINGBOLT'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(attack=0, health=4, position=1),
+            make_character(attack=0, health=14, position=5),
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    frontchar = board.p2.characters[1]
+    backchar = board.p2.characters[5]
+    winner, loser = board.fight(limit=-1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert frontchar.stat_history[0].reason == StatChangeCause.FIREBALL
+    assert set([statchange.reason for statchange in backchar.stat_history]) == {StatChangeCause.FIREBALL, StatChangeCause.LIGHTNING_BOLT}
+
+
+
 def test_earthquake():
     player = make_player(
         spells=['''SBB_SPELL_EARTHQUAKE''', ]
