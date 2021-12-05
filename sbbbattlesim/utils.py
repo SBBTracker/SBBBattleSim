@@ -243,6 +243,11 @@ def random_combat_spell(level):
     if valid_spells:
         return random.choice(valid_spells)
 
+def random_start_combat_spell(level):
+    valid_spells = [*spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in START_OF_FIGHT_SPELLS)]
+    if valid_spells:
+        return random.choice(valid_spells)
+
 
 #TODO are these the same across different effects (robin wood, helm of the gosling, juliets in graveyards)
 # or do they behaave differently. Set up resources with tied attack and different cost, and tied attack&cost but different
