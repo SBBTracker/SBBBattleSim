@@ -132,10 +132,11 @@ def test_baba_yaga(golden):
 
 
 def test_soltak():
-    soltak = make_character(id='SBB_CHARACTER_SOLTAKANCIENT', position=1, attack=0, health=1)
-    generic = make_character(id='GENERIC', attack=1, health=1, position=5)
     player = make_player(
-        characters=[soltak, generic],
+        characters=[
+            make_character(id='SBB_CHARACTER_SOLTAKANCIENT', position=1, attack=0, health=1),
+            make_character(id='PROTECTED', position=5)
+        ],
     )
     enemy = make_player(
         characters=[make_character(id='SBB_CHARACTER_BABYDRAGON', health=2)],
@@ -146,7 +147,8 @@ def test_soltak():
 
     player = board.p1
 
-    assert player.characters[5] is None and winner is player
+    assert player.characters[5] is None
+    assert player.characters[1] is not None
 
 
 def test_trojan_donkey():
@@ -188,4 +190,27 @@ def test_wombats_in_disguise():
 
     assert wombat_spawn
     assert wombat_spawn.stat_history[0].reason == StatChangeCause.WOMBATS_IN_DISGUISE_BUFF
+
+
+def test_doombreath():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_DOOMBREATH')
+        ],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=2),
+            make_character(position=5),
+            make_character(position=6),
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p2
+
+    for i in (2, 5, 6):
+        assert player.characters[i] is None
 

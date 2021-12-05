@@ -101,19 +101,9 @@ def attack(attack_position, attacker, defender, **kwargs):
     defend_character = defender.characters.get(defend_position)
 
     if not attack_character.ranged:
-        attacker_damage = Damage(
-            x=defend_character.attack,
-            reason=StatChangeCause.DAMAGE_WHILE_ATTACKING,
-            source=defend_character,
-            targets=[attack_character]
-        )
+        attacker_damage = defend_character.generate_attack(attack_character, StatChangeCause.DAMAGE_WHILE_ATTACKING)
 
-    defender_damage = Damage(
-        x=attack_character.attack,
-        reason=StatChangeCause.DAMAGE_WHILE_DEFENDING,
-        source=attack_character,
-        targets=[defend_character]
-    )
+    defender_damage = attack_character.generate_attack(defend_character, StatChangeCause.DAMAGE_WHILE_DEFENDING)
 
     # SLAY TRIGGER
     if defend_character.dead:

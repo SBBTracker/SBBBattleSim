@@ -3,6 +3,7 @@ import pkgutil
 from collections import OrderedDict
 from dataclasses import dataclass
 
+from sbbbattlesim.damage import Damage
 from sbbbattlesim.events import EventManager
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.spells import Spell
@@ -98,6 +99,14 @@ class Character(EventManager):
     @property
     def max_health(self):
         return self._base_health + self._temp_health
+
+    def generate_attack(self, target, reason, attacker=False):
+        return Damage(
+            x=self.attack,
+            reason=reason,
+            source=self,
+            targets=[target]
+        )
 
     def change_stats(self, reason, source, attack=0, health=0, damage=0, heal=0, temp=True, *args, **kwargs):
         stat_change = StatChange(reason=reason, source=source, attack=attack, health=health, damage=damage, heal=heal, temp=temp)

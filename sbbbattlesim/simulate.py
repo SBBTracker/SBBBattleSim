@@ -89,13 +89,13 @@ async def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> Si
 
     start = time.perf_counter()
 
+    starting_board = Board(deepcopy(data))
+
     tasks = [
         asyncio.create_task(task)
         for task in map(simulate_brawl, [data for _ in range(t)], [k for _ in range(t)])
     ]
     await asyncio.wait(tasks, timeout=timeout)
-
-    starting_board = Board(deepcopy(data))
 
     sim_results = SimulationResult(
         hash_id=hashlib.sha256(f'{starting_board.p1}{starting_board.p2}'.encode('utf-8')),
