@@ -5,7 +5,6 @@ from sbbbattlesim.utils import Tribe
 
 class CharacterType(Character):
     display_name = 'Orge Princess'
-    slay = True
 
     _attack = 3
     _health = 2

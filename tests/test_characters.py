@@ -67,9 +67,16 @@ def test_support(char, golden, horn):
 
     assert board.p1.characters[1].stat_history[0].reason == StatChangeCause.SUPPORT_BUFF
 
+class FakePlayer:
+    class FakeBoard:
+        def register(self, *args, **kwargs):
+            pass
+    board = FakeBoard()
+    def register(self, *args, **kwargs):
+        pass
 
 @pytest.mark.parametrize('golden', (True, False))
-@pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: char.slay is True))
+@pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: any([e.slay for e in char(FakePlayer(), 0, 0, 0, False, set(), 0).get('OnAttackAndKill')])))
 def test_slay(char, golden):
     '''Triggers a slay, checks success by measuring against a shadow assassin. Liable to fail in the future... '''
 

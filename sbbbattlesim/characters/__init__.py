@@ -89,6 +89,14 @@ class Character(EventManager):
         raise NotImplementedError
 
     @property
+    def slay(self):
+        return bool([e for e in self.get('OnAttackAndKill') if e.slay])
+
+    @property
+    def last_breath(self):
+        return bool([e for e in self.get('OnDeath') if e.last_breath])
+
+    @property
     def attack(self):
         return max(self._base_attack + self._temp_attack, 0)
 

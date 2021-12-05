@@ -137,6 +137,12 @@ class Player(EventManager):
         if "SBB_TREASURE_WHIRLINGBLADES" in self.treasures:
             for target in self.valid_characters():
                 self.treasures["SBB_TREASURE_WHIRLINGBLADES"].buff(target, *args, **kwargs)
+
+        # HERO BUFFS:
+        if self.hero.aura:
+            for target in self.valid_characters():
+                self.hero.buff(target, *args, **kwargs)
+
         for t, treasure in self.treasures.items():
             if t == "SBB_TREASURE_WHIRLINGBLADES":
                 continue
@@ -169,10 +175,6 @@ class Player(EventManager):
                             char.buff(target, *args, **kwargs)
                             char('OnSupport', buffed=target, support=char, *args, **kwargs)
 
-        # HERO BUFFS:
-        if self.hero.aura:
-            for target in self.valid_characters():
-                self.hero.buff(target, *args, **kwargs)
 
         new_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}
 

@@ -5,7 +5,6 @@ from sbbbattlesim.utils import StatChangeCause, Tribe
 
 class CharacterType(Character):
     display_name = 'Vain-Pire'
-    slay = True
 
     _attack = 4
     _health = 4

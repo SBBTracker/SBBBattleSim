@@ -28,4 +28,3 @@ class TreasureType(Treasure):
 
             for _ in range(1 + bool(self.mimic)):
                 target_character.register(NinthBookOnDeath, temp=True)
-            target_character.last_breath = True
