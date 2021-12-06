@@ -6,7 +6,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_black_cat_dying(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_BLACKCAT', position=6, golden=golden),

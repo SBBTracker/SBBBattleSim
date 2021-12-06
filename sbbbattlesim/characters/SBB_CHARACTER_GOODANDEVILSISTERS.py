@@ -6,6 +6,24 @@ from sbbbattlesim.utils import StatChangeCause, Tribe
 
 logger = logging.getLogger(__name__)
 
+
+class FairyBuffOnStart(OnStart):
+
+    def handle(self, stack, *args, **kwargs):
+        highest_attack_evil = max([char.attack for char in self.shoulder_faeries.owner.valid_characters(
+            _lambda=lambda char: Tribe.EVIL in char.tribes)] + [0])
+        highest_health_good = max(
+            [char.health for char in self.shoulder_faeries.owner.valid_characters() if Tribe.GOOD in char.tribes] + [0])
+        self.shoulder_faeries.change_stats(
+            attack=highest_attack_evil * (2 if self.shoulder_faeries.golden else 1),
+            health=highest_health_good * (2 if self.shoulder_faeries.golden else 1),
+            temp=False,
+            reason=StatChangeCause.SHOULDER_FAIRY_BUFF,
+            source=self.shoulder_faeries,
+            stack=stack
+        )
+
+
 class CharacterType(Character):
     display_name = 'Shoulder Faeries'
 
@@ -16,21 +34,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        class FairyBuffOnStart(OnStart):
-            priority=60
-            shoulder_faeries = self
-
-            def handle(self, stack, *args, **kwargs):
-                highest_attack_evil = max([char.attack for char in self.shoulder_faeries.owner.valid_characters(_lambda=lambda char: Tribe.EVIL in char.tribes)] + [0])
-                highest_health_good = max([char.health for char in self.shoulder_faeries.owner.valid_characters() if Tribe.GOOD in char.tribes] + [0])
-                self.shoulder_faeries.change_stats(
-                    attack=highest_attack_evil * (2 if self.shoulder_faeries.golden else 1),
-                    health=highest_health_good * (2 if self.shoulder_faeries.golden else 1),
-                    temp=False,
-                    reason=StatChangeCause.SHOULDER_FAIRY_BUFF,
-                    source=self.shoulder_faeries,
-                    stack=stack
-                )
-
-        self.owner.board.register(FairyBuffOnStart)
+        self.owner.board.register(FairyBuffOnStart, priority=60, shoulder_faeries=self)

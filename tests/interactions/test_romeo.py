@@ -6,7 +6,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_romeo_summons_dead_juliet(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_ROMEO', position=6, attack=1, health=1, golden=golden),
@@ -31,7 +30,6 @@ def test_romeo_summons_dead_juliet(golden):
 
 
 def test_romeo_doesnt_summon_anything():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_ROMEO', position=6, attack=1, health=1),
@@ -53,7 +51,6 @@ def test_romeo_doesnt_summon_anything():
 
 
 def test_two_romeo_summons_one_dead_juliet():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_ROMEO', position=3, attack=1, health=1),
@@ -78,7 +75,6 @@ def test_two_romeo_summons_one_dead_juliet():
 
 
 def test_two_romeo_summons_dead_juliet_alot():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_ROMEO', position=3, attack=1, health=1),
@@ -103,7 +99,6 @@ def test_two_romeo_summons_dead_juliet_alot():
 
 
 def test_romeo_muerte_summons_dead_juliet():
-
     player = make_player(
         hero="SBB_HERO_MUERTE",
         characters=[
@@ -127,5 +122,3 @@ def test_romeo_muerte_summons_dead_juliet():
     assert board.p1.characters[2].id == juliet.id
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (14, 14)
     assert board.p1.characters[3].id == juliet.id
-
-

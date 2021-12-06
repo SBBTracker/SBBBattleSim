@@ -9,7 +9,7 @@ from tests import make_character, make_player
 def test_hippocampus(golden, summoner_id):
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_HUNGRYHUNGRYHIPPOCAMPUS",position=5, attack=1, health=1, golden=golden),
+            make_character(id="SBB_CHARACTER_HUNGRYHUNGRYHIPPOCAMPUS", position=5, attack=1, health=1, golden=golden),
             make_character(id=summoner_id, position=1, attack=1, health=1),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
@@ -32,5 +32,3 @@ def test_hippocampus(golden, summoner_id):
         assert board.p1.characters[1] is not None  # there should be a tweedle dum there
 
     assert (board.p1.characters[5].attack, board.p1.characters[5].health) == final_stats
-
-

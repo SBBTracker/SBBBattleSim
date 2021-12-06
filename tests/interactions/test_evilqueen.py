@@ -8,9 +8,9 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 def test_queenofhearts(golden):
     player = make_player(
-        hero = "SBB_HERO_MUERTE",
+        hero="SBB_HERO_MUERTE",
         characters=[
-            make_character(id="SBB_CHARACTER_BLACKCAT",position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
+            make_character(id="SBB_CHARACTER_BLACKCAT", position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
             make_character(position=1, attack=1, health=1),
             make_character(id="SBB_CHARACTER_QUEENOFHEARTS", position=6, attack=1, health=1, golden=golden),
         ],

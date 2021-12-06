@@ -3,7 +3,6 @@ from tests import make_character, make_player
 
 
 def test_lightning_dragon():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_LIGHTNINGDRAGON', position=6, attack=1, health=1),
@@ -30,4 +29,3 @@ def test_lightning_dragon():
     assert dragon.dead
     assert not frontline.dead
     assert backline.dead
-

@@ -7,6 +7,14 @@ from sbbbattlesim.utils import StatChangeCause
 logger = logging.getLogger(__name__)
 
 
+class IvoryOwlOnStartOnStartBuff(OnStart):
+    def handle(self, stack, *args, **kwargs):
+        for _ in range(bool(self.owl.mimic) + 1):
+            for char in self.owl.player.valid_characters():
+                char.change_stats(attack=2, health=2, reason=StatChangeCause.IVORY_OWL_BUFF, source=self.owl,
+                                  temp=False, stack=stack)
+
+
 class TreasureType(Treasure):
     display_name = 'Ivory Owl'
 
@@ -15,13 +23,4 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        class IvoryOwlOnStartOnStartBuff(OnStart):
-            priority = 120
-            owl = self
-
-            def handle(self, stack, *args, **kwargs):
-                for _ in range(bool(self.owl.mimic) + 1):
-                    for char in self.owl.player.valid_characters():
-                        char.change_stats(attack=2, health=2, reason=StatChangeCause.IVORY_OWL_BUFF, source=self.owl, temp=False, stack=stack)
-
-        self.player.board.register(IvoryOwlOnStartOnStartBuff)
+        self.player.board.register(IvoryOwlOnStartOnStartBuff, priority=120, owl=self)

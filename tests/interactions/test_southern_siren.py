@@ -8,7 +8,6 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('attacker_golden', (True, False))
 @pytest.mark.parametrize('defender_golden', (True, False))
 def test_southern_siren(attacker_golden, defender_golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_LOBO', position=1, attack=1, health=1, golden=attacker_golden),

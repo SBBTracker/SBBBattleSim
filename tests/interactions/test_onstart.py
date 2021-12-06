@@ -10,7 +10,7 @@ def test_onstart_trees(roundtable):
     player = make_player(
         characters=[
             make_character(
-                id="SBB_CHARACTER_KINGTREE",position=2,
+                id="SBB_CHARACTER_KINGTREE", position=2,
                 attack=1, health=100, tribes=[Tribe.EVIL, Tribe.TREANT]
             ),
             make_character(
@@ -53,7 +53,7 @@ def test_onstart_arthur_and_lordy():
     player = make_player(
         characters=[
             make_character(
-                id="SBB_CHARACTER_KINGARTHUR",position=2, golden=True,
+                id="SBB_CHARACTER_KINGARTHUR", position=2, golden=True,
                 attack=5, health=5, tribes=[Tribe.PRINCE]
             ),
             make_character(
@@ -120,5 +120,3 @@ def test_echowood_shoulder_roundtable():
     assert (good.attack, good.health) == (5, 5)
     assert (shoulders.attack, shoulders.health) == (3, 3)
     assert (echo.attack, echo.health) == (101, 8)
-
-

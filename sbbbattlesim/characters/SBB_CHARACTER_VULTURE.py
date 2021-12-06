@@ -6,6 +6,18 @@ from sbbbattlesim.utils import Tribe, StatChangeCause
 
 logger = logging.getLogger(__name__)
 
+
+class BeardedVultureOnDeath(OnDeath):
+    last_breath = False
+
+    def handle(self, *args, **kwargs):
+        stat_change = 6 if self.bearded_vulture.golden else 3
+        self.bearded_vulture.change_stats(
+            attack=stat_change, health=stat_change, temp=False,
+            source=self.bearded_vulture, reason=StatChangeCause.BEARDEDVULTURE_BUFF
+        )
+
+
 class CharacterType(Character):
     display_name = 'Bearded Vulture'
     aura = True
@@ -16,17 +28,6 @@ class CharacterType(Character):
     _tribes = {Tribe.EVIL, Tribe.ANIMAL}
 
     def buff(self, target_character, *args, **kwargs):
-        class BeardedVultureOnDeath(OnDeath):
-            bearded_vulture = self
-            last_breath = False
-            
-            def handle(self, *args, **kwargs):
-                stat_change = 6 if self.bearded_vulture.golden else 3
-                self.bearded_vulture.change_stats(
-                    attack=stat_change, health=stat_change, temp=False,
-                    source=self.bearded_vulture, reason=StatChangeCause.BEARDEDVULTURE_BUFF
-                )
-
         # Give animals minions the buff
         if Tribe.ANIMAL in target_character.tribes and target_character is not self:
-            target_character.register(BeardedVultureOnDeath, temp=True)
+            target_character.register(BeardedVultureOnDeath, temp=True, bearded_vulture=self)

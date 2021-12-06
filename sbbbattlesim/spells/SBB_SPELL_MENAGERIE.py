@@ -13,5 +13,5 @@ class SpellType(TargetedSpell):
         if len(valid_targets):
             targets = random.sample(valid_targets, min(len(valid_targets), 2))
             for target in targets:
-                target.change_stats(health=2, attack=2, temp=False, reason=StatChangeCause.TOIL_AND_TROUBLE, source=self, *args, **kwargs)
-
+                target.change_stats(health=2, attack=2, temp=False, reason=StatChangeCause.TOIL_AND_TROUBLE,
+                                    source=self, *args, **kwargs)

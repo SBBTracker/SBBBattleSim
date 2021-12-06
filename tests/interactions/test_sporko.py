@@ -6,7 +6,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_sporko(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_MAGEMASTER', position=5, attack=3, health=6, golden=golden),
@@ -24,13 +23,13 @@ def test_sporko(golden):
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (final_attack, 1)
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (final_attack, 1)
 
-def test_sporko_ranged():
 
+def test_sporko_ranged():
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_MAGEMASTER', position=6, attack=3, health=6),
         ],
-        treasures= [
+        treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )

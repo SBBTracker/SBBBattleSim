@@ -6,7 +6,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_bearstain_black_cat_dying(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_PROSPERO', position=5, golden=golden),
@@ -28,7 +27,6 @@ def test_bearstain_black_cat_dying(golden):
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_bearstain_black_cat_living(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_PROSPERO', position=5, golden=golden),
@@ -47,7 +45,6 @@ def test_bearstain_black_cat_living(golden):
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_two_bearstain_black_cat_dying(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_PROSPERO', position=5, golden=golden),
@@ -66,4 +63,3 @@ def test_two_bearstain_black_cat_dying(golden):
     final_stats = (45, 45) if golden else (15, 15)
     assert board.p1.characters[1].display_name == 'Cat'
     assert board.p1.characters[1].attack, board.p1.characters[1].health == final_stats
-

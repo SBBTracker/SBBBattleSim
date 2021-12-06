@@ -9,7 +9,7 @@ from tests import make_character, make_player
 @pytest.mark.parametrize("n_char", (1, 2))
 def test_sarc_phoenix(mimic, n_char):
     characters = []
-    for n in range(1, n_char+1):
+    for n in range(1, n_char + 1):
         characters.append(make_character(position=n, attack=1, health=1, tribes=[Tribe.EVIL]))
 
     player = make_player(

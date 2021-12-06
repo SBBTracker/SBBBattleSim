@@ -6,7 +6,6 @@ from sbbbattlesim.spells import registry as spell_registry
 
 logger = logging.getLogger(__name__)
 
-
 LOKI_SPELLS = (
     '''SBB_SPELL_TESTYOURMIGHT''',  # Magic Research
     '''SBB_SPELL_SUGARANDSPICE''',  # Sugar and Spice
@@ -24,7 +23,7 @@ LOKI_SPELLS = (
     '''SBB_SPELL_KNIGHTHOOD''',  # Knighthood
     '''SBB_SPELL_TESTYOURMIGHT''',  # Evil Twin
 )
-#combat spells could be used and shared between deck, book of merlin and monster book
+# combat spells could be used and shared between deck, book of merlin and monster book
 COMBAT_SPELLS = (
     '''SBB_SPELL_FALLINGSTARS''',
     '''SBB_SPELL_EARTHQUAKE''',
@@ -52,6 +51,7 @@ START_OF_FIGHT_SPELLS = (
     '''SBB_SPELL_BEASTWITHIN''',
     '''SBB_SPELL_MENAGERIE'''
 )
+
 
 class Tribe(enum.Enum):
     ANIMAL = 'animal'
@@ -216,10 +216,10 @@ def get_support_targets(position, horn=False):
 
 def get_behind_targets(position):
     return {
-        1: (5, ),
+        1: (5,),
         2: (5, 6),
         3: (6, 7),
-        4: (7, )
+        4: (7,)
     }.get(position, ())
 
 
@@ -238,12 +238,13 @@ def get_spawn_positions(position):
 
 
 def random_combat_spell(level):
-    valid_spells = [*spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in COMBAT_SPELLS)]
+    valid_spells = [
+        *spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in COMBAT_SPELLS)]
     if valid_spells:
         return random.choice(valid_spells)
 
 
-#TODO are these the same across different effects (robin wood, helm of the gosling, juliets in graveyards)
+# TODO are these the same across different effects (robin wood, helm of the gosling, juliets in graveyards)
 # or do they behaave differently. Set up resources with tied attack and different cost, and tied attack&cost but different
 # position and do so for both weaker and stronger style effects
 def find_stat_extreme_character(player, strongest=True):
@@ -254,7 +255,8 @@ def find_stat_extreme_character(player, strongest=True):
 
     func = max if strongest else min
     sub_char = func(valid_characters, key=lambda char: (char.attack, char.cost))
-    sub_chars = list(filter(lambda char: char.attack == sub_char.attack and char.cost == sub_char.cost, valid_characters))
+    sub_chars = list(
+        filter(lambda char: char.attack == sub_char.attack and char.cost == sub_char.cost, valid_characters))
     return random.choice(sub_chars)
 
 
@@ -264,7 +266,6 @@ def find_strongest_character(player):
 
 def find_weakest_character(player):
     return find_stat_extreme_character(player, strongest=False)
-
 
 # DO NOT DO THIS
 # TODO Summon random character with conditions

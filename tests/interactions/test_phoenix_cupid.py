@@ -3,7 +3,6 @@ from tests import make_character, make_player
 
 
 def test_phoenix_cupid():
-
     player = make_player(
         characters=[
             make_character(position=1, attack=1, health=500),
@@ -23,8 +22,8 @@ def test_phoenix_cupid():
     assert board.p1.characters[1] is None
     assert board.p1.characters[5] is None
 
-def test_phoenix_bouncy_cupid():
 
+def test_phoenix_bouncy_cupid():
     player = make_player(
         characters=[
             make_character(id="SBB_CHARACTER_CUPID", position=5, attack=1, health=500),
@@ -43,4 +42,3 @@ def test_phoenix_bouncy_cupid():
 
     assert board.p1.characters[1] is None
     assert board.p1.characters[5] is None
-

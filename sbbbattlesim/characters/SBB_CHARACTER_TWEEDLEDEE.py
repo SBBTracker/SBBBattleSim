@@ -5,6 +5,24 @@ from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe
 
 
+class TweedleDeeLastBreath(OnDeath):
+    last_breath = True
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.priority = sbbbattlesim.SUMMONING_PRIORITY
+
+    def handle(self, *args, **kwargs):
+        attack, health = (4, 6) if self.manager.golden else (2, 3)
+        tweedle_dum = [
+            character_registry['Tweedle Dum'](
+                self.manager.owner, self.manager.position, attack, health,
+                golden=False, keywords=[], tribes=['dwarf'], cost=1
+            )
+        ]
+        self.manager.owner.summon(self.manager.position, tweedle_dum)
+
+
 class CharacterType(Character):
     display_name = 'Tweedle Dee'
     last_breath = True
@@ -16,20 +34,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.TweedleDeeLastBreath)
-
-    class TweedleDeeLastBreath(OnDeath):
-        last_breath = True
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.priority = sbbbattlesim.SUMMONING_PRIORITY
-
-        def handle(self, *args, **kwargs):
-            attack, health = (4, 6) if self.manager.golden else (2, 3)
-            tweedle_dum = [
-                character_registry['Tweedle Dum'](
-                    self.manager.owner, self.manager.position, attack, health,
-                    golden=False, keywords=[], tribes=['dwarf'], cost=1
-                )
-            ]
-            self.manager.owner.summon(self.manager.position, tweedle_dum)
+        self.register(TweedleDeeLastBreath)

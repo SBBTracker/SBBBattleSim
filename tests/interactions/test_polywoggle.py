@@ -7,7 +7,6 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('level', (2, 3, 4, 5, 6))
 def test_polywoggle(golden, level):
-
     player = make_player(
         level=level,
         characters=[
@@ -30,10 +29,7 @@ def test_polywoggle(golden, level):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (2, 2), 'Vainpire probably didnt attack'
     assert board.p1.characters[5] is not None
     assert board.p1.characters[5] is not woggle, 'Its still the polywoggle unfortunately'
-    assert board.p1.characters[5].cost == min(6, level+1)
-
-
+    assert board.p1.characters[5].cost == min(6, level + 1)

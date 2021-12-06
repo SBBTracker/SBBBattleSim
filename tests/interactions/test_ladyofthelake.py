@@ -6,7 +6,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_lady(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_LADYOFTHELAKE', position=5, attack=3, health=6, golden=golden),
@@ -24,13 +23,13 @@ def test_lady(golden):
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (1, final_health)
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (1, final_health)
 
-def test_lady_ranged():
 
+def test_lady_ranged():
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_LADYOFTHELAKE', position=6, attack=3, health=6),
         ],
-        treasures= [
+        treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )

@@ -3,6 +3,14 @@ from sbbbattlesim.events import OnSlay
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
+class ShadowAssassinOnSlay(OnSlay):
+    def handle(self, source, stack, *args, **kwargs):
+        attack_buff, health_buff = (2, 2) if self.shadow_assassin.golden else (1, 1)
+        self.shadow_assassin.change_stats(attack=attack_buff, health=health_buff, temp=False,
+                                          reason=StatChangeCause.SHADOW_ASSASSIN_ON_SLAY_BUFF,
+                                          source=self.shadow_assassin, stack=stack)
+
+
 class CharacterType(Character):
     display_name = 'Shadow Assassin'
     aura = True
@@ -13,13 +21,4 @@ class CharacterType(Character):
     _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
     def buff(self, target_character, *args, **kwargs):
-        class ShadowAssassinOnSlay(OnSlay):
-            shadow_assassin = self
-            def handle(self, source, stack, *args, **kwargs):
-                attack_buff, health_buff = (2, 2) if self.shadow_assassin.golden else (1, 1)
-                self.shadow_assassin.change_stats(attack=attack_buff, health=health_buff, temp=False,
-                                                  reason=StatChangeCause.SHADOW_ASSASSIN_ON_SLAY_BUFF,
-                                                  source=self.shadow_assassin, stack=stack)
-
-        target_character.register(ShadowAssassinOnSlay, temp=True)
-
+        target_character.register(ShadowAssassinOnSlay, temp=True, shadow_assassin=self)

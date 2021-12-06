@@ -10,7 +10,7 @@ def test_ashwood_elm(golden):
     player = make_player(
         characters=[
             make_character(
-                id="SBB_CHARACTER_KINGTREE",position=5,
+                id="SBB_CHARACTER_KINGTREE", position=5,
                 attack=1, health=100, golden=golden, tribes=[Tribe.TREANT]
             ),
             make_character(position=1, attack=1, health=1, tribes=[Tribe.TREANT]),

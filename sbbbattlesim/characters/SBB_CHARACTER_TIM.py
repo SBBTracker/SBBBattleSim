@@ -3,6 +3,18 @@ from sbbbattlesim.events import OnSpellCast
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
+class SpellWeaverOnSpell(OnSpellCast):
+    def handle(self, caster, spell, target, stack, *args, **kwargs):
+        stat_gain = (2 if self.weaver.golden else 1)
+        if not self.weaver.dead:
+            self.weaver.change_stats(
+                attack=stat_gain,
+                reason=StatChangeCause.SPELL_WEAVER,
+                source=self.weaver,
+                stack=stack,
+            )
+
+
 class CharacterType(Character):
     display_name = 'Spell Weaver'
     ranged = True
@@ -14,18 +26,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        class SpellWeaverOnSpell(OnSpellCast):
-            weaver = self
-
-            def handle(self, caster, spell, target, stack, *args, **kwargs):
-                stat_gain = (2 if self.weaver.golden else 1)
-                if not self.weaver.dead:
-                    self.weaver.change_stats(
-                        attack=stat_gain,
-                        reason=StatChangeCause.SPELL_WEAVER,
-                        source=self.weaver,
-                        stack=stack,
-                    )
-
-        self.owner.register(SpellWeaverOnSpell)
+        self.owner.register(SpellWeaverOnSpell, weaver=self)

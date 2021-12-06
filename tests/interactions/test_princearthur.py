@@ -10,7 +10,7 @@ def test_prince_arthur(arthur_is_golden):
     player = make_player(
         characters=[
             make_character(
-                id="SBB_CHARACTER_KINGARTHUR",position=5,
+                id="SBB_CHARACTER_KINGARTHUR", position=5,
                 attack=1, health=1, golden=arthur_is_golden, tribes=[Tribe.PRINCE]
             ),
             make_character(position=1, attack=1, health=1, tribes=[Tribe.PRINCE]),
@@ -36,5 +36,6 @@ def test_prince_arthur(arthur_is_golden):
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == golden_final_stats
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == normal_stats
     assert (board.p1.characters[4].attack, board.p1.characters[4].health) == golden_final_stats
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (golden_final_stats if arthur_is_golden else normal_stats)
+    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (
+        golden_final_stats if arthur_is_golden else normal_stats)
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == normal_stats

@@ -5,7 +5,6 @@ from tests import make_character, make_player
 
 
 def test_darkwood_ranged():
-
     player = make_player(
         characters=[
             make_character(id="SBB_CHARACTER_DARKWOODCREEPER", position=5, attack=1, health=1),
@@ -23,9 +22,9 @@ def test_darkwood_ranged():
 
     assert board.p1.characters[1].attack == 1
 
+
 @pytest.mark.parametrize('golden', (True, False))
 def test_darkwood_melee(golden):
-
     player = make_player(
         characters=[
             make_character(id="SBB_CHARACTER_DARKWOODCREEPER", position=5, attack=1, health=1, golden=golden),
@@ -63,8 +62,3 @@ def test_darkwood_soltak_defending():
     board.p2.resolve_board()
 
     assert board.p1.characters[5].attack == 2
-
-
-
-
-

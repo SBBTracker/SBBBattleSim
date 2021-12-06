@@ -37,4 +37,3 @@ def test_combat_lockout(attack):
 
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=5)
-

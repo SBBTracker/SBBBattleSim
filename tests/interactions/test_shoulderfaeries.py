@@ -10,7 +10,7 @@ def test_shoulderfaeries(golden):
     player = make_player(
         characters=[
             make_character(
-                id="SBB_CHARACTER_GOODANDEVILSISTERS",position=1, attack=1, health=1, golden=golden
+                id="SBB_CHARACTER_GOODANDEVILSISTERS", position=1, attack=1, health=1, golden=golden
             ),
             make_character(position=6, attack=1000, health=100, tribes=[Tribe.GOOD]),
             make_character(position=5, attack=100, health=1000, tribes=[Tribe.EVIL]),

@@ -8,7 +8,6 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('mimic', (True, False))
 @pytest.mark.parametrize('evil_eye', (True, False))
 def test_riverwish_yaga(golden, mimic, evil_eye):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=5, attack=5, health=5, golden=False),
@@ -16,7 +15,7 @@ def test_riverwish_yaga(golden, mimic, evil_eye):
             make_character(position=2),
             make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7)
         ],
-        treasures= [
+        treasures=[
             'SBB_TREASURE_HELMOFCOMMAND' if evil_eye else '',
             'SBB_TREASURE_TREASURECHEST' if mimic else '',
             '''SBB_TREASURE_HERMES'BOOTS'''
@@ -51,7 +50,6 @@ def test_riverwish_yaga(golden, mimic, evil_eye):
 @pytest.mark.parametrize('mimic', (True, False))
 @pytest.mark.parametrize('evil_eye', (True, False))
 def test_double_yaga(mimic, evil_eye):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=5, health=5, golden=False),
@@ -59,7 +57,7 @@ def test_double_yaga(mimic, evil_eye):
             make_character(id='SBB_CHARACTER_CATBURGLAR', position=2, attack=1, health=1),
             make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7)
         ],
-        treasures= [
+        treasures=[
             'SBB_TREASURE_HELMOFCOMMAND' if evil_eye else '',
             'SBB_TREASURE_TREASURECHEST' if mimic else '',
             '''SBB_TREASURE_HERMES'BOOTS'''

@@ -8,7 +8,6 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('level', (2, 3, 4, 5, 6))
 @pytest.mark.parametrize('repeat', range(30))
 def test_donkey_surviving(golden, level, repeat):
-
     player = make_player(
         level=level,
         characters=[
@@ -28,4 +27,3 @@ def test_donkey_surviving(golden, level, repeat):
         assert board.p1.characters[2]._level == level
     else:
         assert board.p1.characters[2]._level <= level
-

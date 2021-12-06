@@ -3,6 +3,17 @@ from sbbbattlesim.events import OnStart
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
+class AshwoodElmOnStart(OnStart):
+    def handle(self, stack, *args, **kwargs):
+        base_attack_change = self.ashwood.health
+        modifier = 2 if self.ashwood.golden else 1
+        attack_change = base_attack_change * modifier
+
+        for char in self.ashwood.owner.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes):
+            char.change_stats(attack=attack_change, temp=False, reason=StatChangeCause.ASHWOOD_ELM_BUFF,
+                              source=self.ashwood, stack=stack)
+
+
 class CharacterType(Character):
     display_name = 'Ashwood Elm'
 
@@ -14,17 +25,4 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        class AshwoodElmOnStart(OnStart):
-            priority=70
-            ashwood = self
-
-            def handle(self, stack, *args, **kwargs):
-                base_attack_change = self.ashwood.health
-                modifier = 2 if self.ashwood.golden else 1
-                attack_change = base_attack_change*modifier
-
-                for char in self.ashwood.owner.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes):
-                    char.change_stats(attack=attack_change, temp=False, reason=StatChangeCause.ASHWOOD_ELM_BUFF,
-                                      source=self.ashwood, stack=stack)
-
-        self.owner.board.register(AshwoodElmOnStart)
+        self.owner.board.register(AshwoodElmOnStart, priority=70, ashwood=self)

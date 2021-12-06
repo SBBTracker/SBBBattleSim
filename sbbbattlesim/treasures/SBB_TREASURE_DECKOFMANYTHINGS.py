@@ -4,7 +4,14 @@ from sbbbattlesim.events import OnStart
 from sbbbattlesim.treasures import Treasure
 
 
-#todo can only cast spells of current level or below
+class DeckOfManyThingsOnStart(OnStart):
+    def handle(self, *args, **kwargs):
+        self.deck.player.cast_spell(random.choice(self.deck.spell_list))
+        if self.deck.mimic:
+            self.deck.player.cast_spell(random.choice(self.deck.spell_list))
+
+
+# todo can only cast spells of current level or below
 class TreasureType(Treasure):
     display_name = 'Deck of Many Things'
 
@@ -25,13 +32,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        class DeckOfManyThingsOnStart(OnStart):
-            deck = self
-
-            def handle(self, *args, **kwargs):
-                self.deck.player.cast_spell(random.choice(self.deck.spell_list))
-                if self.deck.mimic:
-                    self.deck.player.cast_spell(random.choice(self.deck.spell_list))
-
-        self.player.board.register(DeckOfManyThingsOnStart)
+        self.player.board.register(DeckOfManyThingsOnStart, deck=self)

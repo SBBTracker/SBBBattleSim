@@ -41,13 +41,14 @@ def fight(attacker, defender, turn=0, limit=-1, **kwargs):
         return defender, attacker
     elif defender_no_characters_left:
         return attacker, defender
-    elif not (attacker.valid_characters(_lambda=lambda char: char.attack > 0) + defender.valid_characters(_lambda=lambda char: char.attack > 0)):
+    elif not (attacker.valid_characters(_lambda=lambda char: char.attack > 0) + defender.valid_characters(
+            _lambda=lambda char: char.attack > 0)):
         return None, None
 
     return fight(
         attacker=defender,
         defender=attacker,
-        turn=turn+1,
+        turn=turn + 1,
         limit=limit
     )
 
@@ -59,7 +60,8 @@ def attack(attack_position, attacker, defender, **kwargs):
     back = (5, 6, 7)
 
     attack_char = attacker.characters.get(attack_position)
-    front_characters = defender.valid_characters(_lambda=lambda char: char.position in front and char is not attack_char)
+    front_characters = defender.valid_characters(
+        _lambda=lambda char: char.position in front and char is not attack_char)
     back_characters = defender.valid_characters(_lambda=lambda char: char.position in back and char is not attack_char)
     if attacker.characters.get(attack_position).flying:
         if any(back_characters):
@@ -84,17 +86,20 @@ def attack(attack_position, attacker, defender, **kwargs):
     # The characters in attack and defend slots may change after this point so
     # before each event attack_character and defend character is set again
 
-    logger.info(f'{attacker.characters.get(attack_position).pretty_print()} -> {defender.characters.get(defend_position).pretty_print()}')
+    logger.info(
+        f'{attacker.characters.get(attack_position).pretty_print()} -> {defender.characters.get(defend_position).pretty_print()}')
 
     # Pre Damage Event
     # These functions can change the characters in given positions like Medusa
     attack_character = attacker.characters.get(attack_position)
     if attack_character:
-        attack_character('OnPreAttack', attack_position=attack_position, defend_position=defend_position, defend_player=defender, **kwargs)
+        attack_character('OnPreAttack', attack_position=attack_position, defend_position=defend_position,
+                         defend_player=defender, **kwargs)
 
     defend_character = defender.characters.get(defend_position)
     if defend_character:
-        defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position, defend_position=defend_position, attack_player=attacker, **kwargs)
+        defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position,
+                                                 defend_position=defend_position, attack_player=attacker, **kwargs)
 
     # We are pulling the latest attack_character and defend character incase they changed
     attack_character = attacker.characters.get(attack_position)

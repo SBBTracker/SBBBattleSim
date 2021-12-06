@@ -1,3 +1,4 @@
+import collections
 import logging
 import random
 from collections import OrderedDict
@@ -8,9 +9,13 @@ from sbbbattlesim.events import EventManager, OnStart
 from sbbbattlesim.heros import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry, TargetedSpell
 from sbbbattlesim.treasures import registry as treasure_registry
-from collections import defaultdict
 
 logger = logging.getLogger(__name__)
+
+
+class CastSpellOnStart(OnStart):
+    def handle(self, *args, **kwargs):
+        self.player.cast_spell(self.spell, on_start=True)
 
 
 class Player(EventManager):
@@ -19,7 +24,7 @@ class Player(EventManager):
         # Board is board
         self.board = board
 
-        self.stateful_effects = defaultdict(lambda : defaultdict(lambda : None))
+        self.stateful_effects = {}
 
         self.id = id
         self.opponent = None
@@ -27,7 +32,7 @@ class Player(EventManager):
         self._last_attacker = None
         self._attack_chain = 0
 
-        #TODO Make a better implementation of this later
+        # TODO Make a better implementation of this later
         if 'spells_cast' in kwargs:
             self._spells_cast = kwargs['spells_cast']
         else:
@@ -43,7 +48,8 @@ class Player(EventManager):
         for tres in treasures:
             treasure = treasure_registry[tres]
             logger.debug(f'{self.id} Registering treasure {treasure}')
-            self.treasures[treasure.id] = treasure(self, mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0))
+            self.treasures[treasure.id] = treasure(self, mimic + (
+                (hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0))
 
         self.hand = [character_registry[char_data['id']](owner=self, **char_data) for char_data in hand]
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
@@ -52,7 +58,8 @@ class Player(EventManager):
         import copy
         for spl in spells:
             if spl in utils.START_OF_FIGHT_SPELLS:
-                self._register_spell(spl)
+                spell = spell_registry[spl]
+                self.board.register(CastSpellOnStart, priority=spell.priority, spell=spl, player=self)
 
         for char_data in characters:
             char = character_registry[char_data['id']](owner=self, **char_data)
@@ -70,21 +77,12 @@ class Player(EventManager):
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
 
-    def _register_spell(self, spl):
-        class CastSpellOnStart(OnStart):
-            player = self
-            priority = spell_registry[spl]().priority
-
-            def handle(self, *args, **kwargs):
-                self.player.cast_spell(spl, on_start=True)
-
-        self.board.register(CastSpellOnStart)
-
     @property
     def attack_slot(self):
         # Handle case where tokens are spawning in the same position
         # With the max chain of 5 as implemented to stop trophy hunter + croc + grim soul shenanigans
-        if (self.characters.get(self._attack_slot) is self._last_attacker) or (self._attack_chain >= 5) or (self._last_attacker is None):
+        if (self.characters.get(self._attack_slot) is self._last_attacker) or (self._attack_chain >= 5) or (
+                self._last_attacker is None):
             # Prevents the same character from attacking repeatedly
             if self._last_attacker is not None:
                 self._attack_slot += 1
@@ -176,7 +174,8 @@ class Player(EventManager):
         for char in self.valid_characters():
             if char.support:
                 for _ in range(support_itr):  # my commit but blame regi
-                    for target_position in utils.get_support_targets(position=char.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures):
+                    for target_position in utils.get_support_targets(position=char.position,
+                                                                     horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures):
                         target = self.characters.get(target_position)
                         if target:
                             char.buff(target, *args, **kwargs)
@@ -186,7 +185,6 @@ class Player(EventManager):
         if cloak:
             for target in self.valid_characters():
                 cloak.buff(target, *args, **kwargs)
-
 
         new_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}
 
@@ -199,9 +197,6 @@ class Player(EventManager):
         for char in self.valid_characters():
             if char.health < 0:
                 char.change_stats(damage=0, source=self, reason=None)
-
-
-
 
     def summon_from_different_locations(self, characters, *args, **kwargs):
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be
@@ -304,4 +299,3 @@ class Player(EventManager):
         self._spells_cast += 1
         stack = self('OnSpellCast', caster=self, spell=spell, target=target)
         spell.cast(player=self, target=target, stack=stack)
-

@@ -11,7 +11,8 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('treasure', treasure_registry.keys())
 def test_treasure(treasure, mimic, tiger):
     player = make_player(
-        characters=[make_character(position=i, keywords=[kw for kw in Keyword], tribes=[tribe for tribe in Tribe]) for i in range(1, 8)],
+        characters=[make_character(position=i, keywords=[kw for kw in Keyword], tribes=[tribe for tribe in Tribe]) for i
+                    in range(1, 8)],
         treasures=[treasure]
     )
 
@@ -141,8 +142,8 @@ def test_crown_of_atlas(mimic, tiger, on):
     animal = player.characters[1]
 
     assert animal
-    assert animal.attack == (2 + mimic_multiplyer if on else 1 )
-    assert animal.health == (2 + mimic_multiplyer if on else 1 )
+    assert animal.attack == (2 + mimic_multiplyer if on else 1)
+    assert animal.health == (2 + mimic_multiplyer if on else 1)
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -855,6 +856,7 @@ def test_deck_of_many_things(mimic, _):
 
     # TODO this isnt really implemented
 
+
 @pytest.mark.parametrize('mimic', (True, False))
 @pytest.mark.parametrize('on', (True, False))
 def test_other_hand_of_vekna(mimic, on):
@@ -1283,7 +1285,7 @@ def test_sword_of_fire_and_ice(mimic):
 
     assert front.health == 1 + buff
     assert front.attack == 1
-    assert back.health ==1
+    assert back.health == 1
     assert back.attack == 1 + buff
 
 
@@ -1505,6 +1507,7 @@ def test_round_table(mimic):
     assert char
     assert char.attack == 1
 
+
 @pytest.mark.parametrize('mimic', (True, False))
 def test_round_table_echowood(mimic):
     player = make_player(
@@ -1540,10 +1543,10 @@ def test_round_table_echowood(mimic):
     else:
         assert (e2.attack, e2.health) == (1, 11)
 
+
 @pytest.mark.parametrize('mimic', (True, False))
 @pytest.mark.parametrize('on', (True, False))
 def test_phoenix_feather(mimic, on):
-
     player = make_player(
         characters=[
             make_character(attack=5 if on else 1),
@@ -1583,7 +1586,6 @@ def test_phoenix_feather(mimic, on):
 
 @pytest.mark.parametrize('mimic', (True, False))
 def test_spear_of_achilles(mimic):
-
     player = make_player(
         characters=[
             make_character()

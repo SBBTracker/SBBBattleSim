@@ -1,11 +1,12 @@
 import collections
+from dataclasses import dataclass
 from typing import Dict, List
 
 from sbbbattlesim import Board
 from sbbbattlesim.player import Player
 
 
-async def win_rate(results: Dict[str, List[Board]]) -> Dict[str, float]:
+def win_rate(results: Dict[str, List[Board]]) -> Dict[str, float]:
     win_rate = collections.defaultdict(float)
     for pid, boards in results.items():
         total = sum(len(v) for v in results.values())
@@ -25,7 +26,7 @@ def calculate_damage(player: Player) -> int:
     return damage
 
 
-async def average_damage(results: Dict[str, List[Board]]) -> Dict[str, float]:
+def average_damage(results: Dict[str, List[Board]]) -> Dict[str, float]:
     avg_damage = collections.defaultdict(float)
     for pid, boards in results.items():
         damage = [calculate_damage(board.get_player(pid)) for board in boards]
@@ -34,10 +35,14 @@ async def average_damage(results: Dict[str, List[Board]]) -> Dict[str, float]:
     return avg_damage
 
 
+@dataclass
 class SimulationStats:
-    @classmethod
-    async def create(cls, results):
-        self = SimulationStats()
-        self.win_rate = await win_rate(results)
-        self.avg_damage = await average_damage(results)
-        return self
+    win_rate: Dict[str, float]
+    avg_damage: Dict[str, float]
+
+
+def calculate_stats(results):
+    return SimulationStats(
+        win_rate=win_rate(results),
+        avg_damage=average_damage(results)
+    )

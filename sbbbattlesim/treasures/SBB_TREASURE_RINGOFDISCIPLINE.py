@@ -10,4 +10,5 @@ class TreasureType(Treasure):
 
     def buff(self, target_character, *args, **kwargs):
         for _ in range(self.mimic + 1):
-            target_character.change_stats(health=3, reason=StatChangeCause.SIX_OF_SHIELDS, source=self, temp=True, *args, **kwargs)
+            target_character.change_stats(health=3, reason=StatChangeCause.SIX_OF_SHIELDS, source=self, temp=True,
+                                          *args, **kwargs)

@@ -12,4 +12,5 @@ class SpellType(NonTargetedSpell):
     def cast(self, player, *args, **kwargs):
         valid_targets = player.opponent.valid_characters(_lambda=lambda char: char.position in (5, 6, 7))
         if valid_targets:
-            Damage(10, reason=StatChangeCause.LIGHTNING_BOLT, source=self, targets=[random.choice(valid_targets)]).resolve()
+            Damage(10, reason=StatChangeCause.LIGHTNING_BOLT, source=self,
+                   targets=[random.choice(valid_targets)]).resolve()

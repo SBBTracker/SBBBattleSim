@@ -78,5 +78,4 @@ class Registry(object):
                 logger.exception('Error loading spells: {}'.format(name))
 
 
-
 registry = Registry()

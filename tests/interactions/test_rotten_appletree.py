@@ -3,7 +3,6 @@ from tests import make_character, make_player
 
 
 def test_rotten_appletree():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_ROTTENAPPLETREE', position=6, attack=0, health=5),
@@ -23,7 +22,6 @@ def test_rotten_appletree():
 
 
 def test_rotten_appletree_support():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_ROTTENAPPLETREE', position=1, attack=0, health=5),
@@ -34,7 +32,7 @@ def test_rotten_appletree_support():
             make_character(attack=1, health=1000, position=1),
             make_character(id="SBB_CHARACTER_BABYROOT", attack=1, health=1000, position=5)
         ],
-        treasures = [
+        treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
@@ -47,7 +45,6 @@ def test_rotten_appletree_support():
 
 
 def test_rotten_appletree_health_support_dies():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_ROTTENAPPLETREE', position=1, attack=0, health=5),
@@ -59,7 +56,7 @@ def test_rotten_appletree_health_support_dies():
             make_character(attack=1, health=1000, position=1),
             make_character(id="SBB_CHARACTER_BABYROOT", attack=1, health=1, position=5)
         ],
-        treasures = [
+        treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
@@ -104,4 +101,3 @@ def test_rotten_appletree_attack_support_dies():
 
     assert frontchar.health == 1
     assert backchar.dead
-

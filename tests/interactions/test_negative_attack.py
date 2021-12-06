@@ -1,6 +1,7 @@
 from sbbbattlesim import Board
 from tests import make_character, make_player
 
+
 def test_negative_attack():
     player = make_player(
         characters=[

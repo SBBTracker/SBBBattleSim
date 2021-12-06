@@ -6,6 +6,20 @@ from sbbbattlesim.heros import Hero
 logger = logging.getLogger(__name__)
 
 
+class MeurteDoubleLastBreath(OnLastBreath):
+    last_breath = False
+
+    def handle(self, source, stack, *args, **kwargs):
+        if self.meurte.triggered:
+            return
+
+        last_breaths = [evt for evt in stack if getattr(evt, 'last_breath', False)]
+        if last_breaths:
+            self.meurte.triggered = True
+            with stack.open(*args, **kwargs) as executor:
+                executor.execute(last_breaths[-1])
+
+
 class HeroType(Hero):
     display_name = 'Muerte'
     aura = True
@@ -17,20 +31,4 @@ class HeroType(Hero):
     def buff(self, target_character, *args, **kwargs):
         if self.triggered:
             return
-
-        class MeurteDoubleLastBreath(OnLastBreath):
-            meurte = self
-            priority = 999
-            last_breath = False
-
-            def handle(self, source, stack, *args, **kwargs):
-                if self.meurte.triggered:
-                    return
-
-                last_breaths = [evt for evt in stack if getattr(evt, 'last_breath', False)]
-                if last_breaths:
-                    self.meurte.triggered = True
-                    with stack.open(*args, **kwargs) as executor:
-                        executor.execute(last_breaths[-1])
-
-        target_character.register(MeurteDoubleLastBreath)
+        target_character.register(MeurteDoubleLastBreath, meurte=self, priority=999)

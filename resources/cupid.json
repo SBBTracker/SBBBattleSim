@@ -1,61 +1,61 @@
 {
-	"PLAYERONEIDHERE": {
-		"characters": [
-			{
-				"id": "SBB_CHARACTER_CUPID",
-				"attack": 1,
-				"health": 10,
-				"golden": false,
-				"position": 1,
-				"cost": 5,
-				"keywords": [
-					"ranged"
-				],
-				"tribes": [
-					"good",
-					"fairy"
-				]
-			}
-		],
-		"treasures": [
-			"SBB_TREASURE_HERMES'BOOTS"
-		],
-		"hand": [],
-		"hero": ""
-	},
-	"PLAYERTWOIDHERE": {
-		"characters": [
-			{
-				"id": "SBB_CHARACTER_MONSTAR",
-				"attack": 60,
-				"health": 60,
-				"golden": false,
-				"position": 1,
-				"cost": 3,
-				"keywords": [
-					"last breath"
-				],
-				"tribes": [
-					"good"
-				]
-			},
-			{
-				"id": "SBB_CHARACTER_MONSTAR",
-				"attack": 60,
-				"health": 60,
-				"golden": false,
-				"position": 2,
-				"cost": 3,
-				"keywords": [
-					"last breath"
-				],
-				"tribes": [
-					"good"
-				]
-			}
-		],
-		"treasures": [],
-		"hand": [],
-		"hero": ""
-	}
+  "PLAYERONEIDHERE": {
+    "characters": [
+      {
+        "id": "SBB_CHARACTER_CUPID",
+        "attack": 1,
+        "health": 10,
+        "golden": false,
+        "position": 1,
+        "cost": 5,
+        "keywords": [
+          "ranged"
+        ],
+        "tribes": [
+          "good",
+          "fairy"
+        ]
+      }
+    ],
+    "treasures": [
+      "SBB_TREASURE_HERMES'BOOTS"
+    ],
+    "hand": [],
+    "hero": ""
+  },
+  "PLAYERTWOIDHERE": {
+    "characters": [
+      {
+        "id": "SBB_CHARACTER_MONSTAR",
+        "attack": 60,
+        "health": 60,
+        "golden": false,
+        "position": 1,
+        "cost": 3,
+        "keywords": [
+          "last breath"
+        ],
+        "tribes": [
+          "good"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_MONSTAR",
+        "attack": 60,
+        "health": 60,
+        "golden": false,
+        "position": 2,
+        "cost": 3,
+        "keywords": [
+          "last breath"
+        ],
+        "tribes": [
+          "good"
+        ]
+      }
+    ],
+    "treasures": [],
+    "hand": [],
+    "hero": ""
+  }
 }

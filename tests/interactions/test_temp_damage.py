@@ -3,10 +3,11 @@ from tests import make_character, make_player
 from sbbbattlesim.utils import Tribe
 import pytest
 
+
 def test_temp_damage():
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_BABYROOT",position=5, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=1, health=1),
             make_character(position=1, attack=5, health=5),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
@@ -22,14 +23,13 @@ def test_temp_damage():
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 3)
 
 
 def test_temp_damage2():
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_BABYROOT",position=5, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=1, health=1),
             make_character(position=1, attack=5, health=5),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
@@ -45,14 +45,13 @@ def test_temp_damage2():
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 5)
 
 
 def test_temp_damage3():
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_BABYROOT",position=5, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=1, health=1),
             make_character(position=1, attack=5, health=5),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
@@ -67,6 +66,5 @@ def test_temp_damage3():
     winner, loser = board.fight(limit=2)
     board.p1.resolve_board()
     board.p2.resolve_board()
-
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 5)

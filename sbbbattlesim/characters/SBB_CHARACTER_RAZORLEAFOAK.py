@@ -3,6 +3,15 @@ from sbbbattlesim.events import OnDamagedAndSurvived
 from sbbbattlesim.utils import Tribe, StatChangeCause
 
 
+class BrocLeeOnDamageAndSurvived(OnDamagedAndSurvived):
+    def handle(self, stack, *args, **kwargs):
+        self.manager.change_stats(
+            attack=20 if self.manager.golden else 10, temp=False,
+            reason=StatChangeCause.BROC_LEE_BUFF, source=self.manager,
+            stack=stack
+        )
+
+
 class CharacterType(Character):
     display_name = 'Broc Lee'
 
@@ -13,13 +22,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        class BrocLeeOnDamageAndSurvived(OnDamagedAndSurvived):
-            def handle(self, stack, *args, **kwargs):
-                self.manager.change_stats(
-                    attack=20 if self.manager.golden else 10, temp=False,
-                    reason=StatChangeCause.BROC_LEE_BUFF, source=self.manager,
-                    stack=stack
-                )
-
         self.register(BrocLeeOnDamageAndSurvived)

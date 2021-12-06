@@ -3,12 +3,13 @@ from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 import pytest
 
+
 def test_echowood_queenofhearts():
     player = make_player(
-        hero = "SBB_HERO_MUERTE",
+        hero="SBB_HERO_MUERTE",
         characters=[
-            make_character(id="SBB_CHARACTER_BLACKCAT",position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
-            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER",position=5, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_BLACKCAT", position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=5, attack=1, health=1),
             make_character(id="SBB_CHARACTER_QUEENOFHEARTS", position=6, attack=1, health=1),
             make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=7, attack=1, health=1, golden=True),
         ],
@@ -56,7 +57,6 @@ def test_echowood_supported_token():
 
 
 def test_bearstain_echowood():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_PROSPERO', position=5),
@@ -74,12 +74,12 @@ def test_bearstain_echowood():
 
     assert board.p1.characters[7].attack, board.p1.characters[7].health == (6, 6)
 
-def test_echowood_evil_queen():
 
+def test_echowood_evil_queen():
     player = make_player(
-        hero = "SBB_HERO_MUERTE",
+        hero="SBB_HERO_MUERTE",
         characters=[
-            make_character(id="SBB_CHARACTER_BLACKCAT",position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
+            make_character(id="SBB_CHARACTER_BLACKCAT", position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
             make_character(id="SBB_CHARACTER_QUEENOFHEARTS", position=6, attack=1, health=1),
             make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=7, attack=1, health=1),
         ],
@@ -99,10 +99,9 @@ def test_echowood_evil_queen():
 
 
 def test_echowood_pumpkin():
-
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_PUMPKINKING",position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
+            make_character(id="SBB_CHARACTER_PUMPKINKING", position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
             make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=7, attack=1, health=1),
         ],
         treasures=[
@@ -124,10 +123,9 @@ def test_echowood_pumpkin():
 
 
 def test_echowood_pumpkin_support():
-
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_PUMPKINKING",position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
+            make_character(id="SBB_CHARACTER_PUMPKINKING", position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
             make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=7, attack=1, health=1),
             make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=0, health=3)
         ],
@@ -215,6 +213,7 @@ def test_echowood_slay_lancelot(survives):
     board.p2.resolve_board()
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == ((3, 3) if survives else (1, 1))
+
 
 def test_echowood_romeo_juliet():
     player = make_player(

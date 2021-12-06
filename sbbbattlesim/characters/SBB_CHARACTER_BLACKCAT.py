@@ -5,6 +5,24 @@ from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe
 
 
+class BlackCatLastBreath(OnDeath):
+    last_breath = True
+
+    def handle(self, *args, **kwargs):
+        stat = 2 if self.manager.golden else 1
+        cat = character_registry['SBB_CHARACTER_CAT'](
+            self.manager.owner,
+            self.manager.position,
+            stat,
+            stat,
+            golden=False,
+            keywords=[],
+            tribes=['evil', 'animal'],
+            cost=1
+        )
+        self.manager.owner.summon(self.manager.position, [cat])
+
+
 class CharacterType(Character):
     display_name = 'Black Cat'
     last_breath = True
@@ -16,15 +34,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.BlackCatLastBreath)
-
-    class BlackCatLastBreath(OnDeath):
-        last_breath = True
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.priority = sbbbattlesim.SUMMONING_PRIORITY
-
-        def handle(self, *args, **kwargs):
-            stat = 2 if self.manager.golden else 1
-            cats = [character_registry['Cat'](self.manager.owner, self.manager.position, stat, stat, golden=False, keywords=[], tribes=['evil', 'animal'], cost=1)]
-            self.manager.owner.summon(self.manager.position, cats)
+        self.register(BlackCatLastBreath, priority=sbbbattlesim.SUMMONING_PRIORITY)

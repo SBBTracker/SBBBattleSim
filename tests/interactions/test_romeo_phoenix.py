@@ -6,7 +6,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_phoenix_makes_romeo_sad(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_ROMEO', position=6, attack=1, health=1, golden=golden),
@@ -34,4 +33,3 @@ def test_phoenix_makes_romeo_sad(golden):
 
     assert board.p1.characters[6] is None
     assert not juliet.dead
-

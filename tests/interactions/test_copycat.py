@@ -7,13 +7,13 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_muerte_copycat_goodboy(golden):
-
     player = make_player(
-        hero = "SBB_HERO_MUERTE",
+        hero="SBB_HERO_MUERTE",
         characters=[
-            make_character(id="SBB_CHARACTER_COPYCAT",position=2, attack=1, health=5, golden=golden),
-            make_character(id="SBB_CHARACTER_GOODBOY",position=5, attack=1, health=1, tribes=[Tribe.GOOD]),
-            make_character(id="SBB_CHARACTER_GOODBOY", position=6, attack=1, health=1, tribes=[Tribe.GOOD], golden=True),
+            make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5, golden=golden),
+            make_character(id="SBB_CHARACTER_GOODBOY", position=5, attack=1, health=1, tribes=[Tribe.GOOD]),
+            make_character(id="SBB_CHARACTER_GOODBOY", position=6, attack=1, health=1, tribes=[Tribe.GOOD],
+                           golden=True),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
@@ -33,14 +33,15 @@ def test_muerte_copycat_goodboy(golden):
 
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats
 
+
 @pytest.mark.parametrize('golden', (True, False))
 def test_muerte_single_goodboy(golden):
-
     player = make_player(
-        hero = "SBB_HERO_MUERTE",
+        hero="SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5, golden=golden),
-            make_character(id="SBB_CHARACTER_GOODBOY", position=5, attack=1, health=1, tribes=[Tribe.GOOD], golden=True),
+            make_character(id="SBB_CHARACTER_GOODBOY", position=5, attack=1, health=1, tribes=[Tribe.GOOD],
+                           golden=True),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
@@ -66,10 +67,10 @@ def test_muerte_single_goodboy(golden):
 def test_copycat_queenofhearts():
     '''Copycat should not trigger queenofhearts ondeath buff'''
     player = make_player(
-        hero = "SBB_HERO_MUERTE",
+        hero="SBB_HERO_MUERTE",
         characters=[
-            make_character(id="SBB_CHARACTER_COPYCAT",position=2, attack=1, health=5),
-            make_character(id="SBB_CHARACTER_GOODBOY",position=5, attack=1, health=1, tribes=[Tribe.EVIL]),
+            make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5),
+            make_character(id="SBB_CHARACTER_GOODBOY", position=5, attack=1, health=1, tribes=[Tribe.EVIL]),
             make_character(id="SBB_CHARACTER_QUEENOFHEARTS", position=7, attack=1, health=1, golden=True),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
@@ -84,5 +85,6 @@ def test_copycat_queenofhearts():
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert len([evt for evt in board.p1.characters[5].get('OnDeath') if evt.__class__.__name__ == 'EvilQueenOnDeath']) == 1
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1,1)
+    assert len(
+        [evt for evt in board.p1.characters[5].get('OnDeath') if evt.__class__.__name__ == 'EvilQueenOnDeath']) == 1
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 1)

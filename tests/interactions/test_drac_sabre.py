@@ -32,6 +32,7 @@ def test_simple_drac_sabre(mimic):
 
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats
 
+
 @pytest.mark.parametrize('direction', (True, False))
 def test_proc_order_drac_sabre(direction):
     player = make_player(
@@ -57,5 +58,3 @@ def test_proc_order_drac_sabre(direction):
     board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (4, 1)
-
-

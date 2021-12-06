@@ -1,89 +1,89 @@
 {
-	"PLAYERONEIDHERE": {
-		"characters": [
-			{
-				"id": "SBB_CHARACTER_RIVERWISHMERMAID",
-				"attack": 1,
-				"health": 1,
-				"golden": false,
-				"position": 6,
-				"cost": 4,
-				"keywords": [
-                  "support"
-				],
-				"tribes": [
-					"good",
-					"fairy"
-				]
-			},
-            {
-				"id": "SBB_CHARACTER_SHADOWASSASSIN",
-				"attack": 5,
-				"health": 5,
-				"golden": false,
-				"position": 2,
-				"cost": 3,
-				"keywords": [
-                  "ranged"
-				],
-				"tribes": [
-					"good",
-					"fairy"
-				]
-			},
-          {
-				"id": "SBB_CHARACTER_SHADOWASSASSIN",
-				"attack": 5,
-				"health": 5,
-				"golden": true,
-				"position": 3,
-				"cost": 3,
-				"keywords": [
-                  "ranged"
-				],
-				"tribes": [
-					"good",
-					"fairy"
-				]
-			}
-		],
-		"treasures": [],
-		"hand": [],
-		"hero": ""
-	},
-	"PLAYERTWOIDHERE": {
-		"characters": [
-			{
-				"id": "SBB_CHARACTER_PRINCESSPEEP",
-				"attack": 1,
-				"health": 1,
-				"golden": false,
-				"position": 1,
-				"cost": 3,
-				"keywords": [
-					"last breath"
-				],
-				"tribes": [
-					"good"
-				]
-			},
-          {
-				"id": "SBB_CHARACTER_PRINCESSPEEP",
-				"attack": 1,
-				"health": 1,
-				"golden": false,
-				"position": 2,
-				"cost": 3,
-				"keywords": [
-					"last breath"
-				],
-				"tribes": [
-					"good"
-				]
-			}
+  "PLAYERONEIDHERE": {
+    "characters": [
+      {
+        "id": "SBB_CHARACTER_RIVERWISHMERMAID",
+        "attack": 1,
+        "health": 1,
+        "golden": false,
+        "position": 6,
+        "cost": 4,
+        "keywords": [
+          "support"
         ],
-		"treasures": [],
-		"hand": [],
-		"hero": ""
-	}
+        "tribes": [
+          "good",
+          "fairy"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_SHADOWASSASSIN",
+        "attack": 5,
+        "health": 5,
+        "golden": false,
+        "position": 2,
+        "cost": 3,
+        "keywords": [
+          "ranged"
+        ],
+        "tribes": [
+          "good",
+          "fairy"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_SHADOWASSASSIN",
+        "attack": 5,
+        "health": 5,
+        "golden": true,
+        "position": 3,
+        "cost": 3,
+        "keywords": [
+          "ranged"
+        ],
+        "tribes": [
+          "good",
+          "fairy"
+        ]
+      }
+    ],
+    "treasures": [],
+    "hand": [],
+    "hero": ""
+  },
+  "PLAYERTWOIDHERE": {
+    "characters": [
+      {
+        "id": "SBB_CHARACTER_PRINCESSPEEP",
+        "attack": 1,
+        "health": 1,
+        "golden": false,
+        "position": 1,
+        "cost": 3,
+        "keywords": [
+          "last breath"
+        ],
+        "tribes": [
+          "good"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_PRINCESSPEEP",
+        "attack": 1,
+        "health": 1,
+        "golden": false,
+        "position": 2,
+        "cost": 3,
+        "keywords": [
+          "last breath"
+        ],
+        "tribes": [
+          "good"
+        ]
+      }
+    ],
+    "treasures": [],
+    "hand": [],
+    "hero": ""
+  }
 }

@@ -4,6 +4,23 @@ from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe
 
 
+class BabyBearOnDeath(OnDeath):
+    last_breath = True
+
+    def handle(self, *args, **kwargs):
+        stat = 4 if self.manager.golden else 2
+        papa_bear = character_registry['SBB_CHARACTER_PAPABEAR'](
+            owner=self.manager.owner,
+            position=self.manager.position,
+            health=stat,
+            attack=stat,
+            golden=self.manager.golden,
+            tribes=[Tribe.GOOD, Tribe.ANIMAL],
+            cost=1
+        )
+        self.manager.owner.summon(self.manager.position, [papa_bear])
+
+
 class CharacterType(Character):
     display_name = 'Baby Bear'
     last_breath = True
@@ -15,46 +32,8 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.BabyBearOnDeath)
-
-    class BabyBearOnDeath(OnDeath):
-        last_breath = True
-
-        def handle(self, *args, **kwargs):
-            stat = 4 if self.manager.golden else 2
-            papa_bear = PapaBear(
-                owner=self.manager.owner,
-                position=self.manager.position,
-                health=stat,
-                attack=stat,
-                golden=self.manager.golden,
-                tribes=[Tribe.GOOD, Tribe.ANIMAL],
-                cost=1
-            )
-            self.manager.owner.summon(self.manager.position, [papa_bear])
+        self.register(BabyBearOnDeath)
 
 
-# Instantiate Papa Bear
-class PapaBear(Character):
-    display_name = 'Papa Bear'
-    last_breath = True
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.register(self.PapaBearOnDeath)
 
-    class PapaBearOnDeath(OnDeath):
-        last_breath = True
-
-        def handle(self, *args, **kwargs):
-            stat = 8 if self.manager.golden else 4
-            mama = character_registry['Mama Bear'](
-                owner=self.manager.owner,
-                position=self.manager.position,
-                attack=stat,
-                health=stat,
-                golden=False,
-                tribes=['good', 'animal'],
-                cost=1
-            )
-            self.manager.owner.summon(self.manager.position, [mama])

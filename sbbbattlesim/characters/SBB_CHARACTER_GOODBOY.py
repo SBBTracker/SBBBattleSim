@@ -7,6 +7,20 @@ from sbbbattlesim.utils import StatChangeCause, Tribe
 logger = logging.getLogger(__name__)
 
 
+class GoodBoyDeath(OnDeath):
+    last_breath = True
+
+    def handle(self, stack, *args, **kwargs):
+        golden_multiplyer = 2 if self.manager.golden else 1
+        attack_buff = self.manager.attack * golden_multiplyer
+        health_buff = (self.manager._base_health + self.manager._temp_health) * golden_multiplyer
+
+        for char in self.manager.owner.valid_characters():
+            if Tribe.GOOD in char.tribes:
+                char.change_stats(attack=attack_buff, health=health_buff, temp=False,
+                                  reason=StatChangeCause.GOODBOY_BUFF, source=self.manager, stack=stack)
+
+
 class CharacterType(Character):
     display_name = 'Good Boy'
     last_breath = True
@@ -18,16 +32,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.GoodBoyDeath)
-
-    class GoodBoyDeath(OnDeath):
-        last_breath = True
-        def handle(self, stack, *args, **kwargs):
-            golden_multiplyer = 2 if self.manager.golden else 1
-            attack_buff = self.manager.attack * golden_multiplyer
-            health_buff = (self.manager._base_health + self.manager._temp_health) * golden_multiplyer
-
-            for char in self.manager.owner.valid_characters():
-                if Tribe.GOOD in char.tribes:
-                    char.change_stats(attack=attack_buff, health=health_buff, temp=False,
-                                      reason=StatChangeCause.GOODBOY_BUFF, source=self.manager, stack=stack)
+        self.register(GoodBoyDeath)

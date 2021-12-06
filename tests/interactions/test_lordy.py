@@ -11,7 +11,7 @@ def test_lordy(has_wight, golden):
     player = make_player(
         characters=[
             make_character(
-                id="SBB_CHARACTER_FORGEMASTERDWARF",position=1, attack=1, health=1, tribes=[Tribe.DWARF], golden=golden
+                id="SBB_CHARACTER_FORGEMASTERDWARF", position=1, attack=1, health=1, tribes=[Tribe.DWARF], golden=golden
             ),
             make_character(position=6, attack=1, health=1, tribes=[Tribe.DWARF]),
             make_character(position=5, attack=1, health=1),

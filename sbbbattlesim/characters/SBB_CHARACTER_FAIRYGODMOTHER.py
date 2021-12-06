@@ -6,6 +6,19 @@ from sbbbattlesim.utils import Tribe, StatChangeCause
 
 logger = logging.getLogger(__name__)
 
+
+class FairyGodmotherOnDeath(OnDeath):
+    last_breath = False
+
+    def handle(self, stack, *args, **kwargs):
+        stat_change = 4 if self.fairy_godmother.golden else 2
+        for char in self.manager.owner.valid_characters():
+            if Tribe.GOOD in char.tribes:
+                char.change_stats(health=stat_change, temp=False,
+                                  reason=StatChangeCause.FAIRY_GODMOTHER_BUFF, source=self.manager,
+                                  stack=stack)
+
+
 class CharacterType(Character):
     display_name = 'Fairy Godmother'
     aura = True
@@ -18,17 +31,4 @@ class CharacterType(Character):
     def buff(self, target_character, *args, **kwargs):
         # Give animals minions the buff
         if Tribe.GOOD in target_character.tribes:  # Distinctly Fairy Godmother works on self
-
-            class FairyGodmotherOnDeath(OnDeath):
-                fairy_godmother = self
-                last_breath = False
-
-                def handle(self, stack, *args, **kwargs):
-                    stat_change = 4 if self.fairy_godmother.golden else 2
-                    for char in self.manager.owner.valid_characters():
-                        if Tribe.GOOD in char.tribes:
-                            char.change_stats(health=stat_change, temp=False,
-                                              reason=StatChangeCause.FAIRY_GODMOTHER_BUFF, source=self.manager,
-                                              stack=stack)
-
-            target_character.register(FairyGodmotherOnDeath, temp=True)
+            target_character.register(FairyGodmotherOnDeath, temp=True, fairy_godmother=self)

@@ -22,7 +22,7 @@ if __name__ == '__main__':
         if job == log_parser.JOB_BOARDINFO:
 
             try:
-                simulation = asyncio.run(simulate(state, t=4, k=250, timeout=30))
+                simulation = simulate(state, t=4, k=250, timeout=30)
             except SBBBSCrocException:
                 exit()
 
@@ -30,7 +30,8 @@ if __name__ == '__main__':
 
             logger.error(f'RESULT KEYS {simulation.results.keys()}')
 
-            logger.error(f'Simulation Results ({simulation.run_time} - {sum(len(v) for v in simulation.results.values())})')
+            logger.error(
+                f'Simulation Results ({simulation.run_time} - {sum(len(v) for v in simulation.results.values())})')
             logger.error(f'{simulation.starting_board.p1}')
             logger.error(f'{simulation.starting_board.p2}')
 

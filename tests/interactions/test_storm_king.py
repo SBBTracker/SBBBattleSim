@@ -5,6 +5,7 @@ from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived
 from tests import make_character, make_player
 
+
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('raw', (True, False))
 def test_stormking_spawn(r, raw):
@@ -30,6 +31,7 @@ def test_stormking_spawn(r, raw):
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (1, 1)
 
+
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('raw', (True, False))
@@ -43,7 +45,7 @@ def test_stormking_spawn_with_spell(r, golden, raw):
         spells=[
             'SBB_SPELL_FIREBALL'
         ],
-        treasures = [
+        treasures=[
             'SBB_TREASURE_MIRRORUNIVERSE'
         ],
     )
@@ -59,6 +61,7 @@ def test_stormking_spawn_with_spell(r, golden, raw):
     board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (3, 3)
+
 
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('golden', (True, False))
@@ -82,6 +85,7 @@ def test_stormking_cast_spell(r, golden, raw):
     board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == ((8, 8) if golden else (4, 4))
+
 
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('golden', (True, False))
@@ -111,6 +115,7 @@ def test_many_stormking_cast_spell(r, golden, raw):
     for pos in [1, 2, 3, 4]:
         assert (board.p1.characters[pos].attack, board.p1.characters[pos].health) == ((8, 8) if golden else (4, 4))
 
+
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('raw', (True, False))
 def test_storm_king_spawn_high_health(r, raw):
@@ -135,6 +140,7 @@ def test_storm_king_spawn_high_health(r, raw):
     board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (7, 7)
+
 
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('raw', (True, False))
@@ -217,6 +223,7 @@ def test_stormking_spawn_with_large_golden(r, raw):
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (25, 25)
 
+
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('raw', (True, False))
 def test_stormking_spawn_with_large_and_echowood(r, raw):
@@ -247,11 +254,11 @@ def test_stormking_spawn_with_large_and_echowood(r, raw):
     assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (50, 50)
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (49, 49)
 
+
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('raw', (True, False))
 def test_stormking_spawn(golden, r, raw):
-
     player = make_player(
         raw=raw,
         characters=[
@@ -267,12 +274,12 @@ def test_stormking_spawn(golden, r, raw):
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
         def handle(self, *args, **kwargs):
-                summon = character_registry["SBB_CHARACTER_THEGREATANDPOWERFUL"].new(
-                    owner=self.manager.owner,
-                    position=self.manager.position,
-                    golden=golden
-                )
-                self.manager.owner.summon(self.manager.position, [summon])
+            summon = character_registry["SBB_CHARACTER_THEGREATANDPOWERFUL"].new(
+                owner=self.manager.owner,
+                position=self.manager.position,
+                golden=golden
+            )
+            self.manager.owner.summon(self.manager.position, [summon])
 
     board.p1.characters[7].register(FakeTrojanDonkeySummon)
 

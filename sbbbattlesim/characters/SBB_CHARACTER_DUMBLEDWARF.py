@@ -5,7 +5,8 @@ from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
-#aka doubly
+
+# aka doubly
 class CharacterType(Character):
     display_name = 'Dubly'
 

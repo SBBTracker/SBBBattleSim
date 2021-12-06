@@ -12,7 +12,7 @@ def test_crafty_raw(num_treasures, golden):
     treasures = ['''SBB_TREASURE_HERMES'BOOTS''', '''SBB_TREASURE_BADMOON''', '''SBB_TREASURE_BOOKOFHEROES''']
     treasures = treasures[:num_treasures]
 
-    fs = 1 + len(treasures)*(6 if golden else 3)
+    fs = 1 + len(treasures) * (6 if golden else 3)
     player = make_player(
         raw=True,
         characters=[
@@ -28,6 +28,7 @@ def test_crafty_raw(num_treasures, golden):
     board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (fs, fs)
+
 
 @pytest.mark.parametrize('num_treasures', (0, 1, 2, 3))
 @pytest.mark.parametrize('golden', (True, False))
@@ -50,12 +51,12 @@ def test_crafty_spawn(num_treasures, golden):
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
         def handle(self, *args, **kwargs):
-                summon = character_registry["SBB_CHARACTER_DWARVENARTIFICER"].new(
-                    owner=self.manager.owner,
-                    position=self.manager.position,
-                    golden=golden
-                )
-                self.manager.owner.summon(self.manager.position, [summon])
+            summon = character_registry["SBB_CHARACTER_DWARVENARTIFICER"].new(
+                owner=self.manager.owner,
+                position=self.manager.position,
+                golden=golden
+            )
+            self.manager.owner.summon(self.manager.position, [summon])
 
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
@@ -63,7 +64,5 @@ def test_crafty_spawn(num_treasures, golden):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    fs = 1 + len(treasures)*(6 if golden else 3)
+    fs = 1 + len(treasures) * (6 if golden else 3)
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (fs, fs)
-
-

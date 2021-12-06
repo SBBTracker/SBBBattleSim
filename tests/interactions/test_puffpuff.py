@@ -5,6 +5,7 @@ from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived
 from tests import make_character, make_player
 
+
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('raw', (True, False))
 def test_puffpuff_spawn(r, raw):
@@ -30,6 +31,7 @@ def test_puffpuff_spawn(r, raw):
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (2, 2)
 
+
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('raw', (True, False))
 def test_puffpuff_spawn_high_health(r, raw):
@@ -54,6 +56,7 @@ def test_puffpuff_spawn_high_health(r, raw):
     board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (2, 2)
+
 
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('raw', (True, False))
@@ -136,6 +139,7 @@ def test_puffpuff_spawn_with_large_golden(r, raw):
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (20, 20)
 
+
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('raw', (True, False))
 def test_puffpuff_spawn_with_large_and_echowood(r, raw):
@@ -171,7 +175,6 @@ def test_puffpuff_spawn_with_large_and_echowood(r, raw):
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('raw', (True, False))
 def test_puff_spawn(golden, r, raw):
-
     player = make_player(
         raw=raw,
         characters=[
@@ -187,12 +190,12 @@ def test_puff_spawn(golden, r, raw):
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
         def handle(self, *args, **kwargs):
-                summon = character_registry["SBB_CHARACTER_PUFFPUFF"].new(
-                    owner=self.manager.owner,
-                    position=self.manager.position,
-                    golden=golden
-                )
-                self.manager.owner.summon(self.manager.position, [summon])
+            summon = character_registry["SBB_CHARACTER_PUFFPUFF"].new(
+                owner=self.manager.owner,
+                position=self.manager.position,
+                golden=golden
+            )
+            self.manager.owner.summon(self.manager.position, [summon])
 
     board.p1.characters[7].register(FakeTrojanDonkeySummon)
 

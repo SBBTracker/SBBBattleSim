@@ -8,7 +8,6 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('limit', (0, 1, 2))
 def test_oni(golden, limit):
-
     player = make_player(
         characters=[
             make_character(
@@ -46,4 +45,3 @@ def test_oni(golden, limit):
         assert board.p1.characters[6].attack, board.p1.characters[6].health == final_stats
     else:
         assert board.p1.characters[6].attack, board.p1.characters[6].health == (1, 1)
-

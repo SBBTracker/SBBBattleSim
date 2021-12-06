@@ -10,7 +10,7 @@ def test_angry(golden):
     player = make_player(
         characters=[
             make_character(
-                id="SBB_CHARACTER_DWARFMINER",position=1, attack=1, health=2,
+                id="SBB_CHARACTER_DWARFMINER", position=1, attack=1, health=2,
                 golden=golden, tribes=[Tribe.DWARF]
             ),
             make_character(position=6, attack=1, health=1, tribes=[Tribe.DWARF]),
@@ -18,10 +18,10 @@ def test_angry(golden):
     )
     enemy = make_player(
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''],
-        characters = [
+        characters=[
             make_character(position=1, attack=1, health=1),
             make_character(position=2, attack=3, health=3),
-         ],
+        ],
 
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})

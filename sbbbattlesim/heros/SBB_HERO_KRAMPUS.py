@@ -8,4 +8,5 @@ class HeroType(Hero):
 
     def buff(self, target_character, *args, **kwargs):
         if Tribe.EVIL in target_character.tribes:
-            target_character.change_stats(attack=1, health=1, reason=StatChangeCause.KRAMPUS_BUFF, source=self, *args, **kwargs)
+            target_character.change_stats(attack=1, health=1, reason=StatChangeCause.KRAMPUS_BUFF, source=self, *args,
+                                          **kwargs)

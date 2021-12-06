@@ -1,4 +1,3 @@
-
 import pytest
 
 from sbbbattlesim import Board
@@ -7,7 +6,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_riverwish(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=5, attack=1, health=1, golden=golden),
@@ -30,7 +28,6 @@ def test_riverwish(golden):
 
 
 def test_riverwish_cloakoftheassassin():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=5, attack=1, health=1),

@@ -7,6 +7,22 @@ from sbbbattlesim.utils import StatChangeCause
 logger = logging.getLogger(__name__)
 
 
+class CoinOfCharonOnDeath(OnDeath):
+    last_breath = False
+
+    def handle(self, stack, *args, **kwargs):
+        # This should only proc once per combat
+        if self.coin.coin_trigger:
+            return  # This has already procced
+        self.coin.coin_trigger = True
+
+        self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin,
+                                  stack=stack)
+        if self.coin.mimic:
+            self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin,
+                                      stack=stack)
+
+
 class TreasureType(Treasure):
     name = 'Coin of Charon'
     aura = True
@@ -18,19 +34,4 @@ class TreasureType(Treasure):
         self.coin_trigger = False
 
     def buff(self, target_character, *args, **kwargs):
-        class CoinOfCharonOnDeath(OnDeath):
-            priority = 400
-            last_breath = False
-            coin = self
-
-            def handle(self, stack, *args, **kwargs):
-                # This should only proc once per combat
-                if self.coin.coin_trigger:
-                    return  # This has already procced
-                self.coin.coin_trigger = True
-
-                self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin, stack=stack)
-                if self.coin.mimic:
-                    self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin, stack=stack)
-
-        target_character.register(CoinOfCharonOnDeath)
+        target_character.register(CoinOfCharonOnDeath, priority=400, coin=self)

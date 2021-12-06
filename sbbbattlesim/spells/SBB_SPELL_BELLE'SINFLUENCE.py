@@ -7,7 +7,8 @@ class SpellType(TargetedSpell):
     _level = 3
 
     def cast(self, target, *args, **kwargs):
-        target.change_stats(health=4, attack=0, temp=False, reason=StatChangeCause.BEAUTYS_INFLUENCE, source=self, *args, **kwargs)
+        target.change_stats(health=4, attack=0, temp=False, reason=StatChangeCause.BEAUTYS_INFLUENCE, source=self,
+                            *args, **kwargs)
 
         target.tribes.remove(Tribe.EVIL)
         target.tribes.add(Tribe.GOOD)

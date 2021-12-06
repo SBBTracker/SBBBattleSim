@@ -20,4 +20,3 @@ def test_soltak():
 
     assert board.p1.characters[5] is not None
     assert board.p2.characters[1] is None
-

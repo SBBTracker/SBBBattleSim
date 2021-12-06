@@ -7,7 +7,6 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('limit', (1, 2))
 def test_babybear_dying(golden, limit):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_BABYBEAR', position=6,
@@ -23,6 +22,6 @@ def test_babybear_dying(golden, limit):
     board.p2.resolve_board()
 
     if limit == 1:
-        assert board.p1.characters[6].__class__.__name__ == 'PapaBear'
+        assert board.p1.characters[6].id == 'SBB_CHARACTER_PAPABEAR'
     if limit == 2:
-        assert board.p1.characters[6].display_name == 'Mama Bear'
+        assert board.p1.characters[6].id == 'SBB_CHARACTER_MAMABEAR'

@@ -11,7 +11,8 @@ def test_valid_character(char):
     char = character_registry[char.id]
     assert char.valid()
     assert char.display_name
-    assert next(character_registry.filter(_lambda=lambda char_cls: char_cls.id != char.id and char_cls.display_name == char.display_name), True)
+    assert next(character_registry.filter(
+        _lambda=lambda char_cls: char_cls.id != char.id and char_cls.display_name == char.display_name), True)
 
 
 @pytest.mark.parametrize('attack', (True, False))
@@ -40,6 +41,7 @@ SUPPORT_EXCLUSION = (
     'SBB_CHARACTER_BABAYAGA'
 )
 
+
 # TODO write tests that iterate over SUPPORT_EXCLUSION for sanitys sake
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -67,16 +69,21 @@ def test_support(char, golden, horn):
 
     assert board.p1.characters[1].stat_history[0].reason == StatChangeCause.SUPPORT_BUFF
 
+
 class FakePlayer:
     class FakeBoard:
         def register(self, *args, **kwargs):
             pass
+
     board = FakeBoard()
+
     def register(self, *args, **kwargs):
         pass
 
+
 @pytest.mark.parametrize('golden', (True, False))
-@pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: any([e.slay for e in char(FakePlayer(), 0, 0, 0, False, set(), 0).get('OnAttackAndKill')])))
+@pytest.mark.parametrize('char', character_registry.filter(
+    _lambda=lambda char: any([e.slay for e in char(FakePlayer(), 0, 0, 0, False, set(), 0).get('OnAttackAndKill')])))
 def test_slay(char, golden):
     '''Triggers a slay, checks success by measuring against a shadow assassin. Liable to fail in the future... '''
 
@@ -220,4 +227,3 @@ def test_doombreath():
 
     for i in (2, 5, 6):
         assert player.characters[i] is None
-

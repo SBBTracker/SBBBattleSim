@@ -3,6 +3,13 @@ from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.utils import Tribe
 
 
+class BravePrincessSlay(OnAttackAndKill):
+    slay = True
+
+    def handle(self, killed_character, *args, **kwargs):
+        pass
+
+
 class CharacterType(Character):
     display_name = 'Brave Princess'
     quest = True
@@ -14,9 +21,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.BravePrincessSlay)
-
-    class BravePrincessSlay(OnAttackAndKill):
-        slay = True
-        def handle(self, killed_character, *args, **kwargs):
-            pass
+        self.register(BravePrincessSlay)

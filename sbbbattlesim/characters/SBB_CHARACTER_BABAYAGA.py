@@ -6,6 +6,7 @@ from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
+
 class CharacterType(Character):
     display_name = 'Baba Yaga'
     support = True

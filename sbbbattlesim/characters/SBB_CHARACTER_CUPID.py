@@ -7,6 +7,30 @@ from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
+
+class CupidOnPostDefend(OnPostDefend):
+    def __init__(self, *_args, **_kwargs):
+        super().__init__(*_args, **_kwargs)
+        self.used = False
+
+    def handle(self, *_args, **_kwargs):
+        if not self.used:
+            if not self.manager.dead:
+                attack(
+                    attack_position=self.manager.position,
+                    attacker=self.manager.owner,
+                    defender=self.manager.owner
+                )
+                self.used = True
+
+
+class CupidOnPreAttack(OnPreAttack):
+    def handle(self, attack_position, defend_position, defend_player, *args, **kwargs):
+        defend_character = defend_player.characters.get(defend_position)
+        if defend_character is not None:
+            defend_character.register(CupidOnPostDefend)
+
+
 class CharacterType(Character):
     display_name = 'Cupid'
 
@@ -20,28 +44,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.CupidOnPreAttack)
-
-    class CupidOnPreAttack(OnPreAttack):
-
-        def handle(self, attack_position, defend_position, defend_player, *args, **kwargs):
-
-            class CupidOnPostDefend(OnPostDefend):
-                def __init__(self, *_args, **_kwargs):
-                    super().__init__(*_args, **_kwargs)
-                    self.used = False
-
-                def handle(self, *_args, **_kwargs):
-
-                    if not self.used:
-                        if not self.manager.dead:
-                            attack(
-                                attack_position=self.manager.position,
-                                attacker=self.manager.owner,
-                                defender=self.manager.owner
-                            )
-                            self.used = True
-
-            defend_character = defend_player.characters.get(defend_position)
-            if defend_character is not None:
-                defend_character.register(CupidOnPostDefend)
+        self.register(CupidOnPreAttack)

@@ -6,7 +6,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_peep_dying(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_PRINCESSPEEP', position=1, golden=golden),
@@ -24,4 +23,3 @@ def test_peep_dying(golden):
     for i in [1, 2, 3]:
         assert board.p1.characters[i].display_name == 'Sheep'
         assert board.p1.characters[i].attack, board.p2.characters[i].health == final_stats
-

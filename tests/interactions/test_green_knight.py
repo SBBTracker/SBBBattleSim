@@ -8,7 +8,7 @@ from tests import make_character, make_player
 def test_green_knight(golden):
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_THEGREENKNIGHT",position=5, attack=1, health=1, golden=golden),
+            make_character(id="SBB_CHARACTER_THEGREENKNIGHT", position=5, attack=1, health=1, golden=golden),
             make_character(position=1, attack=1, health=1),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']

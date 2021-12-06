@@ -6,6 +6,22 @@ from sbbbattlesim.utils import Tribe, StatChangeCause
 
 logger = logging.getLogger(__name__)
 
+
+class HungryHungryHippocampusOnSummon(OnSummon):
+    def handle(self, summoned_characters, stack, *args, **kwargs):
+        num_animals = len(list(filter(lambda char: Tribe.ANIMAL in char.tribes, summoned_characters)))
+        modifier = 4 if self.hippo.golden else 2
+
+        if self.hippo in self.manager.characters.values():
+            self.hippo.change_stats(
+                health=num_animals * modifier,
+                temp=False,
+                source=self.hippo,
+                reason=StatChangeCause.HUNGRYHUNGRYHIPPOCAMPUS_BUFF,
+                stack=stack
+            )
+
+
 class CharacterType(Character):
     display_name = 'Hungry Hungry Hippocampus'
 
@@ -17,21 +33,5 @@ class CharacterType(Character):
     _tribes = {Tribe.GOOD, Tribe.ANIMAL}
 
     def buff(self, target_character, *args, **kwargs):
-        class HungryHungryHippocampusOnSummon(OnSummon):
-            hungry_hungry_hippocampus = self
-
-            def handle(self, summoned_characters, stack, *args, **kwargs):
-                num_animals = len(list(filter(lambda char: Tribe.ANIMAL in char.tribes, summoned_characters)))
-                modifier = 4 if self.hungry_hungry_hippocampus.golden else 2
-
-                if self.hungry_hungry_hippocampus in self.manager.characters.values():
-                    self.hungry_hungry_hippocampus.change_stats(
-                        health=num_animals*modifier,
-                        temp=False,
-                        source=self.hungry_hungry_hippocampus,
-                        reason=StatChangeCause.HUNGRYHUNGRYHIPPOCAMPUS_BUFF,
-                        stack=stack
-                    )
-
         if target_character is self:
-            self.owner.register(HungryHungryHippocampusOnSummon, temp=True)
+            self.owner.register(HungryHungryHippocampusOnSummon, temp=True, hippo=self)

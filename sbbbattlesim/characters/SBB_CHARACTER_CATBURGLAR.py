@@ -3,6 +3,13 @@ from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.utils import Tribe
 
 
+class KittyCutpurseSlay(OnAttackAndKill):
+    slay = True
+
+    def handle(self, killed_character, *args, **kwargs):
+        pass
+
+
 class CharacterType(Character):
     display_name = 'Kitty Cutpurse'
 
@@ -13,9 +20,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.KittyCutpurseSlay)
-
-    class KittyCutpurseSlay(OnAttackAndKill):
-        slay = True
-        def handle(self, killed_character, *args, **kwargs):
-            pass
+        self.register(KittyCutpurseSlay)

@@ -9,7 +9,8 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('spell', spell_registry.keys())
 def test_spell(spell):
     player = make_player(
-        characters=[make_character(id='GENERIC', attack=1, position=1, keywords=[kw.value for kw in Keyword], tribes=[tribe.value for tribe in Tribe])],
+        characters=[make_character(id='GENERIC', attack=1, position=1, keywords=[kw.value for kw in Keyword],
+                                   tribes=[tribe.value for tribe in Tribe])],
         spells=[spell]
     )
     enemy = make_player(
@@ -31,7 +32,7 @@ def test_falling_stars():
             make_character(position=7),
 
         ],
-        spells=['''SBB_SPELL_FALLINGSTARS''',]
+        spells=['''SBB_SPELL_FALLINGSTARS''', ]
     )
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -44,6 +45,7 @@ def test_falling_stars():
         assert char.stat_history[0].reason == StatChangeCause.FALLING_STARS
 
     assert len(board.p1.graveyard) == 7
+
 
 @pytest.mark.parametrize('repeat', range(30))
 def test_lightning_bolt(repeat):
@@ -96,6 +98,7 @@ def test_fire_ball():
         char = board.p2.characters[pos]
         assert char is not None
         assert char._damage == 0
+
 
 def test_fire_ball_backline():
     player = make_player(
@@ -157,6 +160,7 @@ def test_shrivel_speed(survives):
     else:
         assert char is None
 
+
 @pytest.mark.parametrize('survives', (True, False))
 def test_shrivel_speed2(survives):
     player = make_player(
@@ -164,7 +168,8 @@ def test_shrivel_speed2(survives):
     )
     enemy = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_KINGARTHUR", attack=0, health=(13 if survives else 11), golden=True, tribes=[Tribe.PRINCE]),
+            make_character(id="SBB_CHARACTER_KINGARTHUR", attack=0, health=(13 if survives else 11), golden=True,
+                           tribes=[Tribe.PRINCE]),
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -221,8 +226,8 @@ def test_multiple_spells():
     board.p2.resolve_board()
 
     assert frontchar.stat_history[0].reason == StatChangeCause.FIREBALL
-    assert set([statchange.reason for statchange in backchar.stat_history]) == {StatChangeCause.FIREBALL, StatChangeCause.LIGHTNING_BOLT}
-
+    assert set([statchange.reason for statchange in backchar.stat_history]) == {StatChangeCause.FIREBALL,
+                                                                                StatChangeCause.LIGHTNING_BOLT}
 
 
 def test_earthquake():
@@ -255,7 +260,7 @@ def test_earthquake_peeps():
     enemy = make_player(
         characters=[
             make_character(position=1, health=1),
-            make_character(id="SBB_CHARACTER_PRINCESSPEEP", position=2,),
+            make_character(id="SBB_CHARACTER_PRINCESSPEEP", position=2, ),
             make_character(position=3, health=5),
             make_character(position=4, health=5),
             make_character(position=5, health=5),
@@ -269,7 +274,7 @@ def test_earthquake_peeps():
 
     for pos in [1, 2]:
         char = board.p2.characters[pos]
-        assert char.id == "Sheep"
+        assert char.id == "SBB_CHARACTER_SHEEP"
 
 
 def test_poison_apple():
@@ -288,6 +293,7 @@ def test_poison_apple():
     assert char
     assert char.stat_history[0].reason == StatChangeCause.POISON_APPLE
     assert char.health == 1
+
 
 def test_disintegrate():
     player = make_player(
@@ -339,7 +345,7 @@ def test_cats_call():
     for i in range(1, 5):
         char = board.p1.characters[i]
         assert char
-        assert char.id == 'Cat'
+        assert char.id == 'SBB_CHARACTER_CAT'
 
 
 def test_toil_and_trouble():

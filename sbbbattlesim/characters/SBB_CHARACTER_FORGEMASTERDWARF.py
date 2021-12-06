@@ -6,6 +6,18 @@ from sbbbattlesim.utils import StatChangeCause, Tribe
 
 logger = logging.getLogger(__name__)
 
+
+class LordyBuffOnStart(OnStart):
+    def handle(self, stack, *args, **kwargs):
+        dwarfes = self.lordy.owner.valid_characters(
+            _lambda=lambda char: Tribe.DWARF in char.tribes or char.id == 'SBB_CHARACTER_PRINCESSNIGHT'
+        )
+        stat_change = len(dwarfes) * (4 if self.lordy.golden else 2)
+        for dwarf in dwarfes:
+            dwarf.change_stats(attack=stat_change, health=stat_change, temp=False,
+                               reason=StatChangeCause.LORDY_BUFF, source=self.lordy, stack=stack)
+
+
 class CharacterType(Character):
     display_name = 'Lordy'
 
@@ -16,18 +28,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        class LordyBuffOnStart(OnStart):
-            priority=90
-            lordy = self
-
-            def handle(self, stack, *args, **kwargs):
-                dwarfes = self.lordy.owner.valid_characters(
-                    _lambda=lambda char: Tribe.DWARF in char.tribes or char.id == 'SBB_CHARACTER_PRINCESSNIGHT'
-                )
-                stat_change = len(dwarfes) * (4 if self.lordy.golden else 2)
-                for dwarf in dwarfes:
-                    dwarf.change_stats(attack=stat_change, health=stat_change, temp=False,
-                                       reason=StatChangeCause.LORDY_BUFF, source=self.lordy, stack=stack)
-
-        self.owner.board.register(LordyBuffOnStart)
+        self.owner.board.register(LordyBuffOnStart, priority=90, lordy=self)

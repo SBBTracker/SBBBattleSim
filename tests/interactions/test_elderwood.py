@@ -9,7 +9,7 @@ from tests import make_character, make_player
 def test_elderwood(golden):
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_ELDERTREANT",position=5, attack=1, health=1, golden=golden),
+            make_character(id="SBB_CHARACTER_ELDERTREANT", position=5, attack=1, health=1, golden=golden),
             make_character(position=1, attack=1, health=1, tribes=[Tribe.TREANT]),
             make_character(position=2, attack=1, health=1)
         ],

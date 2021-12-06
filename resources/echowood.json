@@ -1,138 +1,138 @@
 {
-	"PLAYERONEIDHERE": {
-		"characters": [
-			{
-				"id": "SBB_CHARACTER_ECHOWOODSHAMBLER",
-				"attack": 5,
-				"health": 5,
-				"golden": true,
-				"position": 5,
-				"cost": 6,
-				"keywords": [],
-				"tribes": [
-					"treant"
-				]
-			},
-			{
-				"id": "SBB_CHARACTER_QUESTINGPRINCESS",
-				"attack": 6,
-				"health": 6,
-				"golden": false,
-				"position": 6,
-				"cost": 4,
-				"keywords": [
-					"last breath"
-				],
-				"tribes": [
-					"puff puff",
-					"good"
-				]
-			},
-			{
-				"id": "SBB_CHARACTER_GOODBOY",
-				"attack": 5,
-				"health": 5,
-				"golden": false,
-				"position": 1,
-				"cost": 6,
-				"keywords": [
-					"slay"
-				],
-				"tribes": [
-					"good",
-					"princess",
-					"monster"
-				]
-			}
-		],
-		"treasures": [
-			"SBB_TREASURE_FOUNTAINOFYOUTH"
-		],
-		"hand": [],
-		"hero": ""
-	},
-	"PLAYERTWOIDHERE": {
-		"characters": [
-			{
-				"id": "SBB_CHARACTER_PUFFPUFF",
-				"attack": 6,
-				"health": 6,
-				"golden": false,
-				"position": 1,
-				"cost": 4,
-				"keywords": [
-					"last breath"
-				],
-				"tribes": [
-					"puff puff",
-					"good"
-				]
-			},
-			{
-				"id": "SBB_CHARACTER_PUFFPUFF",
-				"attack": 6,
-				"health": 6,
-				"golden": false,
-				"position": 2,
-				"cost": 4,
-				"keywords": [
-					"last breath"
-				],
-				"tribes": [
-					"puff puff",
-					"good"
-				]
-			},
-			{
-				"id": "SBB_CHARACTER_PUFFPUFF",
-				"attack": 6,
-				"health": 6,
-				"golden": false,
-				"position": 3,
-				"cost": 4,
-				"keywords": [
-					"last breath"
-				],
-				"tribes": [
-					"puff puff",
-					"good"
-				]
-			},
-			{
-				"id": "SBB_CHARACTER_PUFFPUFF",
-				"attack": 6,
-				"health": 6,
-				"golden": false,
-				"position": 4,
-				"cost": 4,
-				"keywords": [
-					"last breath"
-				],
-				"tribes": [
-					"puff puff",
-					"good"
-				]
-			},
-			{
-				"id": "SBB_CHARACTER_MADMADAMMIM",
-				"attack": 0,
-				"health": 3,
-				"golden": false,
-				"position": 5,
-				"cost": 1,
-				"keywords": [
-					"support"
-				],
-				"tribes": [
-					"evil",
-					"mage"
-				]
-			}
-		],
-		"treasures": [
-			"SBB_TREASURE_CROWNOFATLAS"
-		],
-		"hand": [],
-		"hero": ""
-	}
+  "PLAYERONEIDHERE": {
+    "characters": [
+      {
+        "id": "SBB_CHARACTER_ECHOWOODSHAMBLER",
+        "attack": 5,
+        "health": 5,
+        "golden": true,
+        "position": 5,
+        "cost": 6,
+        "keywords": [],
+        "tribes": [
+          "treant"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_QUESTINGPRINCESS",
+        "attack": 6,
+        "health": 6,
+        "golden": false,
+        "position": 6,
+        "cost": 4,
+        "keywords": [
+          "last breath"
+        ],
+        "tribes": [
+          "puff puff",
+          "good"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_GOODBOY",
+        "attack": 5,
+        "health": 5,
+        "golden": false,
+        "position": 1,
+        "cost": 6,
+        "keywords": [
+          "slay"
+        ],
+        "tribes": [
+          "good",
+          "princess",
+          "monster"
+        ]
+      }
+    ],
+    "treasures": [
+      "SBB_TREASURE_FOUNTAINOFYOUTH"
+    ],
+    "hand": [],
+    "hero": ""
+  },
+  "PLAYERTWOIDHERE": {
+    "characters": [
+      {
+        "id": "SBB_CHARACTER_PUFFPUFF",
+        "attack": 6,
+        "health": 6,
+        "golden": false,
+        "position": 1,
+        "cost": 4,
+        "keywords": [
+          "last breath"
+        ],
+        "tribes": [
+          "puff puff",
+          "good"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_PUFFPUFF",
+        "attack": 6,
+        "health": 6,
+        "golden": false,
+        "position": 2,
+        "cost": 4,
+        "keywords": [
+          "last breath"
+        ],
+        "tribes": [
+          "puff puff",
+          "good"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_PUFFPUFF",
+        "attack": 6,
+        "health": 6,
+        "golden": false,
+        "position": 3,
+        "cost": 4,
+        "keywords": [
+          "last breath"
+        ],
+        "tribes": [
+          "puff puff",
+          "good"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_PUFFPUFF",
+        "attack": 6,
+        "health": 6,
+        "golden": false,
+        "position": 4,
+        "cost": 4,
+        "keywords": [
+          "last breath"
+        ],
+        "tribes": [
+          "puff puff",
+          "good"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_MADMADAMMIM",
+        "attack": 0,
+        "health": 3,
+        "golden": false,
+        "position": 5,
+        "cost": 1,
+        "keywords": [
+          "support"
+        ],
+        "tribes": [
+          "evil",
+          "mage"
+        ]
+      }
+    ],
+    "treasures": [
+      "SBB_TREASURE_CROWNOFATLAS"
+    ],
+    "hand": [],
+    "hero": ""
+  }
 }

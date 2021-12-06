@@ -7,7 +7,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_goodboy(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_GOODBOY', position=1, attack=5, health=5, golden=golden),

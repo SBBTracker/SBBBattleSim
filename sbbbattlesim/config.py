@@ -10,6 +10,7 @@ config = {
     }
 }
 
+
 def configure_logging():
     try:
         program_logging_config = get_config('logging')
@@ -24,7 +25,8 @@ def configure_logging():
         if python_logging_level:
             logging.basicConfig(level=python_logging_level)
     except:
-        pass
+        logging.basicConfig(level='ERROR')
+
 
 def get_config(*args):
     current_config = config

@@ -1,49 +1,49 @@
 {
-	"PLAYERONEIDHERE": {
-		"characters": [
-			{
-				"id": "SBB_CHARACTER_ROBINWOOD",
-				"attack": 7,
-				"health": 15,
-				"golden": true,
-				"position": 1,
-				"keywords": [
-                  "ranged"
-                ],
-				"cost": 6,
- 				"tribes": [
-					"good",
-					"treant"
-				]
-			}
-		],
-		"treasures": [
-			"SBB_TREASURE_ANCIENTSARCOPHAGUS"
-		],
-		"hand": [],
-		"hero": ""
-	},
-	"PLAYERTWOIDHERE": {
-		"characters": [
-			{
-				"id": "SBB_CHARACTER_MONSTAR",
-				"attack": 31,
-				"health": 60,
-				"golden": false,
-				"position": 1,
-				"cost": 3,
-				"keywords": [
-					"last breath"
-				],
-				"tribes": [
-					"good"
-				]
-			}
-		],
-		"treasures": [
-			"SBB_TREASURE_CROWNOFATLAS"
-		],
-		"hand": [],
-		"hero": ""
-	}
+  "PLAYERONEIDHERE": {
+    "characters": [
+      {
+        "id": "SBB_CHARACTER_ROBINWOOD",
+        "attack": 7,
+        "health": 15,
+        "golden": true,
+        "position": 1,
+        "keywords": [
+          "ranged"
+        ],
+        "cost": 6,
+        "tribes": [
+          "good",
+          "treant"
+        ]
+      }
+    ],
+    "treasures": [
+      "SBB_TREASURE_ANCIENTSARCOPHAGUS"
+    ],
+    "hand": [],
+    "hero": ""
+  },
+  "PLAYERTWOIDHERE": {
+    "characters": [
+      {
+        "id": "SBB_CHARACTER_MONSTAR",
+        "attack": 31,
+        "health": 60,
+        "golden": false,
+        "position": 1,
+        "cost": 3,
+        "keywords": [
+          "last breath"
+        ],
+        "tribes": [
+          "good"
+        ]
+      }
+    ],
+    "treasures": [
+      "SBB_TREASURE_CROWNOFATLAS"
+    ],
+    "hand": [],
+    "hero": ""
+  }
 }

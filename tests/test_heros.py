@@ -64,6 +64,7 @@ def test_evella(on, evil_back):
     assert buffed_cat
     assert buffed_cat.attack == (2 if on else 1) and buffed_cat.health == 1
 
+
 @pytest.mark.parametrize('on', (True, False))
 def test_sad_dracula(on):
     player = make_player(
@@ -135,6 +136,7 @@ def test_gepetto():
     assert cat
     assert cat.attack == 4 and cat.health == 4
 
+
 @pytest.mark.parametrize('on', (True, False))
 def test_krampus(on):
     player = make_player(
@@ -184,7 +186,8 @@ def test_mrsclaus(on):
 def test_merlin():
     player = make_player(
         characters=[
-            make_character(id='GENERIC', position=1, keywords=[kw.value for kw in Keyword], tribes=[tribe.value for tribe in Tribe])
+            make_character(id='GENERIC', position=1, keywords=[kw.value for kw in Keyword],
+                           tribes=[tribe.value for tribe in Tribe])
         ],
         hero='SBB_HERO_MERLIN',
         spells=[
@@ -277,6 +280,7 @@ def test_trophy_hunter():
     assert player.characters[1].id == 'Cat'
     assert player.characters[2].id == 'Cat'
 
+
 def test_trophy_hunter():
     player = make_player(
         characters=[
@@ -345,6 +349,7 @@ def test_beauty(on):
     assert t1 == tribe_set if on else t1 == set()
     assert t2 == tribe_set if on else t2 == set()
 
+
 @pytest.mark.parametrize('treasure', ("SBB_TREASURE_CORRUPTEDHEARTWOOD", "SBB_TREASURE_CROWNOFATLAS"))
 def test_beauty_withtreasure(treasure):
     player = make_player(
@@ -394,12 +399,14 @@ def test_beauty_spawnedanimal():
 
     assert player.characters[1].tribes == {Tribe.GOOD, Tribe.EVIL, Tribe.ANIMAL}
 
+
 FALLEN_ANGEL_TESTS = (
     (['good'], 1, 3),
     (['evil'], 3, 1),
     (['good', 'evil'], 3, 3),
     ([], 1, 1)
 )
+
 
 @pytest.mark.parametrize('tribes, attack, health', FALLEN_ANGEL_TESTS)
 def test_fallen_angel(tribes, attack, health):
@@ -442,5 +449,5 @@ def test_muerte():
 
     player = board.p1
 
-    assert player.characters[1].id == 'Cat'
-    assert player.characters[2].id == 'Cat'
+    assert player.characters[1].id == 'SBB_CHARACTER_CAT'
+    assert player.characters[2].id == 'SBB_CHARACTER_CAT'

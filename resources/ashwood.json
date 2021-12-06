@@ -1,78 +1,78 @@
 {
-	"PLAYERONEIDHERE": {
-		"characters": [
-			{
-				"id": "SBB_CHARACTER_ROTTENAPPLETREE",
-				"attack": 1,
-				"health": 200,
-				"golden": true,
-				"position": 1,
-				"keywords": [],
-				"cost": 4,
- 				"tribes": [
-					"treant"
-				]
-			},
-            {
-				"id": "SBB_CHARACTER_KINGTREE",
-				"attack": 1,
-				"health": 20,
-				"golden": false,
-				"position": 2,
-				"keywords": [],
-				"cost": 4,
- 				"tribes": [
-					"treant"
-				]
-			},
-			{
-				"id": "SBB_CHARACTER_KINGTREE",
-				"attack": 2,
-				"health": 40,
-				"golden": true,
-				"position": 3,
-				"keywords": [],
-				"cost": 4,
- 				"tribes": [
-					"treant"
-				]
-			},
-			{
-				"id": "SBB_CHARACTER_BABYROOT",
-				"attack": 0,
-				"health": 3,
-				"golden": false,
-				"position": 7,
-				"keywords": [],
-				"cost": 4,
- 				"tribes": [
-					"treant"
-				]
-			}
+  "PLAYERONEIDHERE": {
+    "characters": [
+      {
+        "id": "SBB_CHARACTER_ROTTENAPPLETREE",
+        "attack": 1,
+        "health": 200,
+        "golden": true,
+        "position": 1,
+        "keywords": [],
+        "cost": 4,
+        "tribes": [
+          "treant"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_KINGTREE",
+        "attack": 1,
+        "health": 20,
+        "golden": false,
+        "position": 2,
+        "keywords": [],
+        "cost": 4,
+        "tribes": [
+          "treant"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_KINGTREE",
+        "attack": 2,
+        "health": 40,
+        "golden": true,
+        "position": 3,
+        "keywords": [],
+        "cost": 4,
+        "tribes": [
+          "treant"
+        ]
+      },
+      {
+        "id": "SBB_CHARACTER_BABYROOT",
+        "attack": 0,
+        "health": 3,
+        "golden": false,
+        "position": 7,
+        "keywords": [],
+        "cost": 4,
+        "tribes": [
+          "treant"
+        ]
+      }
+    ],
+    "treasures": [],
+    "hand": [],
+    "hero": ""
+  },
+  "PLAYERTWOIDHERE": {
+    "characters": [
+      {
+        "id": "SBB_CHARACTER_MONSTAR",
+        "attack": 8,
+        "health": 60,
+        "golden": false,
+        "position": 1,
+        "cost": 3,
+        "keywords": [
+          "last breath"
         ],
-		"treasures": [],
-		"hand": [],
-		"hero": ""
-	},
-	"PLAYERTWOIDHERE": {
-		"characters": [
-			{
-				"id": "SBB_CHARACTER_MONSTAR",
-				"attack": 8,
-				"health": 60,
-				"golden": false,
-				"position": 1,
-				"cost": 3,
-				"keywords": [
-					"last breath"
-				],
-				"tribes": [
-					"good"
-				]
-			}
-		],
-		"treasures": [],
-		"hand": [],
-		"hero": ""
-	}
+        "tribes": [
+          "good"
+        ]
+      }
+    ],
+    "treasures": [],
+    "hand": [],
+    "hero": ""
+  }
 }

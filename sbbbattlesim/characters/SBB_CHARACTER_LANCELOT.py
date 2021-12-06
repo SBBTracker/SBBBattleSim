@@ -3,6 +3,15 @@ from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
 
+class LancelotSlay(OnAttackAndKill):
+    slay = True
+
+    def handle(self, killed_character, stack, *args, **kwargs):
+        modifier = 4 if self.manager.golden else 2
+        self.manager.change_stats(attack=modifier, health=modifier, temp=False, reason=StatChangeCause.SLAY,
+                                  source=self.manager, stack=stack)
+
+
 class CharacterType(Character):
     display_name = 'Lancelot'
     quest = True
@@ -14,14 +23,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        class LancelotSlay(OnAttackAndKill):
-            slay = True
-
-            def handle(self, killed_character, stack, *args, **kwargs):
-                modifier = 4 if self.manager.golden else 2
-                self.manager.change_stats(attack=modifier, health=modifier, temp=False, reason=StatChangeCause.SLAY,
-                                          source=self.manager, stack=stack)
-
         self.register(LancelotSlay)
-

@@ -26,12 +26,11 @@ def test_cupid_effect():
 
 
 def test_cupid_ranged():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_CUPID', position=6, attack=3, health=6),
         ],
-        treasures= [
+        treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )

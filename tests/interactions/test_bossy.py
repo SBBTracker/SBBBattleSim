@@ -9,7 +9,7 @@ from tests import make_character, make_player
 def test_bossy(golden):
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_BIGBOSS",position=5, attack=1, health=1, golden=golden),
+            make_character(id="SBB_CHARACTER_BIGBOSS", position=5, attack=1, health=1, golden=golden),
             make_character(position=6, attack=1, health=1, tribes=[Tribe.DWARF]),
             make_character(position=7, attack=1, health=1)
         ],

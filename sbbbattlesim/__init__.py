@@ -11,7 +11,6 @@ from sbbbattlesim.exceptions import SBBBSCrocException
 
 SUMMONING_PRIORITY = 10
 
-
 logger = logging.getLogger(__name__)
 
 

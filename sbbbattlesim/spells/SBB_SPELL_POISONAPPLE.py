@@ -12,4 +12,5 @@ class SpellType(NonTargetedSpell):
         valid_targets = player.opponent.valid_characters()
         if valid_targets:
             target = random.choice(valid_targets)
-            target.change_stats(health=-(target._base_health-1), temp=False, reason=StatChangeCause.POISON_APPLE, source=self, *args, **kwargs)
+            target.change_stats(health=-(target._base_health - 1), temp=False, reason=StatChangeCause.POISON_APPLE,
+                                source=self, *args, **kwargs)

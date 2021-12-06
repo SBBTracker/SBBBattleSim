@@ -7,6 +7,17 @@ from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
+
+class LightningDragonOnStart(OnStart):
+
+    def handle(self, *args, **kwargs):
+        attack(
+            attack_position=self.lightning_dragon.position,
+            attacker=self.lightning_dragon.owner,
+            defender=self.lightning_dragon.owner.opponent,
+        )
+
+
 class CharacterType(Character):
     display_name = 'Lightning Dragon'
 
@@ -19,15 +30,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        class LightningDragonOnStart(OnStart):
-            lightning_dragon = self
-            def handle(self, *args, **kwargs):
-                attack(
-                    attack_position=self.lightning_dragon.position,
-                    attacker=self.lightning_dragon.owner,
-                    defender=self.lightning_dragon.owner.opponent,
-                )
-
-        self.owner.board.register(LightningDragonOnStart)
-
+        self.owner.board.register(LightningDragonOnStart, lightning_dragon=self)

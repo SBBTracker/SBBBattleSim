@@ -4,6 +4,13 @@ from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe
 
 
+class PrizedPigLastBreath(OnDeath):
+    last_breath = True
+
+    def handle(self, *args, **kwargs):
+        pass  # this is only relevant for things like trophy hunter
+
+
 class CharacterType(Character):
     display_name = 'Prized Pig'
     last_breath = True
@@ -15,9 +22,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(self.PrizedPigLastBreath)
-
-    class PrizedPigLastBreath(OnDeath):
-        last_breath = True
-        def handle(self, *args, **kwargs):
-            pass  # this is only relevant for things like trophy hunter
+        self.register(PrizedPigLastBreath)

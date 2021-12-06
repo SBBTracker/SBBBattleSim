@@ -7,7 +7,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_monsterbook_wizard_familar(golden):
-
     player = make_player(
         level=2,
         characters=[
@@ -35,7 +34,6 @@ def test_monsterbook_wizard_familar(golden):
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_monsterbook_spellweaver(golden):
-
     player = make_player(
         level=2,
         characters=[
@@ -59,5 +57,3 @@ def test_monsterbook_spellweaver(golden):
     ]
 
     assert len(wizardbuffs) == (2 if golden else 1)
-
-

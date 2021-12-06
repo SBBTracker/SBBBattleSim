@@ -10,7 +10,7 @@ def test_rainbow_unicorn(golden):
     player = make_player(
         characters=[
             make_character(
-                id="SBB_CHARACTER_HELPFULGODMOTHER",position=5, attack=1,
+                id="SBB_CHARACTER_HELPFULGODMOTHER", position=5, attack=1,
                 health=1, golden=golden, tribes=[Tribe.GOOD]
             ),
             make_character(position=6, attack=1, health=1, tribes=[Tribe.GOOD]),

@@ -3,7 +3,6 @@ from tests import make_character, make_player
 
 
 def test_mittens_phoenixfeather():
-
     player = make_player(
         characters=[
             make_character(position=1, attack=500, health=1),
@@ -22,4 +21,3 @@ def test_mittens_phoenixfeather():
 
     assert board.p1.characters[1] is None
     assert board.p1.characters[5] is not None and board.p1.characters[5].attack == 1
-

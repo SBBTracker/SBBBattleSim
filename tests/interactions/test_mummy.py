@@ -6,7 +6,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_mummy(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_WRETCHEDMUMMY', position=1, attack=5, health=1, golden=golden),
@@ -27,4 +26,3 @@ def test_mummy(golden):
     board.p2.resolve_board()
 
     assert board.p2.characters[5].health == 90 if golden else 95
-

@@ -11,7 +11,7 @@ def test_angry_fallingstars():
     player = make_player(
         characters=[
             make_character(
-                id="SBB_CHARACTER_DWARFMINER",position=1, attack=1, health=2, tribes=[Tribe.DWARF]
+                id="SBB_CHARACTER_DWARFMINER", position=1, attack=1, health=2, tribes=[Tribe.DWARF]
             ),
             make_character(position=6, attack=1, health=1, tribes=[Tribe.DWARF]),
         ],
@@ -46,12 +46,12 @@ def test_donkey_fallingstars():
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
         def handle(self, *args, **kwargs):
-                summon = character_registry["SBB_CHARACTER_DARKWOODCREEPER"].new(
-                    owner=self.manager.owner,
-                    position=self.manager.position,
-                    golden=False
-                )
-                self.manager.owner.summon(self.manager.position, [summon])
+            summon = character_registry["SBB_CHARACTER_DARKWOODCREEPER"].new(
+                owner=self.manager.owner,
+                position=self.manager.position,
+                golden=False
+            )
+            self.manager.owner.summon(self.manager.position, [summon])
 
     board.p1.characters[3].register(FakeTrojanDonkeySummon)
     winner, loser = board.fight(limit=2)
@@ -73,7 +73,6 @@ def test_donkey_fallingstars():
 
 @pytest.mark.parametrize('board_full', (True, False))
 def test_donkey_fallingstars_fullboard(board_full):
-
     characters = [
         make_character(position=2, attack=1, health=1),
         make_character(position=3, attack=1, health=1),
@@ -114,5 +113,3 @@ def test_donkey_fallingstars_fullboard(board_full):
                 assert char is donkey
             else:
                 assert char is None
-
-

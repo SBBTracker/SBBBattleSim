@@ -7,7 +7,6 @@ from tests import make_character, make_player
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_lonely_pumpkin_dying(golden):
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_PUMPKINKING', position=1, tribes=[Tribe.EVIL], golden=golden),
@@ -31,7 +30,6 @@ def test_lonely_pumpkin_dying(golden):
 
 
 def test_pumpkin_with_friends_dying():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_PUMPKINKING', position=7, tribes=[Tribe.EVIL]),
@@ -52,7 +50,6 @@ def test_pumpkin_with_friends_dying():
     board.p1.characters[3]._level = 4
     board.p1.characters[4]._level = 5
 
-
     winner, loser = board.fight(limit=5)
     board.p1.resolve_board()
     board.p2.resolve_board()
@@ -61,6 +58,3 @@ def test_pumpkin_with_friends_dying():
     assert board.p1.characters[2]._level == 2
     assert board.p1.characters[3]._level == 3
     assert board.p1.characters[4]._level == 4
-
-
-

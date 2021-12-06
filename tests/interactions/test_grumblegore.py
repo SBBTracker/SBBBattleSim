@@ -8,7 +8,7 @@ from tests import make_character, make_player
 def test_grumblegore(golden):
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_GRUMBLEGORE",position=5, attack=1, health=1, golden=golden),
+            make_character(id="SBB_CHARACTER_GRUMBLEGORE", position=5, attack=1, health=1, golden=golden),
             make_character(position=1, attack=1, health=1),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
@@ -28,12 +28,11 @@ def test_grumblegore(golden):
 
 
 def test_grumblegore_ranged():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_GRUMBLEGORE', position=6, attack=3, health=6),
         ],
-        treasures= [
+        treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )

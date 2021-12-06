@@ -10,7 +10,7 @@ def test_robinwood(golden):
     player = make_player(
         characters=[
             make_character(
-                id="SBB_CHARACTER_ROBINWOOD",position=5,
+                id="SBB_CHARACTER_ROBINWOOD", position=5,
                 attack=5, health=1, golden=golden, tribes=[Tribe.TREANT]
             ),
             make_character(position=2, attack=2, health=1),
@@ -37,12 +37,11 @@ def test_robinwood(golden):
 
 
 def test_robinwood_ranged():
-
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_ROBINWOOD', position=6, attack=3, health=6),
         ],
-        treasures= [
+        treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )

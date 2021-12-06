@@ -8,9 +8,12 @@ logger = logging.getLogger(__name__)
 
 
 class SSBBSEvent:
-    priority = 0
-    def __init__(self, manager):
+    def __init__(self, manager, priority=0, **kwargs):
         self.manager = manager
+        self.priority = priority
+
+        for kw, arg in kwargs.items():
+            setattr(self, kw, arg)
 
     def __call__(self, *args, **kwargs):
         # TODO Add more logging???
@@ -26,12 +29,14 @@ class SSBBSEvent:
 
 class OnSummon(SSBBSEvent):
     '''A unit is summoned'''
+
     def handle(self, summoned_characters, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnStart(SSBBSEvent):
     '''Start of Brawl'''
+
     def handle(self, stack, *args, **kwargs):
         raise NotImplementedError
 
@@ -58,30 +63,35 @@ class OnDeath(SSBBSEvent):
 
 class OnLastBreath(SSBBSEvent):
     '''A character last a last breath'''
+
     def handle(self, source, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPreAttack(SSBBSEvent):
     '''An attacking character attacks'''
+
     def handle(self, attack_position, defend_position, defend_player, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPostAttack(SSBBSEvent):
     '''An attacking character attacks'''
+
     def handle(self, attack_position, defend_position, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPreDefend(SSBBSEvent):
     '''A defending character is attacked'''
+
     def handle(self, attack_position, defend_position, defender, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPostDefend(SSBBSEvent):
     '''A defending character is attacked'''
+
     def handle(self, attack_position, defend_position, stack, *args, **kwargs):
         raise NotImplementedError
 
@@ -115,30 +125,35 @@ class OnAttackAndKill(SSBBSEvent):
 
 class OnSlay(SSBBSEvent):
     '''A character has triggered a slay'''
+
     def handle(self, source, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnSpellCast(SSBBSEvent):
     '''A player cast a spell'''
+
     def handle(self, caster, spell, target, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnBuff(SSBBSEvent):
     '''Triggered when something has a stat change'''
+
     def handle(self, stack, attack=0, health=0, damage=0, reason='', temp=True, origin=None, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnSupport(SSBBSEvent):
     '''Triggered when something '''
+
     def handle(self, buffed, support, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnResolveBoard(SSBBSEvent):
     '''Triggers when a player attempts to resolve the board'''
+
     def handle(self, stack, *args, **kwargs):
         raise NotImplementedError
 
@@ -151,17 +166,18 @@ class EventManager:
     def pretty_print(self):
         return self.__repr__()
 
-    def register(self, event, temp=False):
+    def register(self, event, temp=False, **kwargs):
         if not event.is_valid():
             logger.debug(f'{self.pretty_print()} can not register invalid event {event.__name__}')
             raise ValueError
 
         event_base = inspect.getmro(event)[1].__name__
-        (self._temp if temp else self._events)[event_base].append(event(manager=self))
+        (self._temp if temp else self._events)[event_base].append(event(manager=self, **kwargs))
         logger.debug(f'{self.pretty_print()} Registered {event_base} - {event.__name__}')
 
     def get(self, event):
-        return sorted(self._temp.get(event, []) + self._events.get(event, []), key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True)
+        return sorted(self._temp.get(event, []) + self._events.get(event, []),
+                      key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True)
 
     def clear_temp(self):
         self._temp = collections.defaultdict(list)

@@ -8,4 +8,5 @@ class HeroType(Hero):
 
     def buff(self, target_character, *args, **kwargs):
         if Tribe.GOOD in target_character.tribes:
-            target_character.change_stats(attack=1, health=1, reason=StatChangeCause.MRS_CLAUS_BUFF, source=self, *args, **kwargs)
+            target_character.change_stats(attack=1, health=1, reason=StatChangeCause.MRS_CLAUS_BUFF, source=self, *args,
+                                          **kwargs)
