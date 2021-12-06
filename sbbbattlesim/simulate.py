@@ -82,13 +82,7 @@ def simulate_brawl(data: dict, k: int, raw: dict):
             raise e
 
 
-def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> SimulationResult:
-    data = from_state(state)
-
-    start = time.perf_counter()
-
-    starting_board = Board(deepcopy(data))
-
+def _process(data: dict, t: int = 1, k: int = 1) -> dict:
     manager = multiprocessing.Manager()
     raw = manager.list()
 
@@ -101,12 +95,21 @@ def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> Simulati
     for job in jobs:
         job.join()
 
-    # with multiprocessing.Pool(processes=t) as pool:
-    #     pool.map(simulate_brawl, args=((data, k, results) for _ in range(t)))
-
     results = collections.defaultdict(list)
     for board in raw:
         results[board.winner.id if board.winner else None].append(board)
+
+    return results
+
+
+def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> SimulationResult:
+    data = from_state(state)
+
+    start = time.perf_counter()
+
+    starting_board = Board(deepcopy(data))
+
+    results = _process(data, t, k)
 
     sim_results = SimulationResult(
         hash_id=hashlib.sha256(f'{starting_board.p1}{starting_board.p2}'.encode('utf-8')),

@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 import threading
 from queue import Queue
@@ -20,7 +21,6 @@ if __name__ == '__main__':
         job = update.job
         state = update.state
         if job == log_parser.JOB_BOARDINFO:
-
             try:
                 simulation = simulate(state, t=4, k=250, timeout=30)
             except SBBBSCrocException:
@@ -38,5 +38,3 @@ if __name__ == '__main__':
             logger.error(f'{p1id} {simulation.stats.win_rate[p1id]}% {simulation.stats.avg_damage[p1id]}')
             logger.error(f'{p2id} {simulation.stats.win_rate[p2id]}% {simulation.stats.avg_damage[p2id]}')
             logger.error(f'Tie {simulation.stats.win_rate[None]}%')
-
-            exit()

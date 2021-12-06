@@ -171,7 +171,7 @@ class Registry(object):
     characters = OrderedDict()
 
     def __getitem__(self, item):
-        return self.characters.get(item, self._base_character(item))
+        return self.characters.get(item, Character)
 
     def __getattr__(self, item):
         return getattr(self.characters, item)
@@ -196,12 +196,6 @@ class Registry(object):
             except Exception as exc:
                 logger.exception('Error loading characters: {}'.format(name))
                 raise exc
-
-    def _base_character(self, name):
-        class TempCharacter(Character):
-            display_name = name
-            id = name
-        return TempCharacter
 
 
 registry = Registry()
