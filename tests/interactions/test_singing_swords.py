@@ -4,24 +4,18 @@ from sbbbattlesim import Board
 from tests import make_character, make_player
 
 
-@pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('mimic', (True, False))
-def test_madmim_singingswords(golden, mimic):
+def test_madmim_singingswords(mimic):
 
-    if golden:
-        if mimic:
-            final_stats = 21
-        else:
-            final_stats = 14
+
+    if mimic:
+        final_stats = 3
     else:
-        if mimic:
-            final_stats = 12
-        else:
-            final_stats = 8
+        final_stats = 2
 
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_MADMADAMMIM",position=5, attack=1, health=1, golden=golden),
+            make_character(id="SBB_CHARACTER_MADMADAMMIM",position=5, attack=1, health=1),
             make_character(position=1, attack=1, health=1),
         ],
         treasures=[
@@ -42,9 +36,7 @@ def test_madmim_singingswords(golden, mimic):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (1, 1)
-
+    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (final_stats, 1)
 
 
 def test_singingswords_bearstain():
@@ -128,6 +120,7 @@ def test_singingswords_dos_bearstain():
 def test_singingswords_mimic_roundtable():
 
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1, attack=21, health=30),
         ],
@@ -193,6 +186,7 @@ def test_backline_blackcat():
 
 def test_multiple_echowoods():
     player = make_player(
+        raw=True,
         characters=[
             make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=2, attack=2, health=1),
             make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=3, attack=2, health=1),

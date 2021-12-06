@@ -55,3 +55,4 @@ def test_singingswords_bossy():
     board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (6, 3)
+    assert (board.p1.characters[1]._base_attack, board.p1.characters[1]._base_health) == (1, 1)

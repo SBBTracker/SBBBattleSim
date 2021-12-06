@@ -27,5 +27,6 @@ class TreasureType(Treasure):
                     for char, (attack, health) in change_dt.items():
                         char.change_stats(health=health, attack=attack, reason=StatChangeCause.ROUND_TABLE_BUFF,
                                           source=self.table, temp=False, stack=stack)
+                        self.table.player.resolve_board()
 
         self.player.board.register(RoundTableBuff)

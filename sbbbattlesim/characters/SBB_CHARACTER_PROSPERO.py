@@ -41,6 +41,7 @@ class CharacterType(Character):
 
                     char.change_stats(attack=attack_buff, health=health_buff, reason=StatChangeCause.BEARSTINE_BUFF,
                                       source=self.bearstine, temp=False, stack=stack)
+                    char.owner.resolve_board()
 
         self.owner.register(BearstineOnSummon)
 

@@ -60,12 +60,19 @@ class Player(EventManager):
             self.characters[char.position] = char
 
         # This is designed to remove temp buffs that were passed in
+        singingswords = 'SBB_TREASURE_WHIRLINGBLADES' in treasures
+        attack_multiplier = 1
+        if singingswords:
+            attack_multiplier = 2
+            if mimic:
+                attack_multiplier = 3
+
         if raw:
             self.resolve_board()
             for char in self.characters.values():
                 if char:
                     char._base_health -= char._temp_health
-                    char._base_attack -= char._temp_attack
+                    char._base_attack -= int(char._temp_attack/attack_multiplier)
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
@@ -114,6 +121,7 @@ class Player(EventManager):
         return self._attack_slot
 
     def resolve_board(self, *args, **kwargs):
+
         old_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}
 
         # Remove all bonuses
@@ -132,11 +140,6 @@ class Player(EventManager):
         kwargs['stack'] = self('OnResolveBoard', *args, **kwargs)
 
         # TREASURE BUFFS
-        # we need to apply singing swords first
-        # TODO Add priority to treasures and sort this loop by that priority
-        if "SBB_TREASURE_WHIRLINGBLADES" in self.treasures:
-            for target in self.valid_characters():
-                self.treasures["SBB_TREASURE_WHIRLINGBLADES"][0].buff(target, *args, **kwargs)
 
         # HERO BUFFS:
         if self.hero.id != "SBB_HERO_PRINCESSBELLE":
@@ -188,7 +191,14 @@ class Player(EventManager):
             for target in self.valid_characters():
                 cloak_ls[0].buff(target, *args, **kwargs)
 
-
+        # we need to apply singing swords last
+        # TODO Add priority to treasures and sort this loop by that priority
+        if "SBB_TREASURE_WHIRLINGBLADES" in self.treasures:
+            attack_dt = dict()
+            for target in self.valid_characters():
+                attack_dt[target] = target.attack
+            for target in self.valid_characters():
+                self.treasures["SBB_TREASURE_WHIRLINGBLADES"][0].buff(target, attack_override=attack_dt[target], *args, **kwargs)
         new_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}
 
         for char, new_temp_health in new_temp_health_dt.items():
@@ -216,22 +226,22 @@ class Player(EventManager):
             logger.info(f'Spawning {char} in {pos} position')
 
         # Now that we have summoned units, make sure they have the buffs they should
-        self.resolve_board(force_echowood=True, *args, **kwargs)
+        self.resolve_board(summoned_characters=summoned_characters, *args, **kwargs)
 
-        # summoned units need buffed attack and it needs to affect echowood
-        if '''SBB_TREASURE_WHIRLINGBLADES''' in self.treasures:
-            multiplier = 1
-            if "SBB_TREASURE_TREASURECHEST" in self.treasures:
-                multiplier = 2
-            for sc in summoned_characters:
-                if sc.position in [1, 2, 3, 4]:
-                    sc.change_stats(
-                        attack=sc._base_attack * multiplier,
-                        source=self,
-                        reason=utils.StatChangeCause.SINGINGSWORD_BUFF,
-                        temp=False,
-                        force_echowood=True,
-                    )
+        # # summoned units need buffed attack and it needs to affect echowood
+        # if '''SBB_TREASURE_WHIRLINGBLADES''' in self.treasures:
+        #     multiplier = 1
+        #     if "SBB_TREASURE_TREASURECHEST" in self.treasures:
+        #         multiplier = 2
+        #     for sc in summoned_characters:
+        #         if sc.position in [1, 2, 3, 4]:
+        #             sc.change_stats(
+        #                 attack=sc._base_attack * multiplier,
+        #                 source=self,
+        #                 reason=utils.StatChangeCause.SINGINGSWORD_BUFF,
+        #                 temp=False,
+        #                 force_echowood=True,
+        #             )
 
         # The player handles on-summon effects
         self('OnSummon', summoned_characters=summoned_characters)
@@ -253,22 +263,22 @@ class Player(EventManager):
             logger.info(f'Spawning {char} in {pos} position')
 
         # Now that we have summoned units, make sure they have the buffs they should
-        self.resolve_board(force_echowood=True, *args, **kwargs)
+        self.resolve_board(summoned_characters=summoned_characters, *args, **kwargs)
 
-        # Summoned units need buffed attack and it needs to buff echowood
-        if '''SBB_TREASURE_WHIRLINGBLADES''' in self.treasures:
-            multiplier = 1
-            if "SBB_TREASURE_TREASURECHEST" in self.treasures:
-                multiplier = 2
-            for sc in summoned_characters:
-                if sc.position in [1, 2, 3, 4]:
-                    sc.change_stats(
-                        attack=sc._base_attack * multiplier,
-                        source=self,
-                        reason=utils.StatChangeCause.SINGINGSWORD_BUFF,
-                        temp=False,
-                        force_echowood=True,
-                    )
+        # # Summoned units need buffed attack and it needs to buff echowood
+        # if '''SBB_TREASURE_WHIRLINGBLADES''' in self.treasures:
+        #     multiplier = 1
+        #     if "SBB_TREASURE_TREASURECHEST" in self.treasures:
+        #         multiplier = 2
+        #     for sc in summoned_characters:
+        #         if sc.position in [1, 2, 3, 4]:
+        #             sc.change_stats(
+        #                 attack=sc._base_attack * multiplier,
+        #                 source=self,
+        #                 reason=utils.StatChangeCause.SINGINGSWORD_BUFF,
+        #                 temp=False,
+        #                 force_echowood=True,
+        #             )
 
         # The player handles on-summon effects
         stack = self('OnSummon', summoned_characters=summoned_characters)
