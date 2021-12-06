@@ -3,6 +3,13 @@ from sbbbattlesim.utils import Tribe
 from sbbbattlesim.events import OnDeath
 
 
+class HumptyDumptyOnDeath(OnDeath):
+    last_breath = False
+
+    def handle(self, *args, **kwargs):
+        self.manager.owner.graveyard.remove(self.egg)
+
+
 class CharacterType(Character):
     display_name = 'Humpty Dumpty'
 
@@ -13,13 +20,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        class HumptyDumptyOnDeath(OnDeath):
-            last_breath = False
-            egg = self
-            priority = 1001
-
-            def handle(self, *args, **kwargs):
-                self.manager.owner.graveyard.remove(self.egg)
-
-        self.register(HumptyDumptyOnDeath)
+        self.register(HumptyDumptyOnDeath, egg=self, priority=1001)

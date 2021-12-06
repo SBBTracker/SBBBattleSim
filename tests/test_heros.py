@@ -186,12 +186,11 @@ def test_mrsclaus(on):
 def test_merlin():
     player = make_player(
         characters=[
-            make_character(id='GENERIC', position=1, keywords=[kw.value for kw in Keyword], tribes=[tribe.value for tribe in Tribe])
+            make_character(id='SBB_CHARACTER_MONSTERBOOK'),
+            make_character(attack=0, position=7)
         ],
         hero='SBB_HERO_MERLIN',
-        spells=[
-            'SBB_SPELL_EARTHQUAKE'
-        ]
+        level=6
     )
     enemy = make_player(
         characters=[make_character(id='GENERIC', position=1)],
@@ -203,10 +202,10 @@ def test_merlin():
 
     player = board.p1
 
-    generic = player.characters.get(1)
+    char = player.characters.get(7)
 
-    assert generic
-    assert generic.attack == 3 and generic.health == 2
+    assert char
+    assert char.attack == 2 and char.health == 2
 
 
 @pytest.mark.parametrize('on', (True, False))
@@ -322,7 +321,7 @@ def test_trophy_hunter_yaga():
     player = board.p1
 
     for pos in [1, 2, 3]:
-        assert player.characters[pos].id == "Cat"
+        assert player.characters[pos].id == "SBB_CHARACTER_CAT"
 
 
 @pytest.mark.parametrize('limit', (1, 3, 5))

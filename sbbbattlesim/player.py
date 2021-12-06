@@ -13,6 +13,11 @@ from collections import defaultdict
 logger = logging.getLogger(__name__)
 
 
+class CastSpellOnStart(OnStart):
+    def handle(self, *args, **kwargs):
+        self.player.cast_spell(self.spell, trigger_onspell=False)
+
+
 class Player(EventManager):
     def __init__(self, characters, id, board, treasures, hero, hand, spells, level=0, raw=False, *args, **kwargs):
         super().__init__()
@@ -52,7 +57,8 @@ class Player(EventManager):
         import copy
         for spl in spells:
             if spl in utils.START_OF_FIGHT_SPELLS:
-                self._register_spell(spl)
+                priority = spell_registry[spl]().priority
+                self.board.register(CastSpellOnStart, spell=spl, player=self, priority=priority)
 
         for char_data in characters:
             char = character_registry[char_data['id']](owner=self, **char_data)
@@ -76,16 +82,6 @@ class Player(EventManager):
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
-
-    def _register_spell(self, spl):
-        class CastSpellOnStart(OnStart):
-            player = self
-            priority = spell_registry[spl]().priority
-
-            def handle(self, *args, **kwargs):
-                self.player.cast_spell(spl, trigger_onspell=False)
-
-        self.board.register(CastSpellOnStart)
 
     @property
     def attack_slot(self):
@@ -210,9 +206,6 @@ class Player(EventManager):
         for char in self.valid_characters():
             if char.health < 0:
                 char.change_stats(damage=0, source=self, reason=None)
-
-
-
 
     def summon_from_different_locations(self, characters, *args, **kwargs):
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be

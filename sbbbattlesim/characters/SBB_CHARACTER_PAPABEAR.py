@@ -25,6 +25,11 @@ class CharacterType(Character):
     display_name = 'Papa Bear'
     last_breath = True
 
+    _attack = 2
+    _health = 2
+    _level = 1
+    _tribes = {Tribe.ANIMAL, Tribe.GOOD}
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.register(PapaBearOnDeath)

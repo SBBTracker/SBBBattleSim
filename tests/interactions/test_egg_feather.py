@@ -17,8 +17,7 @@ def test_egg_feather():
         ],
     )
     enemy = make_player(
-
-        characters = [
+        characters=[
             make_character(position=1, attack=1, health=1),
          ],
 
@@ -27,6 +26,5 @@ def test_egg_feather():
     winner, loser = board.fight(limit=2)
     board.p1.resolve_board()
     board.p2.resolve_board()
-
 
     assert board.p1.characters[1] is None

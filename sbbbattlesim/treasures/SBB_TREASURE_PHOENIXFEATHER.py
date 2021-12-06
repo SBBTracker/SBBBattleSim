@@ -6,7 +6,7 @@ class PhoenixFeatherOnDeath(OnDeath):
     last_breath = False
 
     def handle(self, *args, **kwargs):
-        if not self.feather.feather_used:
+        if not self.feather.feather_used and self.manager in self.manager.owner.graveyard:
 
             all_characters = self.manager.owner.valid_characters() + [self.manager]
             max_attack = max(all_characters, key=lambda x: x.attack).attack

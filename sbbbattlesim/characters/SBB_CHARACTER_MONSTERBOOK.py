@@ -1,6 +1,11 @@
+import logging
+
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe, random_combat_spell
+
+
+logger = logging.getLogger(__name__)
 
 
 class MonsterBookOnDeath(OnDeath):
@@ -11,8 +16,11 @@ class MonsterBookOnDeath(OnDeath):
 
         for _ in range(itr):
             spell = random_combat_spell(self.monster_book.owner.level)
-            if spell:
-                self.manager.owner.cast_spell(spell.id)
+            if not spell:
+                logger.debug(f'{self.monster_book.pretty_print()} could not find a viable spell')
+                return
+
+            self.manager.owner.cast_spell(spell.id)
 
 
 class CharacterType(Character):
