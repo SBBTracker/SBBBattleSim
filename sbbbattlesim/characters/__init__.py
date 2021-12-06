@@ -128,8 +128,6 @@ class Character(EventManager):
                 self._base_attack += attack
                 self._base_health += health
 
-            if 'origin' in kwargs:
-                del kwargs['origin']
             self('OnBuff', attack=attack, health=health, damage=damage, reason=reason, temp=temp, origin=self, source=source, *args, **kwargs)
 
         if damage > 0:
@@ -186,7 +184,7 @@ class Registry(object):
         logger.debug(f'Registered {name} - {character}')
 
     def filter(self, _lambda=lambda char_cls: True):
-        return (char_cls for id, char_cls in self.characters.items() if id not in CHARACTER_EXCLUSION and _lambda(char_cls))
+        return (char_cls for id, char_cls in self.characters.items() if id not in CHARACTER_EXCLUSION and _lambda(char_cls) and char_cls._level > 1)
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):

@@ -1,7 +1,7 @@
 import pytest
 
 from sbbbattlesim import Board
-from sbbbattlesim.utils import Keyword, Tribe
+from sbbbattlesim.utils import Keyword, Tribe, StatChangeCause
 from tests import make_character, make_player
 
 
@@ -205,7 +205,46 @@ def test_merlin():
     char = player.characters.get(7)
 
     assert char
-    assert char.attack == 2 and char.health == 2
+    for pos in [7]:
+        wizardbuffs = [
+            r for r in board.p1.characters[pos].stat_history if r.reason == StatChangeCause.MERLIN_BUFF
+        ]
+
+        assert len(wizardbuffs) == 1
+
+def test_merlin_not_activate():
+    player = make_player(
+        characters=[
+            make_character(attack=0, position=7)
+        ],
+        spells=[
+            "SBB_SPELL_FIREBALL"
+        ],
+        hero='SBB_HERO_MERLIN',
+        level=6
+    )
+    enemy = make_player(
+        characters=[make_character(id='GENERIC', position=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    enemy_char = board.p2.characters[1]
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    player = board.p1
+
+    char = player.characters.get(7)
+
+    assert char
+    for pos in [7]:
+        wizardbuffs = [
+            r for r in board.p1.characters[pos].stat_history if r.reason == StatChangeCause.MERLIN_BUFF
+        ]
+
+        assert len(wizardbuffs) == 0
+
+    assert enemy_char.dead
 
 
 @pytest.mark.parametrize('on', (True, False))

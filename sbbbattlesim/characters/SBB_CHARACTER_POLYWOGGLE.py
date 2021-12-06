@@ -25,12 +25,7 @@ class PolywoggleSlay(OnAttackAndKill):
                 tribes=char._tribes,
                 cost=char._level,
             )
-            self.manager.owner.characters[self.manager.position] = new_char
-            self.manager.position = 'polywoggle-land'
-
-            self.manager.owner._attack_slot += 1
-            if self.manager.owner._attack_slot > 7:
-                self.manager.owner._attack_slot = 1
+            self.manager.owner.transform(self.manager.position, new_char)
 
 
 class CharacterType(Character):

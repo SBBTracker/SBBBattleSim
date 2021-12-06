@@ -40,7 +40,7 @@ class Player(EventManager):
 
         self.characters = OrderedDict({i: None for i in range(1, 8)})
 
-        self._attack_slot = 1
+        self._attack_slot = None
         self.graveyard = []
 
         self.treasures = defaultdict(list)
@@ -85,6 +85,9 @@ class Player(EventManager):
 
     @property
     def attack_slot(self):
+        if self._attack_slot is None:
+            self._attack_slot = 1
+
         # Handle case where tokens are spawning in the same position
         # With the max chain of 5 as implemented to stop trophy hunter + croc + grim soul shenanigans
         if (self.characters.get(self._attack_slot) is self._last_attacker) or (self._attack_chain >= 5) or (self._last_attacker is None):
@@ -221,22 +224,6 @@ class Player(EventManager):
         # Now that we have summoned units, make sure they have the buffs they should
         self.resolve_board(summoned_characters=summoned_characters, *args, **kwargs)
 
-        # # summoned units need buffed attack and it needs to affect echowood
-        # if '''SBB_TREASURE_WHIRLINGBLADES''' in self.treasures:
-        #     multiplier = 1
-        #     if "SBB_TREASURE_TREASURECHEST" in self.treasures:
-        #         multiplier = 2
-        #     for sc in summoned_characters:
-        #         if sc.position in [1, 2, 3, 4]:
-        #             sc.change_stats(
-        #                 attack=sc._base_attack * multiplier,
-        #                 source=self,
-        #                 reason=utils.StatChangeCause.SINGINGSWORD_BUFF,
-        #                 temp=False,
-        #                 force_echowood=True,
-        #             )
-
-        # The player handles on-summon effects
         self('OnSummon', summoned_characters=summoned_characters)
 
         return summoned_characters
@@ -258,25 +245,22 @@ class Player(EventManager):
         # Now that we have summoned units, make sure they have the buffs they should
         self.resolve_board(summoned_characters=summoned_characters, *args, **kwargs)
 
-        # # Summoned units need buffed attack and it needs to buff echowood
-        # if '''SBB_TREASURE_WHIRLINGBLADES''' in self.treasures:
-        #     multiplier = 1
-        #     if "SBB_TREASURE_TREASURECHEST" in self.treasures:
-        #         multiplier = 2
-        #     for sc in summoned_characters:
-        #         if sc.position in [1, 2, 3, 4]:
-        #             sc.change_stats(
-        #                 attack=sc._base_attack * multiplier,
-        #                 source=self,
-        #                 reason=utils.StatChangeCause.SINGINGSWORD_BUFF,
-        #                 temp=False,
-        #                 force_echowood=True,
-        #             )
-
         # The player handles on-summon effects
         stack = self('OnSummon', summoned_characters=summoned_characters)
 
         return summoned_characters
+
+    def transform(self, pos, character, *args, **kwargs):
+        if self.characters[pos] is not None:
+            self.characters[pos] = character
+            self.resolve_board(summoned_characters=[character], *args, **kwargs)
+
+            # TODO wrap this into a nice helper function to be used in the attack slot getter as well
+            if self._attack_slot == pos:
+                self._attack_slot += 1
+                if self._attack_slot > 7:
+                    self.attack_slot = 1
+
 
     def valid_characters(self, _lambda=lambda char: True):
         """
