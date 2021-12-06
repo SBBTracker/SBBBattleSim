@@ -24,7 +24,7 @@ class Player(EventManager):
         # Board is board
         self.board = board
 
-        self.stateful_effects = defaultdict(lambda : defaultdict(lambda : None))
+        self.stateful_effects = {}
 
         self.id = id
         self.opponent = None
