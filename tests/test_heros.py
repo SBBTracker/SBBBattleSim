@@ -186,8 +186,7 @@ def test_mrsclaus(on):
 def test_merlin():
     player = make_player(
         characters=[
-            make_character(id='GENERIC', position=1, keywords=[kw.value for kw in Keyword],
-                           tribes=[tribe.value for tribe in Tribe])
+            make_character(id='GENERIC', position=1, keywords=[kw.value for kw in Keyword], tribes=[tribe.value for tribe in Tribe])
         ],
         hero='SBB_HERO_MERLIN',
         spells=[
@@ -280,7 +279,6 @@ def test_trophy_hunter():
     assert player.characters[1].id == 'Cat'
     assert player.characters[2].id == 'Cat'
 
-
 def test_trophy_hunter():
     player = make_player(
         characters=[
@@ -300,6 +298,68 @@ def test_trophy_hunter():
 
     assert (player.characters[1].attack, player.characters[1].health) == (4, 4)
 
+
+def test_trophy_hunter_yaga():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_BLACKCAT', position=1),
+            make_character(id="SBB_CHARACTER_BABAYAGA", position=5)
+        ],
+        hero='SBB_HERO_MILITARYLEADER',
+        treasures=['''SBB_TREASURE_HERMES'BOOTS'''],
+    )
+
+    enemy = make_player(
+        characters=[
+            make_character()
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    player = board.p1
+
+    for pos in [1, 2, 3]:
+        assert player.characters[pos].id == "Cat"
+
+
+@pytest.mark.parametrize('limit', (1, 3, 5))
+def test_trophy_hunter_friendlyspirit(limit):
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_FRIENDLYGHOST', position=1, attack=5, health=10),
+        ],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS'''],
+        hero='SBB_HERO_MILITARYLEADER',
+    )
+
+    enemy = make_player(
+        characters=[
+            make_character(attack=0, position=1),
+            make_character(attack=0, position=2),
+            make_character(attack=0, position=3),
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=limit)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    player = board.p1
+
+    ghost = board.p1.characters[1]
+    if limit == 1:
+        final_stats = (10, 20)
+    elif limit == 3:
+        final_stats = (20, 40)
+    elif limit == 5:
+        final_stats = (40, 80)
+    else:
+        raise ValueError(f'Limit of {limit} is not configured in the test')
+
+    assert (ghost.attack, ghost.health) == final_stats
 
 def test_modred():
     player = make_player(
@@ -399,14 +459,12 @@ def test_beauty_spawnedanimal():
 
     assert player.characters[1].tribes == {Tribe.GOOD, Tribe.EVIL, Tribe.ANIMAL}
 
-
 FALLEN_ANGEL_TESTS = (
     (['good'], 1, 3),
     (['evil'], 3, 1),
     (['good', 'evil'], 3, 3),
     ([], 1, 1)
 )
-
 
 @pytest.mark.parametrize('tribes, attack, health', FALLEN_ANGEL_TESTS)
 def test_fallen_angel(tribes, attack, health):

@@ -1,4 +1,3 @@
-import collections
 import logging
 import random
 from collections import OrderedDict
@@ -174,8 +173,7 @@ class Player(EventManager):
         for char in self.valid_characters():
             if char.support:
                 for _ in range(support_itr):  # my commit but blame regi
-                    for target_position in utils.get_support_targets(position=char.position,
-                                                                     horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures):
+                    for target_position in utils.get_support_targets(position=char.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures):
                         target = self.characters.get(target_position)
                         if target:
                             char.buff(target, *args, **kwargs)
@@ -279,7 +277,7 @@ class Player(EventManager):
 
         return [char for char in self.characters.values() if base_lambda(char) and _lambda(char)]
 
-    def cast_spell(self, spell_id, on_start=False):
+    def cast_spell(self, spell_id, trigger_onspell=True):
         spell = spell_registry[spell_id]()
         if spell is None:
             return
@@ -294,8 +292,14 @@ class Player(EventManager):
             return
 
         logger.debug(f'{self.id} casting {spell}')
-        if self._spells_cast is None:
-            self._spells_cast = 0
-        self._spells_cast += 1
-        stack = self('OnSpellCast', caster=self, spell=spell, target=target)
+
+        stack = None
+        if trigger_onspell:  # for spells in the passed-in list of spells cast, do not increment
+            if self._spells_cast is None:
+                self._spells_cast = 0
+            self._spells_cast += 1
+
+            stack = self('OnSpellCast', caster=self, spell=spell, target=target)
+
         spell.cast(player=self, target=target, stack=stack)
+

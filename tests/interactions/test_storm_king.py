@@ -56,6 +56,13 @@ def test_stormking_spawn_with_spell(r, golden, raw):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
+    class CastFireballOnStart(OnStart):
+        player = board.p1
+
+        def handle(self, stack, *args, **kwargs):
+            self.player.cast_spell('SBB_SPELL_FIREBALL')
+
+    board.register(CastFireballOnStart)
     winner, loser = board.fight(limit=1)
     board.p1.resolve_board()
     board.p2.resolve_board()
@@ -73,12 +80,17 @@ def test_stormking_cast_spell(r, golden, raw):
         characters=[
             make_character(id="SBB_CHARACTER_THEGREATANDPOWERFUL", position=1, attack=s, health=s, golden=golden),
         ],
-        spells=[
-            'SBB_SPELL_FIREBALL'
-        ]
     )
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
+
+    class CastFireballOnStart(OnStart):
+        player = board.p1
+
+        def handle(self, stack, *args, **kwargs):
+            self.player.cast_spell('SBB_SPELL_FIREBALL')
+
+    board.register(CastFireballOnStart)
 
     winner, loser = board.fight(limit=0)
     board.p1.resolve_board()
@@ -101,12 +113,18 @@ def test_many_stormking_cast_spell(r, golden, raw):
             make_character(id="SBB_CHARACTER_THEGREATANDPOWERFUL", position=4, attack=s, health=s, golden=golden),
 
         ],
-        spells=[
-            'SBB_SPELL_FIREBALL'
-        ]
     )
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
+
+
+    class CastFireballOnStart(OnStart):
+        player = board.p1
+
+        def handle(self, stack, *args, **kwargs):
+            self.player.cast_spell('SBB_SPELL_FIREBALL')
+
+    board.register(CastFireballOnStart)
 
     winner, loser = board.fight(limit=0)
     board.p1.resolve_board()
@@ -223,7 +241,6 @@ def test_stormking_spawn_with_large_golden(r, raw):
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (25, 25)
 
-
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('raw', (True, False))
 def test_stormking_spawn_with_large_and_echowood(r, raw):
@@ -254,11 +271,11 @@ def test_stormking_spawn_with_large_and_echowood(r, raw):
     assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (50, 50)
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (49, 49)
 
-
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('raw', (True, False))
 def test_stormking_spawn(golden, r, raw):
+
     player = make_player(
         raw=raw,
         characters=[

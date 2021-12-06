@@ -119,6 +119,7 @@ class StatChangeCause(enum.Enum):
     SPELL_WEAVER = 141
     CRAFTY_BUFF = 142
     STORM_KING_BUFF = 143
+    AON_BUFF = 144
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202
@@ -240,6 +241,11 @@ def get_spawn_positions(position):
 def random_combat_spell(level):
     valid_spells = [
         *spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in COMBAT_SPELLS)]
+    if valid_spells:
+        return random.choice(valid_spells)
+
+def random_start_combat_spell(level):
+    valid_spells = [*spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in START_OF_FIGHT_SPELLS)]
     if valid_spells:
         return random.choice(valid_spells)
 
