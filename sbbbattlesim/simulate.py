@@ -83,9 +83,6 @@ def simulate_brawl(data: dict, k: int, raw: dict):
 
 
 def _process(data: dict, t: int = 1, k: int = 1) -> dict:
-
-    print(data)
-
     manager = multiprocessing.Manager()
     raw = manager.list()
 
