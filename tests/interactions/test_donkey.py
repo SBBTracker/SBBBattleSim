@@ -26,4 +26,4 @@ def test_donkey_surviving(golden, level, repeat):
     if golden:
         assert board.p1.characters[2]._level == level
     else:
-        assert board.p1.characters[2]._level <= level
+        assert board.p1.characters[2]._level <= level and board.p1.characters[2]._level > 1

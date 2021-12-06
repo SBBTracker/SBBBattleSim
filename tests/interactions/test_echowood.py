@@ -1,6 +1,6 @@
 from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
-from sbbbattlesim.events import OnDamagedAndSurvived
+from sbbbattlesim.events import OnDamagedAndSurvived, OnSummon
 from tests import make_character, make_player
 from sbbbattlesim.characters import registry as character_registry
 
@@ -573,3 +573,91 @@ def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood(r):
     assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (3, 3)
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (4, 4)
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (4, 4)
+
+
+@pytest.mark.parametrize('r', range(8))
+def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood_onspawn(r):
+    player = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=6, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=7, attack=1, health=1),
+            make_character(position=1, attack=2, health=4),
+            make_character(position=2, attack=2, health=4),
+            make_character(position=5, attack=2, health=4),
+        ],
+        treasures=[
+            "SBB_TREASURE_SUMMONINGCIRCLE",
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=5, attack=1, health=1),
+            make_character(position=6, attack=1, health=1),
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
+
+        def handle(self, *args, **kwargs):
+                summon = character_registry["SBB_CHARACTER_BLACKCAT"].new(
+                    owner=self.manager.owner,
+                    position=self.manager.position,
+                    golden=False,
+                )
+                self.manager.owner.summon(self.manager.position, [summon])
+
+    class FakeTrojanDonkeyOnSummonSummon(OnSummon):
+        donkey = board.p1.characters[1]
+        triggered = False
+
+        def handle(self, *args, **kwargs):
+                if not self.triggered:
+                    self.triggered=True
+                    summon = character_registry["SBB_CHARACTER_BLACKCAT"].new(
+                        owner=self.manager,
+                        position=self.donkey.position,
+                        golden=False,
+                    )
+                    self.manager.summon(self.donkey.position, [summon])
+
+    board.p1.characters[1].register(FakeTrojanDonkeySummon)
+    board.p1.register(FakeTrojanDonkeyOnSummonSummon)
+
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (2, 2)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (3, 3)
+    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (4, 4)
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (4, 4)
+
+
+
+def test_medusa_echowood():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_MEDUSA', position=6, attack=1, health=1),
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(attack=1, health=1, position=2),
+            make_character(id="SBB_CHARACTER_BABYROOT", attack=0, health=1, position=5),
+            make_character(id="SBB_CHARACTER_MADMADAMMIM", attack=0, health=1, position=6),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", attack=1, health=1, position=7),
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    creature = board.p2.characters[1]
+    winner, loser = board.fight(limit=1)
+    echo = board.p2.characters[7]
+
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (echo.attack, echo.health) == (4, 4)
