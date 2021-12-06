@@ -66,9 +66,6 @@ class Character(EventManager):
 
         self.stat_history = []
 
-        for kw, arg in kwargs.items():
-            setattr(self, kw, arg)
-
     @classmethod
     def new(cls, owner, position, golden):
         return cls(
@@ -86,7 +83,7 @@ class Character(EventManager):
 
     @classmethod
     def valid(cls):
-        return cls._attack != 0 or cls._health != 0 or cls._level != 0, f'{cls._attack}/{cls.health} ({cls._level})'
+        return cls._attack != 0 or cls._health != 0 or cls._level != 0
 
     def buff(self, target_character, *args, **kwargs):
         raise NotImplementedError
@@ -120,8 +117,7 @@ class Character(EventManager):
         )
 
     def change_stats(self, reason, source, attack=0, health=0, damage=0, heal=0, temp=True, *args, **kwargs):
-        stat_change = StatChange(reason=reason, source=source, attack=attack, health=health, damage=damage, heal=heal,
-                                 temp=temp)
+        stat_change = StatChange(reason=reason, source=source, attack=attack, health=health, damage=damage, heal=heal, temp=temp)
         logger.debug(f'{self.pretty_print()} stat change b/c {stat_change}')
 
         if attack != 0 or health != 0:
@@ -134,8 +130,7 @@ class Character(EventManager):
 
             if 'origin' in kwargs:
                 del kwargs['origin']
-            self('OnBuff', attack=attack, health=health, damage=damage, reason=reason, temp=temp, origin=self, *args,
-                 **kwargs)
+            self('OnBuff', attack=attack, health=health, damage=damage, reason=reason, temp=temp, origin=self, source=source, *args, **kwargs)
 
         if damage > 0:
             if self.invincible and reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:
@@ -176,7 +171,7 @@ class Registry(object):
     characters = OrderedDict()
 
     def __getitem__(self, item):
-        return self.characters.get(item, Character)
+        return self.characters.get(item, self._base_character(item))
 
     def __getattr__(self, item):
         return getattr(self.characters, item)
@@ -191,8 +186,7 @@ class Registry(object):
         logger.debug(f'Registered {name} - {character}')
 
     def filter(self, _lambda=lambda char_cls: True):
-        return (char_cls for id, char_cls in self.characters.items() if
-                id not in CHARACTER_EXCLUSION and _lambda(char_cls))
+        return (char_cls for id, char_cls in self.characters.items() if id not in CHARACTER_EXCLUSION and _lambda(char_cls))
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
@@ -202,6 +196,12 @@ class Registry(object):
             except Exception as exc:
                 logger.exception('Error loading characters: {}'.format(name))
                 raise exc
+
+    def _base_character(self, name):
+        class TempCharacter(Character):
+            display_name = name
+            id = name
+        return TempCharacter
 
 
 registry = Registry()

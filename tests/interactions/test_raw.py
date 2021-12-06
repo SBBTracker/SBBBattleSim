@@ -10,7 +10,7 @@ def test_raw_fanny(golden):
     player = make_player(
         raw=True,
         characters=[
-            make_character(id="SBB_CHARACTER_ANGRYDWARF", position=5, attack=1, health=1, golden=golden),
+            make_character(id="SBB_CHARACTER_ANGRYDWARF",position=5, attack=1, health=1, golden=golden),
             make_character(position=1, attack=5, health=5, tribes=[Tribe.DWARF]),
             make_character(position=2, attack=1, health=1)
         ]
@@ -41,7 +41,7 @@ def test_singingswords_bossy():
     player = make_player(
         raw=True,
         characters=[
-            make_character(id="SBB_CHARACTER_BIGBOSS", position=5, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_BIGBOSS",position=5, attack=1, health=1),
             make_character(position=1, attack=6, health=3, tribes=[Tribe.DWARF]),
         ],
         treasures=[
@@ -55,3 +55,4 @@ def test_singingswords_bossy():
     board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (6, 3)
+    assert (board.p1.characters[1]._base_attack, board.p1.characters[1]._base_health) == (1, 1)

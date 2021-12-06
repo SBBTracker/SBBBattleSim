@@ -1,6 +1,9 @@
 from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
+from sbbbattlesim.events import OnDamagedAndSurvived
 from tests import make_character, make_player
+from sbbbattlesim.characters import registry as character_registry
+
 import pytest
 
 
@@ -236,3 +239,337 @@ def test_echowood_romeo_juliet():
     board.p2.resolve_board()
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (8, 8)
+
+
+def test_multiple_echowoods_with_summon():
+    player = make_player(
+        raw=True,
+        characters=[
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=3, attack=2, health=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=4, attack=2, health=1),
+            make_character(position=1, attack=2, health=2),
+        ],
+        treasures=[
+            "SBB_TREASURE_WHIRLINGBLADES",
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=5, attack=1, health=1),
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
+
+        def handle(self, *args, **kwargs):
+                summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
+                    owner=self.manager.owner,
+                    position=self.manager.position,
+                    golden=False
+                )
+                self.manager.owner.summon(self.manager.position, [summon])
+
+    board.p1.characters[1].register(FakeTrojanDonkeySummon)
+
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 1)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 1)
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (2, 1)
+
+def test_multiple_echowoods_with_summon():
+    player = make_player(
+        raw=True,
+        characters=[
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=3, attack=2, health=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=4, attack=2, health=1),
+            make_character(position=1, attack=2, health=2),
+        ],
+        treasures=[
+            "SBB_TREASURE_WHIRLINGBLADES",
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=5, attack=1, health=1),
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
+
+        def handle(self, *args, **kwargs):
+                summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
+                    owner=self.manager.owner,
+                    position=self.manager.position,
+                    golden=False
+                )
+                self.manager.owner.summon(self.manager.position, [summon])
+
+    board.p1.characters[1].register(FakeTrojanDonkeySummon)
+
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 1)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 1)
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (2, 1)
+
+
+def test_multiple_echowoods_with_summon_and_health_support():
+    player = make_player(
+        raw=True,
+        characters=[
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=3, attack=2, health=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=4, attack=2, health=1),
+            make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=1, health=1),
+            make_character(position=1, attack=2, health=4),
+        ],
+        treasures=[
+            "SBB_TREASURE_WHIRLINGBLADES",
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=5, attack=1, health=1),
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
+
+        def handle(self, *args, **kwargs):
+                summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
+                    owner=self.manager.owner,
+                    position=self.manager.position,
+                    golden=False
+                )
+                self.manager.owner.summon(self.manager.position, [summon])
+
+    board.p1.characters[1].register(FakeTrojanDonkeySummon)
+
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 4)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 4)
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (2, 4)
+
+
+def test_multiple_echowoods_with_summon_and_health_support():
+    player = make_player(
+        raw=True,
+        characters=[
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=3, attack=2, health=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=4, attack=2, health=1),
+            make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=1, health=1),
+            make_character(position=1, attack=2, health=4),
+        ],
+        treasures=[
+            "SBB_TREASURE_WHIRLINGBLADES",
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=5, attack=1, health=1),
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
+
+        def handle(self, *args, **kwargs):
+                summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
+                    owner=self.manager.owner,
+                    position=self.manager.position,
+                    golden=False
+                )
+                self.manager.owner.summon(self.manager.position, [summon])
+
+    board.p1.characters[1].register(FakeTrojanDonkeySummon)
+
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 4)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 4)
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (2, 4)
+
+
+def test_multiple_echowoods_with_summon_and_health_support_not_raw():
+    player = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=3, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=4, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=1, health=1),
+            make_character(position=1, attack=2, health=4),
+        ],
+        treasures=[
+            "SBB_TREASURE_WHIRLINGBLADES",
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=5, attack=1, health=1),
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
+
+        def handle(self, *args, **kwargs):
+                summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
+                    owner=self.manager.owner,
+                    position=self.manager.position,
+                    golden=False
+                )
+                self.manager.owner.summon(self.manager.position, [summon])
+
+    board.p1.characters[1].register(FakeTrojanDonkeySummon)
+
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 4)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 4)
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (2, 4)
+
+
+def test_multiple_echowoods_with_summoningportal():
+    player = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=3, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=4, attack=1, health=1),
+            make_character(position=1, attack=2, health=4),
+        ],
+        treasures=[
+            "SBB_TREASURE_SUMMONINGCIRCLE",
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=5, attack=1, health=1),
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
+
+        def handle(self, *args, **kwargs):
+                summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
+                    owner=self.manager.owner,
+                    position=self.manager.position,
+                    golden=False
+                )
+                self.manager.owner.summon(self.manager.position, [summon])
+
+    board.p1.characters[1].register(FakeTrojanDonkeySummon)
+
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (2, 2)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (2, 2)
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (2, 2)
+
+
+@pytest.mark.parametrize('r', range(8))
+def test_multiple_echowoods_with_summoningportal_summontwo(r):
+    player = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=6, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=7, attack=1, health=1),
+            make_character(position=1, attack=2, health=4),
+            make_character(position=2, attack=2, health=4),
+            make_character(position=5, attack=2, health=4),
+        ],
+        treasures=[
+            "SBB_TREASURE_SUMMONINGCIRCLE",
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=5, attack=1, health=1),
+            make_character(position=6, attack=1, health=1),
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
+
+        def handle(self, *args, **kwargs):
+                summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
+                    owner=self.manager.owner,
+                    position=self.manager.position,
+                    golden=False
+                )
+                self.manager.owner.summon(self.manager.position, [summon])
+
+    board.p1.characters[1].register(FakeTrojanDonkeySummon)
+    board.p1.characters[2].register(FakeTrojanDonkeySummon)
+
+    winner, loser = board.fight(limit=2)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 4)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (3, 3)
+    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (4, 4)
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (4, 4)
+
+
+@pytest.mark.parametrize('r', range(8))
+def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood(r):
+    player = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=6, attack=1, health=1),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=7, attack=1, health=1),
+            make_character(position=1, attack=2, health=4),
+            make_character(position=2, attack=2, health=4),
+            make_character(position=5, attack=2, health=4),
+        ],
+        treasures=[
+            "SBB_TREASURE_SUMMONINGCIRCLE",
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(position=5, attack=1, health=1),
+            make_character(position=6, attack=1, health=1),
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
+
+        def handle(self, *args, **kwargs):
+                summon = character_registry["SBB_CHARACTER_BLACKCAT"].new(
+                    owner=self.manager.owner,
+                    position=self.manager.position,
+                    golden=False,
+                )
+                self.manager.owner.summon(self.manager.position, [summon])
+
+    board.p1.characters[1].register(FakeTrojanDonkeySummon)
+    board.p1.characters[2].register(FakeTrojanDonkeySummon)
+
+    winner, loser = board.fight(limit=2)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (2, 2)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (3, 3)
+    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (4, 4)
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (4, 4)
