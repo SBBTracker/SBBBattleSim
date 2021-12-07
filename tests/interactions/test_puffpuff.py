@@ -203,5 +203,5 @@ def test_puff_spawn(golden, r, raw):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (34, 34) if golden else (17, 17)
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (21, 21) if golden else (11, 11)
+    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (34, 34) if golden else (17, 17), (board.p1.characters[6].attack, board.p1.characters[6].health)
+    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (21, 21) if golden else (11, 11), (board.p1.characters[1].attack, board.p1.characters[1].health)

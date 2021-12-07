@@ -969,6 +969,76 @@ def test_coin_of_charon(mimic):
 
 
 @pytest.mark.parametrize('mimic', (True, False))
+@pytest.mark.parametrize('full_board', (True, False))
+def test_reduplicator(mimic, full_board):
+
+    characters = [
+        make_character(id="SBB_CHARACTER_BLACKCAT", position=1, health=1),
+        make_character(position=4, health=5),
+        make_character(position=5, health=5),
+        make_character(position=6, health=5),
+        make_character(position=7, health=5),
+    ]
+
+    if full_board:
+        characters.append(make_character(position=2, health=5))
+        characters.append(make_character(position=3, health=5))
+
+    player = make_player(
+        characters=characters,
+        treasures=[
+            'SBB_TREASURE_REDUPLICATOR',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        spells=[
+            "SBB_SPELL_EARTHQUAKE"
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    player = board.p1
+    char1 = player.characters[1]
+    char2 = player.characters[2]
+    char3 = player.characters[3]
+
+    triggered = player.treasures['SBB_TREASURE_REDUPLICATOR'][0].triggered
+    cat_id = 'SBB_CHARACTER_CAT'
+    assert char1.id == cat_id
+    if mimic and full_board:
+        assert char2
+        assert char3
+        assert char3.id != cat_id
+        assert char2.id != cat_id
+        assert not triggered
+    elif not mimic and full_board:
+        assert char3
+        assert char3.id != cat_id
+        assert char2
+        assert char2.id != cat_id
+        assert not triggered
+    elif mimic and not full_board:
+        assert char2
+        assert char2.id == cat_id
+        assert char3
+        assert char3.id == cat_id
+        assert triggered
+    elif not mimic and not full_board:
+        assert char2
+        assert char2.id == cat_id
+        assert triggered
+        assert char3 is None
+    else:
+        raise ValueError('Nonsense state')
+
+
+
+@pytest.mark.parametrize('mimic', (True, False))
 def test_moonsong_horn(mimic):
     player = make_player(
         characters=[

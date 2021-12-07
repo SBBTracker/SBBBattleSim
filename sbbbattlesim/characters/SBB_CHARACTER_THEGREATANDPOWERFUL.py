@@ -1,7 +1,9 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSpellCast, OnStart, OnSummon
 from sbbbattlesim.utils import StatChangeCause, Tribe
+import logging
 
+logger = logging.getLogger(__name__)
 
 class StormKingOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
@@ -13,6 +15,8 @@ class StormKingOnStart(OnStart):
         current_health = int(
             (self.storm_king.health - (self.storm_king._health * (2 if self.storm_king.golden else 1))) / (
                 4 if self.storm_king.golden else 2))
+
+        logger.error(f'current_buff: {current_buff} current_attack: {current_attack} current_health: {current_health}')
 
         new_buff = min(current_attack, current_health)
 
@@ -59,7 +63,7 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
 
         self.owner.register(StormKingOnSpellCast, storm_king=self)
-        self.owner.register(StormKingOnSummon, storm_king=self)
+        self.owner.register(StormKingOnSummon, storm_king=self, priority=-15)
         self.owner.board.register(StormKingOnStart, storm_king=self, priority=9000)
 
     @classmethod

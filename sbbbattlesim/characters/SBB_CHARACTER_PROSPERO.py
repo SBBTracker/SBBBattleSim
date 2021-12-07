@@ -22,7 +22,7 @@ class CharacterType(Character):
             def handle(self, summoned_characters, stack, *args, **kwargs):
                 for char in summoned_characters:
                     if char is self.bearstine or Tribe.ANIMAL not in char.tribes:
-                            continue
+                        continue
 
                     stat_multplier = 2 if self.bearstine.golden else 1
 
@@ -43,7 +43,7 @@ class CharacterType(Character):
                                       source=self.bearstine, temp=False, stack=stack)
                     char.owner.resolve_board()
 
-        self.owner.register(BearstineOnSummon)
+        self.owner.register(BearstineOnSummon, priority=-20)
 
     def buff(self, target_character, *args, **kwargs):
         if Tribe.ANIMAL in target_character.tribes and target_character != self:
