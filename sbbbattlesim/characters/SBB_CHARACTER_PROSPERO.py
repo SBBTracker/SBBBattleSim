@@ -21,8 +21,8 @@ class CharacterType(Character):
             bearstine = self
             def handle(self, summoned_characters, stack, *args, **kwargs):
                 for char in summoned_characters:
-                    if Tribe.ANIMAL not in char.tribes:
-                        continue
+                    if char is self.bearstine or Tribe.ANIMAL not in char.tribes:
+                            continue
 
                     stat_multplier = 2 if self.bearstine.golden else 1
 

@@ -261,6 +261,8 @@ class Player(EventManager):
                 if self._attack_slot > 7:
                     self.attack_slot = 1
 
+        character.owner.opponent.resolve_board()
+
 
     def valid_characters(self, _lambda=lambda char: True):
         """
