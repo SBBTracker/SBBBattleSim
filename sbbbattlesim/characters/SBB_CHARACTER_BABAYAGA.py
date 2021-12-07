@@ -7,6 +7,17 @@ from sbbbattlesim.utils import Tribe
 logger = logging.getLogger(__name__)
 
 
+class BabaYagaOnSlayBuff(OnSlay):
+    def handle(self, source, stack, *args, **kwargs):
+        if isinstance(source, OnSlay):
+            return
+
+        for _ in range(2 if self.baba_yaga.golden else 1):
+            with stack.open(source=self, *args, **kwargs) as executor:
+                logger.debug(f'Baba Yaga Triggering OnAttackAndKill {source} ({args} {kwargs})')
+                executor.execute(source, *args, **kwargs)
+
+
 class CharacterType(Character):
     display_name = 'Baba Yaga'
     support = True
@@ -18,16 +29,4 @@ class CharacterType(Character):
     _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
     def buff(self, target_character, *args, **kwargs):
-        class BabaYagaOnSlayBuff(OnSlay):
-            baba_yaga = self
-
-            def handle(self, source, stack, *args, **kwargs):
-                if isinstance(source, OnSlay):
-                    return
-
-                for _ in range(2 if self.baba_yaga.golden else 1):
-                    with stack.open(source=self, *args, **kwargs) as executor:
-                        logger.debug(f'Baba Yaga Triggering OnAttackAndKill {source} ({args} {kwargs})')
-                        executor.execute(source, *args, **kwargs)
-
-        target_character.register(BabaYagaOnSlayBuff, temp=True)
+        target_character.register(BabaYagaOnSlayBuff, temp=True, baba_yaga=self)

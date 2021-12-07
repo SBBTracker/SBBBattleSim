@@ -37,6 +37,9 @@ class Registry(object):
         self.heros[name] = hero
         logger.debug(f'Registered {name} - {hero}')
 
+    def filter(self, _lambda=lambda hero_cls: True):
+        return (hero_cls for id, hero_cls in self.heros.items() if _lambda(hero_cls))
+
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
             try:

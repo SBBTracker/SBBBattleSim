@@ -10,7 +10,7 @@ from sbbbattlesim import simulate, SBBBSCrocException
 logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
-    logger.error(f'Starting...')
+    logger.debug(f'Starting...')
     queue = Queue()
     threading.Thread(target=log_parser.run,
                      args=(queue,),
@@ -28,13 +28,13 @@ if __name__ == '__main__':
 
             p1id, p2id = simulation.starting_board.p1.id, simulation.starting_board.p2.id
 
-            logger.error(f'RESULT KEYS {simulation.results.keys()}')
+            logger.debug(f'RESULT KEYS {simulation.results.keys()}')
 
-            logger.error(
+            logger.debug(
                 f'Simulation Results ({simulation.run_time} - {sum(len(v) for v in simulation.results.values())})')
-            logger.error(f'{simulation.starting_board.p1}')
-            logger.error(f'{simulation.starting_board.p2}')
+            logger.debug(f'{simulation.starting_board.p1}')
+            logger.debug(f'{simulation.starting_board.p2}')
 
-            logger.error(f'{p1id} {simulation.stats.win_rate[p1id]}% {simulation.stats.avg_damage[p1id]}')
-            logger.error(f'{p2id} {simulation.stats.win_rate[p2id]}% {simulation.stats.avg_damage[p2id]}')
-            logger.error(f'Tie {simulation.stats.win_rate[None]}%')
+            logger.debug(f'{p1id} {simulation.stats.win_rate[p1id]}% {simulation.stats.avg_damage[p1id]}')
+            logger.debug(f'{p2id} {simulation.stats.win_rate[p2id]}% {simulation.stats.avg_damage[p2id]}')
+            logger.debug(f'Tie {simulation.stats.win_rate[None]}%')
