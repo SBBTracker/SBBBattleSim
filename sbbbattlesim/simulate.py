@@ -111,16 +111,16 @@ def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> Simulati
 
     results = _process(data, t, k)
 
-    for pid in (starting_board.p1.id, starting_board.p2.id, None):
-        if pid not in results:
-            starting_board[pid] = []
+    # for pid in (starting_board.p1.id, starting_board.p2.id, None):
+    #     if pid not in results:
+    #         starting_board[pid] = []
 
     sim_results = SimulationResult(
         hash_id=hashlib.sha256(f'{starting_board.p1}{starting_board.p2}'.encode('utf-8')),
         # results=results,
         run_time=time.perf_counter() - start,
         starting_board=starting_board,
-        stats=calculate_stats(results)
+        stats=calculate_stats(results, starting_board.p1, starting_board.p2)
     )
 
     return sim_results
