@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class SimulationResult:
     hash_id: hash
-    results: Dict[str, List[Board]]
+    # results: Dict[str, List[Board]]
     run_time: float
     starting_board: Board
     stats: SimulationStats
@@ -71,7 +71,7 @@ def from_state(state: dict):
 
 
 def simulate_brawl(data: dict, k: int, raw: dict):
-    logger.error(f'Simulation Starting (k={k})')
+    logger.debug(f'Simulation Starting (k={k})')
     for _ in range(k):
         board = Board(deepcopy(data))
         try:
@@ -111,9 +111,13 @@ def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> Simulati
 
     results = _process(data, t, k)
 
+    for pid in (starting_board.p1.id, starting_board.p2.id, None):
+        if pid not in results:
+            starting_board[pid] = []
+
     sim_results = SimulationResult(
         hash_id=hashlib.sha256(f'{starting_board.p1}{starting_board.p2}'.encode('utf-8')),
-        results=results,
+        # results=results,
         run_time=time.perf_counter() - start,
         starting_board=starting_board,
         stats=calculate_stats(results)

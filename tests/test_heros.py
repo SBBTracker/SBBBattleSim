@@ -360,26 +360,27 @@ def test_trophy_hunter_friendlyspirit(limit):
 
     assert (ghost.attack, ghost.health) == final_stats
 
-def test_modred():
-    player = make_player(
-        characters=[
-            make_character()
-        ],
-        hero='SBB_HERO_MORDRED',
-        hand=[make_character(id=f'TEST{i}', attack=i) for i in range(4)]
-    )
 
-    enemy = make_player(
-        characters=[make_character(id='GENERIC', position=1)],
-    )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
-
-    player = board.p1
-
-    assert player.characters[1].id == 'TEST3'
+# def test_modred():
+#     player = make_player(
+#         characters=[
+#             make_character()
+#         ],
+#         hero='SBB_HERO_MORDRED',
+#         hand=[make_character(id=f'TEST{i}', attack=i) for i in range(4)]
+#     )
+#
+#     enemy = make_player(
+#         characters=[make_character(id='GENERIC', position=1)],
+#     )
+#     board = Board({'PLAYER': player, 'ENEMY': enemy})
+#     winner, loser = board.fight()
+#     board.p1.resolve_board()
+#     board.p2.resolve_board()
+#
+#     player = board.p1
+#
+#     assert player.characters[1].id == 'TEST3'
 
 
 @pytest.mark.parametrize('on', (True, False))
