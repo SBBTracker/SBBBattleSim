@@ -91,6 +91,8 @@ def test_courtwizard_noattack_eveniftoken():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     unit = board.p1.characters[1]
     assert unit
+    unit2 = board.p1.characters[2]
+    assert unit2
     prince = board.p2.characters[1]
     assert prince
     wizard = board.p2.characters[6]
@@ -114,6 +116,7 @@ def test_courtwizard_noattack_eveniftoken():
     assert prince.dead
     assert wizard.dead
     assert peep.dead
+    assert not unit2.dead
 
     for pos in [5, 6, 7]:
         assert board.p2.characters[pos].id == "SBB_CHARACTER_SHEEP"
