@@ -34,19 +34,12 @@ class Board(EventManager):
             return self.p2
 
     def fight(self, limit=-1):
-
         attacker, defender = who_goes_first(self.p1, self.p2)
-
         attacker.resolve_board()
         defender.resolve_board()
-
-        ### TODO test who's events trigger in which order
         self('OnStart')
-
-        winner, loser = fight(attacker, defender, limit=limit)
-        self.winner = winner
-        self.loser = loser
-        return winner, loser
+        self.winner, self.loser = fight(attacker, defender, limit=limit)
+        return self.winner, self.loser
 
 
 def who_goes_first(p1, p2):

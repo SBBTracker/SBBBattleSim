@@ -1,4 +1,5 @@
 import collections
+import concurrent.futures
 import hashlib
 import logging
 import multiprocessing
@@ -9,18 +10,9 @@ from dataclasses import dataclass
 from typing import Dict, List
 
 from sbbbattlesim import Board
-from sbbbattlesim.stats import SimulationStats, calculate_stats
+from sbbbattlesim.stats import calculate_stats, BoardStats
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class SimulationResult:
-    hash_id: hash
-    # results: Dict[str, List[Board]]
-    run_time: float
-    starting_board: Board
-    stats: SimulationStats
 
 
 def from_state(state: dict):
@@ -70,39 +62,36 @@ def from_state(state: dict):
     return sim_data
 
 
-def simulate_brawl(data: dict, k: int, raw: dict):
-    logger.debug(f'Simulation Starting (k={k})')
+def simulate_brawl(data: dict, k: int, raw: dict) -> List[BoardStats]:
+    logger.error(f'Simulation Process Starting (k={k})')
+    results = []
     for _ in range(k):
         board = Board(deepcopy(data))
-        try:
-            board.fight(limit=-1)
-            raw.append(board)
-        except Exception as e:
-            traceback.print_exc()
-            raise e
-
-
-def _process(data: dict, t: int = 1, k: int = 1) -> dict:
-    manager = multiprocessing.Manager()
-    raw = manager.list()
-
-    jobs = []
-    for i in range(t):
-        p = multiprocessing.Process(target=simulate_brawl, args=(data, k, raw))
-        jobs.append(p)
-        p.start()
-
-    for job in jobs:
-        job.join()
-
-    results = collections.defaultdict(list)
-    for board in raw:
-        results[board.winner.id if board.winner else None].append(board)
+        board.fight(limit=-1)
+        results.append(calculate_stats(board))
 
     return results
 
 
-def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> SimulationResult:
+def _process(data: dict, t: int = 1, k: int = 1, timeout: int = 30) -> list:
+    raw = []
+    with concurrent.futures.ProcessPoolExecutor(max_workers=t) as executor:
+        futures = [executor.submit(simulate_brawl, data, k, raw) for _ in range(t)]
+        for future in concurrent.futures.as_completed(futures, timeout=timeout):
+            raw.extend(future.result())
+
+    return raw
+
+
+@dataclass
+class SimulationStats:
+    _id: hash
+    run_time: float
+    starting_board: Board
+    results: List[BoardStats]
+
+
+def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> SimulationStats:
     data = from_state(state)
 
     start = time.perf_counter()
@@ -111,16 +100,9 @@ def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> Simulati
 
     results = _process(data, t, k)
 
-    # for pid in (starting_board.p1.id, starting_board.p2.id, None):
-    #     if pid not in results:
-    #         starting_board[pid] = []
-
-    sim_results = SimulationResult(
-        hash_id=hashlib.sha256(f'{starting_board.p1}{starting_board.p2}'.encode('utf-8')),
-        # results=results,
+    return SimulationStats(
+        _id=hashlib.sha256(f'{starting_board.p1}{starting_board.p2}'.encode('utf-8')),
         run_time=time.perf_counter() - start,
         starting_board=starting_board,
-        stats=calculate_stats(results, starting_board.p1, starting_board.p2)
+        results=results
     )
-
-    return sim_results
