@@ -173,8 +173,14 @@ class Player(EventManager):
 
         for char in self.valid_characters():
             if char.aura:
-                for target in self.valid_characters():
-                    char.buff(target, *args, **kwargs)
+                if char.id == "SBB_CHARACTER_ECHOWOODSHAMBLER":
+                    for target in self.valid_characters():
+                        char.buff(target, *args, **kwargs)
+        for char in self.valid_characters():
+            if char.aura:
+                if char.id != "SBB_CHARACTER_ECHOWOODSHAMBLER":
+                    for target in self.valid_characters():
+                        char.buff(target, *args, **kwargs)
 
         for char in self.valid_characters():
             if char.support:
@@ -260,6 +266,8 @@ class Player(EventManager):
                 self._attack_slot += 1
                 if self._attack_slot > 7:
                     self.attack_slot = 1
+
+        character.owner.opponent.resolve_board()
 
 
     def valid_characters(self, _lambda=lambda char: True):

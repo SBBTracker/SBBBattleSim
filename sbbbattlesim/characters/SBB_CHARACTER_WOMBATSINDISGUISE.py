@@ -36,7 +36,6 @@ class WombatsInDisguiseOnDeath(OnDeath):
             )
 
             summon.owner.register(WombatsInDisguiseOnSummon, wombat=self.manager, summon=summon)
-
             self.manager.owner.summon(self.manager.position, [summon])
 
 

@@ -12,11 +12,35 @@ def test_crafty_raw(num_treasures, golden):
     treasures = ['''SBB_TREASURE_HERMES'BOOTS''', '''SBB_TREASURE_BADMOON''', '''SBB_TREASURE_BOOKOFHEROES''']
     treasures = treasures[:num_treasures]
 
-    fs = 1 + len(treasures) * (6 if golden else 3)
+    fs = (2 if golden else 1) + len(treasures) * (6 if golden else 3)
     player = make_player(
         raw=True,
         characters=[
-            make_character(id="SBB_CHARACTER_DWARVENARTIFICER", position=1, attack=fs, health=fs)
+            make_character(id="SBB_CHARACTER_DWARVENARTIFICER", position=1, attack=fs, health=fs, golden=golden)
+        ],
+        treasures=treasures
+    )
+    enemy = make_player()
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+
+    winner, loser = board.fight(limit=2)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[1]._base_attack, board.p1.characters[1]._base_health) == ((2, 2) if golden else (1, 1))
+
+
+@pytest.mark.parametrize('num_treasures', (0, 1, 2, 3))
+@pytest.mark.parametrize('golden', (True, False))
+def test_crafty(num_treasures, golden):
+    treasures = ['''SBB_TREASURE_HERMES'BOOTS''', '''SBB_TREASURE_BADMOON''', '''SBB_TREASURE_BOOKOFHEROES''']
+    treasures = treasures[:num_treasures]
+
+    fs = (2 if golden else 1) + len(treasures) * (6 if golden else 3)
+    player = make_player(
+        raw=False,
+        characters=[
+            make_character(id="SBB_CHARACTER_DWARVENARTIFICER", position=1, attack=(2 if golden else 1), health=(2 if golden else 1), golden=golden)
         ],
         treasures=treasures
     )
@@ -28,7 +52,6 @@ def test_crafty_raw(num_treasures, golden):
     board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (fs, fs)
-
 
 @pytest.mark.parametrize('num_treasures', (0, 1, 2, 3))
 @pytest.mark.parametrize('golden', (True, False))
@@ -65,4 +88,6 @@ def test_crafty_spawn(num_treasures, golden):
     board.p2.resolve_board()
 
     fs = 1 + len(treasures) * (6 if golden else 3)
+    fs2 = fs + (1 if golden else 0)
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (fs2, fs2)
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (fs, fs)

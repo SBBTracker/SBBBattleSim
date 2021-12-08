@@ -9,7 +9,8 @@ logger = logging.getLogger(__name__)
 
 class HungryHungryHippocampusOnSummon(OnSummon):
     def handle(self, summoned_characters, stack, *args, **kwargs):
-        num_animals = len(list(filter(lambda char: Tribe.ANIMAL in char.tribes, summoned_characters)))
+        _lambda = lambda char: Tribe.ANIMAL in char.tribes and char is not self.hippo
+        num_animals = len(list(filter(_lambda, summoned_characters)))
         modifier = 4 if self.hippo.golden else 2
 
         if self.hippo in self.manager.characters.values():

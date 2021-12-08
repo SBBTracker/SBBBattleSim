@@ -22,11 +22,10 @@ class CharacterType(Character):
                 echo_wood = self
 
                 def handle(self, stack, summoned_characters=[], is_from_echowood=False, attack=0, health=0, damage=0,
-                           reason='', temp=True, source=None, origin=None, *args, **kwargs):
+                           reason='', temp=True, source=None, *args, **kwargs):
 
-                    if not origin.dead:
-                        if (not temp or origin in summoned_characters) and (not is_from_echowood):
-                            logger.info(f'THE ORIGIN IS {origin.pretty_print()}')
+                    if not self.manager.dead:
+                        if (not temp or self.manager in summoned_characters) and (not is_from_echowood):
 
                             gold_multiplier = 2 if self.echo_wood.golden else 1
 

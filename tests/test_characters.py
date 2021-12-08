@@ -71,6 +71,8 @@ def test_support(char, golden, horn):
 
 
 class FakePlayer:
+    stateful_effects = dict()
+    id = "Fake"
     class FakeBoard:
         def register(self, *args, **kwargs):
             pass
@@ -203,7 +205,7 @@ def test_wombats_in_disguise():
     wombat_spawn = player.characters.get(1)
 
     assert wombat_spawn
-    assert wombat_spawn.stat_history[0].reason == StatChangeCause.WOMBATS_IN_DISGUISE_BUFF
+    assert StatChangeCause.WOMBATS_IN_DISGUISE_BUFF in [r.reason for r in wombat_spawn.stat_history]
 
 
 def test_doombreath():

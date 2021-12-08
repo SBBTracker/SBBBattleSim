@@ -30,8 +30,6 @@ class MedusaOnPreAttack(OnPreAttack):
                 defend_character.position, new_statue
             )
 
-            defend_character.owner.resolve_board()
-
 
 class CharacterType(Character):
     display_name = 'Medusa'

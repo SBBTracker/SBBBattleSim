@@ -70,9 +70,9 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.owner.register(PuffPuffOnSummon, puff=self, priority=9000)
+        self.owner.register(PuffPuffOnSummon, puff=self, priority=-15)
         self.register(PuffPuffDeath, puff=self)
-        self.owner.board.register(PuffPuffOnStart, puff=self)
+        self.owner.board.register(PuffPuffOnStart, puff=self, priority=9000)
 
     @classmethod
     def new(cls, *args, **kwargs):

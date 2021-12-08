@@ -304,5 +304,5 @@ def test_stormking_spawn(golden, r, raw):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (36, 36) if golden else (18, 18)
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (33, 33) if golden else (17, 17)
+    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (36, 36) if golden else (18, 18), board.p1.characters[6].pretty_print()
+    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (33, 33) if golden else (17, 17), board.p1.characters[1].pretty_print()

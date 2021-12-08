@@ -19,5 +19,4 @@ class SpellType(NonTargetedSpell):
                 target.owner, target.position, 10, 10, golden=False,
                 keywords=[], tribes=[Tribe.ANIMAL], cost=1
             )
-            target.owner.characters[target.position] = pig
-            target.owner.opponent.resolve_board()
+            target.owner.transform(target.position, pig)
