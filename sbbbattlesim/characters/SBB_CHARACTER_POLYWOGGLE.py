@@ -10,7 +10,8 @@ class PolywoggleSlay(OnAttackAndKill):
     slay = True
 
     def handle(self, killed_character, *args, **kwargs):
-        _lambda = lambda char: char._level == min(self.manager.owner.level + 1, 6)
+        golden_promotion = (2 if self.woggle.golden else 1)
+        _lambda = lambda char: char._level == min(self.manager.owner.level + golden_promotion, 6)
         valid_chars = list(character_registry.filter(_lambda=_lambda))
         if valid_chars:
             char = random.choice(valid_chars)
