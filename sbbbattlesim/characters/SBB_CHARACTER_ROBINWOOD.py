@@ -8,12 +8,15 @@ class RobinWoodOnFightStart(OnStart):
         strongest_enemy_char = find_strongest_character(self.robin_wood.owner.opponent)
         weakest_allied_char = find_weakest_character(self.robin_wood.owner)
 
-        strongest_enemy_char.change_stats(attack=-30 if self.robin_wood.golden else -15, temp=False,
-                                          reason=StatChangeCause.ROBIN_WOOD_DEBUFF, source=self.robin_wood,
-                                          stack=stack)
-        weakest_allied_char.change_stats(attack=30 if self.robin_wood.golden else 15, temp=False,
-                                         reason=StatChangeCause.ROBIN_WOOD_BUFF, source=self.robin_wood,
-                                         stack=stack)
+        if strongest_enemy_char:
+            strongest_enemy_char.change_stats(attack=-30 if self.robin_wood.golden else -15, temp=False,
+                                              reason=StatChangeCause.ROBIN_WOOD_DEBUFF, source=self.robin_wood,
+                                              stack=stack)
+
+        if weakest_allied_char:
+            weakest_allied_char.change_stats(attack=30 if self.robin_wood.golden else 15, temp=False,
+                                             reason=StatChangeCause.ROBIN_WOOD_BUFF, source=self.robin_wood,
+                                             stack=stack)
 
 
 class CharacterType(Character):
