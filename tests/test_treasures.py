@@ -894,7 +894,7 @@ def test_deck_of_many_things(mimic, _):
     board.p2.resolve_board()
 
     wizardbuffs = [
-        r for r in board.p1.characters[1].stat_history if r.reason == StatChangeCause.MERLIN_BUFF
+        r for r in board.p1.characters[1]._action_history if r.reason == StatChangeCause.MERLIN_BUFF
     ]
 
     if mimic:

@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -25,5 +26,6 @@ class HeroType(Hero):
             target_character.register(EvellaAura, temp=True, evella=self)
 
         if Tribe.EVIL in target_character.tribes:
-            target_character.change_stats(attack=self.animal_deaths, reason=StatChangeCause.EVELLA_BUFF, source=self,
-                                          temp=True, *args, **kwargs)
+            with Buff(reason=StatChangeCause.EVELLA_BUFF, source=self, targets=[target_character],
+                      attack=self.animal_deaths, temp=True, *args, **kwargs):
+                pass

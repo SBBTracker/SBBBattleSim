@@ -1,6 +1,7 @@
 import logging
 import random
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnSpellCast
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import StatChangeCause
@@ -15,8 +16,9 @@ class MerlinOnSpellCast(OnSpellCast):
         logger.debug(f'MERLIN TARGET {valid_targets}')
         if valid_targets:
             target_character = random.choice(valid_targets)
-            target_character.change_stats(attack=2, health=1, reason=StatChangeCause.MERLIN_BUFF, source=self.merlin,
-                                          temp=False, stack=stack)
+            with Buff(reason=StatChangeCause.MERLIN_BUFF, source=self.merlin, targets=[target_character],
+                      attack=2, health=1, temp=False, stack=stack):
+                pass
 
 
 class HeroType(Hero):

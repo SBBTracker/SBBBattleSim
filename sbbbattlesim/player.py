@@ -3,6 +3,7 @@ import random
 from collections import OrderedDict, defaultdict
 
 from sbbbattlesim import utils
+from sbbbattlesim.action import Damage
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import EventManager, OnStart
 from sbbbattlesim.heros import registry as hero_registry
@@ -212,9 +213,7 @@ class Player(EventManager):
             if new_temp_health < old_temp_health:
                 char._damage -= min(char._damage, old_temp_health - new_temp_health)
 
-        for char in self.valid_characters():
-            if char.health < 0:
-                char.change_stats(damage=0, source=self, reason=None)
+        Damage(damage=0, source=self, reason=None, targets=self.valid_characters()).resolve()
 
     def summon_from_different_locations(self, characters, *args, **kwargs):
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be

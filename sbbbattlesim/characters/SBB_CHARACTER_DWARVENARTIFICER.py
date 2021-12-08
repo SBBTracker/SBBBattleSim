@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSummon, OnStart
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -21,8 +22,9 @@ class CharacterType(Character):
         if target_character is self:
             golden_multipler = 2 if self.golden else 1
             crafty_buff = 3 * len(self.owner.treasures) * golden_multipler
-            self.change_stats(attack=crafty_buff, health=crafty_buff, temp=True,
-                              reason=StatChangeCause.CRAFTY_BUFF, source=self, *args, **kwargs)
+            with Buff(reason=StatChangeCause.CRAFTY_BUFF, source=self, targets=[self],
+                      attack=crafty_buff, health=crafty_buff, temp=True, *args, **kwargs):
+                pass
 
     @classmethod
     def new(cls, owner, position, golden):

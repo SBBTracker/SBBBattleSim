@@ -29,7 +29,7 @@ def test_monsterbook_wizard_familar(golden):
 
     for pos in [2, 3, 4]:
         wizardbuffs = [
-            r for r in board.p1.characters[pos].stat_history if r.reason == StatChangeCause.WIZARDS_FAMILIAR
+            r for r in board.p1.characters[pos]._action_history if r.reason == StatChangeCause.WIZARDS_FAMILIAR
         ]
 
         assert len(wizardbuffs) == (2 if golden else 1)
@@ -59,7 +59,7 @@ def test_monsterbook_spellweaver(golden):
 
     for pos in [2, 3, 4]:
         wizardbuffs = [
-            r for r in board.p1.characters[pos].stat_history if r.reason == StatChangeCause.SPELL_WEAVER
+            r for r in board.p1.characters[pos]._action_history if r.reason == StatChangeCause.SPELL_WEAVER
         ]
 
         assert len(wizardbuffs) == (2 if golden else 1)
@@ -90,7 +90,7 @@ def test_monsterbook_aon(golden):
 
     for pos in [2, 3, 4]:
         wizardbuffs = [
-            r for r in board.p1.characters[pos].stat_history if r.reason == StatChangeCause.AON_BUFF
+            r for r in board.p1.characters[pos]._action_history if r.reason == StatChangeCause.AON_BUFF
         ]
 
         num_buffs = (6 if golden else 3)

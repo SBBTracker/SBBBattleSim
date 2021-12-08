@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -16,11 +17,9 @@ class CoinOfCharonOnDeath(OnDeath):
             return  # This has already procced
         self.coin.coin_trigger = True
 
-        self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin,
-                                  stack=stack)
-        if self.coin.mimic:
-            self.manager.change_stats(attack=4, health=4, reason=StatChangeCause.COIN_OF_CHARON, source=self.coin,
-                                      stack=stack)
+        for _ in range(self.coin.mimic + 1):
+            Buff(reason=StatChangeCause.COIN_OF_CHARON, source=self.coin, targets=[self.manager],
+                 attack=4, health=4, stack=stack)
 
 
 class TreasureType(Treasure):

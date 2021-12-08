@@ -98,7 +98,7 @@ def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> Simulati
 
     starting_board = Board(deepcopy(data))
 
-    results = _process(data, t, k)
+    results = _process(data, t, k, timeout)
 
     return SimulationStats(
         _id=hashlib.sha256(f'{starting_board.p1}{starting_board.p2}'.encode('utf-8')),

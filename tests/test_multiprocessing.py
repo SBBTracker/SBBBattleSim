@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 
 from sbbbattlesim.simulate import _process
@@ -13,11 +15,13 @@ sim_data = [
 ]
 
 
+@pytest.mark.skipif('processing' not in sys.argv, reason='Not Including Multiprocessing Tests')
 @pytest.mark.parametrize('data', sim_data)
 def test_multiprocessing(data):
     _process(data, 1, 1)
 
 
+@pytest.mark.skipif('processing' not in sys.argv, reason='Not Including Multiprocessing Tests')
 @pytest.mark.parametrize('char', character_registry.filter())
 def test_character_pickling(char):
     '''Run a combat, results dont matter. This will either crash or pass'''
@@ -30,6 +34,7 @@ def test_character_pickling(char):
     _process(data, 1, 1)
 
 
+@pytest.mark.skipif('processing' not in sys.argv, reason='Not Including Multiprocessing Tests')
 @pytest.mark.parametrize('hero', hero_registry.filter())
 def test_hero_pickling(hero):
     '''Run a combat, results dont matter. This will either crash or pass'''
@@ -42,6 +47,7 @@ def test_hero_pickling(hero):
     _process(data, 1, 1)
 
 
+@pytest.mark.skipif('processing' not in sys.argv, reason='Not Including Multiprocessing Tests')
 @pytest.mark.parametrize('treasure', treasure_registry.filter())
 def test_treasure_pickling(treasure):
     '''Run a combat, results dont matter. This will either crash or pass'''
@@ -53,6 +59,8 @@ def test_treasure_pickling(treasure):
     }
     _process(data, 1, 1)
 
+
+@pytest.mark.skipif('processing' not in sys.argv, reason='Not Including Multiprocessing Tests')
 @pytest.mark.parametrize('spell', spell_registry.filter())
 def test_spell_pickling(spell):
     '''Run a combat, results dont matter. This will either crash or pass'''

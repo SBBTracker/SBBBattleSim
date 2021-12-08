@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -14,8 +15,8 @@ class BookOfHeroesOnAttackAndKillBuff(OnAttackAndKill):
         logger.debug(f'BOOK KILLED {killed_character.tribes} MIMIC {self.book.mimic}')
         if Tribe.EVIL in killed_character.tribes:
             for _ in range(self.book.mimic + 1):
-                self.target_character.change_stats(attack=1, health=2, reason=StatChangeCause.BOOK_OF_HEROES,
-                                                   source=self.book, temp=False, stack=stack)
+                Buff(reason=StatChangeCause.BOOK_OF_HEROES, source=self.book, targets=[self.target_character],
+                     attack=1, health=2, temp=False, stack=stack).resolve()
 
 
 class TreasureType(Treasure):

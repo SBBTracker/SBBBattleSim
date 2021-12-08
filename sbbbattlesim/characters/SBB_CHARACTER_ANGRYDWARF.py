@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
@@ -14,11 +15,6 @@ class CharacterType(Character):
     def buff(self, target_character, *args, **kwargs):
         if Tribe.DWARF in target_character.tribes:
             stat_change = 4 if self.golden else 2
-            target_character.change_stats(
-                attack=stat_change,
-                health=stat_change,
-                temp=True,
-                reason=StatChangeCause.SUPPORT_BUFF,
-                source=self,
-                *args, **kwargs
-            )
+            with Buff(reason=StatChangeCause.SUPPORT_BUFF, source=self, targets=[target_character],
+                      attack=stat_change, health=stat_change, temp=True, *args, **kwargs):
+                pass

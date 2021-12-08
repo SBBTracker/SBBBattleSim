@@ -1,7 +1,7 @@
 import random
 
 from sbbbattlesim.characters import Character
-from sbbbattlesim.damage import Damage
+from sbbbattlesim.action import Damage
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
@@ -13,7 +13,7 @@ class WretchedMummyDeath(OnDeath):
         valid_targets = self.manager.owner.opponent.valid_characters()
         if valid_targets:
             Damage(
-                self.manager.attack * (1 + bool(self.manager.golden)),
+                damage=self.manager.attack * (1 + bool(self.manager.golden)),
                 reason=StatChangeCause.WRETCHED_MUMMY_EXPLOSION,
                 source=self.manager,
                 targets=[random.choice(valid_targets)]

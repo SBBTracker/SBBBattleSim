@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSummon
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -14,13 +15,8 @@ class HungryHungryHippocampusOnSummon(OnSummon):
         modifier = 4 if self.hippo.golden else 2
 
         if self.hippo in self.manager.characters.values():
-            self.hippo.change_stats(
-                health=num_animals * modifier,
-                temp=False,
-                source=self.hippo,
-                reason=StatChangeCause.HUNGRYHUNGRYHIPPOCAMPUS_BUFF,
-                stack=stack
-            )
+            Buff(source=self.hippo, reason=StatChangeCause.HUNGRYHUNGRYHIPPOCAMPUS_BUFF, targets=[self.hippo],
+                 health=num_animals * modifier, temp=False, stack=stack).resolve()
 
 
 class CharacterType(Character):

@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -10,9 +11,8 @@ logger = logging.getLogger(__name__)
 class IvoryOwlOnStartOnStartBuff(OnStart):
     def handle(self, stack, *args, **kwargs):
         for _ in range(bool(self.owl.mimic) + 1):
-            for char in self.owl.player.valid_characters():
-                char.change_stats(attack=2, health=2, reason=StatChangeCause.IVORY_OWL_BUFF, source=self.owl,
-                                  temp=False, stack=stack)
+            Buff(reason=StatChangeCause.IVORY_OWL_BUFF, source=self.owl, targets=self.owl.player.valid_characters(),
+                 attack=2, health=2, temp=False, stack=stack).resolve()
 
 
 class TreasureType(Treasure):

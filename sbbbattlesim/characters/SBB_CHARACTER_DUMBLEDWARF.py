@@ -1,9 +1,16 @@
 import logging
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
-from sbbbattlesim.utils import Tribe
+from sbbbattlesim.events import OnBuff
+from sbbbattlesim.utils import Tribe, StatChangeCause
 
 logger = logging.getLogger(__name__)
+
+
+class DoublyOnBuff(OnBuff):
+    def handle(self, *args, **kwargs):
+        Buff(reason=StatChangeCause.DOUBLEY_BUFF, source=self.doubly, targets=[self.doubly], *args, **kwargs)
 
 
 # aka doubly
@@ -17,7 +24,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-    def change_stats(self, attack=0, health=0, *args, **kwargs):
-        golden_multiplier = 3 if self.golden else 2
-        super().change_stats(attack=attack * golden_multiplier, health=health * golden_multiplier, *args, **kwargs)
+        self.register(DoublyOnBuff, doubly=self, priority=9999)

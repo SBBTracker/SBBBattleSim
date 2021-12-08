@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSummon
 
@@ -26,7 +27,7 @@ class CharacterType(Character):
 
                     stat_multplier = 2 if self.bearstine.golden else 1
 
-                    previous_bearstine_buffs = [stat_change for stat_change in char.stat_history if stat_change.reason == StatChangeCause.BEARSTINE_BUFF]
+                    previous_bearstine_buffs = [stat_change for stat_change in char._action_history if stat_change.reason == StatChangeCause.BEARSTINE_BUFF]
                     previous_bearstine_attack_buffs = sum(stat_change.attack for stat_change in previous_bearstine_buffs)
                     if "SBB_TREASURE_WHIRLINGBLADES" in self.manager.treasures:
                         if '''SBB_TREASURE_TREASURECHEST''' in self.manager.treasures:
@@ -39,8 +40,8 @@ class CharacterType(Character):
                     attack_buff = (char.attack - previous_bearstine_attack_buffs) * stat_multplier
                     health_buff = (char.health - previous_bearstine_health_buffs) * stat_multplier
 
-                    char.change_stats(attack=attack_buff, health=health_buff, reason=StatChangeCause.BEARSTINE_BUFF,
-                                      source=self.bearstine, temp=False, stack=stack)
+                    Buff(reason=StatChangeCause.BEARSTINE_BUFF, source=self.bearstine, targets=[char],
+                         attack=attack_buff, health=health_buff,  temp=False, stack=stack).resolve()
                     char.owner.resolve_board()
 
         self.owner.register(BearstineOnSummon, priority=-20)
@@ -48,7 +49,6 @@ class CharacterType(Character):
     def buff(self, target_character, *args, **kwargs):
         if Tribe.ANIMAL in target_character.tribes and target_character != self:
             modifier = 4 if self.golden else 2
-            target_character.change_stats(
-                attack=modifier, health=modifier, temp=True,
-                reason=StatChangeCause.AURA_BUFF, source=self, *args, **kwargs
-            )
+            with Buff(reason=StatChangeCause.AURA_BUFF, source=self, targets=[target_character],
+                      attack=modifier, health=modifier, temp=True, *args, **kwargs):
+                pass

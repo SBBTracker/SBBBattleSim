@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnBuff
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -33,15 +34,10 @@ class CharacterType(Character):
                             health_change = max(0, gold_multiplier*health)
 
                             if attack_change > 0 or health_change > 0:
-                                self.echo_wood.change_stats(
-                                    attack=gold_multiplier * attack,
-                                    health=gold_multiplier * health,
-                                    temp=False,
-                                    reason=StatChangeCause.ECHOWOOD_BUFF,
-                                    source=self.manager,
-                                    stack=stack,
-                                    is_from_echowood=True,
-                                )
+                                Buff(reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager, targets=[self.echo_wood],
+                                     attack=gold_multiplier * attack, health=gold_multiplier * health,
+                                     temp=False, stack=stack, is_from_echowood=True,
+                                ).resolve()
 
             target_character.register(EchoWoodBuff, temp=True)
 

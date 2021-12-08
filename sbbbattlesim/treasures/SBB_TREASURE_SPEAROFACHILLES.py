@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnPreAttack
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -6,8 +7,8 @@ from sbbbattlesim.utils import StatChangeCause
 class SpearOfAchillesAttack(OnPreAttack):
     def handle(self, stack, *args, **kwargs):
         for _ in range(1 + bool(self.spear.mimic)):
-            self.manager.change_stats(health=7, attack=7, reason=StatChangeCause.SPEAR_OF_ACHILLES, source=self,
-                                      temp=False, stack=stack)
+            Buff(reason=StatChangeCause.SPEAR_OF_ACHILLES, source=self, targets=[self.manager],
+                 health=7, attack=7, temp=False, stack=stack).resolve()
 
 
 class TreasureType(Treasure):

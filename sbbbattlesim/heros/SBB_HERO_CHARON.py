@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import StatChangeCause
@@ -10,10 +11,9 @@ class CharonOnDeath(OnDeath):
         # This should only proc once per combat
         if self.charon.triggered:
             return  # This has already procced
-        self.charon.triggered = True
 
-        self.manager.change_stats(attack=2, health=1, reason=StatChangeCause.CHARON_BUFF, source=self.charon,
-                                  stack=stack)
+        with Buff(reason=StatChangeCause.CHARON_BUFF, source=self.charon, targets=[self.manager], attack=2, health=1, stack=stack):
+            self.charon.triggered = True
 
 
 class HeroType(Hero):

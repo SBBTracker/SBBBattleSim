@@ -1,5 +1,6 @@
 import collections
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath, OnSummon, OnStart
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -33,9 +34,9 @@ class PuffPuffDeath(OnDeath):
         puffbuffs = self.puff.owner.stateful_effects.setdefault('puffbuff', collections.defaultdict())
 
         buff = 2 if self.puff.golden else 1
-        for char in self.manager.owner.valid_characters(_lambda=lambda char: char.id == self.puff.id):
-            char.change_stats(attack=buff, health=buff, reason=StatChangeCause.PUFF_PUFF_BUFF,
-                              source=self.puff, stack=stack)
+        puffpuffs = self.manager.owner.valid_characters(_lambda=lambda char: char.id == self.puff.id)
+        Buff(reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff, targets=puffpuffs,
+             attack=buff, health=buff, stack=stack).resolve()
 
         if puffbuffs[self.puff.owner.id] is None:
             puffbuffs[self.puff.owner.id] = 0
@@ -51,9 +52,9 @@ class PuffPuffOnSummon(OnSummon):
 
         golden_multipler = 2 if self.puff.golden else 1
         puff_buff = (puffbuffs.get(self.puff.owner.id) or 0) * golden_multipler
-
-        self.puff.change_stats(attack=puff_buff, health=puff_buff, temp=False,
-                               reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff)
+        Buff(attack=puff_buff, health=puff_buff, temp=False,
+             reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff,
+             targets=[self.puff]).resolve()
 
 
 class CharacterType(Character):

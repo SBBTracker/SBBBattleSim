@@ -42,7 +42,7 @@ def test_falling_stars():
         assert board.p1.characters[pos] is None
 
     for char in board.p1.graveyard:
-        assert char.stat_history[0].reason == StatChangeCause.FALLING_STARS
+        assert char._action_history[0].reason == StatChangeCause.FALLING_STARS, char._action_history[0]
 
     assert len(board.p1.graveyard) == 7
 
@@ -65,7 +65,7 @@ def test_lightning_bolt(repeat):
     board.p1.characters[1] is not None
 
     char = board.p2.graveyard[0]
-    assert char.stat_history[0].reason == StatChangeCause.LIGHTNING_BOLT
+    assert char._action_history[0].reason == StatChangeCause.LIGHTNING_BOLT
 
 
 def test_fire_ball():
@@ -85,14 +85,14 @@ def test_fire_ball():
 
     char = board.p2.graveyard[0]
     assert char.position == 2
-    assert char.stat_history[0].reason == StatChangeCause.FIREBALL
+    assert char._action_history[0].reason == StatChangeCause.FIREBALL
 
     char = board.p2.graveyard[1]
     assert char.position == 5
-    assert char.stat_history[0].reason == StatChangeCause.FIREBALL
+    assert char._action_history[0].reason == StatChangeCause.FIREBALL
 
     char = board.p2.characters[6]
-    assert char.stat_history[0].reason == StatChangeCause.FIREBALL
+    assert char._action_history[0].reason == StatChangeCause.FIREBALL
 
     for pos in [7]:
         char = board.p2.characters[pos]
@@ -113,7 +113,7 @@ def test_fire_ball_backline():
     winner, loser = board.fight(limit=-1)
 
     char = board.p2.characters[6]
-    assert char.stat_history[0].reason == StatChangeCause.FIREBALL
+    assert char._action_history[0].reason == StatChangeCause.FIREBALL
 
 
 def test_shrivel():
@@ -132,7 +132,7 @@ def test_shrivel():
 
     char = board.p2.characters[1]
     assert char
-    assert char.stat_history[0].reason == StatChangeCause.SHRIVEL
+    assert char._action_history[0].reason == StatChangeCause.SHRIVEL
     assert char.attack == 0 and char.health == 1
 
 
@@ -225,9 +225,9 @@ def test_multiple_spells():
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert frontchar.stat_history[0].reason == StatChangeCause.FIREBALL
-    assert set([statchange.reason for statchange in backchar.stat_history]) == {StatChangeCause.FIREBALL,
-                                                                                StatChangeCause.LIGHTNING_BOLT}
+    assert frontchar._action_history[0].reason == StatChangeCause.FIREBALL
+    assert set([statchange.reason for statchange in backchar._action_history]) == {StatChangeCause.FIREBALL,
+                                                                                   StatChangeCause.LIGHTNING_BOLT}
 
 
 def test_earthquake():
@@ -245,11 +245,11 @@ def test_earthquake():
 
     char = board.p2.graveyard[0]
     assert char
-    assert char.stat_history[0].reason == StatChangeCause.EARTHQUAKE
+    assert char._action_history[0].reason == StatChangeCause.EARTHQUAKE
 
     char = board.p2.characters[2]
     assert char
-    assert char.stat_history[0].reason == StatChangeCause.EARTHQUAKE
+    assert char._action_history[0].reason == StatChangeCause.EARTHQUAKE
     assert char.health == 1
 
 
@@ -291,7 +291,7 @@ def test_poison_apple():
 
     char = board.p2.characters[1]
     assert char
-    assert char.stat_history[0].reason == StatChangeCause.POISON_APPLE
+    assert char._action_history[0].reason == StatChangeCause.POISON_APPLE
     assert char.health == 1
 
 
@@ -309,7 +309,7 @@ def test_disintegrate():
 
     char = board.p2.graveyard[0]
     assert char
-    assert char.stat_history[0].reason == StatChangeCause.SMITE
+    assert char._action_history[0].reason == StatChangeCause.SMITE
 
 
 def test_pigomorph():
@@ -367,4 +367,4 @@ def test_toil_and_trouble():
     for i in range(1, 3):
         char = board.p1.characters[i]
         assert char
-        assert char.stat_history[0].reason == StatChangeCause.TOIL_AND_TROUBLE
+        assert char._action_history[0].reason == StatChangeCause.TOIL_AND_TROUBLE
