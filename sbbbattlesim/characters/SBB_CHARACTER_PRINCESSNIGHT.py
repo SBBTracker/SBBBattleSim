@@ -5,7 +5,11 @@ from sbbbattlesim.utils import Tribe
 class CharacterType(Character):
     display_name = 'Princess Wight'
 
+    quest = True
+
     _attack = 2
     _health = 4
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.PRINCESS}
+
+    # TODO fucking do
