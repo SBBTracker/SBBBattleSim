@@ -60,6 +60,10 @@ def attack(attack_position, attacker, defender, **kwargs):
     back = (5, 6, 7)
 
     attack_char = attacker.characters.get(attack_position)
+    if attack_char is None:
+        # the character may have died elsewhere in the stack
+        return
+
     front_characters = defender.valid_characters(
         _lambda=lambda char: char.position in front and char is not attack_char)
     back_characters = defender.valid_characters(_lambda=lambda char: char.position in back and char is not attack_char)

@@ -10,8 +10,10 @@ def test_polywoggle(golden, level):
     player = make_player(
         level=level,
         characters=[
-            make_character(id='SBB_CHARACTER_POLYWOGGLE', position=5, attack=2, health=2, golden=golden),
-            make_character(id='SBB_CHARACTER_NIGHTSTALKER', position=6, attack=1, health=1),
+            make_character(id='SBB_CHARACTER_POLYWOGGLE', position=2, attack=2, health=2, golden=golden),
+            make_character(id='SBB_CHARACTER_NIGHTSTALKER', position=5, attack=1, health=1),
+            make_character(id='SBB_CHARACTER_BABAYAGA', position=6, attack=3, health=6, golden=golden),
+
         ],
         treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''
@@ -29,7 +31,10 @@ def test_polywoggle(golden, level):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (2, 2), 'Vainpire probably didnt attack'
-    assert board.p1.characters[5] is not None
-    assert board.p1.characters[5] is not woggle, 'Its still the polywoggle unfortunately'
-    assert board.p1.characters[5].cost == min(6, level + 1)
+    golden_promotion = (2 if golden else 1)
+
+    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (2, 2), 'Vainpire probably didnt attack'
+    assert board.p1.characters[2] is not None
+    assert board.p1.characters[2] is not woggle, 'Its still the polywoggle unfortunately'
+    assert board.p1.characters[2].golden == golden
+    assert board.p1.characters[2].cost == min(6, level + golden_promotion)
