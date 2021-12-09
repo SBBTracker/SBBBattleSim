@@ -20,8 +20,8 @@ def fight(attacker, defender, turn=0, limit=-1, **kwargs):
     attacker.resolve_board()
     defender.resolve_board()
 
-    logger.info(f'Attacker {attacker}')
-    logger.info(f'Defender {defender}')
+    logger.info(f'Attacker {attacker.pretty_print()}')
+    logger.info(f'Defender {defender.pretty_print()}')
 
     # Get Attacker
     attack_position = attacker.attack_slot

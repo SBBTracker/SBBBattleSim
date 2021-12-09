@@ -19,7 +19,7 @@ class CoinOfCharonOnDeath(OnDeath):
 
         for _ in range(self.coin.mimic + 1):
             Buff(reason=StatChangeCause.COIN_OF_CHARON, source=self.coin, targets=[self.manager],
-                 attack=4, health=4, stack=stack)
+                 attack=4, health=4, stack=stack).execute()
 
 
 class TreasureType(Treasure):

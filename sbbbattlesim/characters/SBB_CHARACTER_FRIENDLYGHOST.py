@@ -17,10 +17,9 @@ class FriendlySpiritLastBreath(OnDeath):
         golden_multiplyer = 2 if self.manager.golden else 1
 
         char = random.choice(chars)
-        with Buff(reason=StatChangeCause.FRIENDLY_SPIRIT_BUFF, source=self.manager, targets=[char],
-                  attack=self.manager.attack * golden_multiplyer, health=self.manager.max_health * golden_multiplyer,
-                  temp=False, stack=stack):
-            pass
+        Buff(reason=StatChangeCause.FRIENDLY_SPIRIT_BUFF, source=self.manager, targets=[char],
+             attack=self.manager.attack * golden_multiplyer, health=self.manager.max_health * golden_multiplyer,
+             temp=False, stack=stack).execute()
 
 
 class CharacterType(Character):

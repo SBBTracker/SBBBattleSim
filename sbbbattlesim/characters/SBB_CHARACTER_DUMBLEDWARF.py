@@ -9,8 +9,12 @@ logger = logging.getLogger(__name__)
 
 
 class DoublyOnBuff(OnBuff):
-    def handle(self, *args, **kwargs):
-        Buff(reason=StatChangeCause.DOUBLEY_BUFF, source=self.doubly, targets=[self.doubly], *args, **kwargs)
+    def handle(self, reason, stack, attack, health, *args, **kwargs):
+        if reason == StatChangeCause.DOUBLEY_BUFF:
+            return
+        golden_multiplier = 2 if self.doubly else 1
+        Buff(reason=StatChangeCause.DOUBLEY_BUFF, source=self.doubly, targets=[self.doubly],
+             attack=attack * golden_multiplier, health=health * golden_multiplier, stack=stack).resolve()
 
 
 # aka doubly

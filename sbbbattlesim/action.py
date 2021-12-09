@@ -53,7 +53,21 @@ class Action:
         return self.__repr__()
 
     def __repr__(self):
-        return f'{self.source} ({self.reason}) {self.targets} ({self.args} {self.kwargs})'
+        prefix = f'{self.source} {self.reason} {self.targets}'
+
+        stats = ''
+        if self.attack > 0 or self.health > 0:
+            stats = f'+{self.attack}/{self.health}'
+        elif self.attack < 0 or self.health < 0:
+            stats = f'-{self.attack}/{self.health}'
+        elif self.damage != 0:
+            stats = f'!{self.damage}'
+        elif self.health != 0:
+            stats = f'~{self.heal}'
+
+        args = f'({self.args} {self.kwargs})'
+
+        return f'{prefix} {stats} {args}'
 
     def __enter__(self):
         self._active = True

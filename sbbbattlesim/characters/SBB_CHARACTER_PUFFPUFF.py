@@ -14,10 +14,9 @@ class PuffPuffOnStart(OnStart):
         puffbuffs = self.puff.owner.stateful_effects.setdefault('puffbuff', collections.defaultdict())
 
         current_buff = puffbuffs.get(self.puff.owner.id)
-        bonus_attack = int(
-            (self.puff.attack - self.puff._attack * (2 if self.puff.golden else 1)) / (2 if self.puff.golden else 1))
-        bonus_health = int(
-            (self.puff.health - self.puff._health * (2 if self.puff.golden else 1)) / (2 if self.puff.golden else 1))
+        golden_multiplier = 2 if self.puff.golden else 1
+        bonus_attack = int((self.puff.attack - self.puff._attack * golden_multiplier) / golden_multiplier)
+        bonus_health = int((self.puff.health - self.puff._health * golden_multiplier) / golden_multiplier)
 
         new_buff = max(0, min(bonus_attack, bonus_health))
 
@@ -36,7 +35,7 @@ class PuffPuffDeath(OnDeath):
         buff = 2 if self.puff.golden else 1
         puffpuffs = self.manager.owner.valid_characters(_lambda=lambda char: char.id == self.puff.id)
         Buff(reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff, targets=puffpuffs,
-             attack=buff, health=buff, stack=stack).resolve()
+             attack=buff, health=buff, stack=stack).execute()
 
         if puffbuffs[self.puff.owner.id] is None:
             puffbuffs[self.puff.owner.id] = 0

@@ -13,6 +13,5 @@ class CharacterType(Character):
     _tribes = {Tribe.GOOD, Tribe.TREANT}
 
     def buff(self, target_character, *args, **kwargs):
-        with Buff(reason=StatChangeCause.SUPPORT_BUFF, source=self, targets=[target_character],
-                  health=6 if self.golden else 3, temp=True, *args, **kwargs):
-            pass
+        Buff(reason=StatChangeCause.SUPPORT_BUFF, source=self, targets=[target_character],
+             health=6 if self.golden else 3, temp=True, *args, **kwargs).execute()

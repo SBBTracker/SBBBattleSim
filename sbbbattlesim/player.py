@@ -213,7 +213,20 @@ class Player(EventManager):
             if new_temp_health < old_temp_health:
                 char._damage -= min(char._damage, old_temp_health - new_temp_health)
 
-        Damage(damage=0, source=self, reason=None, targets=self.valid_characters()).resolve()
+        dead_characters = []
+        for char in self.characters.values():
+            if not char:
+                continue
+
+            if char.health <= 0:
+                char.dead = True
+                dead_characters.append(char)
+                self.graveyard.append(char)
+                self.characters[char.position] = None
+                logger.info(f'{char.pretty_print()} died')
+
+        for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
+            char('OnDeath')
 
     def summon_from_different_locations(self, characters, *args, **kwargs):
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be

@@ -11,9 +11,10 @@ class CharonOnDeath(OnDeath):
         # This should only proc once per combat
         if self.charon.triggered:
             return  # This has already procced
+        self.charon.triggered = True
 
-        with Buff(reason=StatChangeCause.CHARON_BUFF, source=self.charon, targets=[self.manager], attack=2, health=1, stack=stack):
-            self.charon.triggered = True
+        Buff(reason=StatChangeCause.CHARON_BUFF, source=self.charon, targets=[self.manager],
+             attack=2, health=1, stack=stack).execute()
 
 
 class HeroType(Hero):

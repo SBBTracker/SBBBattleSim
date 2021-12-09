@@ -100,7 +100,7 @@ class Character(EventManager):
         )
 
     def clear_temp(self):
-        logger.debug(f'{self.pretty_print()} clearing temp')
+        # logger.debug(f'{self.pretty_print()} clearing temp')
         super().clear_temp()
 
         self._temp_attack = 0

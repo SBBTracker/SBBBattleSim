@@ -13,4 +13,4 @@ class TreasureType(Treasure):
         if Tribe.DWARF in target_character.tribes:
             for _ in range(self.mimic + 1):
                 Buff(reason=StatChangeCause.DEEPSTONE_MINE, source=self, targets=[target_character],
-                     attack=2, health=2, temp=True, *args, **kwargs)
+                     attack=2, health=2, temp=True, *args, **kwargs).resolve()

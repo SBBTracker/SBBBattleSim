@@ -65,7 +65,7 @@ def test_lightning_bolt(repeat):
     board.p1.characters[1] is not None
 
     char = board.p2.graveyard[0]
-    assert char._action_history[0].reason == StatChangeCause.LIGHTNING_BOLT
+    assert char._action_history[0].reason == StatChangeCause.LIGHTNING_BOLT, char._action_history[0]
 
 
 def test_fire_ball():

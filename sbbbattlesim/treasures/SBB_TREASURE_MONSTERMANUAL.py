@@ -10,7 +10,7 @@ class MonsterManualOnDeath(OnDeath):
     def handle(self, stack, *args, **kwargs):
         for _ in range(self.manual.mimic + 1):
             Buff(reason=StatChangeCause.MONSTER_MANUAL_BUFF, source=self.manual, targets=[self.manager],
-                 attack=2, stack=stack).resolve()
+                 attack=2, stack=stack).execute()
 
 
 class TreasureType(Treasure):
