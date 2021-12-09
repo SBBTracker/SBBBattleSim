@@ -20,3 +20,29 @@ def test_soltak():
 
     assert board.p1.characters[5] is not None
     assert board.p2.characters[1] is None
+
+
+def test_doombreath():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_DOOMBREATH')
+        ],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    enemy = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_SOLTAKANCIENT", position=2, attack=0),
+            make_character(position=5),
+            make_character(position=6),
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+
+    player = board.p2
+
+    assert player.characters[2] is None
+
+    for i in (5, 6):
+        assert player.characters[i] is not None, f'{[i.pretty_print() for i in player.valid_characters()]}'
+
