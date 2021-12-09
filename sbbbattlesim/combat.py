@@ -116,12 +116,15 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     if not attack_character.ranged:
         attacker_damage.resolve()
-    defender_damage.resolve()
 
     # SLAY TRIGGER
     if defend_character.dead:
         attack_character('OnAttackAndKill', killed_character=defend_character, **kwargs)
 
-    # Post Damage Event
+    # for copycat to work properly
     attack_character('OnPostAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
+
+    defender_damage.resolve()
+    # for cupid to work properly
     defend_character('OnPostDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
+
