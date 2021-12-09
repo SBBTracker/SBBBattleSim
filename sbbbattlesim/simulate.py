@@ -63,7 +63,7 @@ def from_state(state: dict):
 
 
 def simulate_brawl(data: dict, k: int, raw: dict) -> List[BoardStats]:
-    logger.error(f'Simulation Process Starting (k={k})')
+    logger.debug(f'Simulation Process Starting (k={k})')
     results = []
     for _ in range(k):
         board = Board(deepcopy(data))
