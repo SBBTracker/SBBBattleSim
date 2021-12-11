@@ -21,11 +21,11 @@ def fight(attacker, defender, turn=0, limit=-1, **kwargs):
     attacker.resolve_board()
     defender.resolve_board()
 
-    logger.info(f'Attacker {attacker}')
-    logger.info(f'Defender {defender}')
+    logger.info(f'Attacker {attacker.pretty_print()}')
+    logger.info(f'Defender {defender.pretty_print()}')
 
     # Get Attacker
-    attack_position = attacker.attack_slot
+    attack_position = attacker.get_attack_slot()
     if attack_position is not None:
         attack(attacker=attacker, defender=defender, attack_position=attack_position, **kwargs)
     else:
@@ -59,14 +59,13 @@ def attack(attack_position, attacker, defender, **kwargs):
     front = (1, 2, 3, 4)
     back = (5, 6, 7)
 
-    attack_char = attacker.characters.get(attack_position)
-    if attack_char is None:
+    attack_character = attacker.characters.get(attack_position)
+    if attack_character is None:
         # the character may have died elsewhere in the stack
         return
 
-    front_characters = defender.valid_characters(
-        _lambda=lambda char: char.position in front and char is not attack_char)
-    back_characters = defender.valid_characters(_lambda=lambda char: char.position in back and char is not attack_char)
+    front_characters = defender.valid_characters(_lambda=lambda char: char.position in front and char is not attack_character)
+    back_characters = defender.valid_characters(_lambda=lambda char: char.position in back and char is not attack_character)
     if attacker.characters.get(attack_position).flying:
         if any(back_characters):
             valid_defenders = back_characters
@@ -89,21 +88,12 @@ def attack(attack_position, attacker, defender, **kwargs):
     # AFTER THIS POINT BOTH ATTACK AND DEFEND POSITION IS DEFINED
     # The characters in attack and defend slots may change after this point so
     # before each event attack_character and defend character is set again
-
-    logger.info(
-        f'{attacker.characters.get(attack_position).pretty_print()} -> {defender.characters.get(defend_position).pretty_print()}')
+    logger.info(f'{attack_character.pretty_print()} -> {defend_character.pretty_print()}')
 
     # Pre Damage Event
     # These functions can change the characters in given positions like Medusa
-    attack_character = attacker.characters.get(attack_position)
-    if attack_character:
-        attack_character('OnPreAttack', attack_position=attack_position, defend_position=defend_position,
-                         defend_player=defender, **kwargs)
-
-    defend_character = defender.characters.get(defend_position)
-    if defend_character:
-        defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position,
-                                                 defend_position=defend_position, attack_player=attacker, **kwargs)
+    attacker.characters.get(attack_position)('OnPreAttack', attack_position=attack_position, defend_position=defend_position, defend_player=defender, **kwargs)
+    defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position, defend_position=defend_position, attack_player=attacker, **kwargs)
 
     # We are pulling the latest attack_character and defend character incase they changed
     attack_character = attacker.characters.get(attack_position)
@@ -111,7 +101,6 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     if not attack_character.ranged:
         attacker_damage = defend_character.generate_attack(attack_character, StatChangeCause.DAMAGE_WHILE_ATTACKING)
-
     defender_damage = attack_character.generate_attack(defend_character, StatChangeCause.DAMAGE_WHILE_DEFENDING)
 
     if not attack_character.ranged:
