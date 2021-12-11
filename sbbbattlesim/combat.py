@@ -3,7 +3,6 @@ import random
 import sys
 from functools import lru_cache
 
-from sbbbattlesim.damage import Damage
 from sbbbattlesim.utils import StatChangeCause
 
 sys.setrecursionlimit(500)
@@ -99,9 +98,12 @@ def attack(attack_position, attacker, defender, **kwargs):
     attack_character = attacker.characters.get(attack_position)
     defend_character = defender.characters.get(defend_position)
 
-    if not attack_character.ranged:
-        attacker_damage = defend_character.generate_attack(attack_character, StatChangeCause.DAMAGE_WHILE_ATTACKING)
+    attacker_damage = defend_character.generate_attack(attack_character, StatChangeCause.DAMAGE_WHILE_ATTACKING)
     defender_damage = attack_character.generate_attack(defend_character, StatChangeCause.DAMAGE_WHILE_DEFENDING)
+
+    if not attack_character.ranged:
+        attacker_damage.execute()
+    defender_damage.execute()
 
     if not attack_character.ranged:
         attacker_damage.resolve()
@@ -114,6 +116,7 @@ def attack(attack_position, attacker, defender, **kwargs):
     attack_character('OnPostAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
 
     defender_damage.resolve()
+
     # for cupid to work properly
     defend_character('OnPostDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
 

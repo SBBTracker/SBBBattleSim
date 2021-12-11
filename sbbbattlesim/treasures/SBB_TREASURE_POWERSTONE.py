@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
 
@@ -10,5 +11,5 @@ class TreasureType(Treasure):
 
     def buff(self, target_character, *args, **kwargs):
         for _ in range(self.mimic + 1):
-            target_character.change_stats(health=1, attack=1, reason=StatChangeCause.POWER_ORB, source=self, temp=True,
-                                          *args, **kwargs)
+            Buff(reason=StatChangeCause.POWER_ORB, source=self, targets=[target_character],
+                 health=1, attack=1, temp=True, *args, **kwargs).resolve()

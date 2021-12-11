@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnSupport
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import StatChangeCause
@@ -5,7 +6,8 @@ from sbbbattlesim.utils import StatChangeCause
 
 class PupSupportBuff(OnSupport):
     def handle(self, buffed, support, *args, **kwargs):
-        buffed.change_stats(attack=2, health=1, reason=StatChangeCause.PUP_BUFF, source=self.pup)
+        Buff(reason=StatChangeCause.PUP_BUFF, source=self.pup, targets=[buffed],
+             attack=2, health=1).resolve()
 
 
 class HeroType(Hero):

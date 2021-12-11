@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -10,19 +11,17 @@ logger = logging.getLogger(__name__)
 class FairyBuffOnStart(OnStart):
 
     def handle(self, stack, *args, **kwargs):
-        highest_attack_evil = max([char.attack for char in self.shoulder_faeries.owner.valid_characters(
-            _lambda=lambda char: Tribe.EVIL in char.tribes)] + [0])
-        highest_health_good = max(
-            [char.health for char in self.shoulder_faeries.owner.valid_characters() if Tribe.GOOD in char.tribes] + [0])
-        self.shoulder_faeries.change_stats(
-            attack=highest_attack_evil * (2 if self.shoulder_faeries.golden else 1),
-            health=highest_health_good * (2 if self.shoulder_faeries.golden else 1),
-            temp=False,
-            reason=StatChangeCause.SHOULDER_FAIRY_BUFF,
-            source=self.shoulder_faeries,
-            stack=stack
-        )
-
+        highest_attack_evil = max([char.attack for char in self.shoulder_faeries.owner.valid_characters(_lambda=lambda char: Tribe.EVIL in char.tribes)] + [0])
+        highest_health_good = max([char.health for char in self.shoulder_faeries.owner.valid_characters() if Tribe.GOOD in char.tribes] + [0])
+        with Buff(
+                reason=StatChangeCause.SHOULDER_FAIRY_BUFF,
+                source=self.shoulder_faeries,
+                targets=[self.shoulder_faeries],
+                attack=highest_attack_evil * (2 if self.shoulder_faeries.golden else 1),
+                health=highest_health_good * (2 if self.shoulder_faeries.golden else 1),
+                temp=False,
+        ):
+            pass
 
 class CharacterType(Character):
     display_name = 'Shoulder Faeries'

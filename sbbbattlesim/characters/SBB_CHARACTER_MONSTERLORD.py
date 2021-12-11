@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnPreAttack
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -10,12 +11,9 @@ logger = logging.getLogger(__name__)
 class OniKingOnMonsterAttack(OnPreAttack):
     def handle(self, stack, *args, **kwargs):
         stat_change = 20 if self.oni_king.golden else 10
-        self.manager.change_stats(
-            attack=stat_change, health=stat_change, temp=False,
-            source=self.oni_king, reason=StatChangeCause.ONIKING_BUFF,
-            stack=stack
-        )
-
+        with Buff(source=self.oni_king, reason=StatChangeCause.ONIKING_BUFF, targets=[self.manager],
+                  attack=stat_change, health=stat_change, temp=False, stack=stack):
+            pass
 
 class CharacterType(Character):
     display_name = 'Oni King'

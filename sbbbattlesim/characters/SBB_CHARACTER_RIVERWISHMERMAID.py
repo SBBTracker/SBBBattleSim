@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -8,11 +9,8 @@ class RiverwishMermaidBuff(OnAttackAndKill):
 
     def handle(self, killed_character, stack, *args, **kwargs):
         stats = 2 if self.riverwish_mermaid.golden else 1
-        self.manager.change_stats(
-            attack=stats, health=stats, temp=False,
-            reason=StatChangeCause.SUPPORT_BUFF, source=self.riverwish_mermaid,
-            stack=stack
-        )
+        Buff(reason=StatChangeCause.SUPPORT_BUFF, source=self.riverwish_mermaid, targets=[self.manager],
+             attack=stats, health=stats, temp=False, stack=stack).resolve()
 
 
 class CharacterType(Character):

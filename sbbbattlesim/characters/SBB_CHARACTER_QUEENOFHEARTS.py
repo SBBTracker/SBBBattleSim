@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -8,8 +9,8 @@ class EvilQueenOnDeath(OnDeath):
 
     def handle(self, stack, *args, **kwargs):
         stat_change = 4 if self.evil_queen.golden else 2
-        self.evil_queen.change_stats(attack=stat_change, health=stat_change, temp=False,
-                                     source=self.evil_queen, reason=StatChangeCause.EVILQUEEN_BUFF, stack=stack)
+        Buff(source=self.evil_queen, reason=StatChangeCause.EVILQUEEN_BUFF, targets=[self.evil_queen],
+             attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
 
 class CharacterType(Character):

@@ -1,4 +1,5 @@
 from sbbbattlesim import utils
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -12,8 +13,8 @@ class HeartWoodOnStart(OnStart):
             char = self.heartwood.owner.characters[pos]
             if char is not None:
                 if Tribe.TREANT in char.tribes:
-                    char.change_stats(attack=stat_change, health=stat_change, temp=False,
-                                      reason=StatChangeCause.HEARTWOOD_BUFF, source=self, stack=stack)
+                    Buff(reason=StatChangeCause.HEARTWOOD_BUFF, source=self, targets=[char],
+                         attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
 
 class CharacterType(Character):

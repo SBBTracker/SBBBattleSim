@@ -3,30 +3,13 @@ import pkgutil
 from collections import OrderedDict
 from dataclasses import dataclass
 
-from sbbbattlesim.damage import Damage
+from sbbbattlesim.action import Damage
 from sbbbattlesim.events import EventManager
-from sbbbattlesim.heros import Hero
-from sbbbattlesim.spells import Spell
-from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
 logic_path = __path__
-
-
-@dataclass
-class StatChange:
-    reason: StatChangeCause
-    source: ('Character', Treasure, Hero, Spell)
-    attack: int
-    health: int
-    damage: int
-    heal: int
-    temp: bool
-
-    def __repr__(self):
-        return f'{self.reason} (attack={self.attack}, health={self.health}, damage={self.damage}, heal={self.heal}, temp={self.temp})'
 
 
 class Character(EventManager):
@@ -64,7 +47,7 @@ class Character(EventManager):
         self.dead = False
         self.invincible = False
 
-        self.stat_history = []
+        self._action_history = []
 
     @classmethod
     def new(cls, owner, position, golden):
@@ -110,49 +93,14 @@ class Character(EventManager):
 
     def generate_attack(self, target, reason, attacker=False):
         return Damage(
-            x=self.attack,
             reason=reason,
             source=self,
-            targets=[target]
+            targets=[target],
+            damage=self.attack,
         )
 
-    def change_stats(self, reason, source, attack=0, health=0, damage=0, heal=0, temp=True, *args, **kwargs):
-        stat_change = StatChange(reason=reason, source=source, attack=attack, health=health, damage=damage, heal=heal, temp=temp)
-        logger.debug(f'{self.pretty_print()} stat change b/c {stat_change}')
-
-        if attack != 0 or health != 0:
-            if temp:
-                self._temp_attack += attack
-                self._temp_health += health
-            else:
-                self._base_attack += attack
-                self._base_health += health
-
-            self('OnBuff', attack=attack, health=health, damage=damage, reason=reason, temp=temp, source=source, *args, **kwargs)
-
-        if damage > 0:
-            if self.invincible and reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:
-                self('OnDamagedAndSurvived', damage=0, *args, **kwargs)
-                return
-            self._damage += damage
-
-        if heal > 0:
-            if heal < self._damage:
-                self._damage = self._damage - heal
-            else:
-                self._damage = 0
-
-        logger.debug(f'{self.pretty_print()} finishsed stat change')
-        self.stat_history.append(stat_change)
-
-        if self.health <= 0:
-            self.dead = True
-            logger.debug(f'{self.pretty_print()} marked for death')
-        elif damage > 0:
-            self('OnDamagedAndSurvived', damage=damage, *args, **kwargs)
-
     def clear_temp(self):
-        logger.debug(f'{self.pretty_print()} clearing temp')
+        # logger.debug(f'{self.pretty_print()} clearing temp')
         super().clear_temp()
 
         self._temp_attack = 0

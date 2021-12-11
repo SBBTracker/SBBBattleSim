@@ -27,6 +27,8 @@ class Board(EventManager):
         self.winner = None
         self.loser = None
 
+        self.actions = []
+
     def get_player(self, id):
         if self.p1.id == id:
             return self.p1

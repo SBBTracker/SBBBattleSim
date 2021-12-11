@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -8,8 +9,9 @@ class LancelotSlay(OnAttackAndKill):
 
     def handle(self, killed_character, stack, *args, **kwargs):
         modifier = 4 if self.manager.golden else 2
-        self.manager.change_stats(attack=modifier, health=modifier, temp=False, reason=StatChangeCause.SLAY,
-                                  source=self.manager, stack=stack)
+        with Buff(reason=StatChangeCause.SLAY, source=self.manager, targets=[self.manager],
+                  attack=modifier, health=modifier, temp=False,  stack=stack):
+            pass
 
 
 class CharacterType(Character):

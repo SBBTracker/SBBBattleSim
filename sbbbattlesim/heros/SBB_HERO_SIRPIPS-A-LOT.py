@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import StatChangeCause
 
@@ -8,5 +9,5 @@ class HeroType(Hero):
 
     def buff(self, target_character, *args, **kwargs):
         if target_character.position in (1, 2, 3, 4):
-            target_character.change_stats(health=2, reason=StatChangeCause.JACKS_GIANT_BUFF, source=self, *args,
-                                          **kwargs)
+            Buff(reason=StatChangeCause.JACKS_GIANT_BUFF, source=self, targets=[target_character],
+                 health=2, temp=True, *args, **kwargs).resolve()

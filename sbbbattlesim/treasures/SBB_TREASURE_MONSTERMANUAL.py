@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -8,8 +9,8 @@ class MonsterManualOnDeath(OnDeath):
 
     def handle(self, stack, *args, **kwargs):
         for _ in range(self.manual.mimic + 1):
-            self.manager.change_stats(attack=2, reason=StatChangeCause.MONSTER_MANUAL_BUFF, source=self.manual,
-                                      stack=stack)
+            Buff(reason=StatChangeCause.MONSTER_MANUAL_BUFF, source=self.manual, targets=[self.manager],
+                 attack=2, stack=stack).execute()
 
 
 class TreasureType(Treasure):

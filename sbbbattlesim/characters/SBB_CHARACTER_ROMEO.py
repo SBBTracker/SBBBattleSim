@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDeath, OnSummon
@@ -14,10 +15,8 @@ class RomeoOnSummon(OnSummon):
         for char in summoned_characters:
             if char is self.juliet:
                 modifier = 14 if self.romeo.golden else 7
-                char.change_stats(
-                    reason=StatChangeCause.ROMEO_BUFF, attack=modifier,
-                    health=modifier, temp=False, source=self.romeo
-                )
+                Buff(reason=StatChangeCause.ROMEO_BUFF, source=self.romeo, targets=[char],
+                     attack=modifier, health=modifier, temp=False).resolve()
 
 
 class RomeoLastBreath(OnDeath):

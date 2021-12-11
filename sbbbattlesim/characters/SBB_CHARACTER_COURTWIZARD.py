@@ -13,7 +13,7 @@ class CourtWizardOnDeathBuff(OnDeath):
 
     def handle(self, attack_buff=0, health_buff=0, temp=False, *args, **kwargs):
         death_reason = next(
-            (stat_history_element.reason for stat_history_element in reversed(self.manager.stat_history) if
+            (stat_history_element.reason for stat_history_element in reversed(self.manager._action_history) if
              stat_history_element.damage > 0))
 
         if death_reason == StatChangeCause.DAMAGE_WHILE_DEFENDING:

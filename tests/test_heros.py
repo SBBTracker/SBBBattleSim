@@ -207,7 +207,7 @@ def test_merlin():
     assert char
     for pos in [7]:
         wizardbuffs = [
-            r for r in board.p1.characters[pos].stat_history if r.reason == StatChangeCause.MERLIN_BUFF
+            r for r in board.p1.characters[pos]._action_history if r.reason == StatChangeCause.MERLIN_BUFF
         ]
 
         assert len(wizardbuffs) == 1
@@ -239,7 +239,7 @@ def test_merlin_not_activate():
     assert char
     for pos in [7]:
         wizardbuffs = [
-            r for r in board.p1.characters[pos].stat_history if r.reason == StatChangeCause.MERLIN_BUFF
+            r for r in board.p1.characters[pos]._action_history if r.reason == StatChangeCause.MERLIN_BUFF
         ]
 
         assert len(wizardbuffs) == 0

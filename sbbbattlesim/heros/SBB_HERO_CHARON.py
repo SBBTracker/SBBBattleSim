@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import StatChangeCause
@@ -15,8 +16,8 @@ class CharonOnDeath(OnDeath):
             return  # This has already procced
         self.charon.triggered = True
 
-        self.manager.change_stats(attack=2, health=1, reason=StatChangeCause.CHARON_BUFF, source=self.charon,
-                                  stack=stack)
+        Buff(reason=StatChangeCause.CHARON_BUFF, source=self.charon, targets=[self.manager],
+             attack=2, health=1, stack=stack).execute()
 
 
 class HeroType(Hero):

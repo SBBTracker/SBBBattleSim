@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -32,6 +33,6 @@ class HeroType(Hero):
             attack_buff = 2 if self.angel_attack_buff else 0
             health_buff = 2 if self.angel_health_buff else 0
 
-            target_character.change_stats(attack=attack_buff, health=health_buff,
-                                          reason=StatChangeCause.FALLEN_ANGEL_BUFF, source=self, temp=True, *args,
-                                          **kwargs)
+            with Buff(reason=StatChangeCause.FALLEN_ANGEL_BUFF, source=self, targets=[target_character],
+                      attack=attack_buff, health=health_buff, temp=True, *args, **kwargs):
+                pass

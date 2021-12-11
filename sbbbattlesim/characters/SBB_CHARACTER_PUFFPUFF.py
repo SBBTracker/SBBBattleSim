@@ -1,5 +1,6 @@
 import collections
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath, OnSummon, OnStart
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -13,10 +14,9 @@ class PuffPuffOnStart(OnStart):
         puffbuffs = self.puff.owner.stateful_effects.setdefault('puffbuff', collections.defaultdict())
 
         current_buff = puffbuffs.get(self.puff.owner.id)
-        bonus_attack = int(
-            (self.puff.attack - self.puff._attack * (2 if self.puff.golden else 1)) / (2 if self.puff.golden else 1))
-        bonus_health = int(
-            (self.puff.health - self.puff._health * (2 if self.puff.golden else 1)) / (2 if self.puff.golden else 1))
+        golden_multiplier = 2 if self.puff.golden else 1
+        bonus_attack = int((self.puff.attack - self.puff._attack * golden_multiplier) / golden_multiplier)
+        bonus_health = int((self.puff.health - self.puff._health * golden_multiplier) / golden_multiplier)
 
         new_buff = max(0, min(bonus_attack, bonus_health))
 
@@ -33,9 +33,9 @@ class PuffPuffDeath(OnDeath):
         puffbuffs = self.puff.owner.stateful_effects.setdefault('puffbuff', collections.defaultdict())
 
         buff = 2 if self.puff.golden else 1
-        for char in self.manager.owner.valid_characters(_lambda=lambda char: char.id == self.puff.id):
-            char.change_stats(attack=buff, health=buff, reason=StatChangeCause.PUFF_PUFF_BUFF,
-                              source=self.puff, stack=stack)
+        puffpuffs = self.manager.owner.valid_characters(_lambda=lambda char: char.id == self.puff.id)
+        Buff(reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff, targets=puffpuffs,
+             attack=buff, health=buff, stack=stack).execute()
 
         if puffbuffs[self.puff.owner.id] is None:
             puffbuffs[self.puff.owner.id] = 0
@@ -51,9 +51,9 @@ class PuffPuffOnSummon(OnSummon):
 
         golden_multipler = 2 if self.puff.golden else 1
         puff_buff = (puffbuffs.get(self.puff.owner.id) or 0) * golden_multipler
-
-        self.puff.change_stats(attack=puff_buff, health=puff_buff, temp=False,
-                               reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff)
+        Buff(attack=puff_buff, health=puff_buff, temp=False,
+             reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff,
+             targets=[self.puff]).resolve()
 
 
 class CharacterType(Character):

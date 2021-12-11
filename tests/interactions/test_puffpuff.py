@@ -109,7 +109,7 @@ def test_puffpuff_spawn_with_large(r, raw):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (50, 50)
+    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (51, 51)
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (45, 45)
 
 
@@ -167,8 +167,8 @@ def test_puffpuff_spawn_with_large_and_echowood(r, raw):
     board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (45, 45)
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (50, 50)
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (45, 45)
+    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (51, 51)
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (47, 47)
 
 
 @pytest.mark.parametrize('r', range(5))

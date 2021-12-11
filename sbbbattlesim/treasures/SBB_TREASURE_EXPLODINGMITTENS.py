@@ -1,4 +1,4 @@
-from sbbbattlesim.damage import Damage
+from sbbbattlesim.action import Damage
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -9,7 +9,7 @@ class ExplodingMittensOnDeath(OnDeath):
 
     def handle(self, *args, **kwargs):
         for _ in range(bool(self.mitten.mimic) + 1):
-            Damage(1, reason=StatChangeCause.EXPLODING_MITTENS_DAMAGE, source=self.mitten,
+            Damage(damage=1, reason=StatChangeCause.EXPLODING_MITTENS_DAMAGE, source=self.mitten,
                    targets=self.manager.owner.opponent.valid_characters()).resolve()
 
 

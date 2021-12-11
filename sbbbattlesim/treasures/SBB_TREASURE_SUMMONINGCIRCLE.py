@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnSummon
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -12,9 +13,8 @@ class SummoningPortalBuff(OnSummon):
         for char in summoned_characters:
             self.portal.buff_count += 1
             for _ in range(self.portal.mimic + 1):
-                char.change_stats(attack=self.portal.buff_count, health=self.portal.buff_count,
-                                  reason=StatChangeCause.SUMMONING_PORTA, source=self.portal, temp=False,
-                                  stack=stack)
+                Buff(reason=StatChangeCause.SUMMONING_PORTA, source=self.portal, targets=[char],
+                     attack=self.portal.buff_count, health=self.portal.buff_count, temp=False, stack=stack).resolve()
 
 
 class TreasureType(Treasure):

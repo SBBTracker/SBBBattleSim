@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import Buff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -12,11 +13,9 @@ class FairyGodmotherOnDeath(OnDeath):
 
     def handle(self, stack, *args, **kwargs):
         stat_change = 4 if self.fairy_godmother.golden else 2
-        for char in self.manager.owner.valid_characters():
-            if Tribe.GOOD in char.tribes:
-                char.change_stats(health=stat_change, temp=False,
-                                  reason=StatChangeCause.FAIRY_GODMOTHER_BUFF, source=self.manager,
-                                  stack=stack)
+        targets = self.manager.owner.valid_characters(_lambda=lambda char: Tribe.GOOD in char.tribes)
+        Buff(reason=StatChangeCause.FAIRY_GODMOTHER_BUFF, source=self.manager, targets=targets,
+             health=stat_change, temp=False, stack=stack).resolve()
 
 
 class CharacterType(Character):

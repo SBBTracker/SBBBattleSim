@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnSlay
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -6,8 +7,8 @@ from sbbbattlesim.utils import StatChangeCause
 class BadMoonSlayBuff(OnSlay):
     def handle(self, source, stack, *args, **kwargs):
         for _ in range(self.bad_moon.mimic + 1):
-            self.manager.change_stats(attack=1, health=2, reason=StatChangeCause.BAD_MOON,
-                                      source=self.bad_moon, temp=False, stack=stack)
+            Buff(reason=StatChangeCause.BAD_MOON, source=self.bad_moon, targets=[self.manager],
+                 attack=1, health=2,  temp=False, stack=stack).resolve()
 
 
 class TreasureType(Treasure):

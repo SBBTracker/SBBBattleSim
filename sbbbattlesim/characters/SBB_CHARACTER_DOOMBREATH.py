@@ -1,6 +1,6 @@
 from sbbbattlesim import utils
 from sbbbattlesim.characters import Character
-from sbbbattlesim.damage import Damage
+from sbbbattlesim.action import Damage
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
@@ -19,7 +19,7 @@ class CharacterType(Character):
             _lambda=lambda char: char.position in behind_targets)]]
 
         return Damage(
-            x=self.attack,
+            damage=self.attack,
             reason=reason,
             source=self,
             targets=targets

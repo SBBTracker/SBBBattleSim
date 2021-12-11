@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.spells import TargetedSpell
 from sbbbattlesim.utils import StatChangeCause
 
@@ -7,4 +8,4 @@ class SpellType(TargetedSpell):
     _level = 4
 
     def cast(self, target, *args, **kwargs):
-        target.change_stats(attack=4, temp=False, reason=StatChangeCause.STONE_SKIN, source=self, *args, **kwargs)
+        Buff(attack=4, temp=False, reason=StatChangeCause.STONE_SKIN, source=self, targets=[target], *args, **kwargs)

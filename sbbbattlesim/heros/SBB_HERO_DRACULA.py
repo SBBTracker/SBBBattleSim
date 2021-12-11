@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import StatChangeCause
@@ -7,9 +8,9 @@ class SadDraculaOnAttackAndKill(OnAttackAndKill):
     slay = True
 
     def handle(self, killed_character, stack, *args, **kwargs):
-        self.manager.change_stats(attack=3, reason=StatChangeCause.SAD_DRACULA_SLAY, source=self.sad_dracula,
-                                  stack=stack)
-
+        with Buff(reason=StatChangeCause.SAD_DRACULA_SLAY, source=self.sad_dracula, targets=[self.manager],
+                  attack=3, stack=stack):
+            pass
 
 class HeroType(Hero):
     display_name = 'Sad Dracula'

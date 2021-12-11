@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
@@ -12,5 +13,5 @@ class HeroType(Hero):
 
     def buff(self, target_character, *args, **kwargs):
         if Tribe.PRINCE in target_character.tribes or Tribe.PRINCESS in target_character.tribes:
-            target_character.change_stats(attack=1 * self.mirhi_buff, health=2 * self.mirhi_buff,
-                                          reason=StatChangeCause.MIRHI_BUFF, source=self, *args, **kwargs)
+            Buff(reason=StatChangeCause.MIRHI_BUFF, source=self, targets=[target_character],
+                 attack=1 * self.mirhi_buff, health=2 * self.mirhi_buff, temp=True, *args, **kwargs).resolve()

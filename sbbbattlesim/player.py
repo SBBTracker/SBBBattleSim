@@ -3,6 +3,7 @@ import random
 from collections import OrderedDict, defaultdict
 
 from sbbbattlesim import utils
+from sbbbattlesim.action import Damage
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import EventManager, OnStart
 from sbbbattlesim.heros import registry as hero_registry
@@ -214,9 +215,20 @@ class Player(EventManager):
             if new_temp_health < old_temp_health:
                 char._damage -= min(char._damage, old_temp_health - new_temp_health)
 
-        for char in self.valid_characters():
-            if char.health < 0:
-                char.change_stats(damage=0, source=self, reason=None)
+        dead_characters = []
+        for char in self.characters.values():
+            if not char:
+                continue
+
+            if char.health <= 0:
+                char.dead = True
+                dead_characters.append(char)
+                self.graveyard.append(char)
+                self.characters[char.position] = None
+                logger.info(f'{char.pretty_print()} died')
+
+        for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
+            char('OnDeath')
 
     def spawn(self, character, position):
         logger.info(f'Spawning {character.pretty_print()} in {position} position')

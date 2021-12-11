@@ -1,4 +1,5 @@
 from sbbbattlesim import utils
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -12,8 +13,8 @@ class RingOfRevengeBuff(OnDeath):
             char = self.manager.owner.characters.get(pos)
             if char:
                 for _ in range(self.ring_of_revenge.mimic + 1):
-                    char.change_stats(health=1, attack=1, reason=StatChangeCause.RING_OF_REVENGE,
-                                      source=self.ring_of_revenge, temp=False, stack=stack)
+                    Buff(reason=StatChangeCause.RING_OF_REVENGE, source=self.ring_of_revenge, targets=[char],
+                         health=1, attack=1,  temp=False, stack=stack).resolve()
 
 
 class TreasureType(Treasure):

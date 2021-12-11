@@ -59,14 +59,13 @@ def test_courtwizard_diesandproccs():
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-
     assert mummy.dead
     assert prince.dead
     assert wizard.dead
     assert not unit.dead
 
     wizardmummy = [
-        r for r in wizard.stat_history if r.reason == StatChangeCause.WRETCHED_MUMMY_EXPLOSION
+        r for r in wizard._action_history if r.reason == StatChangeCause.WRETCHED_MUMMY_EXPLOSION
     ]
 
     assert wizardmummy

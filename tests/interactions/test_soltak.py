@@ -41,7 +41,7 @@ def test_doombreath():
 
     player = board.p2
 
-    assert player.characters[2] is None
+    assert player.characters[2] is None, player.characters[2].dead
 
     for i in (5, 6):
         assert player.characters[i] is not None, f'{[i.pretty_print() for i in player.valid_characters()]}'

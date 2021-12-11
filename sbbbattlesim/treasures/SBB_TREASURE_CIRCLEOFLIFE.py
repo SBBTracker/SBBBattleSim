@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Buff
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -7,9 +8,9 @@ class TreeOfLifeHeal(OnDeath):
     last_breath = False
 
     def handle(self, stack, *args, **kwargs):
-        for char in self.manager.owner.valid_characters():
-            char.change_stats(heal=char.health, temp=False, reason=StatChangeCause.TREE_OF_LIFE, source=self.tree,
-                              stack=stack)
+        for _ in range(self.tree.mimic + 1):
+            Buff(reason=StatChangeCause.TREE_OF_LIFE, source=self.tree, targets=self.manager.owner.valid_characters(),
+                 heal=-1, temp=False, stack=stack).resolve()
 
 
 class TreasureType(Treasure):
