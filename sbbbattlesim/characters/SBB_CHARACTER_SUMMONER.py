@@ -7,10 +7,9 @@ from sbbbattlesim.utils import Tribe, StatChangeCause
 class AonOnSpell(OnSpellCast):
     def handle(self, caster, spell, target, stack, *args, **kwargs):
         stat_gain = (2 if self.aon.golden else 1)
-        for char in self.aon.owner.valid_characters(_lambda=lambda c: Tribe.MAGE in c.tribes):
-            Buff(reason=StatChangeCause.AON_BUFF, source=self.aon,
-                 targets=self.aon.owner.valid_characters(_lambda=lambda c: Tribe.MAGE in c.tribes),
-                 attack=stat_gain, stack=stack).resolve()
+        Buff(reason=StatChangeCause.AON_BUFF, source=self.aon,
+             targets=self.aon.owner.valid_characters(_lambda=lambda c: Tribe.MAGE in c.tribes),
+             attack=stat_gain, stack=stack).resolve()
 
 
 class AonSlay(OnAttackAndKill):
@@ -32,8 +31,3 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         self.owner.register(AonOnSpell, aon=self)
         self.register(AonSlay)
-
-
-
-
-

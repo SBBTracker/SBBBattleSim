@@ -59,6 +59,6 @@ def test_charon_wombat():
 
     assert summoned_char is not None
 
-    stat_history = board.p1.characters[1].stat_history[0]
+    stat_history = board.p1.characters[1]._action_history[0]
 
     assert stat_history.attack, stat_history.health == (2, 3)

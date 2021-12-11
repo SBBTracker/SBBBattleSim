@@ -95,17 +95,22 @@ class Action:
                      attack=self.attack, health=self.health, damage=self.damage, temp=self.temp,
                      *self.args, **self.kwargs)
 
+                self._char_buffer.add(char)
+
             if self.damage > 0:
                 if char.invincible and self.reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:
                     char('OnDamagedAndSurvived', damage=0, *self.args, **self.kwargs)
                     return
                 char._damage += self.damage
+                self._char_buffer.add(char)
+
 
             if self.heal != 0:
                 if self.heal == -1:
                     char._damage = 0
                 else:
                     char._damage = max(char._damage - self.heal, 0)
+                self._char_buffer.add(char)
 
             logger.debug(f'{char.pretty_print()} finishsed stat change')
             # self.stat_history.append(stat_change)
@@ -113,8 +118,10 @@ class Action:
             if char.health <= 0:
                 char.dead = True
                 logger.debug(f'{char.pretty_print()} marked for death')
+                self._char_buffer.add(char)
             elif self.damage > 0:
                 char('OnDamagedAndSurvived', damage=self.damage, *self.args, **self.kwargs)
+                self._char_buffer.add(char)
 
             char._action_history.append(self)
 
@@ -131,7 +138,10 @@ class Action:
 
         logger.debug(f'RESOLVING DAMAGE FOR {self}')
 
-        for char in self.targets:
+        for char in self._char_buffer:
+            if char in char.owner.graveyard:
+                continue
+
             if char.dead:
                 dead_characters.append(char)
                 char.owner.graveyard.append(char)
