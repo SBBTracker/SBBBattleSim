@@ -224,7 +224,6 @@ class Player(EventManager):
         character.position = position
         return character
 
-
     def summon_from_different_locations(self, characters, *args, **kwargs):
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be
         able to summon from multiple points at once before running the onsummon stack. This may be useful

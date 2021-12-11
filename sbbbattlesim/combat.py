@@ -60,7 +60,6 @@ def attack(attack_position, attacker, defender, **kwargs):
     back = (5, 6, 7)
 
     attack_character = attacker.characters.get(attack_position)
-    logger.debug(f'VALID ATTACKER {attack_character.pretty_print()}')
     if attack_character is None:
         # the character may have died elsewhere in the stack
         return
@@ -89,17 +88,11 @@ def attack(attack_position, attacker, defender, **kwargs):
     # AFTER THIS POINT BOTH ATTACK AND DEFEND POSITION IS DEFINED
     # The characters in attack and defend slots may change after this point so
     # before each event attack_character and defend character is set again
-
-    logger.info(f'Attacker {attacker.pretty_print()}    {attack_position}')
-    logger.info(f'Defender {defender.pretty_print()}    {defend_position}')
     logger.info(f'{attack_character.pretty_print()} -> {defend_character.pretty_print()}')
 
     # Pre Damage Event
     # These functions can change the characters in given positions like Medusa
     attacker.characters.get(attack_position)('OnPreAttack', attack_position=attack_position, defend_position=defend_position, defend_player=defender, **kwargs)
-    logger.info(f'Attacker {attacker.pretty_print()}    {attack_position}')
-    logger.info(f'Defender {defender.pretty_print()}    {defend_position}')
-    logger.info(f'{attacker.characters.get(attack_position)} -> {defender.characters.get(defend_position)}')
     defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position, defend_position=defend_position, attack_player=attacker, **kwargs)
 
     # We are pulling the latest attack_character and defend character incase they changed
