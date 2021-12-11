@@ -10,8 +10,7 @@ logger = logging.getLogger(__name__)
 
 class SummoningPortalBuff(OnSummon):
     def handle(self, summoned_characters, stack, *args, **kwargs):
-        for char in sorted(summoned_characters, key=lambda char: char.position, reverse=True):
-            logger.debug(f'IS CHARACTER THE CHARACTER {char is self.manager.characters[char.position]}')
+        for char in summoned_characters:
             self.portal.buff_count += 1
             for _ in range(self.portal.mimic + 1):
                 Buff(reason=StatChangeCause.SUMMONING_PORTA, source=self.portal, targets=[char],

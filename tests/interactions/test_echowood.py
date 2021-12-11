@@ -173,14 +173,16 @@ def test_echowood_romeo():
 
 
 @pytest.mark.parametrize('survives', (True, False))
-def test_echowood_slay_vainpire(survives):
+@pytest.mark.parametrize('phoenix_feather', (True, False))
+def test_echowood_slay_vainpire(survives, phoenix_feather):
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_NIGHTSTALKER', position=2, attack=5, health=5),
             make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=7, attack=1, health=1),
         ],
         treasures=[
-            '''SBB_TREASURE_HERMES'BOOTS'''
+            '''SBB_TREASURE_HERMES'BOOTS''',
+            "SBB_TREASURE_PHOENIXFEATHER" if phoenix_feather else ''
         ]
     )
     enemy = make_player(
@@ -192,7 +194,7 @@ def test_echowood_slay_vainpire(survives):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == ((2, 2) if survives else (1, 1))
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == ((2, 2) if (survives or phoenix_feather) else (1, 1))
 
 
 @pytest.mark.parametrize('survives', (True, False))
@@ -661,3 +663,5 @@ def test_medusa_echowood():
     board.p2.resolve_board()
 
     assert (echo.attack, echo.health) == (4, 4)
+
+

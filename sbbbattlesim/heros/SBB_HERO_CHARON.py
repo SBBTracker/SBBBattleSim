@@ -8,6 +8,9 @@ class CharonOnDeath(OnDeath):
     last_breath = False
 
     def handle(self, stack, *args, **kwargs):
+        if self.manager._level < 2:
+            return
+
         # This should only proc once per combat
         if self.charon.triggered:
             return  # This has already procced

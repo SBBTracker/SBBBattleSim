@@ -220,6 +220,7 @@ def test_doombreath():
             make_character(position=2),
             make_character(position=5),
             make_character(position=6),
+            make_character(position=7),
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -229,3 +230,5 @@ def test_doombreath():
 
     for i in (2, 5, 6):
         assert player.characters[i] is None
+
+    assert player.characters[7] is not None

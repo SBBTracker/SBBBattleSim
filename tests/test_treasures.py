@@ -939,10 +939,12 @@ def test_other_hand_of_vekna(mimic, on):
 
 
 @pytest.mark.parametrize('mimic', (True, False))
-def test_coin_of_charon(mimic):
+@pytest.mark.parametrize('real_unit', (True, False))
+def test_coin_of_charon(mimic, real_unit):
     player = make_player(
         characters=[
-            make_character(attack=0),
+            make_character(),
+            make_character(id="SBB_CHARACTER_WIZARD" if real_unit else "", position=5)
         ],
         treasures=[
             '''SBB_TREASURE_MONKEY'SPAW''',
@@ -951,21 +953,25 @@ def test_coin_of_charon(mimic):
     )
 
     enemy = make_player(
-        characters=[make_character()],
+        characters=[make_character(), make_character(position=2)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
+    fake_unit = board.p1.characters[1]
+    assert fake_unit
+
+    maybe_real_unit = board.p1.characters[5]
+    assert maybe_real_unit
+
     winner, loser = board.fight()
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    player = board.p1
-    char = player.graveyard[0]
+    assert fake_unit.dead
+    assert maybe_real_unit.dead
 
-    assert char
-    final = 4
-    if mimic:
-        final = 8
-    assert char.attack == final
+    final_stats = (9, 9) if mimic else (5, 5)
+    assert (fake_unit.attack, fake_unit.health + fake_unit._damage) == (1, 1)
+    assert (maybe_real_unit.attack, maybe_real_unit.health + fake_unit._damage) == (final_stats if real_unit else (1, 1))
 
 
 @pytest.mark.parametrize('mimic', (True, False))

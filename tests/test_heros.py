@@ -4,12 +4,12 @@ from sbbbattlesim import Board
 from sbbbattlesim.utils import Keyword, Tribe, StatChangeCause
 from tests import make_character, make_player
 
-
-def test_charon():
+@pytest.mark.parametrize('is_real', (True, False))
+def test_charon(is_real):
     player = make_player(
         characters=[
             make_character(id='TEST', position=1),
-            make_character(position=5)
+            make_character(id="SBB_CHARACTER_WIZARD" if is_real else '', position=5)
         ],
         hero='SBB_HERO_CHARON'
     )
@@ -28,11 +28,11 @@ def test_charon():
     player = board.p1
     dead = player.graveyard[0]
     assert dead
-    assert dead.attack == 3 and dead.health + dead._damage == 2
+    assert dead.attack == 1 and dead.health + dead._damage == 1
 
     also_dead = player.graveyard[1]
     assert also_dead
-    assert also_dead.attack == 1 and also_dead.health + dead._damage == 1
+    assert also_dead.attack == (3 if is_real else 1) and also_dead.health + dead._damage == (2 if is_real else 1)
 
 
 @pytest.mark.parametrize('on', (True, False))

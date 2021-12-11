@@ -49,4 +49,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(WombatsInDisguiseOnDeath)
+        self.register(WombatsInDisguiseOnDeath, priority=410)  # faster than coin of charon

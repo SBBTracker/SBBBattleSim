@@ -21,4 +21,4 @@ class TreasureType(Treasure):
 
     def buff(self, target_character, *args, **kwargs):
         if Tribe.MONSTER in target_character.tribes:
-            target_character.register(MonsterManualOnDeath, temp=True, manual=self)
+            target_character.register(MonsterManualOnDeath, temp=True, manual=self, priority=400)

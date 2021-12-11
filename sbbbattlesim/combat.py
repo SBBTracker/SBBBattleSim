@@ -59,6 +59,10 @@ def attack(attack_position, attacker, defender, **kwargs):
     back = (5, 6, 7)
 
     attack_char = attacker.characters.get(attack_position)
+    if attack_char is None:
+        # the character may have died elsewhere in the stack
+        return
+
     front_characters = defender.valid_characters(
         _lambda=lambda char: char.position in front and char is not attack_char)
     back_characters = defender.valid_characters(_lambda=lambda char: char.position in back and char is not attack_char)
@@ -113,12 +117,15 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     if not attack_character.ranged:
         attacker_damage.resolve()
-    defender_damage.resolve()
 
     # SLAY TRIGGER
     if defend_character.dead:
         attack_character('OnAttackAndKill', killed_character=defend_character, **kwargs)
 
-    # Post Damage Event
+    # for copycat to work properly
     attack_character('OnPostAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
+
+    defender_damage.resolve()
+    # for cupid to work properly
     defend_character('OnPostDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
+

@@ -34,3 +34,31 @@ def test_wombat_dying(golden, level, repeat):
     ]
 
     assert len(wombat_buffs) == 1
+
+
+def test_charon_wombat():
+    '''Wombat death does not get buffed by coin of charon for some reason'''
+    player = make_player(
+        level=2,
+        characters=[
+            make_character(id='SBB_CHARACTER_WOMBATSINDISGUISE', attack=2, health=3, position=1),
+        ],
+        treasures=[
+            '''SBB_TREASURE_MONKEY'SPAW'''
+        ]
+    )
+    enemy = make_player(
+        characters=[make_character(attack=5, health=5)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    summoned_char = board.p1.characters[1]
+
+    assert summoned_char is not None
+
+    stat_history = board.p1.characters[1].stat_history[0]
+
+    assert stat_history.attack, stat_history.health == (2, 3)

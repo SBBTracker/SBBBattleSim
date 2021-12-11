@@ -25,4 +25,4 @@ def test_rottenappletree_slay_mittens(mittens):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert jorm.dead == mittens, jorm.pretty_print()
+    assert not jorm.dead, jorm.pretty_print()
