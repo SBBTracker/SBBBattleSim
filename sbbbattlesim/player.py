@@ -84,8 +84,7 @@ class Player(EventManager):
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
 
-    @property
-    def attack_slot(self):
+    def get_attack_slot(self):
         if self._attack_slot is None:
             self._attack_slot = 1
 
@@ -208,6 +207,9 @@ class Player(EventManager):
         new_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}
 
         for char, new_temp_health in new_temp_health_dt.items():
+            if char not in old_temp_health_dt and self.characters[char.position] is not char:
+                continue
+
             old_temp_health = old_temp_health_dt[char]
 
             if new_temp_health < old_temp_health:
@@ -228,16 +230,17 @@ class Player(EventManager):
         for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
             char('OnDeath')
 
+    def spawn(self, character, position):
+        logger.info(f'Spawning {character.pretty_print()} in {position} position')
+        self.characters[position] = character
+        character.position = position
+        return character
+
     def summon_from_different_locations(self, characters, *args, **kwargs):
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be
         able to summon from multiple points at once before running the onsummon stack. This may be useful
         for other things too'''
-        summoned_characters = []
-        for char in characters:
-            pos = char.position
-            self.characters[pos] = char
-            summoned_characters.append(self.characters[pos])
-            logger.info(f'Spawning {char} in {pos} position')
+        summoned_characters = [self.spawn(char, char.position) for char in characters]
 
         # Now that we have summoned units, make sure they have the buffs they should
         self.resolve_board(summoned_characters=summoned_characters, *args, **kwargs)
@@ -250,15 +253,11 @@ class Player(EventManager):
         summoned_characters = []
         spawn_order = utils.get_spawn_positions(pos)
         for char in characters:
-            # TODO This could be better
             pos = next((pos for pos in spawn_order if self.characters.get(pos) is None), None)
             if pos is None:
                 break
 
-            char.position = pos
-            self.characters[pos] = char
-            summoned_characters.append(self.characters[pos])
-            logger.info(f'Spawning {char} in {pos} position')
+            summoned_characters.append(self.spawn(char, pos))
 
         # Now that we have summoned units, make sure they have the buffs they should
         self.resolve_board(summoned_characters=summoned_characters, *args, **kwargs)
@@ -270,7 +269,7 @@ class Player(EventManager):
 
     def transform(self, pos, character, *args, **kwargs):
         if self.characters[pos] is not None:
-            self.characters[pos] = character
+            self.spawn(character, pos)
             self.resolve_board(summoned_characters=[character], *args, **kwargs)
 
             # TODO wrap this into a nice helper function to be used in the attack slot getter as well
@@ -280,7 +279,6 @@ class Player(EventManager):
                     self.attack_slot = 1
 
         character.owner.opponent.resolve_board()
-
 
     def valid_characters(self, _lambda=lambda char: True):
         """

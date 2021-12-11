@@ -62,7 +62,7 @@ class Character(EventManager):
         )
 
     def pretty_print(self):
-        return f'''{self.display_name} pos:{self.position} gold:{self.golden} ({self.attack}/{self.health})'''
+        return f'''{"*" if self.golden else ""}{self.display_name}{"*" if self.golden else ""} ({self.attack}/{self.health})'''
 
     @classmethod
     def valid(cls):
