@@ -78,6 +78,11 @@ class Action:
         self.resolve()
 
     def _(self, char, *args, **kwargs):
+        '''
+        Preforms all stat changes and represents the core of any Action
+        This should never be accessed outside an Action class or subclass
+        If you touch this you are touching every stat change in the simulator
+        '''
         args = (*self.args, *args)
         kwargs = self.kwargs | kwargs
         if self.attack != 0 or self.health != 0:
