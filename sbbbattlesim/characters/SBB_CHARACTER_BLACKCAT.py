@@ -11,7 +11,7 @@ class BlackCatLastBreath(OnDeath):
     def handle(self, *args, **kwargs):
         stat = 2 if self.manager.golden else 1
         cat = character_registry['SBB_CHARACTER_CAT'](
-            self.manager.owner,
+            self.manager.player,
             self.manager.position,
             stat,
             stat,
@@ -20,7 +20,7 @@ class BlackCatLastBreath(OnDeath):
             tribes=['evil', 'animal'],
             cost=1
         )
-        self.manager.owner.summon(self.manager.position, [cat])
+        self.manager.player.summon(self.manager.position, [cat])
 
 
 class CharacterType(Character):

@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class CopycatOnPostAttack(OnPostAttack):
     def handle(self, stack, *args, **kwargs):
         behind_targets = get_behind_targets(self.manager.position)
-        targetted_chars = [c for c in self.manager.owner.valid_characters() if c.position in behind_targets]
+        targetted_chars = [c for c in self.manager.player.valid_characters() if c.position in behind_targets]
 
         itr = 2 if self.manager.golden else 1
         for _ in range(itr):

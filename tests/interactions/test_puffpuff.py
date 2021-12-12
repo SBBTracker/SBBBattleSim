@@ -191,11 +191,11 @@ def test_puff_spawn(golden, r, raw):
 
         def handle(self, *args, **kwargs):
             summon = character_registry["SBB_CHARACTER_PUFFPUFF"].new(
-                owner=self.manager.owner,
+                player=self.manager.player,
                 position=self.manager.position,
                 golden=golden
             )
-            self.manager.owner.summon(self.manager.position, [summon])
+            self.manager.player.summon(self.manager.position, [summon])
 
     board.p1.characters[7].register(FakeTrojanDonkeySummon)
 

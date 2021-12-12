@@ -13,8 +13,8 @@ class LightningDragonOnStart(OnStart):
     def handle(self, *args, **kwargs):
         attack(
             attack_position=self.lightning_dragon.position,
-            attacker=self.lightning_dragon.owner,
-            defender=self.lightning_dragon.owner.opponent,
+            attacker=self.lightning_dragon.player,
+            defender=self.lightning_dragon.player.opponent,
         )
 
 
@@ -30,4 +30,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.owner.board.register(LightningDragonOnStart, lightning_dragon=self)
+        self.player.board.register(LightningDragonOnStart, lightning_dragon=self)

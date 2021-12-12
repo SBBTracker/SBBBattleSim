@@ -31,4 +31,4 @@ class CharacterType(Character):
 
     def buff(self, target_character, *args, **kwargs):
         if target_character is self:
-            self.owner.register(HungryHungryHippocampusOnSummon, temp=True, hippo=self)
+            self.player.register(HungryHungryHippocampusOnSummon, temp=True, hippo=self)

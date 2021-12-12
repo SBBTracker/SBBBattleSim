@@ -7,7 +7,7 @@ from sbbbattlesim.utils import Tribe, StatChangeCause
 class PrinceArthurOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
         stat_change = 4 if self.arthur.golden else 2
-        royals = self.arthur.owner.valid_characters(
+        royals = self.arthur.player.valid_characters(
             _lambda=lambda char: char.golden and (Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes)
         )
         Buff(source=self.arthur, reason=StatChangeCause.PRINCEARTHUR_BUFF, targets=royals,
@@ -24,4 +24,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.owner.board.register(PrinceArthurOnStart, priority=80, arthur=self)
+        self.player.board.register(PrinceArthurOnStart, priority=80, arthur=self)

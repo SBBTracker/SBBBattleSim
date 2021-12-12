@@ -6,8 +6,8 @@ from sbbbattlesim.utils import find_strongest_character, find_weakest_character,
 
 class RobinWoodOnFightStart(OnStart):
     def handle(self, stack, *args, **kwargs):
-        strongest_enemy_char = find_strongest_character(self.robin_wood.owner.opponent)
-        weakest_allied_char = find_weakest_character(self.robin_wood.owner)
+        strongest_enemy_char = find_strongest_character(self.robin_wood.player.opponent)
+        weakest_allied_char = find_weakest_character(self.robin_wood.player)
 
         if strongest_enemy_char:
             Buff(reason=StatChangeCause.ROBIN_WOOD_DEBUFF, source=self.robin_wood, targets=[strongest_enemy_char],
@@ -28,4 +28,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.owner.board.register(RobinWoodOnFightStart, priority=50, robin_wood=self)
+        self.player.board.register(RobinWoodOnFightStart, priority=50, robin_wood=self)

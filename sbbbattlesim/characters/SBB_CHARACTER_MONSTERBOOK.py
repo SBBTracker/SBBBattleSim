@@ -15,12 +15,12 @@ class MonsterBookOnDeath(OnDeath):
         itr = (2 if self.monster_book.golden else 1)
 
         for _ in range(itr):
-            spell = random_combat_spell(self.monster_book.owner.level)
+            spell = random_combat_spell(self.monster_book.player.level)
             if not spell:
                 logger.debug(f'{self.monster_book.pretty_print()} could not find a viable spell')
                 return
 
-            self.manager.owner.cast_spell(spell.id)
+            self.manager.player.cast_spell(spell.id)
 
 
 class CharacterType(Character):

@@ -102,7 +102,7 @@ def test_courtwizard_noattack_eveniftoken():
     class FakeOndeathFallingstars(OnDeath):
         last_breath = False
         def handle(self, *args, **kwargs):
-            self.manager.owner.cast_spell('SBB_SPELL_FALLINGSTARS')
+            self.manager.player.cast_spell('SBB_SPELL_FALLINGSTARS')
 
     unit.register(FakeOndeathFallingstars, priority=9999)
 

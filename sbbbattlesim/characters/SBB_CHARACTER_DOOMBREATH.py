@@ -15,7 +15,7 @@ class CharacterType(Character):
 
     def generate_attack(self, target, reason, attacker=False):
         behind_targets = utils.get_behind_targets(target.position)
-        targets = [target, *[char for char in self.owner.opponent.valid_characters(
+        targets = [target, *[char for char in self.player.opponent.valid_characters(
             _lambda=lambda char: char.position in behind_targets)]]
 
         return Damage(

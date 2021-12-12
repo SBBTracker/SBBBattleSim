@@ -25,18 +25,18 @@ class WombatsInDisguiseOnDeath(OnDeath):
     last_breath = True
 
     def handle(self, stack, *args, **kwargs):
-        _lambda = lambda char: char._level <= self.manager.owner.level
+        _lambda = lambda char: char._level <= self.manager.player.level
         valid_summons = [*character_registry.filter(_lambda=_lambda)]
 
         if valid_summons:
             summon = random.choice(valid_summons).new(
-                owner=self.manager.owner,
+                player=self.manager.player,
                 position=self.manager.position,
                 golden=self.manager.golden
             )
 
-            summon.owner.register(WombatsInDisguiseOnSummon, wombat=self.manager, summon=summon)
-            self.manager.owner.summon(self.manager.position, [summon])
+            summon.player.register(WombatsInDisguiseOnSummon, wombat=self.manager, summon=summon)
+            self.manager.player.summon(self.manager.position, [summon])
 
 
 class CharacterType(Character):

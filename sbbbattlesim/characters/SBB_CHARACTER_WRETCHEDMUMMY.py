@@ -10,7 +10,7 @@ class WretchedMummyDeath(OnDeath):
     last_breath = True
 
     def handle(self, *args, **kwargs):
-        valid_targets = self.manager.owner.opponent.valid_characters()
+        valid_targets = self.manager.player.opponent.valid_characters()
         if valid_targets:
             Damage(
                 damage=self.manager.attack * (1 + bool(self.manager.golden)),

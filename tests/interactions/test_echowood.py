@@ -266,11 +266,11 @@ def test_multiple_echowoods_with_summon():
 
         def handle(self, *args, **kwargs):
                 summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
-                    owner=self.manager.owner,
+                    player=self.manager.player,
                     position=self.manager.position,
                     golden=False
                 )
-                self.manager.owner.summon(self.manager.position, [summon])
+                self.manager.player.summon(self.manager.position, [summon])
 
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
@@ -305,11 +305,11 @@ def test_multiple_echowoods_with_summon():
 
         def handle(self, *args, **kwargs):
                 summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
-                    owner=self.manager.owner,
+                    player=self.manager.player,
                     position=self.manager.position,
                     golden=False
                 )
-                self.manager.owner.summon(self.manager.position, [summon])
+                self.manager.player.summon(self.manager.position, [summon])
 
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
@@ -346,11 +346,11 @@ def test_multiple_echowoods_with_summon_and_health_support():
 
         def handle(self, *args, **kwargs):
                 summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
-                    owner=self.manager.owner,
+                    player=self.manager.player,
                     position=self.manager.position,
                     golden=False
                 )
-                self.manager.owner.summon(self.manager.position, [summon])
+                self.manager.player.summon(self.manager.position, [summon])
 
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
@@ -387,11 +387,11 @@ def test_multiple_echowoods_with_summon_and_health_support():
 
         def handle(self, *args, **kwargs):
                 summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
-                    owner=self.manager.owner,
+                    player=self.manager.player,
                     position=self.manager.position,
                     golden=False
                 )
-                self.manager.owner.summon(self.manager.position, [summon])
+                self.manager.player.summon(self.manager.position, [summon])
 
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
@@ -427,11 +427,11 @@ def test_multiple_echowoods_with_summon_and_health_support_not_raw():
 
         def handle(self, *args, **kwargs):
                 summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
-                    owner=self.manager.owner,
+                    player=self.manager.player,
                     position=self.manager.position,
                     golden=False
                 )
-                self.manager.owner.summon(self.manager.position, [summon])
+                self.manager.player.summon(self.manager.position, [summon])
 
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
@@ -466,11 +466,11 @@ def test_multiple_echowoods_with_summoningportal():
 
         def handle(self, *args, **kwargs):
                 summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
-                    owner=self.manager.owner,
+                    player=self.manager.player,
                     position=self.manager.position,
                     golden=False
                 )
-                self.manager.owner.summon(self.manager.position, [summon])
+                self.manager.player.summon(self.manager.position, [summon])
 
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
@@ -511,11 +511,11 @@ def test_multiple_echowoods_with_summoningportal_summontwo(r):
 
         def handle(self, *args, **kwargs):
                 summon = character_registry["SBB_CHARACTER_ECHOWOODSHAMBLER"].new(
-                    owner=self.manager.owner,
+                    player=self.manager.player,
                     position=self.manager.position,
                     golden=False
                 )
-                self.manager.owner.summon(self.manager.position, [summon])
+                self.manager.player.summon(self.manager.position, [summon])
 
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
     board.p1.characters[2].register(FakeTrojanDonkeySummon)
@@ -558,11 +558,11 @@ def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood(r):
 
         def handle(self, *args, **kwargs):
                 summon = character_registry["SBB_CHARACTER_BLACKCAT"].new(
-                    owner=self.manager.owner,
+                    player=self.manager.player,
                     position=self.manager.position,
                     golden=False,
                 )
-                self.manager.owner.summon(self.manager.position, [summon])
+                self.manager.player.summon(self.manager.position, [summon])
 
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
     board.p1.characters[2].register(FakeTrojanDonkeySummon)
@@ -603,11 +603,11 @@ def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood_onspawn(r
 
         def handle(self, *args, **kwargs):
                 summon = character_registry["SBB_CHARACTER_BLACKCAT"].new(
-                    owner=self.manager.owner,
+                    player=self.manager.player,
                     position=self.manager.position,
                     golden=False,
                 )
-                self.manager.owner.summon(self.manager.position, [summon])
+                self.manager.player.summon(self.manager.position, [summon])
 
     class FakeTrojanDonkeyOnSummonSummon(OnSummon):
         donkey = board.p1.characters[1]
@@ -617,7 +617,7 @@ def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood_onspawn(r
                 if not self.triggered:
                     self.triggered=True
                     summon = character_registry["SBB_CHARACTER_BLACKCAT"].new(
-                        owner=self.manager,
+                        player=self.manager,
                         position=self.donkey.position,
                         golden=False,
                     )

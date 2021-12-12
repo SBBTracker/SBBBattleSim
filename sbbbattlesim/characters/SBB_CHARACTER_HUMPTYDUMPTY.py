@@ -7,7 +7,7 @@ class HumptyDumptyOnDeath(OnDeath):
     last_breath = False
 
     def handle(self, *args, **kwargs):
-        self.manager.owner.graveyard.remove(self.egg)
+        self.manager.player.graveyard.remove(self.egg)
 
 
 class CharacterType(Character):

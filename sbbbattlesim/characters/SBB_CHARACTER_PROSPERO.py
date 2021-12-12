@@ -42,9 +42,9 @@ class CharacterType(Character):
 
                     Buff(reason=StatChangeCause.BEARSTINE_BUFF, source=self.bearstine, targets=[char],
                          attack=attack_buff, health=health_buff,  temp=False, stack=stack).resolve()
-                    char.owner.resolve_board()
+                    char.player.resolve_board()
 
-        self.owner.register(BearstineOnSummon, priority=-20)
+        self.player.register(BearstineOnSummon, priority=-20)
 
     def buff(self, target_character, *args, **kwargs):
         if Tribe.ANIMAL in target_character.tribes and target_character != self:

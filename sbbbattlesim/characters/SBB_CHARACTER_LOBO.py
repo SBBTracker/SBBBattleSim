@@ -11,7 +11,7 @@ class SouthernSirenSlay(OnAttackAndKill):
         modifier = 2 if self.manager.golden else 1
         chars = [
             character_registry[killed_character.id](
-                self.manager.owner, self.manager.position,
+                self.manager.player, self.manager.position,
                 killed_character.attack, killed_character.max_health,
                 golden=killed_character.golden,
                 tribes=killed_character.tribes,
@@ -20,7 +20,7 @@ class SouthernSirenSlay(OnAttackAndKill):
         ]
         chars = chars * modifier
 
-        self.manager.owner.summon(self.manager.position, chars)
+        self.manager.player.summon(self.manager.position, chars)
 
 
 class CharacterType(Character):

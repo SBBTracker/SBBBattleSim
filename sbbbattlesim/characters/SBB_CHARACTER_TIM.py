@@ -23,4 +23,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.owner.register(SpellWeaverOnSpell, weaver=self)
+        self.player.register(SpellWeaverOnSpell, weaver=self)

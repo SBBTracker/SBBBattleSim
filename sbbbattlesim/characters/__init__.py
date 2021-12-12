@@ -29,9 +29,9 @@ class Character(EventManager):
     _level = 0
     _tribes = set()
 
-    def __init__(self, owner, position, attack, health, golden, tribes, cost, *args, **kwargs):
+    def __init__(self, player, position, attack, health, golden, tribes, cost, *args, **kwargs):
         super().__init__()
-        self.owner = owner
+        self.player = player
 
         self.position = position
         self._base_attack = attack
@@ -47,12 +47,15 @@ class Character(EventManager):
         self.dead = False
         self.invincible = False
 
+        self.support_buff = None
+        self.aura_buff = None
+
         self._action_history = []
 
     @classmethod
-    def new(cls, owner, position, golden):
+    def new(cls, player, position, golden):
         return cls(
-            owner=owner,
+            player=player,
             position=position,
             golden=golden,
             attack=cls._attack * (2 if golden else 1),

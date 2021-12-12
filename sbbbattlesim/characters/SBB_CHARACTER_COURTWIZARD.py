@@ -19,8 +19,8 @@ class CourtWizardOnDeathBuff(OnDeath):
         if death_reason == StatChangeCause.DAMAGE_WHILE_DEFENDING:
             attack(
                 attack_position=self.court_wizard.position,
-                attacker=self.manager.owner,
-                defender=self.manager.owner.opponent,
+                attacker=self.manager.player,
+                defender=self.manager.player.opponent,
                 **kwargs
             )
 

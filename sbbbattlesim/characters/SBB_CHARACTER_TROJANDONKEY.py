@@ -12,19 +12,19 @@ logger = logging.getLogger(__name__)
 class TrojanDonkeySummon(OnDamagedAndSurvived):
     def handle(self, *args, **kwargs):
         if self.manager.golden:
-            _lambda = lambda char: char._level == self.manager.owner.level
+            _lambda = lambda char: char._level == self.manager.player.level
         else:
-            _lambda = lambda char: char._level <= self.manager.owner.level
+            _lambda = lambda char: char._level <= self.manager.player.level
 
         valid_summons = [*character_registry.filter(_lambda=_lambda)]
         if valid_summons:
             _summon = random.choice(valid_summons)
             summon = _summon.new(
-                owner=self.manager.owner,
+                player=self.manager.player,
                 position=self.manager.position,
                 golden=False
             )
-            self.manager.owner.summon(self.manager.position, [summon])
+            self.manager.player.summon(self.manager.position, [summon])
 
 
 class CharacterType(Character):

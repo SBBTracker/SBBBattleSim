@@ -15,7 +15,7 @@ class PumpkinKingOnDeath(OnDeath):
     def handle(self, *args, **kwargs):
         summons = []
         dead_in_order = sorted(
-            [char for char in self.manager.owner.graveyard if Tribe.EVIL in char.tribes],
+            [char for char in self.manager.player.graveyard if Tribe.EVIL in char.tribes],
             key=lambda char: char._level, reverse=True
         )
         for dead in dead_in_order[:7]:
@@ -23,12 +23,12 @@ class PumpkinKingOnDeath(OnDeath):
                 _lambda=lambda char: char._level > 1 and char._level == dead._level - 1 and Tribe.EVIL in char._tribes))
             if summon_choices:
                 summons.append(random.choice(summon_choices).new(
-                    owner=self.manager.owner,
+                    player=self.manager.player,
                     position=dead.position,
                     golden=self.manager.golden
                 ))
 
-        self.manager.owner.summon_from_different_locations(summons)
+        self.manager.player.summon_from_different_locations(summons)
 
 
 class CharacterType(Character):

@@ -13,7 +13,7 @@ class AshwoodElmOnStart(OnStart):
         with Buff(
             reason=StatChangeCause.ASHWOOD_ELM_BUFF,
             source=self.ashwood,
-            targets=self.ashwood.owner.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes),
+            targets=self.ashwood.player.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes),
             attack=attack_change,
             temp=False,
             stack=stack
@@ -31,4 +31,4 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.owner.board.register(AshwoodElmOnStart, priority=70, ashwood=self)
+        self.player.board.register(AshwoodElmOnStart, priority=70, ashwood=self)

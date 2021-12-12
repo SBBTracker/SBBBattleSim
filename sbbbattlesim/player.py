@@ -51,7 +51,7 @@ class Player(EventManager):
             logger.debug(f'{self.id} Registering treasure {treasure}')
             self.treasures[treasure.id].append(treasure(self, mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0)))
 
-        self.hand = [character_registry[char_data['id']](owner=self, **char_data) for char_data in hand]
+        self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand]
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
         logger.debug(f'{self.id} registering hero {self.hero}')
 
@@ -62,7 +62,7 @@ class Player(EventManager):
                 self.board.register(CastSpellOnStart, spell=spl, player=self, priority=priority)
 
         for char_data in characters:
-            char = character_registry[char_data['id']](owner=self, **char_data)
+            char = character_registry[char_data['id']](player=self, **char_data)
             logger.debug(f'{self.id} registering character {char}')
             self.characters[char.position] = char
 
@@ -80,6 +80,11 @@ class Player(EventManager):
                 if char:
                     char._base_health -= char._temp_health
                     char._base_attack -= int(char._temp_attack/attack_multiplier)
+                    
+        self.aura_buffs = set()
+        for char in self.valid_characters():
+            if char.aura and char.aura_buff:
+                self.aura_buffs.add(char.aura_buff)
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
@@ -234,6 +239,14 @@ class Player(EventManager):
         logger.info(f'Spawning {character.pretty_print()} in {position} position')
         self.characters[position] = character
         character.position = position
+
+        support_positions = utils.get_behind_targets(position)
+        possible_supports = self.valid_characters(_lambda=lambda char: char.position in support_positions and char.support)
+        support_buffs = {char.support_buff for char in possible_supports}
+        logger.debug(f'Resolving Support Buffs and Auras {support_buffs} {self.aura_buffs}')
+        for buff in sorted(support_buffs | self.aura_buffs, key=lambda b: b.priority, reverse=True):
+            buff.execute(character)
+
         return character
 
     def summon_from_different_locations(self, characters, *args, **kwargs):
@@ -278,7 +291,7 @@ class Player(EventManager):
                 if self._attack_slot > 7:
                     self.attack_slot = 1
 
-        character.owner.opponent.resolve_board()
+        character.player.opponent.resolve_board()
 
     def valid_characters(self, _lambda=lambda char: True):
         """

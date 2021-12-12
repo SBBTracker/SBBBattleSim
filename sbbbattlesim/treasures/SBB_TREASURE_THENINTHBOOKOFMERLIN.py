@@ -12,9 +12,9 @@ class NinthBookOnDeath(OnDeath):
 
     def handle(self, *args, **kwargs):
         for _ in range(bool(self.book.mimic) + 1):
-            spell = random_combat_spell(self.manager.owner.level)
+            spell = random_combat_spell(self.manager.player.level)
             if spell:
-                self.manager.owner.cast(spell)
+                self.manager.player.cast(spell)
 
 
 class TreasureType(Treasure):

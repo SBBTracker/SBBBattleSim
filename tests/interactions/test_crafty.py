@@ -75,11 +75,11 @@ def test_crafty_spawn(num_treasures, golden):
 
         def handle(self, *args, **kwargs):
             summon = character_registry["SBB_CHARACTER_DWARVENARTIFICER"].new(
-                owner=self.manager.owner,
+                player=self.manager.player,
                 position=self.manager.position,
                 golden=golden
             )
-            self.manager.owner.summon(self.manager.position, [summon])
+            self.manager.player.summon(self.manager.position, [summon])
 
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 

@@ -9,6 +9,7 @@ from sbbbattlesim.utils import StatChangeCause
 
 logger = logging.getLogger(__name__)
 
+
 class ActionState(Enum):
     CREATED = 1
     EXECUTED = 2
@@ -43,7 +44,6 @@ class Action:
         self.kwargs = kwargs
 
         self._active = False
-        self._char_buffer = set()
 
         self.state = ActionState.CREATED
 
@@ -77,53 +77,47 @@ class Action:
         self._active = False
         self.resolve()
 
+    def _(self, char, *args, **kwargs):
+        args = (*self.args, *args)
+        kwargs = self.kwargs | kwargs
+        if self.attack != 0 or self.health != 0:
+
+            if self.temp:
+                char._temp_attack += self.attack
+                char._temp_health += self.health
+            else:
+                char._base_attack += self.attack
+                char._base_health += self.health
+
+            # TRIGGER ON BUFF
+            char('OnBuff', reason=self.reason, source=self.source,
+                 attack=self.attack, health=self.health, damage=self.damage, temp=self.temp,
+                 *args, **kwargs)
+
+        if self.damage > 0:
+            if char.invincible and self.reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:
+                char('OnDamagedAndSurvived', damage=0, *args, **kwargs)
+                return
+            char._damage += self.damage
+
+        if self.heal != 0:
+            char._damage = 0 if self.heal == -1 else max(char._damage - self.heal, 0)
+
+        logger.debug(f'{char.pretty_print()} finishsed stat change')
+        char._action_history.append(self)
+
+        if char.health <= 0:
+            char.dead = True
+            logger.debug(f'{char.pretty_print()} marked for death')
+        elif self.damage > 0:
+            char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
+
     def execute(self):
         if self.state in (ActionState.RESOLVED, ActionState.EXECUTED):
             return
 
         for char in self.targets:
-            if self.attack != 0 or self.health != 0:
-                if self.temp:
-                    char._temp_attack += self.attack
-                    char._temp_health += self.health
-                else:
-                    char._base_attack += self.attack
-                    char._base_health += self.health
-
-                # TRIGGER ON BUFF
-                char('OnBuff', reason=self.reason, source=self.source,
-                     attack=self.attack, health=self.health, damage=self.damage, temp=self.temp,
-                     *self.args, **self.kwargs)
-
-                self._char_buffer.add(char)
-
-            if self.damage > 0:
-                if char.invincible and self.reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:
-                    char('OnDamagedAndSurvived', damage=0, *self.args, **self.kwargs)
-                    return
-                char._damage += self.damage
-                self._char_buffer.add(char)
-
-
-            if self.heal != 0:
-                if self.heal == -1:
-                    char._damage = 0
-                else:
-                    char._damage = max(char._damage - self.heal, 0)
-                self._char_buffer.add(char)
-
-            logger.debug(f'{char.pretty_print()} finishsed stat change')
-            # self.stat_history.append(stat_change)
-
-            if char.health <= 0:
-                char.dead = True
-                logger.debug(f'{char.pretty_print()} marked for death')
-                self._char_buffer.add(char)
-            elif self.damage > 0:
-                char('OnDamagedAndSurvived', damage=self.damage, *self.args, **self.kwargs)
-                self._char_buffer.add(char)
-
-            char._action_history.append(self)
+            self._(char)
 
         self.state = ActionState.EXECUTED
 
@@ -138,14 +132,15 @@ class Action:
 
         logger.debug(f'RESOLVING DAMAGE FOR {self}')
 
-        for char in self._char_buffer:
-            if char in char.owner.graveyard:
+        for char in self.targets:
+            if char in char.player.graveyard:
+                logger.debug(f'{char.pretty_print()} already in graveyard')
                 continue
 
             if char.dead:
                 dead_characters.append(char)
-                char.owner.graveyard.append(char)
-                char.owner.characters[char.position] = None
+                char.player.graveyard.append(char)
+                char.player.characters[char.position] = None
                 logger.info(f'{char.pretty_print()} died')
 
         logger.info(f'These are the dead characters: {dead_characters}')
@@ -164,3 +159,47 @@ class Damage(Action):
 
 class Buff(Action):
     pass
+
+
+class SupportBuff(Buff):
+    def __init__(
+            self,
+            priority=0,
+            reason=StatChangeCause.SUPPORT_BUFF,
+            temp=True,
+            _lambda=lambda char: True,
+            *args,
+            **kwargs
+    ):
+        super().__init__(reason=reason, temp=temp, targets=None, *args, **kwargs)
+        self.priority = priority
+        self._lambda = _lambda
+
+    def execute(self, character, *args, **kwargs):
+        if not self._lambda(character):
+            return
+
+        self._(character, *args, **kwargs)
+
+
+class AuraBuff(Buff):
+
+    def __init__(
+            self,
+            priority=0,
+            reason=StatChangeCause.AURA_BUFF,
+            temp=True,
+            _lambda=lambda char: True,
+            *args,
+            **kwargs
+    ):
+        super().__init__(reason=reason, temp=temp, targets=None, *args, **kwargs)
+        self.priority = priority
+        self._lambda = _lambda
+
+    def execute(self, character, *args, **kwargs):
+        if not self._lambda(character):
+            return
+
+        self._(character, *args, **kwargs)
+

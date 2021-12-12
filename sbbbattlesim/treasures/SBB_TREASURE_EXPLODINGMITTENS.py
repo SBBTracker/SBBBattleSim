@@ -10,7 +10,7 @@ class ExplodingMittensOnDeath(OnDeath):
     def handle(self, *args, **kwargs):
         for _ in range(bool(self.mitten.mimic) + 1):
             Damage(damage=1, reason=StatChangeCause.EXPLODING_MITTENS_DAMAGE, source=self.mitten,
-                   targets=self.manager.owner.opponent.valid_characters()).resolve()
+                   targets=self.manager.player.opponent.valid_characters()).resolve()
 
 
 class TreasureType(Treasure):

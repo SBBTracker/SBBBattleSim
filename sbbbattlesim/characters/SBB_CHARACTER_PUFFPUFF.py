@@ -11,9 +11,9 @@ logger = logging.getLogger(__name__)
 
 class PuffPuffOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
-        puffbuffs = self.puff.owner.stateful_effects.setdefault('puffbuff', collections.defaultdict())
+        puffbuffs = self.puff.player.stateful_effects.setdefault('puffbuff', collections.defaultdict())
 
-        current_buff = puffbuffs.get(self.puff.owner.id)
+        current_buff = puffbuffs.get(self.puff.player.id)
         golden_multiplier = 2 if self.puff.golden else 1
         bonus_attack = int((self.puff.attack - self.puff._attack * golden_multiplier) / golden_multiplier)
         bonus_health = int((self.puff.health - self.puff._health * golden_multiplier) / golden_multiplier)
@@ -21,25 +21,25 @@ class PuffPuffOnStart(OnStart):
         new_buff = max(0, min(bonus_attack, bonus_health))
 
         if current_buff is None:
-            puffbuffs[self.puff.owner.id] = new_buff
+            puffbuffs[self.puff.player.id] = new_buff
         else:
-            puffbuffs[self.puff.owner.id] = min(current_buff, new_buff)
+            puffbuffs[self.puff.player.id] = min(current_buff, new_buff)
 
 
 class PuffPuffDeath(OnDeath):
     last_breath = True
 
     def handle(self, stack, *args, **kwargs):
-        puffbuffs = self.puff.owner.stateful_effects.setdefault('puffbuff', collections.defaultdict())
+        puffbuffs = self.puff.player.stateful_effects.setdefault('puffbuff', collections.defaultdict())
 
         buff = 2 if self.puff.golden else 1
-        puffpuffs = self.manager.owner.valid_characters(_lambda=lambda char: char.id == self.puff.id)
+        puffpuffs = self.manager.player.valid_characters(_lambda=lambda char: char.id == self.puff.id)
         Buff(reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff, targets=puffpuffs,
              attack=buff, health=buff, stack=stack).execute()
 
-        if puffbuffs[self.puff.owner.id] is None:
-            puffbuffs[self.puff.owner.id] = 0
-        puffbuffs[self.puff.owner.id] += buff
+        if puffbuffs[self.puff.player.id] is None:
+            puffbuffs[self.puff.player.id] = 0
+        puffbuffs[self.puff.player.id] += buff
 
 
 class PuffPuffOnSummon(OnSummon):
@@ -47,10 +47,10 @@ class PuffPuffOnSummon(OnSummon):
         if not self.puff in summoned_characters:
             return
 
-        puffbuffs = self.puff.owner.stateful_effects.setdefault('puffbuff', collections.defaultdict())
+        puffbuffs = self.puff.player.stateful_effects.setdefault('puffbuff', collections.defaultdict())
 
         golden_multipler = 2 if self.puff.golden else 1
-        puff_buff = (puffbuffs.get(self.puff.owner.id) or 0) * golden_multipler
+        puff_buff = (puffbuffs.get(self.puff.player.id) or 0) * golden_multipler
         Buff(attack=puff_buff, health=puff_buff, temp=False,
              reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff,
              targets=[self.puff]).resolve()
@@ -70,18 +70,18 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.owner.register(PuffPuffOnSummon, puff=self, priority=-15)
+        self.player.register(PuffPuffOnSummon, puff=self, priority=-15)
         self.register(PuffPuffDeath, puff=self)
-        self.owner.board.register(PuffPuffOnStart, puff=self, priority=9000)
+        self.player.board.register(PuffPuffOnStart, puff=self, priority=9000)
 
     @classmethod
     def new(cls, *args, **kwargs):
         self = super().new(*args, **kwargs)
 
         # TODO this logic will come back in the future
-        # self.owner.resolve_board()
+        # self.player.resolve_board()
         #
-        # stat_buff = (self.owner.stateful_effects['puffbuffs'][self.owner.id] or 0)
+        # stat_buff = (self.player.stateful_effects['puffbuffs'][self.player.id] or 0)
         #
         # self.change_stats(
         #     attack=stat_buff,
