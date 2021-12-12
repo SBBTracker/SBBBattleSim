@@ -17,8 +17,6 @@ class StormKingOnStart(OnStart):
             (self.storm_king.health - (self.storm_king._health * (2 if self.storm_king.golden else 1))) / (
                 4 if self.storm_king.golden else 2))
 
-        logger.error(f'current_buff: {current_buff} current_attack: {current_attack} current_health: {current_health}')
-
         new_buff = min(current_attack, current_health)
 
         self.storm_king.player._spells_cast = min(current_buff, new_buff) if current_buff is not None else new_buff
