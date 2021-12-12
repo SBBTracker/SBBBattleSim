@@ -77,7 +77,7 @@ class Action:
         self._active = False
         self.resolve()
 
-    def __action(self, char, *args, **kwargs):
+    def _action(self, char, *args, **kwargs):
         '''
         Preforms all stat changes and represents the core of any Action
         This should never be accessed outside an Action class or subclass
@@ -122,7 +122,7 @@ class Action:
             return
 
         for char in self.targets:
-            self.__action(char)
+            self._action(char)
 
         self.state = ActionState.EXECUTED
 
@@ -184,7 +184,7 @@ class SupportBuff(Buff):
         if not self._lambda(character):
             return
 
-        self.__action(character, *args, **kwargs)
+        self._action(character, *args, **kwargs)
 
 
 class AuraBuff(Buff):
@@ -206,5 +206,5 @@ class AuraBuff(Buff):
         if not self._lambda(character):
             return
 
-        self.__action(character, *args, **kwargs)
+        self._action(character, *args, **kwargs)
 
