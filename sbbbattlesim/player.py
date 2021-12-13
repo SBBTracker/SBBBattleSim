@@ -39,7 +39,7 @@ class Player(EventManager):
         else:
             self._spells_cast = None
 
-        self.characters = OrderedDict({i: None for i in range(1, 8)})
+        self.__characters = OrderedDict({i: None for i in range(1, 8)})
 
         self._attack_slot = None
         self.graveyard = []
@@ -64,7 +64,7 @@ class Player(EventManager):
         for char_data in characters:
             char = character_registry[char_data['id']](player=self, **char_data)
             logger.debug(f'{self.id} registering character {char}')
-            self.characters[char.position] = char
+            self.__characters[char.position] = char
 
         # This is designed to remove temp buffs that were passed in
         singingswords = 'SBB_TREASURE_WHIRLINGBLADES' in treasures
@@ -76,7 +76,7 @@ class Player(EventManager):
 
         if raw:
             self.resolve_board()
-            for char in self.characters.values():
+            for char in self.__characters.values():
                 if char:
                     char._base_health -= char._temp_health
                     char._base_attack -= int(char._temp_attack/attack_multiplier)
@@ -134,7 +134,7 @@ class Player(EventManager):
         # and units that give secondary units buffs that buff
         # arbitrary units
         self.clear_temp()
-        for pos, char in self.characters.items():
+        for pos, char in self.__characters.items():
             if char is None:
                 continue
             char.clear_temp()
@@ -191,7 +191,7 @@ class Player(EventManager):
             if char.support:
                 for _ in range(support_itr):  # my commit but blame regi
                     for target_position in utils.get_support_targets(position=char.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures):
-                        target = self.characters.get(target_position)
+                        target = self.__characters.get(target_position)
                         if target:
                             char.buff(target, *args, **kwargs)
                             char('OnSupport', buffed=target, support=char, *args, **kwargs)
@@ -211,43 +211,57 @@ class Player(EventManager):
                 self.treasures["SBB_TREASURE_WHIRLINGBLADES"][0].buff(target, attack_override=attack_dt[target], *args, **kwargs)
         new_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}
 
-        for char, new_temp_health in new_temp_health_dt.items():
-            if char not in old_temp_health_dt and self.characters[char.position] is not char:
-                continue
-
-            old_temp_health = old_temp_health_dt[char]
-
-            if new_temp_health < old_temp_health:
-                char._damage -= min(char._damage, old_temp_health - new_temp_health)
+        # for char, new_temp_health in new_temp_health_dt.items():
+        #     if char not in old_temp_health_dt and self.__characters[char.position] is not char:
+        #         continue
+        #
+        #     old_temp_health = old_temp_health_dt[char]
+        #
+        #     if new_temp_health < old_temp_health:
+        #         char._damage -= min(char._damage, old_temp_health - new_temp_health)
 
         dead_characters = []
-        for char in self.characters.values():
+        for char in self.__characters.values():
             if not char:
                 continue
 
             if char.health <= 0:
                 char.dead = True
                 dead_characters.append(char)
-                self.graveyard.append(char)
-                self.characters[char.position] = None
-                logger.info(f'{char.pretty_print()} died')
+                self.despawn(char)
 
         for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
             char('OnDeath')
 
     def spawn(self, character, position):
         logger.info(f'Spawning {character.pretty_print()} in {position} position')
-        self.characters[position] = character
+        self.__characters[position] = character
         character.position = position
 
         support_positions = utils.get_behind_targets(position)
         possible_supports = self.valid_characters(_lambda=lambda char: char.position in support_positions and char.support)
         support_buffs = {char.support_buff for char in possible_supports}
-        logger.debug(f'Resolving Support Buffs and Auras {support_buffs} {self.aura_buffs}')
         for buff in sorted(support_buffs | self.aura_buffs, key=lambda b: b.priority, reverse=True):
             buff.execute(character)
 
         return character
+
+    def despawn(self, character):
+        logger.info(f'Despawning {character.pretty_print()}')
+        position = character.position
+        self.graveyard.append(character)
+        self.__characters[position] = None
+        logger.info(f'{character.pretty_print()} died')
+
+        if character.support and character.support_buff:
+            character.support_buff.remove()
+
+        if character.aura and character.aura_buff:
+            character.aura_buff.remove()
+
+    @property
+    def characters(self):
+        return {pos: char for pos, char in self.__characters.items()}
 
     def summon_from_different_locations(self, characters, *args, **kwargs):
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be
@@ -266,7 +280,7 @@ class Player(EventManager):
         summoned_characters = []
         spawn_order = utils.get_spawn_positions(pos)
         for char in characters:
-            pos = next((pos for pos in spawn_order if self.characters.get(pos) is None), None)
+            pos = next((pos for pos in spawn_order if self.__characters.get(pos) is None), None)
             if pos is None:
                 break
 
@@ -281,7 +295,7 @@ class Player(EventManager):
         return summoned_characters
 
     def transform(self, pos, character, *args, **kwargs):
-        if self.characters[pos] is not None:
+        if self.__characters[pos] is not None:
             self.spawn(character, pos)
             self.resolve_board(summoned_characters=[character], *args, **kwargs)
 
@@ -301,7 +315,7 @@ class Player(EventManager):
         # NOTE: this assumes that a dead thing can NEVER be targeted
         base_lambda = lambda char: char is not None and not char.dead
 
-        return [char for char in self.characters.values() if base_lambda(char) and _lambda(char)]
+        return [char for char in self.__characters.values() if base_lambda(char) and _lambda(char)]
 
     def cast_spell(self, spell_id, trigger_onspell=True):
         spell = spell_registry[spell_id]()

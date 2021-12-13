@@ -14,7 +14,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.support_buff = SupportBuff(source=self, attack=6 if self.golden else 3, temp=True,)
+        self.support_buff = SupportBuff(source=self, attack=6 if self.golden else 3)
 
     def buff(self, target_character, *args, **kwargs):
         self.support_buff.execute(target_character, *args, **kwargs)

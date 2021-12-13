@@ -20,8 +20,17 @@ class BabaYagaOnSlayBuff(OnSlay):
 
 
 class BabaYagaSupportBuff(SupportBuff):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.applied_buffs = {}
+
     def execute(self, character, *args, **kwargs):
-        character.register(BabaYagaOnSlayBuff, baba_yaga=self.source, temp=True, *args, **kwargs)
+        event = character.register(BabaYagaOnSlayBuff, baba_yaga=self.source, temp=True, *args, **kwargs)
+        self.applied_buffs[character] = event
+
+    def remove(self):
+        for char, buff in self.applied_buffs:
+            char.remove(buff)
 
 
 class CharacterType(Character):

@@ -172,8 +172,20 @@ class EventManager:
             raise ValueError
 
         event_base = inspect.getmro(event)[1].__name__
-        (self._temp if temp else self._events)[event_base].append(event(manager=self, **kwargs))
-        logger.debug(f'{self.pretty_print()} Registered {event_base} - {event.__name__}')
+        event = event(manager=self, **kwargs)
+        (self._temp if temp else self._events)[event_base].append(event)
+        logger.debug(f'{self.pretty_print()} Registered {event_base} - {event.__class__.__name__}')
+        return event
+
+    def unregister(self, event):
+        event_base = inspect.getmro(event)[1].__name__
+        try:
+            self._temp.get(event_base, []).remove(event)
+        except ValueError:
+            try:
+                self._events.get(event_base, []).remove(event)
+            except ValueError:
+                pass
 
     def get(self, event):
         return sorted(self._temp.get(event, []) + self._events.get(event, []),

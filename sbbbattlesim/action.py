@@ -14,6 +14,7 @@ class ActionState(Enum):
     CREATED = 1
     EXECUTED = 2
     RESOLVED = 3
+    ROLLED_BACK = 5
 
 
 class Action:
@@ -47,6 +48,8 @@ class Action:
 
         self.state = ActionState.CREATED
 
+        self._char_buffer = set()
+
         logger.debug(f'New {self}')
 
     def __str__(self):
@@ -77,7 +80,7 @@ class Action:
         self._active = False
         self.resolve()
 
-    def _action(self, char, *args, **kwargs):
+    def _apply(self, char, *args, **kwargs):
         '''
         Preforms all stat changes and represents the core of any Action
         This should never be accessed outside an Action class or subclass
@@ -85,6 +88,10 @@ class Action:
         '''
         args = (*self.args, *args)
         kwargs = self.kwargs | kwargs
+        self._char_buffer.add(char)
+
+        logger.debug(f'{char.pretty_print()} started stat change')
+
         if self.attack != 0 or self.health != 0:
 
             if self.temp:
@@ -117,36 +124,54 @@ class Action:
         elif self.damage > 0:
             char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
 
+    def _clear(self, char, *args, **kwargs):
+        logger.debug(f'{char.pretty_print()} started stat clear')
+
+        if self.health != 0:
+            char._damage -= min(char._damage, self.health)
+
+        if self.attack != 0:
+            char._attack -= self.attack
+
+        logger.debug(f'{char.pretty_print()} finished stat clear')
+
     def execute(self):
-        if self.state in (ActionState.RESOLVED, ActionState.EXECUTED):
+        if self.state in (ActionState.RESOLVED, ActionState.EXECUTED, ActionState.ROLLED_BACK):
             return
 
         for char in self.targets:
-            self._action(char)
+            self._apply(char)
 
         self.state = ActionState.EXECUTED
+
+    def roll_back(self):
+        for char in self.targets:
+            self._clear(char)
+
+        self.state = ActionState.ROLLED_BACK
 
     def resolve(self):
         if self.state == ActionState.CREATED:
             self.execute()
-        elif self.state == ActionState.RESOLVED:
+        elif self.state in (ActionState.RESOLVED, ActionState.ROLLED_BACK):
             logger.debug(f'{self} ALREADY RESOLVED')
             return
 
-        dead_characters = []
-
         logger.debug(f'RESOLVING DAMAGE FOR {self}')
 
-        for char in self.targets:
+        characters = self._char_buffer
+        self._char_buffer = set()
+
+        dead_characters = []
+
+        for char in characters:
             if char in char.player.graveyard:
                 logger.debug(f'{char.pretty_print()} already in graveyard')
                 continue
 
             if char.dead:
                 dead_characters.append(char)
-                char.player.graveyard.append(char)
-                char.player.characters[char.position] = None
-                logger.info(f'{char.pretty_print()} died')
+                char.player.despawn(char)
 
         logger.info(f'These are the dead characters: {dead_characters}')
         for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
@@ -163,48 +188,34 @@ class Damage(Action):
 
 
 class Buff(Action):
-    pass
+    def __init__(self, priority=0, _lambda=lambda char: True, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.priority = priority
+        self._lambda = _lambda
+
+    def execute(self, character=None, *args, **kwargs):
+        if character:
+            if not self._lambda(character):
+                return
+            self._apply(character, *args, **kwargs)
+        else:
+            for char in self.targets:
+                self._apply(char, *args, **kwargs)
+
+        self.state = ActionState.EXECUTED
+
+    def remove(self):
+        self.targets = self._char_buffer
+        self.roll_back()
+        self.resolve()
+        self.state = ActionState.ROLLED_BACK
 
 
 class SupportBuff(Buff):
-    def __init__(
-            self,
-            priority=0,
-            reason=StatChangeCause.SUPPORT_BUFF,
-            temp=True,
-            _lambda=lambda char: True,
-            *args,
-            **kwargs
-    ):
-        super().__init__(reason=reason, temp=temp, targets=None, *args, **kwargs)
-        self.priority = priority
-        self._lambda = _lambda
-
-    def execute(self, character, *args, **kwargs):
-        if not self._lambda(character):
-            return
-
-        self._action(character, *args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(reason=StatChangeCause.SUPPORT_BUFF, temp=True, targets=None, *args, **kwargs)
 
 
 class AuraBuff(Buff):
-
-    def __init__(
-            self,
-            priority=0,
-            reason=StatChangeCause.AURA_BUFF,
-            temp=True,
-            _lambda=lambda char: True,
-            *args,
-            **kwargs
-    ):
-        super().__init__(reason=reason, temp=temp, targets=None, *args, **kwargs)
-        self.priority = priority
-        self._lambda = _lambda
-
-    def execute(self, character, *args, **kwargs):
-        if not self._lambda(character):
-            return
-
-        self._action(character, *args, **kwargs)
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(reason=StatChangeCause.AURA_BUFF, temp=True, targets=None, *args, **kwargs)
