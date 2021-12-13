@@ -9,7 +9,7 @@ class EvellaAura(OnDeath):
 
     def handle(self, *args, **kwargs):
         self.evella.animal_deaths += 1
-        self.manager.owner.resolve_board()
+        self.manager.player.resolve_board()
 
 
 class HeroType(Hero):

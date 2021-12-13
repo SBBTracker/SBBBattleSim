@@ -23,7 +23,7 @@ class RomeoLastBreath(OnDeath):
     last_breath = True
 
     def handle(self, *args, **kwargs):
-        dead_juliets = [j for j in self.manager.owner.graveyard if j.id == JULIET_ID]
+        dead_juliets = [j for j in self.manager.player.graveyard if j.id == JULIET_ID]
 
         if dead_juliets:
             juliet = max(dead_juliets, key=lambda juliet: (juliet.attack, juliet.health))
@@ -36,12 +36,12 @@ class RomeoLastBreath(OnDeath):
                 golden=juliet.golden,
                 position=self.romeo.position,
                 cost=juliet.cost,
-                owner=juliet.owner,
+                player=juliet.player,
             )
             self.juliet = new_juliet
 
-            self.manager.owner.register(RomeoOnSummon, juliet=self.juliet, romeo=self.romeo, triggered=False)
-            self.manager.owner.summon(self.manager.position, [new_juliet])
+            self.manager.player.register(RomeoOnSummon, juliet=self.juliet, romeo=self.romeo, triggered=False)
+            self.manager.player.summon(self.manager.position, [new_juliet])
 
 
 class CharacterType(Character):

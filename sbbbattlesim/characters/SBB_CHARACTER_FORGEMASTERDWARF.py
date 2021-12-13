@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class LordyBuffOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
-        dwarfes = self.lordy.owner.valid_characters(
+        dwarfes = self.lordy.player.valid_characters(
             _lambda=lambda char: Tribe.DWARF in char.tribes or char.id == 'SBB_CHARACTER_PRINCESSNIGHT'
         )
         stat_change = len(dwarfes) * (4 if self.lordy.golden else 2)
@@ -29,4 +29,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.owner.board.register(LordyBuffOnStart, priority=90, lordy=self)
+        self.player.board.register(LordyBuffOnStart, priority=90, lordy=self)

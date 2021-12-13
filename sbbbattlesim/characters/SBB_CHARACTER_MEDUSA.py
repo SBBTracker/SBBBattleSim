@@ -19,14 +19,14 @@ class MedusaOnPreAttack(OnPreAttack):
 
         if defend_character.id != STATUE_ID:
             new_statue = character_registry[STATUE_ID](
-                self.manager.owner,
+                self.manager.player,
                 defend_character.position,
                 attack,
                 health,
                 golden=False,
                 keywords=[], tribes=[], cost=1
             )
-            defend_character.owner.transform(
+            defend_character.player.transform(
                 defend_character.position, new_statue
             )
 

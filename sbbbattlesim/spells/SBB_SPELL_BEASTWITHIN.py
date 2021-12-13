@@ -17,7 +17,7 @@ class CatsCallOnDeath(OnDeath):
         if len(self.player.valid_characters(_lambda=front_row_lambda)) == 0:
             for pos in (1, 2, 3, 4):
                 cat = character_registry['SBB_CHARACTER_CAT'](
-                    self.manager.owner,
+                    self.manager.player,
                     pos,
                     1,
                     1,

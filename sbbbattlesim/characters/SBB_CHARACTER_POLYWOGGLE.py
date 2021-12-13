@@ -11,7 +11,7 @@ class PolywoggleSlay(OnAttackAndKill):
 
     def handle(self, killed_character, *args, **kwargs):
         golden_promotion = (2 if self.woggle.golden else 1)
-        _lambda = lambda char: char._level == min(self.manager.owner.level + golden_promotion, 6)
+        _lambda = lambda char: char._level == min(self.manager.player.level + golden_promotion, 6)
         valid_chars = list(character_registry.filter(_lambda=_lambda))
         if valid_chars:
             char = random.choice(valid_chars)
@@ -22,11 +22,11 @@ class PolywoggleSlay(OnAttackAndKill):
                 health=char._health + self.manager._base_health - (2 if self.manager.golden else 1),
                 golden=self.manager.golden,
                 position=self.manager.position,
-                owner=self.manager.owner,
+                player=self.manager.player,
                 tribes=char._tribes,
                 cost=char._level,
             )
-            self.manager.owner.transform(self.manager.position, new_char)
+            self.manager.player.transform(self.manager.position, new_char)
 
 
 class CharacterType(Character):

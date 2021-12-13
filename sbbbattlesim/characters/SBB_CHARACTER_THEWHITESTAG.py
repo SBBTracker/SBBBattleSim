@@ -7,7 +7,7 @@ from sbbbattlesim.utils import get_behind_targets, Tribe, StatChangeCause
 class TheWhiteStagOnPreAttack(OnPreAttack):
     def handle(self, *args, **kwargs):
         behind_targets = get_behind_targets(self.manager.position)
-        targetted_chars = [c for c in self.manager.owner.valid_characters() if c.position in behind_targets]
+        targetted_chars = [c for c in self.manager.player.valid_characters() if c.position in behind_targets]
         modifier = 6 if self.manager.golden else 3
 
         Buff(reason=StatChangeCause.THE_WHITE_STAG_BUFF, source=self.stag, targets=targetted_chars,

@@ -9,7 +9,7 @@ class TreeOfLifeHeal(OnDeath):
 
     def handle(self, stack, *args, **kwargs):
         for _ in range(self.tree.mimic + 1):
-            Buff(reason=StatChangeCause.TREE_OF_LIFE, source=self.tree, targets=self.manager.owner.valid_characters(),
+            Buff(reason=StatChangeCause.TREE_OF_LIFE, source=self.tree, targets=self.manager.player.valid_characters(),
                  heal=-1, temp=False, stack=stack).resolve()
 
 

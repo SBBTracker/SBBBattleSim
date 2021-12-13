@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, SupportBuff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
@@ -13,7 +13,9 @@ class CharacterType(Character):
     _level = 4
     _tribes = {Tribe.GOOD, Tribe.MAGE}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.support_buff = SupportBuff(source=self, health=10 if self.golden else 5, temp=True,)
+
     def buff(self, target_character, *args, **kwargs):
-        with Buff(reason=StatChangeCause.SUPPORT_BUFF, source=self, targets=[target_character],
-                  health=10 if self.golden else 5, temp=True,  *args, **kwargs):
-            pass
+        self.support_buff.execute(target_character, *args, **kwargs)

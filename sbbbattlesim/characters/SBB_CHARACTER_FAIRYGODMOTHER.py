@@ -13,7 +13,7 @@ class FairyGodmotherOnDeath(OnDeath):
 
     def handle(self, stack, *args, **kwargs):
         stat_change = 4 if self.fairy_godmother.golden else 2
-        targets = self.manager.owner.valid_characters(_lambda=lambda char: Tribe.GOOD in char.tribes)
+        targets = self.manager.player.valid_characters(_lambda=lambda char: Tribe.GOOD in char.tribes)
         Buff(reason=StatChangeCause.FAIRY_GODMOTHER_BUFF, source=self.manager, targets=targets,
              health=stat_change, temp=False, stack=stack).resolve()
 

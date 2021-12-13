@@ -22,4 +22,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.owner.register(WizardFamiliarOnSpell, wizard_familiar=self)
+        self.player.register(WizardFamiliarOnSpell, wizard_familiar=self)

@@ -6,19 +6,19 @@ class PhoenixFeatherOnDeath(OnDeath):
     last_breath = False
 
     def handle(self, *args, **kwargs):
-        if not self.feather.feather_used and self.manager in self.manager.owner.graveyard:
+        if not self.feather.feather_used and self.manager in self.manager.player.graveyard:
 
-            all_characters = self.manager.owner.valid_characters() + [self.manager]
+            all_characters = self.manager.player.valid_characters() + [self.manager]
             max_attack = max(all_characters, key=lambda x: x.attack).attack
             if self.manager.attack >= max_attack:
                 self.manager._damage = 0
                 self.manager.dead = False
-                self.manager.owner.graveyard.remove(self.manager)
-                self.manager.owner.summon(self.manager.position, [self.manager])
+                self.manager.player.graveyard.remove(self.manager)
+                self.manager.player.summon(self.manager.position, [self.manager])
 
                 if self.feather.mimic:
                     new_char = self.manager.__class__(
-                        self.manager.owner,
+                        self.manager.player,
                         self.manager.position,
                         self.manager.attack,
                         self.manager.health,
@@ -27,7 +27,7 @@ class PhoenixFeatherOnDeath(OnDeath):
                         cost=self.manager.cost
                     )
 
-                    self.manager.owner.summon(self.manager.position, [new_char])
+                    self.manager.player.summon(self.manager.position, [new_char])
 
                 self.feather.feather_used = True
 

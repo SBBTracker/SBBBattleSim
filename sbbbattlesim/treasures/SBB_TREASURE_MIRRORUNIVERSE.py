@@ -8,7 +8,7 @@ class MirrorMirrorOnDeath(OnDeath):
     def handle(self, *args, **kwargs):
         copies = [
             self.manager.__class__(
-                owner=self.manager.owner,
+                player=self.manager.player,
                 position=self.manager.position,
                 attack=1,
                 health=1,
@@ -19,7 +19,7 @@ class MirrorMirrorOnDeath(OnDeath):
             ) for _ in range(1 + bool(self.mirror.mimic))
         ]
 
-        self.manager.owner.summon(self.manager.position, copies)
+        self.manager.player.summon(self.manager.position, copies)
 
 
 class MirrorMirrorOnStart(OnStart):

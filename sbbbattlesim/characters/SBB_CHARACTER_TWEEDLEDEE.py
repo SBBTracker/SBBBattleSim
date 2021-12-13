@@ -16,11 +16,11 @@ class TweedleDeeLastBreath(OnDeath):
         attack, health = (4, 6) if self.manager.golden else (2, 3)
         tweedle_dum = [
             character_registry['Tweedle Dum'](
-                self.manager.owner, self.manager.position, attack, health,
+                self.manager.player, self.manager.position, attack, health,
                 golden=False, keywords=[], tribes=['dwarf'], cost=1
             )
         ]
-        self.manager.owner.summon(self.manager.position, tweedle_dum)
+        self.manager.player.summon(self.manager.position, tweedle_dum)
 
 
 class CharacterType(Character):

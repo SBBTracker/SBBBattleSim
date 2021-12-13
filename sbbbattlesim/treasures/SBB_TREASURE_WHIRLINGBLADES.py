@@ -13,7 +13,7 @@ class TreasureType(Treasure):
 
 
     def buff(self, target_character, attack_override, *args, **kwargs):
-        if '''SBB_TREASURE_TREASURECHEST''' in target_character.owner.treasures:
+        if '''SBB_TREASURE_TREASURECHEST''' in target_character.player.treasures:
             attack_multiplier = 2
         else:
             attack_multiplier = 1

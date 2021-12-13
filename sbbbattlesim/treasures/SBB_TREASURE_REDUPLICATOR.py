@@ -11,7 +11,7 @@ class ReduplicatorOnSummon(OnSummon):
                 for _ in range(self.reduplicator.mimic+1):
                     copied_character = summoned_characters[0]
                     new_character = character_registry[copied_character.id](
-                        owner=copied_character.owner,
+                        player=copied_character.player,
                         position=copied_character.position,
                         attack=copied_character._base_attack,
                         health=copied_character._base_health,

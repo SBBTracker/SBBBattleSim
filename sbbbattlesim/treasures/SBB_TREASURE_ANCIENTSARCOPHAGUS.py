@@ -11,7 +11,7 @@ class AncientSarcophagusOnDeath(OnDeath):
 
     def handle(self, *args, **kwargs):
         for _ in range(self.ancient_sarcophagus.mimic + 1):
-            valid_targets = self.manager.owner.opponent.valid_characters()
+            valid_targets = self.manager.player.opponent.valid_characters()
             if valid_targets:
                 Damage(damage=3, reason=StatChangeCause.ANCIENT_SARCOPHAGUS, source=self.ancient_sarcophagus,
                        targets=[random.choice(valid_targets)]).resolve()

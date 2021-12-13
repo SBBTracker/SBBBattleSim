@@ -10,7 +10,7 @@ class BabyBearOnDeath(OnDeath):
     def handle(self, *args, **kwargs):
         stat = 4 if self.manager.golden else 2
         papa_bear = character_registry['SBB_CHARACTER_PAPABEAR'](
-            owner=self.manager.owner,
+            player=self.manager.player,
             position=self.manager.position,
             health=stat,
             attack=stat,
@@ -18,7 +18,7 @@ class BabyBearOnDeath(OnDeath):
             tribes=[Tribe.GOOD, Tribe.ANIMAL],
             cost=1
         )
-        self.manager.owner.summon(self.manager.position, [papa_bear])
+        self.manager.player.summon(self.manager.position, [papa_bear])
 
 
 class CharacterType(Character):

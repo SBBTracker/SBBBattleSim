@@ -86,11 +86,11 @@ def test_summon_bearstain():
 
         def handle(self, *args, **kwargs):
             summon = character_registry["SBB_CHARACTER_PROSPERO"].new(
-                owner=self.manager.owner,
+                player=self.manager.player,
                 position=self.manager.position,
                 golden=False
             )
-            self.manager.owner.summon(self.manager.position, [summon])
+            self.manager.player.summon(self.manager.position, [summon])
 
     donkey.register(FakeTrojanDonkeySummon)
 

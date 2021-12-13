@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import SupportBuff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSlay
 from sbbbattlesim.utils import Tribe
@@ -18,6 +19,11 @@ class BabaYagaOnSlayBuff(OnSlay):
                 executor.execute(source, *args, **kwargs)
 
 
+class BabaYagaSupportBuff(SupportBuff):
+    def execute(self, character, *args, **kwargs):
+        character.register(BabaYagaOnSlayBuff, baba_yaga=self.source, temp=True, *args, **kwargs)
+
+
 class CharacterType(Character):
     display_name = 'Baba Yaga'
     support = True
@@ -28,5 +34,9 @@ class CharacterType(Character):
     _level = 5
     _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.support_buff = BabaYagaSupportBuff(source=self)
+
     def buff(self, target_character, *args, **kwargs):
-        target_character.register(BabaYagaOnSlayBuff, temp=True, baba_yaga=self)
+        self.support_buff.execute(target_character, *args, **kwargs)

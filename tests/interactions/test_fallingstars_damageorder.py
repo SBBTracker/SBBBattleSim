@@ -47,11 +47,11 @@ def test_donkey_fallingstars():
 
         def handle(self, *args, **kwargs):
             summon = character_registry["SBB_CHARACTER_DARKWOODCREEPER"].new(
-                owner=self.manager.owner,
+                player=self.manager.player,
                 position=self.manager.position,
                 golden=False
             )
-            self.manager.owner.summon(self.manager.position, [summon])
+            self.manager.player.summon(self.manager.position, [summon])
 
     board.p1.characters[3].register(FakeTrojanDonkeySummon)
     winner, loser = board.fight(limit=2)

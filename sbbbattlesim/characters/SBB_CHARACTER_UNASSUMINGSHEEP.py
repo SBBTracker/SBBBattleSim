@@ -12,11 +12,11 @@ class SheepWolfLastBreath(OnDeath):
         stat = 12 if self.manager.golden else 6
         sheep = [
             character_registry['SBB_CHARACTER_EVILWOLF'](
-                self.manager.owner, self.manager.position, stat, stat,
+                self.manager.player, self.manager.position, stat, stat,
                 golden=False, keywords=[], tribes=['evil', 'animal'], cost=1
             )
         ]
-        self.manager.owner.summon(self.manager.position, sheep)
+        self.manager.player.summon(self.manager.position, sheep)
 
 
 class CharacterType(Character):

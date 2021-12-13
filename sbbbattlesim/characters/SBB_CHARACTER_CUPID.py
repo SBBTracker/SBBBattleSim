@@ -18,8 +18,8 @@ class CupidOnPostDefend(OnPostDefend):
             if not self.manager.dead:
                 attack(
                     attack_position=self.manager.position,
-                    attacker=self.manager.owner,
-                    defender=self.manager.owner
+                    attacker=self.manager.player,
+                    defender=self.manager.player
                 )
                 self.used = True
 

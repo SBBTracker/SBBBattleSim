@@ -16,7 +16,7 @@ class SpellType(NonTargetedSpell):
         if valid_targets:
             target = random.choice(valid_targets)
             pig = character_registry[PIGOMORPH_ID](
-                target.owner, target.position, 10, 10, golden=False,
+                target.player, target.position, 10, 10, golden=False,
                 keywords=[], tribes=[Tribe.ANIMAL], cost=1
             )
-            target.owner.transform(target.position, pig)
+            target.player.transform(target.position, pig)

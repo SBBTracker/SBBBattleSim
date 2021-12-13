@@ -9,8 +9,8 @@ class HeartWoodOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
         stat_change = 4 if self.heartwood.golden else 2
         for pos in utils.get_support_targets(self.heartwood.position,
-                                             horn='SBB_TREASURE_BANNEROFCOMMAND' in self.heartwood.owner.treasures):
-            char = self.heartwood.owner.characters[pos]
+                                             horn='SBB_TREASURE_BANNEROFCOMMAND' in self.heartwood.player.treasures):
+            char = self.heartwood.player.characters[pos]
             if char is not None:
                 if Tribe.TREANT in char.tribes:
                     Buff(reason=StatChangeCause.HEARTWOOD_BUFF, source=self, targets=[char],
@@ -28,7 +28,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.owner.board.register(HeartWoodOnStart, priority=100, heartwood=self)
+        self.player.board.register(HeartWoodOnStart, priority=100, heartwood=self)
 
     def buff(self, target_character, *args, **kwargs):
         pass

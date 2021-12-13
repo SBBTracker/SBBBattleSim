@@ -13,7 +13,7 @@ class ThreeBigPigsDeath(OnDeath):
 
         sheep = [
             character_registry['SBB_CHARACTER_PIGGY'](
-                owner=self.manager.owner,
+                player=self.manager.player,
                 position=self.manager.position,
                 attack=stat,
                 health=stat,
@@ -24,7 +24,7 @@ class ThreeBigPigsDeath(OnDeath):
             ) for _ in range(3)
         ]
 
-        self.manager.owner.summon(self.manager.position, sheep)
+        self.manager.player.summon(self.manager.position, sheep)
 
 
 class CharacterType(Character):

@@ -10,7 +10,7 @@ class RingOfRevengeBuff(OnDeath):
 
     def handle(self, stack, *args, **kwargs):
         for pos in utils.get_behind_targets(self.manager.position):
-            char = self.manager.owner.characters.get(pos)
+            char = self.manager.player.characters.get(pos)
             if char:
                 for _ in range(self.ring_of_revenge.mimic + 1):
                     Buff(reason=StatChangeCause.RING_OF_REVENGE, source=self.ring_of_revenge, targets=[char],
