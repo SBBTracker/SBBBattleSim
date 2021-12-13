@@ -49,6 +49,5 @@ class CharacterType(Character):
     def buff(self, target_character, *args, **kwargs):
         if Tribe.ANIMAL in target_character.tribes and target_character != self:
             modifier = 4 if self.golden else 2
-            with Buff(reason=StatChangeCause.AURA_BUFF, source=self, targets=[target_character],
-                      attack=modifier, health=modifier, temp=True, *args, **kwargs):
-                pass
+            Buff(reason=StatChangeCause.AURA_BUFF, source=self, targets=[target_character],
+                 attack=modifier, health=modifier, temp=True, *args, **kwargs).resolve()

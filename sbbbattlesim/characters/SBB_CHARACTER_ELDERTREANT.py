@@ -13,7 +13,7 @@ class HeartWoodOnStart(OnStart):
             char = self.heartwood.player.characters[pos]
             if char is not None:
                 if Tribe.TREANT in char.tribes:
-                    Buff(reason=StatChangeCause.HEARTWOOD_BUFF, source=self, targets=[char],
+                    Buff(reason=StatChangeCause.HEARTWOOD_BUFF, source=self.heartwood, targets=[char],
                          attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
 

@@ -9,9 +9,8 @@ class VainPireSlay(OnAttackAndKill):
 
     def handle(self, killed_character, stack, *args, **kwargs):
         stat_buff = 2 if self.manager.golden else 1
-        with Buff(reason=StatChangeCause.SLAY, source=self.manager, targets=[self.manager],
-                  attack=stat_buff, health=stat_buff, temp=False, stack=stack):
-            pass
+        Buff(reason=StatChangeCause.SLAY, source=self.manager, targets=[self.manager],
+             attack=stat_buff, health=stat_buff, temp=False, stack=stack).resolve()
 
 
 class CharacterType(Character):

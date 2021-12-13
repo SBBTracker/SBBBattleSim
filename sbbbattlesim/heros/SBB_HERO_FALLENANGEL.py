@@ -33,6 +33,5 @@ class HeroType(Hero):
             attack_buff = 2 if self.angel_attack_buff else 0
             health_buff = 2 if self.angel_health_buff else 0
 
-            with Buff(reason=StatChangeCause.FALLEN_ANGEL_BUFF, source=self, targets=[target_character],
-                      attack=attack_buff, health=health_buff, temp=True, *args, **kwargs):
-                pass
+            Buff(reason=StatChangeCause.FALLEN_ANGEL_BUFF, source=self, targets=[target_character],
+                 attack=attack_buff, health=health_buff, temp=True, *args, **kwargs).resolve()

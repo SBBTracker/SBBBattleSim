@@ -10,15 +10,9 @@ class AshwoodElmOnStart(OnStart):
         modifier = 2 if self.ashwood.golden else 1
         attack_change = base_attack_change * modifier
 
-        with Buff(
-            reason=StatChangeCause.ASHWOOD_ELM_BUFF,
-            source=self.ashwood,
-            targets=self.ashwood.player.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes),
-            attack=attack_change,
-            temp=False,
-            stack=stack
-        ):
-            pass
+        Buff(reason=StatChangeCause.ASHWOOD_ELM_BUFF, source=self.ashwood,
+             targets=self.ashwood.player.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes),
+             attack=attack_change, temp=False, stack=stack).resolve()
 
 class CharacterType(Character):
     display_name = 'Ashwood Elm'

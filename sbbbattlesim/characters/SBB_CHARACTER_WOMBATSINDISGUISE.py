@@ -16,9 +16,8 @@ class WombatsInDisguiseOnSummon(OnSummon):
 
         for char in summoned_characters:
             if char is self.summon:
-                with Buff(reason=StatChangeCause.WOMBATS_IN_DISGUISE_BUFF, source=self.wombat, targets=[char],
-                          attack=attack_buff, health=health_buff, temp=False):
-                    pass
+                Buff(reason=StatChangeCause.WOMBATS_IN_DISGUISE_BUFF, source=self.wombat, targets=[char],
+                     attack=attack_buff, health=health_buff, temp=False).resolve()
 
 
 class WombatsInDisguiseOnDeath(OnDeath):

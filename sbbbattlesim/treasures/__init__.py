@@ -20,6 +20,9 @@ class Treasure(EventManager):
         self.player = player
         self.mimic = mimic
 
+    def pretty_print(self):
+        return self.display_name
+
     def valid(self):
         return self._level != 0
 
