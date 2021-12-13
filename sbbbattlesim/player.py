@@ -239,7 +239,7 @@ class Player(EventManager):
         character.position = position
 
         support_positions = utils.get_behind_targets(position)
-        possible_supports = self.valid_characters(_lambda=lambda char: char.position in support_positions and char.support)
+        possible_supports = self.valid_characters(_lambda=lambda char: char.position in support_positions and char.support and char.support_buff)
         support_buffs = {char.support_buff for char in possible_supports}
         for buff in sorted(support_buffs | self.aura_buffs, key=lambda b: b.priority, reverse=True):
             buff.execute(character)
