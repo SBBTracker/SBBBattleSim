@@ -14,8 +14,17 @@ class RiverwishMermaidOnAttackAndKill(OnAttackAndKill):
 
 
 class RiverwishMermaidSupportBuff(SupportBuff):
-    def execute(self, character, *args, **kwargs):
-        character.register(RiverwishMermaidOnAttackAndKill, riverwish_mermaid=self.source, temp=True, *args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.applied_buffs = {}
+
+    def _apply(self, char, *args, **kwargs):
+        event = char.register(RiverwishMermaidOnAttackAndKill, riverwish_mermaid=self.source, temp=True, *args, **kwargs)
+        self.applied_buffs[char] = event
+
+    def remove(self):
+        for char, buff in self.applied_buffs:
+            char.remove(buff)
 
 
 class CharacterType(Character):
