@@ -85,7 +85,8 @@ def test_fire_ball():
 
     for char in board.p2.graveyard:
         char._action_history[0].reason = StatChangeCause.FIREBALL
-
+    
+    # TODO make sure we do correct death ordering
     # char = board.p2.graveyard[0]
     # assert char.position == 2
     # assert char._action_history[0].reason == StatChangeCause.FIREBALL
