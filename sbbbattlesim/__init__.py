@@ -4,7 +4,7 @@ from sbbbattlesim.board import Board
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.config import configure_logging
 from sbbbattlesim.heros import registry as hero_registry
-from sbbbattlesim.simulate import simulate
+from sbbbattlesim.simulate import simulate, from_state
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
 from sbbbattlesim.exceptions import SBBBSCrocException
