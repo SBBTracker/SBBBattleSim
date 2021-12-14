@@ -8,6 +8,7 @@ import traceback
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import Dict, List
+import json
 
 from sbbbattlesim import Board
 from sbbbattlesim.stats import calculate_stats, BoardStats
@@ -58,6 +59,8 @@ def from_state(state: dict):
         }
 
     assert isinstance(sim_data, dict)
+
+    logger.info(json.dumps(sim_data))
 
     return sim_data
 
