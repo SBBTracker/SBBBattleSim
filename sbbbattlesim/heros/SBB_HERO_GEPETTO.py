@@ -8,9 +8,8 @@ class GeppettoOnSummon(OnSummon):
 
     def handle(self, summoned_characters, stack, *args, **kwargs):
         level = self.geppetto.player.level
-        with Buff(reason=StatChangeCause.GEPPETTO_BUFF, source=self.geppetto, targets=summoned_characters,
-                  attack=level, health=level, stack=stack, temp=False):
-            pass
+        Buff(reason=StatChangeCause.GEPPETTO_BUFF, source=self.geppetto, targets=summoned_characters,
+             attack=level, health=level, stack=stack, temp=False).resolve()
 
 
 class HeroType(Hero):

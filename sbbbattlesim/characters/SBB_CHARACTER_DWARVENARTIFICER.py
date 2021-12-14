@@ -22,9 +22,8 @@ class CharacterType(Character):
         if target_character is self:
             golden_multipler = 2 if self.golden else 1
             crafty_buff = 3 * len(self.player.treasures) * golden_multipler
-            with Buff(reason=StatChangeCause.CRAFTY_BUFF, source=self, targets=[self],
-                      attack=crafty_buff, health=crafty_buff, temp=True, *args, **kwargs):
-                pass
+            Buff(reason=StatChangeCause.CRAFTY_BUFF, source=self, targets=[self],
+                 attack=crafty_buff, health=crafty_buff, temp=True, *args, **kwargs).resolve()
 
     @classmethod
     def new(cls, player, position, golden):

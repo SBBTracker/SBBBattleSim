@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff, SupportBuff
+from sbbbattlesim.action import Buff, SupportBuff, EventSupport
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -38,7 +38,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.support_buff = RiverwishMermaidSupportBuff(source=self)
+        self.support_buff = EventSupport(source=self, event=RiverwishMermaidOnAttackAndKill, riverwish_mermaid=self)
 
     def buff(self, target_character, *args, **kwargs):
         self.support_buff.execute(target_character, *args, **kwargs)

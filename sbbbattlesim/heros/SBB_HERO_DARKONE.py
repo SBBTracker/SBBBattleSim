@@ -26,6 +26,5 @@ class HeroType(Hero):
             target_character.register(EvellaAura, temp=True, evella=self)
 
         if Tribe.EVIL in target_character.tribes:
-            with Buff(reason=StatChangeCause.EVELLA_BUFF, source=self, targets=[target_character],
-                      attack=self.animal_deaths, temp=True, *args, **kwargs):
-                pass
+            Buff(reason=StatChangeCause.EVELLA_BUFF, source=self, targets=[target_character],
+                 attack=self.animal_deaths, temp=True, *args, **kwargs).resolve()

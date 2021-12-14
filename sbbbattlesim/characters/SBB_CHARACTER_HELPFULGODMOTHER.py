@@ -14,6 +14,5 @@ class CharacterType(Character):
 
     def buff(self, target_character, *args, **kwargs):
         if Tribe.GOOD in target_character.tribes and target_character != self:
-            with Buff(source=self, reason=StatChangeCause.RAINBOWUNICORN_BUFF, targets=[target_character],
-                      health=2 if self.golden else 1, temp=True,  *args, **kwargs):
-                pass
+            Buff(source=self, reason=StatChangeCause.RAINBOWUNICORN_BUFF, targets=[target_character],
+                 health=2 if self.golden else 1, temp=True,  *args, **kwargs).resolve()

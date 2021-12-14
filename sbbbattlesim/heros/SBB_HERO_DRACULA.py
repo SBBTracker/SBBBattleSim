@@ -8,9 +8,9 @@ class SadDraculaOnAttackAndKill(OnAttackAndKill):
     slay = True
 
     def handle(self, killed_character, stack, *args, **kwargs):
-        with Buff(reason=StatChangeCause.SAD_DRACULA_SLAY, source=self.sad_dracula, targets=[self.manager],
-                  attack=3, stack=stack):
-            pass
+       Buff(reason=StatChangeCause.SAD_DRACULA_SLAY, source=self.sad_dracula, targets=[self.manager],
+            attack=3, stack=stack).resolve()
+
 
 class HeroType(Hero):
     display_name = 'Sad Dracula'

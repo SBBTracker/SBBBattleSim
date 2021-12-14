@@ -254,10 +254,10 @@ class Player(EventManager):
         logger.info(f'{character.pretty_print()} died')
 
         if character.support and character.support_buff:
-            character.support_buff.remove()
+            character.support_buff.roll_back()
 
         if character.aura and character.aura_buff:
-            character.aura_buff.remove()
+            character.aura_buff.roll_back()
 
     @property
     def characters(self):
