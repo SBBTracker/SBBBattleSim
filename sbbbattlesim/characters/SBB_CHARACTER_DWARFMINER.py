@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class AngryBuff(OnDamagedAndSurvived):
     def handle(self, stack, *args, **kwargs):
         stat_change = 4 if self.manager.golden else 2
-        Buff(reason=StatChangeCause.ANGRY_BUFF, source=self,
+        Buff(reason=StatChangeCause.ANGRY_BUFF, source=self.manager,
              targets=self.manager.player.valid_characters(_lambda=lambda char: Tribe.DWARF in char.tribes),
              attack=stat_change, health=stat_change, temp=False, stack=stack,
              ).resolve()

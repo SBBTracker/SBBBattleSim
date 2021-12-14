@@ -1,3 +1,4 @@
+import collections
 import logging
 from enum import Enum
 from typing import List
@@ -14,7 +15,7 @@ class ActionState(Enum):
     CREATED = 1
     EXECUTED = 2
     RESOLVED = 3
-    ROLLED_BACK = 5
+    ROLLED_BACK = 4
 
 
 class Action:
@@ -22,7 +23,9 @@ class Action:
             self,
             reason: StatChangeCause,
             source: ('Character', Treasure, Hero, Spell),
-            targets: List['Character'],
+            targets: (List['Character'], None) = None,
+            _lambda=None,
+            priority: int = 0,
             attack: int = 0,
             health: int = 0,
             damage: int = 0,
@@ -33,7 +36,9 @@ class Action:
     ):
         self.reason = reason
         self.source = source
-        self.targets = targets
+        self.targets = targets or []
+        self._lambda = _lambda or (lambda _: True)
+        self.priority = priority
 
         self.attack = attack
         self.health = health
@@ -44,10 +49,7 @@ class Action:
         self.args = args
         self.kwargs = kwargs
 
-        self._active = False
-
         self.state = ActionState.CREATED
-
         self._char_buffer = set()
 
         logger.debug(f'New {self}')
@@ -56,44 +58,20 @@ class Action:
         return self.__repr__()
 
     def __repr__(self):
-        prefix = f'{self.source} {self.reason} {self.targets}'
-
-        stats = ''
-        if self.attack > 0 or self.health > 0:
-            stats = f'+{self.attack}/{self.health}'
-        elif self.attack < 0 or self.health < 0:
-            stats = f'-{self.attack}/{self.health}'
-        elif self.damage != 0:
-            stats = f'!{self.damage}'
-        elif self.health != 0:
-            stats = f'~{self.heal}'
-
-        args = f'({self.args} {self.kwargs})'
-
-        return f'{prefix} {stats} {args}'
-
-    def __enter__(self):
-        self._active = True
-        self.execute()
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self._active = False
-        self.resolve()
+        return f'{self.reason} {self.source.pretty_print()} >>> {[char.pretty_print() for char in self.targets]} ({self.args}, {self.kwargs})'
 
     def _apply(self, char, *args, **kwargs):
         '''
-        Preforms all stat changes and represents the core of any Action
+        This is the core of any Action class and should not be touched unless you are making changes to ALL effects
         This should never be accessed outside an Action class or subclass
-        If you touch this you are touching every stat change in the simulator
         '''
+
         args = (*self.args, *args)
         kwargs = self.kwargs | kwargs
         self._char_buffer.add(char)
-
-        logger.debug(f'{char.pretty_print()} started stat change')
+        char._action_history.append(self)
 
         if self.attack != 0 or self.health != 0:
-
             if self.temp:
                 char._temp_attack += self.attack
                 char._temp_health += self.health
@@ -106,7 +84,7 @@ class Action:
                  attack=self.attack, health=self.health, damage=self.damage, temp=self.temp,
                  *args, **kwargs)
 
-        if self.damage > 0:
+        if self.damage != 0:
             if char.invincible and self.reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:
                 char('OnDamagedAndSurvived', damage=0, *args, **kwargs)
                 return
@@ -115,9 +93,6 @@ class Action:
         if self.heal != 0:
             char._damage = 0 if self.heal == -1 else max(char._damage - self.heal, 0)
 
-        logger.debug(f'{char.pretty_print()} finishsed stat change')
-        char._action_history.append(self)
-
         if char.health <= 0:
             char.dead = True
             logger.debug(f'{char.pretty_print()} marked for death')
@@ -125,27 +100,33 @@ class Action:
             char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
 
     def _clear(self, char, *args, **kwargs):
-        logger.debug(f'{char.pretty_print()} started stat clear')
-
+        '''
+        This is the core function to specify how to reverse an action and should not be touched unless you are making changes to ALL effects
+        This should never be accessed outside an Action class or subclass
+        '''
         if self.health != 0:
             char._damage -= min(char._damage, self.health)
 
         if self.attack != 0:
             char._attack -= self.attack
 
-        logger.debug(f'{char.pretty_print()} finished stat clear')
 
-    def execute(self):
-        if self.state in (ActionState.RESOLVED, ActionState.EXECUTED, ActionState.ROLLED_BACK):
+    def execute(self, character=None, *args, **kwargs):
+        if self.state in (ActionState.RESOLVED, ActionState.ROLLED_BACK):
             return
 
-        for char in self.targets:
-            self._apply(char)
+        if character:
+            if not self._lambda(character):
+                return
+            self._apply(character, *args, **kwargs)
+        else:
+            for char in self.targets:
+                self._apply(char, *args, **kwargs)
 
         self.state = ActionState.EXECUTED
 
     def roll_back(self):
-        for char in self.targets:
+        for char in self.targets or self._char_buffer:
             self._clear(char)
 
         self.state = ActionState.ROLLED_BACK
@@ -181,41 +162,51 @@ class Action:
 
 
 class Damage(Action):
-    def execute(self):
-        self.targets = [char for char in self.targets if not char.dead]
-        super().execute()
-        self.targets = [char for char in self.targets if char.dead]
+    pass
+
+
+class Heal(Action):
+    pass
 
 
 class Buff(Action):
-    def __init__(self, priority=0, _lambda=lambda char: True, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.priority = priority
-        self._lambda = _lambda
-
-    def execute(self, character=None, *args, **kwargs):
-        if character:
-            if not self._lambda(character):
-                return
-            self._apply(character, *args, **kwargs)
-        else:
-            for char in self.targets:
-                self._apply(char, *args, **kwargs)
-
-        self.state = ActionState.EXECUTED
-
-    def remove(self):
-        self.targets = self._char_buffer
-        self.roll_back()
-        self.resolve()
-        self.state = ActionState.ROLLED_BACK
+    pass
 
 
 class SupportBuff(Buff):
     def __init__(self, *args, **kwargs):
-        super().__init__(reason=StatChangeCause.SUPPORT_BUFF, temp=True, targets=None, *args, **kwargs)
+        super().__init__(reason=StatChangeCause.SUPPORT_BUFF, temp=True, *args, **kwargs)
 
 
 class AuraBuff(Buff):
     def __init__(self, *args, **kwargs):
-        super().__init__(reason=StatChangeCause.AURA_BUFF, temp=True, targets=None, *args, **kwargs)
+        super().__init__(reason=StatChangeCause.AURA_BUFF, temp=True, *args, **kwargs)
+
+
+class EventAction(Action):
+    def __init__(self, event, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.event = event
+        self._event_buffer = collections.defaultdict(list)
+
+    def _apply(self, char, *args, **kwargs):
+        args = (*self.args, *args)
+        kwargs = self.kwargs | kwargs
+        self._char_buffer.add(char)
+
+        registered = char.register(self.event, temp=self.temp, *args, **kwargs)
+        self._event_buffer[char].append(registered)
+
+    def _clear(self, char, *args, **kwargs):
+        for registered in self._event_buffer.get(char):
+            char.unregister(registered)
+
+
+class EventSupport(EventAction):
+    def __init__(self, *args, **kwargs):
+        super().__init__(reason=StatChangeCause.SUPPORT_BUFF, temp=True, *args, **kwargs)
+
+
+class EventAura(EventAction):
+    def __init__(self, *args, **kwargs):
+        super().__init__(reason=StatChangeCause.AURA_BUFF, temp=True, *args, **kwargs)

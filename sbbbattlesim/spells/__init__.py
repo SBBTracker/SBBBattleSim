@@ -24,10 +24,7 @@ class Spell:
     def valid(cls):
         return cls._level != 0
 
-    def __str__(self):
-        return self.__repr__()
-
-    def __repr__(self):
+    def pretty_print(self):
         return self.display_name
 
 

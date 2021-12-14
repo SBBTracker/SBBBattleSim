@@ -9,9 +9,8 @@ class LancelotSlay(OnAttackAndKill):
 
     def handle(self, killed_character, stack, *args, **kwargs):
         modifier = 4 if self.manager.golden else 2
-        with Buff(reason=StatChangeCause.SLAY, source=self.manager, targets=[self.manager],
-                  attack=modifier, health=modifier, temp=False,  stack=stack):
-            pass
+        Buff(reason=StatChangeCause.SLAY, source=self.manager, targets=[self.manager],
+             attack=modifier, health=modifier, temp=False,  stack=stack).resolve()
 
 
 class CharacterType(Character):

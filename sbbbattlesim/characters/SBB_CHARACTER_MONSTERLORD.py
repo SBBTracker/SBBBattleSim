@@ -11,9 +11,8 @@ logger = logging.getLogger(__name__)
 class OniKingOnMonsterAttack(OnPreAttack):
     def handle(self, stack, *args, **kwargs):
         stat_change = 20 if self.oni_king.golden else 10
-        with Buff(source=self.oni_king, reason=StatChangeCause.ONIKING_BUFF, targets=[self.manager],
-                  attack=stat_change, health=stat_change, temp=False, stack=stack):
-            pass
+        Buff(source=self.oni_king, reason=StatChangeCause.ONIKING_BUFF, targets=[self.manager],
+             attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
 class CharacterType(Character):
     display_name = 'Oni King'

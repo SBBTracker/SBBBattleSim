@@ -13,9 +13,9 @@ class ChupacabraSlay(OnAttackAndKill):
 
         modifier = 2 if self.manager.golden else 1
 
-        with Buff(reason=StatChangeCause.SLAY, source=self.manager, targets=[self.manager, *targetted_chars],
-                  attack=modifier, health=modifier, temp=False, stack=stack):
-            pass
+        Buff(reason=StatChangeCause.SLAY, source=self.manager, targets=[self.manager, *targetted_chars],
+             attack=modifier, health=modifier, temp=False, stack=stack).resolve()
+
 
 
 class CharacterType(Character):

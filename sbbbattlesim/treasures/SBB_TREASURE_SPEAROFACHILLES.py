@@ -7,7 +7,7 @@ from sbbbattlesim.utils import StatChangeCause
 class SpearOfAchillesAttack(OnPreAttack):
     def handle(self, stack, *args, **kwargs):
         for _ in range(1 + bool(self.spear.mimic)):
-            Buff(reason=StatChangeCause.SPEAR_OF_ACHILLES, source=self, targets=[self.manager],
+            Buff(reason=StatChangeCause.SPEAR_OF_ACHILLES, source=self.spear, targets=[self.manager],
                  health=7, attack=7, temp=False, stack=stack).resolve()
 
 

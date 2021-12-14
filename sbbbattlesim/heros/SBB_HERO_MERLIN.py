@@ -16,9 +16,8 @@ class MerlinOnSpellCast(OnSpellCast):
         logger.debug(f'MERLIN TARGET {valid_targets}')
         if valid_targets:
             target_character = random.choice(valid_targets)
-            with Buff(reason=StatChangeCause.MERLIN_BUFF, source=self.merlin, targets=[target_character],
-                      attack=2, health=1, temp=False, stack=stack):
-                pass
+            Buff(reason=StatChangeCause.MERLIN_BUFF, source=self.merlin, targets=[target_character],
+                 attack=2, health=1, temp=False, stack=stack).resolve()
 
 
 class HeroType(Hero):

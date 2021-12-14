@@ -14,9 +14,8 @@ class LordyBuffOnStart(OnStart):
             _lambda=lambda char: Tribe.DWARF in char.tribes or char.id == 'SBB_CHARACTER_PRINCESSNIGHT'
         )
         stat_change = len(dwarfes) * (4 if self.lordy.golden else 2)
-        with Buff(reason=StatChangeCause.LORDY_BUFF, source=self.lordy, targets=dwarfes,
-                  attack=stat_change, health=stat_change, temp=False, stack=stack):
-            pass
+        Buff(reason=StatChangeCause.LORDY_BUFF, source=self.lordy, targets=dwarfes,
+             attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
 
 class CharacterType(Character):

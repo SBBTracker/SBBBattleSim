@@ -15,6 +15,9 @@ class Hero:
     def __init__(self, player):
         self.player = player
 
+    def pretty_print(self):
+        return self.display_name
+
     def buff(self, target_character, *args, **kwargs):
         raise NotImplementedError
 
