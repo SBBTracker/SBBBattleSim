@@ -178,7 +178,7 @@ class EventManager:
         return event
 
     def unregister(self, event):
-        event_base = inspect.getmro(event)[1].__name__
+        event_base = inspect.getmro(event.__class__)[1].__name__
         try:
             self._temp.get(event_base, []).remove(event)
         except ValueError:
