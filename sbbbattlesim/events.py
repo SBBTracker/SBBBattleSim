@@ -191,6 +191,32 @@ class EventManager:
         return sorted(self._temp.get(event, []) + self._events.get(event, []),
                       key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True)
 
+    def get_itr(self, event):
+
+        _evt_lambda  = lambda : self._temp.get(event, []) + self._events.get(event, [])
+        evts = _evt_lambda()
+        evts_set = set(_evt_lambda())
+        finished_evts = set()
+        last_evt = None
+        while True:
+            for evt in sorted(evts, key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True):
+                yield evt
+                last_evt = evt
+                finished_evts.add(evt)
+
+                new_evts_set = {s for s in set(_evt_lambda()) - finished_evts if s.priority < last_evt.priority}
+
+                if (evts_set - finished_evts) != new_evts_set - finished_evts:
+                    new_evts = _evt_lambda()
+                    evts = list(new_evts_set)
+                    evts_set = set(evts)
+
+            if not evts_set - finished_evts:
+                break
+
+
+
+
     def clear_temp(self):
         self._temp = collections.defaultdict(list)
 
@@ -205,7 +231,7 @@ class EventManager:
         stack = stack or EventStack(self)
 
         with stack.open(*args, **kwargs) as executor:
-            for evt in handlers:
+            for evt in self.get_itr(event):
                 logger.debug(f'Firing {evt} with {args} {kwargs}')
                 executor.execute(evt, *args, **kwargs)
 

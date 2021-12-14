@@ -18,4 +18,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(RingOfMeteorsActivation, ring=self)
+        self.player.board.register(RingOfMeteorsActivation, ring=self, priority=-10)
