@@ -34,7 +34,7 @@ def from_state(state: dict):
                     'id': content_id,
                     'attack': int(data.cardattack),
                     'health': int(data.cardhealth),
-                    'golden': data.is_golden if isinstance(data.is_golden, bool) else data.is_golden == "True",
+                    'golden': data.is_golden if isinstance(data.is_golden, bool) else data.is_golden.lower() == "true",
                     'cost': int(data.cost),
                     'position': int(data.slot) + 1,  # This is done to match slot to normal board positions
                     'tribes': [subtype.lower() for subtype in data.subtypes],
