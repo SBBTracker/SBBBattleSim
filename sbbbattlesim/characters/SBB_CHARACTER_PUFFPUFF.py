@@ -37,6 +37,10 @@ class PuffPuffDeath(OnDeath):
         Buff(reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff, targets=puffpuffs,
              attack=buff, health=buff, stack=stack).execute()
 
+        # in case of random summon
+        if not self.puff.player.id in puffbuffs:
+            puffbuffs[self.puff.player.id] = None
+
         if puffbuffs[self.puff.player.id] is None:
             puffbuffs[self.puff.player.id] = 0
         puffbuffs[self.puff.player.id] += buff
