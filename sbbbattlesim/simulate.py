@@ -34,11 +34,10 @@ def from_state(state: dict):
                     'id': content_id,
                     'attack': int(data.cardattack),
                     'health': int(data.cardhealth),
-                    'golden': bool(data.is_golden),
+                    'golden': data.is_golden if isinstance(data.is_golden, bool) else data.is_golden == "True",
                     'cost': int(data.cost),
                     'position': int(data.slot) + 1,  # This is done to match slot to normal board positions
                     'tribes': [subtype.lower() for subtype in data.subtypes],
-                    'raw': True
                 })
             elif data.zone == 'Treasure':
                 treasures.append(data.content_id)
@@ -54,7 +53,8 @@ def from_state(state: dict):
             'hero': hero,
             'spells': spells,
             'level': level,
-            'hand': hand
+            'hand': hand,
+            'raw': True
         }
 
     assert isinstance(sim_data, dict)
