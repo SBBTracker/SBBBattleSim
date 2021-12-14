@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, EventAura
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -22,6 +22,10 @@ class CharacterType(Character):
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.QUEEN}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aura_buff = EventAura(source=self, oni_king=self, event=EvilQueenOnDeath, evil_queen=self,
+                                   _lambda=lambda char: Tribe.EVIL in char.tribes)
+
     def buff(self, target_character, *args, **kwargs):
-        if Tribe.EVIL in target_character.tribes and target_character is not self:
-            target_character.register(EvilQueenOnDeath, temp=True, evil_queen=self)
+        self.aura_buff.execute(target_character)

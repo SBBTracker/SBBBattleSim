@@ -1,5 +1,5 @@
 from sbbbattlesim import utils
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, EventAura
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -23,6 +23,12 @@ class TreasureType(Treasure):
 
     _level = 3
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.feather_used = False
+        stats = 3 * (self.mimic + 1)
+        self.aura_buff = EventAura(event=RingOfRevengeBuff, source=self, ring_of_revenge=self,
+                                  _lambda=lambda char: char.position in range(1, 5))
+
     def buff(self, target_character, *args, **kwargs):
-        if target_character.position in range(1, 5):
-            target_character.register(RingOfRevengeBuff, temp=True, ring_of_revenge=self)
+        self.aura_buff.execute(target_character)

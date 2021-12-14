@@ -1,6 +1,14 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, AuraBuff
+from sbbbattlesim.characters import Character
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause, Tribe
+
+
+def _crown_tribe_shift(char: Character):
+    if Tribe.EVIL in char.tribes:
+        char.tribes.remove(Tribe.EVIL)
+    if Tribe.GOOD not in char.tribes:
+        char.tribes.add(Tribe.GOOD)
 
 
 class TreasureType(Treasure):
@@ -9,14 +17,11 @@ class TreasureType(Treasure):
 
     _level = 2
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        stats = 1 * (self.mimic + 1)
+        self.aura_buff = AuraBuff(reason=StatChangeCause.CLOAK_OF_THE_ASSASSIN, source=self, health=stats, attack=stats,
+                                  _lambda=lambda char: Tribe.ANIMAL in char.tribes, _action=_crown_tribe_shift)
+
     def buff(self, target_character, *args, **kwargs):
-        if Tribe.ANIMAL in target_character.tribes:
-
-            for _ in range(self.mimic + 1):
-                Buff(reason=StatChangeCause.CROWN_OF_ATLAS, source=self, targets=[target_character],
-                     health=1, attack=1, temp=True, *args, **kwargs).resolve()
-
-            if Tribe.EVIL in target_character.tribes:
-                target_character.tribes.remove(Tribe.EVIL)
-            if Tribe.GOOD not in target_character.tribes:
-                target_character.tribes.add(Tribe.GOOD)
+        self.aura_buff.execute(target_character)

@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, EventAura
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -34,6 +34,7 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.coin_trigger = False
+        self.aura_buff = EventAura(event=CoinOfCharonOnDeath, source=self, priority=400, coin=self)
 
     def buff(self, target_character, *args, **kwargs):
-        target_character.register(CoinOfCharonOnDeath, priority=400, coin=self)
+        self.aura_buff.execute(target_character)

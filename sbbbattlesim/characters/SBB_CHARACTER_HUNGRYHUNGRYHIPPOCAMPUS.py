@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, EventAura, PlayerEvent
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSummon
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -22,13 +22,11 @@ class HungryHungryHippocampusOnSummon(OnSummon):
 class CharacterType(Character):
     display_name = 'Hungry Hungry Hippocampus'
 
-    aura = True
-
     _attack = 10
     _health = 1
     _level = 4
     _tribes = {Tribe.GOOD, Tribe.ANIMAL}
 
-    def buff(self, target_character, *args, **kwargs):
-        if target_character is self:
-            self.player.register(HungryHungryHippocampusOnSummon, temp=True, hippo=self)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.player_buff = PlayerEvent(source=self, event=HungryHungryHippocampusOnSummon, hippo=self)

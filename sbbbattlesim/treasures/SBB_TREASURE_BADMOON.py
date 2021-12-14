@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, EventAura
 from sbbbattlesim.events import OnSlay
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -17,5 +17,9 @@ class TreasureType(Treasure):
 
     _level = 3
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aura_buff = EventAura(event=BadMoonSlayBuff, source=self, bad_moon=self)
+
     def buff(self, target_character, *args, **kwargs):
-        target_character.register(BadMoonSlayBuff, temp=True, bad_moon=self)
+        self.aura_buff.execute(target_character)

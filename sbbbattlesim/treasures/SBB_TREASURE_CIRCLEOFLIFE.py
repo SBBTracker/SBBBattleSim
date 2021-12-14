@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import EventAura, Heal
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -9,7 +9,7 @@ class TreeOfLifeHeal(OnDeath):
 
     def handle(self, stack, *args, **kwargs):
         for _ in range(self.tree.mimic + 1):
-            Buff(reason=StatChangeCause.TREE_OF_LIFE, source=self.tree, targets=self.manager.player.valid_characters(),
+            Heal(reason=StatChangeCause.TREE_OF_LIFE, source=self.tree, targets=self.manager.player.valid_characters(),
                  heal=-1, temp=False, stack=stack).resolve()
 
 
@@ -19,5 +19,10 @@ class TreasureType(Treasure):
 
     _level = 5
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        stats = 2 * (self.mimic + 1)
+        self.aura_buff = EventAura(event=TreeOfLifeHeal, source=self, tree=self)
+
     def buff(self, target_character, *args, **kwargs):
-        target_character.register(TreeOfLifeHeal, temp=True, tree=self)
+        self.aura_buff.execute(target_character)

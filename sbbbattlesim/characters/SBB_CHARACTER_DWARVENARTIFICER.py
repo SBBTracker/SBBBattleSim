@@ -17,6 +17,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # TODO Fix Crafty
 
     def buff(self, target_character, *args, **kwargs):
         if target_character is self:

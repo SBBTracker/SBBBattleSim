@@ -1,6 +1,6 @@
 import random
 
-from sbbbattlesim.action import Damage
+from sbbbattlesim.action import Damage, EventAura
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -23,6 +23,10 @@ class TreasureType(Treasure):
 
     _level = 3
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aura_buff = EventAura(event=AncientSarcophagusOnDeath, source=self, ancient_sarcophagus=self,
+                                   _lambda=lambda char: Tribe.EVIL in char.tribes)
+
     def buff(self, target_character, *args, **kwargs):
-        if Tribe.EVIL in target_character.tribes:
-            target_character.register(AncientSarcophagusOnDeath, temp=True, ancient_sarcophagus=self)
+        self.aura_buff.execute(target_character)

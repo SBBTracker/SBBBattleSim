@@ -85,7 +85,8 @@ class StatChangeCause(enum.Enum):
     DAMAGE_WHILE_DEFENDING = 2
     SUPPORT_BUFF = 3
     AURA_BUFF = 4
-    SLAY = 5
+    PLAYER_AURA = 5
+    SLAY = 6
 
     ANGRY_BUFF = 101
     DOUBLEY_BUFF = 102

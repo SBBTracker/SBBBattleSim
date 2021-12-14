@@ -11,7 +11,6 @@ class TreasureType(Treasure):
 
     aura = True
 
-
     def buff(self, target_character, attack_override, *args, **kwargs):
         if '''SBB_TREASURE_TREASURECHEST''' in target_character.player.treasures:
             attack_multiplier = 2

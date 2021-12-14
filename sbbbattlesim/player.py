@@ -1,3 +1,4 @@
+import collections
 import logging
 import random
 from collections import OrderedDict, defaultdict
@@ -44,16 +45,18 @@ class Player(EventManager):
         self._attack_slot = None
         self.graveyard = []
 
-        self.treasures = defaultdict(list)
+        self.treasures = collections.defaultdict(list)
         mimic = 'SBB_TREASURE_TREASURECHEST' in treasures
         for tres in treasures:
             treasure = treasure_registry[tres]
-            logger.debug(f'{self.id} Registering treasure {treasure}')
-            self.treasures[treasure.id].append(treasure(self, mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0)))
+            mimic_count = mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0)
+            treasure = treasure(player=self, mimic=mimic_count)
+            logger.debug(f'{self.id} Registering treasure {treasure.pretty_print()}')
+            self.treasures[treasure.id].append(treasure)
 
         self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand]
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
-        logger.debug(f'{self.id} registering hero {self.hero}')
+        logger.debug(f'{self.id} registering hero {self.hero.pretty_print()}')
 
         import copy
         for spl in spells:
@@ -63,7 +66,7 @@ class Player(EventManager):
 
         for char_data in characters:
             char = character_registry[char_data['id']](player=self, **char_data)
-            logger.debug(f'{self.id} registering character {char}')
+            logger.debug(f'{self.id} registering character {char.pretty_print()}')
             self.__characters[char.position] = char
 
         # This is designed to remove temp buffs that were passed in
@@ -84,7 +87,24 @@ class Player(EventManager):
         self.aura_buffs = set()
         for char in self.valid_characters():
             if char.aura and char.aura_buff:
-                self.aura_buffs.add(char.aura_buff)
+                try:
+                    self.aura_buffs.update(set(char.aura_buff))
+                except TypeError:
+                    self.aura_buffs.add(char.aura_buff)
+
+            if char.player_buff is not None:
+                char.player_buff.execute()
+
+        for tid, tl in self.treasures.items():
+            if tid == '''SBB_TREASURE_WHIRLINGBLADES''':
+                continue
+
+            for treasure in tl:
+                if treasure.aura and treasure.aura_buff:
+                    try:
+                        self.aura_buffs.update(set(treasure.aura_buff))
+                    except TypeError:
+                        self.aura_buffs.add(treasure.aura_buff)
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
@@ -243,6 +263,9 @@ class Player(EventManager):
         support_buffs = {char.support_buff for char in possible_supports}
         for buff in sorted(support_buffs | self.aura_buffs, key=lambda b: b.priority, reverse=True):
             buff.execute(character)
+
+        if character.player_buff:
+            character.player_buff.execute()
 
         return character
 

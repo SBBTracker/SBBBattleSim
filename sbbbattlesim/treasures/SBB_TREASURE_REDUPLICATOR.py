@@ -1,6 +1,12 @@
+import logging
+
 from sbbbattlesim.events import OnSummon
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.characters import registry as character_registry
+
+
+logger = logging.getLogger(__name__)
+
 
 class ReduplicatorOnSummon(OnSummon):
     def handle(self, summoned_characters, *args, **kwargs):
@@ -9,6 +15,7 @@ class ReduplicatorOnSummon(OnSummon):
                 self.reduplicator.triggered = True
                 for _ in range(self.reduplicator.mimic+1):
                     copied_character = summoned_characters[0]
+                    logger.debug(copied_character.pretty_print())
                     new_character = character_registry[copied_character.id](
                         player=copied_character.player,
                         position=copied_character.position,

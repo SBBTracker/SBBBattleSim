@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, EventAura
 from sbbbattlesim.events import OnPreAttack
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -17,5 +17,11 @@ class TreasureType(Treasure):
 
     _level = 6
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.feather_used = False
+        stats = 4 * (bool(self.mimic) + 1)
+        self.aura_buff = EventAura(event=SpearOfAchillesAttack, source=self, spear=self)
+
     def buff(self, target_character, *args, **kwargs):
-        target_character.register(SpearOfAchillesAttack, temp=True, spear=self)
+        self.aura_buff.execute(target_character)

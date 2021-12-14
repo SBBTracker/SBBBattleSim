@@ -49,6 +49,7 @@ class Character(EventManager):
 
         self.support_buff = None
         self.aura_buff = None
+        self.player_buff = None
 
         self._action_history = []
 

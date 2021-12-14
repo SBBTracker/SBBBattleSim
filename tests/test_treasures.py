@@ -1440,7 +1440,7 @@ def test_ninth_book_of_merlin(mimic):
     assert not_mage
 
     assert mage.last_breath
-    assert len([evt for evt in mage.get('OnDeath') if evt.last_breath]) == 1 + mimic
+    assert len([evt for evt in mage.get('OnDeath') if evt.last_breath]) == 1
 
     assert not not_mage.last_breath
     assert len([evt for evt in not_mage.get('OnDeath') if evt.last_breath]) == 0

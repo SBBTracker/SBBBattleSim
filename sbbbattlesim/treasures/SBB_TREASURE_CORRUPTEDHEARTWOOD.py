@@ -1,6 +1,14 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, AuraBuff
+from sbbbattlesim.characters import Character
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause, Tribe
+
+
+def _heartwood_tribe_shift(char: Character):
+    if Tribe.GOOD in char.tribes:
+        char.tribes.remove(Tribe.GOOD)
+    if Tribe.EVIL not in char.tribes:
+        char.tribes.add(Tribe.EVIL)
 
 
 class TreasureType(Treasure):
@@ -9,14 +17,12 @@ class TreasureType(Treasure):
 
     _level = 2
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        stats = 1 * (self.mimic + 1)
+        self.aura_buff = AuraBuff(reason=StatChangeCause.CORRUPTED_HEARTWOOD, source=self, attack=stats,
+                                  _lambda=lambda char: Tribe.ANIMAL in char.tribes or Tribe.TREANT in char.tribes,
+                                  _action=_heartwood_tribe_shift)
+
     def buff(self, target_character, *args, **kwargs):
-        if Tribe.ANIMAL in target_character.tribes or Tribe.TREANT in target_character.tribes:
-
-            for _ in range(self.mimic + 1):
-                Buff(reason=StatChangeCause.CORRUPTED_HEARTWOOD, source=self, targets=[target_character],
-                     attack=1, temp=True, *args, **kwargs).resolve()
-
-            if Tribe.GOOD in target_character.tribes:
-                target_character.tribes.remove(Tribe.GOOD)
-            if Tribe.EVIL not in target_character.tribes:
-                target_character.tribes.add(Tribe.EVIL)
+        self.aura_buff.execute(target_character)

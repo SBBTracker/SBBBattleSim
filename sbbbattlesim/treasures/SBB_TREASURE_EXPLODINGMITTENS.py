@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Damage
+from sbbbattlesim.action import Damage, EventAura
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -19,5 +19,9 @@ class TreasureType(Treasure):
 
     _level = 5
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aura_buff = EventAura(event=ExplodingMittensOnDeath, source=self, mitten=self)
+
     def buff(self, target_character, *args, **kwargs):
-        target_character.register(ExplodingMittensOnDeath, temp=True, mitten=self)
+        self.aura_buff.execute(target_character)

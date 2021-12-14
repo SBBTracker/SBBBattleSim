@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import AuraBuff, EventAura
 from sbbbattlesim.characters import Character
 from sbbbattlesim.combat import attack
 from sbbbattlesim.events import OnDeath
@@ -36,6 +37,11 @@ class CharacterType(Character):
     _level = 4
     _tribes = {Tribe.GOOD, Tribe.MAGE}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aura_buff = EventAura(reason=StatChangeCause.AURA_BUFF, source=self, court_wizard=self,
+                                   _lambda=lambda char: Tribe.PRINCESS in char.tribes or Tribe.PRINCE in char.tribes,
+                                   event=CourtWizardOnDeathBuff)
+
     def buff(self, target_character, *args, **kwargs):
-        if Tribe.PRINCESS in target_character.tribes or Tribe.PRINCE in target_character.tribes:
-            target_character.register(CourtWizardOnDeathBuff, temp=True, court_wizard=self)
+        self.aura_buff.execute(target_character)

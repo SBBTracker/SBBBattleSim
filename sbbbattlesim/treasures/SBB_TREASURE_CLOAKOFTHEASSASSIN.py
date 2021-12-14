@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, AuraBuff
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
 
@@ -13,9 +13,10 @@ class TreasureType(Treasure):
 
     _level = 3
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        stats = 3 * (self.mimic + 1)
+        self.aura_buff = AuraBuff(reason=StatChangeCause.CLOAK_OF_THE_ASSASSIN, source=self, health=stats, attack=stats)
+
     def buff(self, target_character, *args, **kwargs):
-        logger.debug(f'IS THIS A SLAY??? {target_character}  {target_character.slay}')
-        if target_character.slay:
-            for _ in range(self.mimic + 1):
-                Buff(reason=StatChangeCause.CLOAK_OF_THE_ASSASSIN, source=self, targets=[target_character],
-                     health=3, attack=3,  temp=True, *args, **kwargs).resolve()
+        self.aura_buff.execute(target_character)

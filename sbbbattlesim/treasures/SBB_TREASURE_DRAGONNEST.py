@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, AuraBuff
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
@@ -9,8 +9,11 @@ class TreasureType(Treasure):
 
     _level = 2
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        stats = 5 * (self.mimic + 1)
+        self.aura_buff = AuraBuff(reason=StatChangeCause.DRAGON_NEST, source=self, health=stats, attack=stats,
+                                  _lambda=lambda char: Tribe.DRAGON in char.tribes)
+
     def buff(self, target_character, *args, **kwargs):
-        if Tribe.DRAGON in target_character.tribes:
-            for _ in range(self.mimic + 1):
-                Buff(reason=StatChangeCause.DRAGON_NEST, source=self, targets=[target_character],
-                     attack=5, health=5, temp=True, *args, **kwargs).resolve()
+        self.aura_buff.execute(target_character)

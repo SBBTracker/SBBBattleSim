@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, EventAura
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDamagedAndSurvived
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -25,5 +25,9 @@ class CharacterType(Character):
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.TREANT}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aura_buff = EventAura(reason=StatChangeCause.AURA_BUFF, source=self, darkwood=self, event=DarkwoodCreeperOnDamage)
+
     def buff(self, target_character, *args, **kwargs):
-        target_character.register(DarkwoodCreeperOnDamage, temp=True, darkwood=self)
+        self.aura_buff.execute(target_character)

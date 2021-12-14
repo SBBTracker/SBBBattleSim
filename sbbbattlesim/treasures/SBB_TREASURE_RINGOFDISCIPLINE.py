@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, AuraBuff
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
 
@@ -9,7 +9,11 @@ class TreasureType(Treasure):
 
     _level = 5
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.feather_used = False
+        stats = 3 * (self.mimic + 1)
+        self.aura_buff = AuraBuff(reason=StatChangeCause.SIX_OF_SHIELDS, source=self, health=stats)
+
     def buff(self, target_character, *args, **kwargs):
-        for _ in range(self.mimic + 1):
-            Buff(reason=StatChangeCause.SIX_OF_SHIELDS, source=self, targets=[target_character],
-                 health=3,  temp=True, *args, **kwargs).resolve()
+        self.aura_buff.execute(target_character)

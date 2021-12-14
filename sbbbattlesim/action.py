@@ -31,6 +31,7 @@ class Action:
             damage: int = 0,
             heal: int = 0,
             temp: bool = False,
+            _action=None,
             *args,
             **kwargs
     ):
@@ -38,6 +39,7 @@ class Action:
         self.source = source
         self.targets = targets or []
         self._lambda = _lambda or (lambda _: True)
+        self._action = _action
         self.priority = priority
 
         self.attack = attack
@@ -98,6 +100,9 @@ class Action:
             logger.debug(f'{char.pretty_print()} marked for death')
         elif self.damage > 0:
             char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
+
+        if callable(self._action):
+            self._action(char)
 
     def _clear(self, char, *args, **kwargs):
         '''
@@ -175,12 +180,14 @@ class Buff(Action):
 
 class SupportBuff(Buff):
     def __init__(self, *args, **kwargs):
-        super().__init__(reason=StatChangeCause.SUPPORT_BUFF, temp=True, *args, **kwargs)
+        kwargs = dict(reason=StatChangeCause.SUPPORT_BUFF, temp=True) | kwargs
+        super().__init__(*args, **kwargs)
 
 
 class AuraBuff(Buff):
     def __init__(self, *args, **kwargs):
-        super().__init__(reason=StatChangeCause.AURA_BUFF, temp=True, *args, **kwargs)
+        kwargs = dict(reason=StatChangeCause.AURA_BUFF, temp=True) | kwargs
+        super().__init__(*args, **kwargs)
 
 
 class EventAction(Action):
@@ -194,7 +201,7 @@ class EventAction(Action):
         kwargs = self.kwargs | kwargs
         self._char_buffer.add(char)
 
-        registered = char.register(self.event, temp=self.temp, *args, **kwargs)
+        registered = char.register(self.event, priority=self.priority, temp=self.temp, *args, **kwargs)
         self._event_buffer[char].append(registered)
 
     def _clear(self, char, *args, **kwargs):
@@ -204,9 +211,35 @@ class EventAction(Action):
 
 class EventSupport(EventAction):
     def __init__(self, *args, **kwargs):
-        super().__init__(reason=StatChangeCause.SUPPORT_BUFF, temp=True, *args, **kwargs)
+        kwargs = dict(reason=StatChangeCause.SUPPORT_BUFF, temp=True) | kwargs
+        super().__init__(*args, **kwargs)
 
 
 class EventAura(EventAction):
     def __init__(self, *args, **kwargs):
-        super().__init__(reason=StatChangeCause.AURA_BUFF, temp=True, *args, **kwargs)
+        kwargs = dict(reason=StatChangeCause.AURA_BUFF, temp=True) | kwargs
+        super().__init__(*args, **kwargs)
+
+
+class PlayerEvent(EventAction):
+    def __init__(self, reason=StatChangeCause.PLAYER_AURA, *args, **kwargs):
+        super().__init__(reason=reason, *args, **kwargs)
+        self.player = self.source.player
+        self._registered = False
+
+    def execute(self, _=None, *args, **kwargs):
+        if self._registered:
+            return
+
+        args = (*self.args, *args)
+        kwargs = self.kwargs | kwargs
+
+        registered = self.player.register(self.event, priority=self.priority, temp=self.temp, *args, **kwargs)
+        self._registered = True
+
+    def roll_back(self):
+        if not self._registered:
+            return
+
+        self.player.unregister(self.event)
+        self._registered = False

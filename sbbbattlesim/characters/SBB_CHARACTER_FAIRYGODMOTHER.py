@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, EventAura
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -27,7 +27,10 @@ class CharacterType(Character):
     _level = 4
     _tribes = {Tribe.GOOD, Tribe.FAIRY}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aura_buff = EventAura(source=self, echo_wood=self, event=FairyGodmotherOnDeath, fairy_godmother=self,
+                                   _lambda=lambda char: Tribe.GOOD in char.tribes)
+
     def buff(self, target_character, *args, **kwargs):
-        # Give animals minions the buff
-        if Tribe.GOOD in target_character.tribes:  # Distinctly Fairy Godmother works on self
-            target_character.register(FairyGodmotherOnDeath, temp=True, fairy_godmother=self)
+        self.aura_buff.execute(target_character)

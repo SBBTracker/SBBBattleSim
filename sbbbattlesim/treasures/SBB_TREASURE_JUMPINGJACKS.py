@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, EventAura
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
@@ -25,5 +25,9 @@ class TreasureType(Treasure):
 
     _level = 4
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aura_buff = EventAura(event=OtherHandOfVekna, source=self, vekna=self)
+
     def buff(self, target_character, *args, **kwargs):
-        target_character.register(OtherHandOfVekna, temp=True, vekna=self)
+        self.aura_buff.execute(target_character)

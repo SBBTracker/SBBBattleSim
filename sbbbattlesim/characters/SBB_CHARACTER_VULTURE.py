@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, EventAura
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe, StatChangeCause
@@ -26,7 +26,10 @@ class CharacterType(Character):
     _level = 4
     _tribes = {Tribe.EVIL, Tribe.ANIMAL}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aura_buff = EventAura(source=self, bearded_vulture=self, event=BeardedVultureOnDeath,
+                                   _lambda=lambda char: Tribe.ANIMAL in char.tribes and char is not self)
+
     def buff(self, target_character, *args, **kwargs):
-        # Give animals minions the buff
-        if Tribe.ANIMAL in target_character.tribes and target_character is not self:
-            target_character.register(BeardedVultureOnDeath, temp=True, bearded_vulture=self)
+        self.aura_buff.execute(target_character)

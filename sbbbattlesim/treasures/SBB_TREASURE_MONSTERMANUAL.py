@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, EventAura
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause, Tribe
@@ -19,6 +19,11 @@ class TreasureType(Treasure):
 
     _level = 2
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.coin_trigger = False
+        self.aura_buff = EventAura(event=MonsterManualOnDeath, source=self, manual=self, priority=400,
+                                   _lambda=lambda char: Tribe.MONSTER in char.tribes)
+
     def buff(self, target_character, *args, **kwargs):
-        if Tribe.MONSTER in target_character.tribes:
-            target_character.register(MonsterManualOnDeath, temp=True, manual=self, priority=400)
+        self.aura_buff.execute(target_character)

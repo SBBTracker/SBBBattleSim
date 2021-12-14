@@ -1,3 +1,4 @@
+from sbbbattlesim.action import EventAura
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 import copy
@@ -42,6 +43,7 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.feather_used = False
+        self.aura_buff = EventAura(event=PhoenixFeatherOnDeath, source=self, priority=1000, feather=self)
 
     def buff(self, target_character, *args, **kwargs):
-        target_character.register(PhoenixFeatherOnDeath, temp=True, priority=1000, feather=self)
+        self.aura_buff.execute(target_character)

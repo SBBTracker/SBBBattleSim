@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, AuraBuff
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import StatChangeCause
 
@@ -13,8 +13,11 @@ class TreasureType(Treasure):
 
     _level = 3
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        stats = 10 * (self.mimic + 1)
+        self.aura_buff = AuraBuff(reason=StatChangeCause.STING, source=self, attack=stats,
+                                  _lambda=lambda char: char.position == 1)
+
     def buff(self, target_character, *args, **kwargs):
-        if target_character.position == 1:
-            for _ in range(self.mimic + 1):
-                Buff(reason=StatChangeCause.STING, source=self, targets=[target_character],
-                     attack=10,  temp=True, *args, **kwargs).resolve()
+        self.aura_buff.execute(target_character)
