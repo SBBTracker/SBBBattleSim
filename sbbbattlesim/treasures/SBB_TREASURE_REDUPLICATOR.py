@@ -3,7 +3,6 @@ from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.characters import registry as character_registry
 
 class ReduplicatorOnSummon(OnSummon):
-    # TODO answer question: if a black cat and a princess peep die next to eachother on anotherwise full board, will you get two cats or will it whiff? this educates on how summoning multiple units works
     def handle(self, summoned_characters, *args, **kwargs):
         if not self.reduplicator.triggered:
             if len(self.manager.valid_characters()) != 7:
@@ -19,7 +18,7 @@ class ReduplicatorOnSummon(OnSummon):
                         tribes=copied_character.tribes,
                         cost=copied_character.cost
                     )
-                    self.manager.summon(new_character.position, [new_character])
+                    self.manager.summon(new_character.position, [new_character], *args, **kwargs)
 
 
 class TreasureType(Treasure):
