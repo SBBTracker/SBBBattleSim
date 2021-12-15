@@ -210,7 +210,7 @@ class EventManager:
 
             if not evts_set:
                 break
-                
+
 
     def clear_temp(self):
         self._temp = collections.defaultdict(list)
