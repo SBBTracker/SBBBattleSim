@@ -13,7 +13,7 @@ class CharacterType(Character):
     _tribes = {Tribe.EVIL, Tribe.PRINCESS}
 
     def buff(self, target_character, *args, **kwargs):
-        if Tribe.DWARF in target_character.tribes and target_character != self:
+        if Tribe.DWARF in target_character.tribes:
             modifier = 2 if self.golden else 1
             Buff(reason=StatChangeCause.AURA_BUFF, source=self, targets=[target_character],
                  attack=modifier, health=modifier, temp=True, *args, **kwargs).resolve()

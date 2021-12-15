@@ -1,32 +1,30 @@
 import logging
 
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnDeath
+from sbbbattlesim.events import OnAttackAndKill, OnDeath
 from sbbbattlesim.utils import get_behind_targets, Tribe
 import random
 
 logger = logging.getLogger(__name__)
 
-#todo write tests for me
 class GrimSoulOnDeath(OnDeath):
     last_breath = True
 
     def handle(self, stack, *args, **kwargs):
 
-        targets = self.manager.player.valid_characters(lambda char: char.last_breath and char.id!='SBB_CHARACTER_CERBERUS')
+        targets = self.manager.player.valid_characters(lambda char: char.slay and char.id!='SBB_CHARACTER_CERBERUS')
         if targets:
             target = random.choice(targets)
-        else:
-            return
+            itr = 2 if self.manager.golden else 1
+            for _ in range(itr):
+                with stack.open(source=self) as executor:
+                    slays = [evt for evt in target.get('OnAttackAndKill') if evt.slay]
+                    for slay in slays:
+                        logger.debug(f'Grim soul Triggering OnAttackAndKill({args} {kwargs})')
+                        executor.execute(slay, killed_character=None, *args, **kwargs)
 
-        itr = 2 if self.manager.golden else 1
-        for _ in range(itr):
-            with stack.open(source=self) as executor:
-                last_breaths = [evt for evt in target.get('OnDeath') if evt.last_breath]
 
-                for lb in last_breaths:
-                    logger.debug(f'Grimsoul Triggering LastBreath({args} {kwargs})')
-                    executor.execute(lb, *args, **kwargs)
+
 
 
 class CharacterType(Character):
