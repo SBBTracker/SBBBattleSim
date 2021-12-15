@@ -67,7 +67,7 @@ def _who_goes_first(player):
     cnt = 0
     if player.hero.id == DRAC:
         cnt += 1
-        
+
     if player.treasures.get(HERMES_BOOTS):
         cnt += 1
         if player.treasures.get(MIMIC):
