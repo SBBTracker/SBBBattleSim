@@ -18,10 +18,13 @@ class PumpkinKingOnDeath(OnDeath):
             [char for char in self.manager.player.graveyard if Tribe.EVIL in char.tribes],
             key=lambda char: char._level, reverse=True
         )
-        #todo do we have a test for this?
         for dead in dead_in_order[:7]:
-            summon_choices = list(character_registry.filter(
-                _lambda=lambda char: (char._level > 1 and char._level == dead._level - 1 and Tribe.EVIL in char._tribes) or (char.id == 'SBB_CHARACTER_CAT' and dead._level == 2)))
+            if dead._level > 2:
+                summon_choices = list(character_registry.filter(
+                    _lambda=lambda char: (char._level > 1 and char._level == dead._level - 1 and Tribe.EVIL in char._tribes)))
+            else:
+                summon_choices = [character_registry['SBB_CHARACTER_CAT']]
+
             if summon_choices:
                 summons.append(random.choice(summon_choices).new(
                     player=self.manager.player,

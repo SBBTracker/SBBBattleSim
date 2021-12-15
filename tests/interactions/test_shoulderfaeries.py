@@ -30,4 +30,3 @@ def test_shoulderfaeries(golden):
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == final_stats
 
-# TODO figure out exactly how they work with round table

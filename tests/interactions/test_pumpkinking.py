@@ -54,7 +54,7 @@ def test_pumpkin_with_friends_dying():
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert board.p1.characters[1] is None
+    assert board.p1.characters[1]._level == 1
     assert board.p1.characters[2]._level == 2
     assert board.p1.characters[3]._level == 3
     assert board.p1.characters[4]._level == 4
@@ -72,9 +72,12 @@ def test_pumpkin_summoning_cats(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     pk = board.p1.characters[1]
-    winner, loser = board.fight(limit=1)
+    winner, loser = board.fight(limit=2)
     board.p1.resolve_board()
     board.p2.resolve_board()
 
     summoned_unit = board.p1.characters[1]
-    assert board.p1.characters[1].id == "SBB_CHARACTER_CAT"
+    assert summoned_unit, [i.pretty_print() for i in board.p1.valid_characters()]
+    assert summoned_unit.id == "SBB_CHARACTER_CAT"
+    assert summoned_unit.golden == golden
+

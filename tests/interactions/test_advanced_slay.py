@@ -81,3 +81,26 @@ def test_double_yaga(mimic, evil_eye):
     final_stats = (final_stat, final_stat)
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (final_stat, 1)
+
+
+def test_complicated_grimsoul():
+    player = make_player(
+        hero="SBB_HERO_MILITARYLEADER",
+        characters=[
+            make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=5, health=5, golden=False),
+            make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=6, attack=5, health=5, golden=False),
+            make_character(id='SBB_CHARACTER_CERBERUS', position=2, attack=10, health=10, golden=False)
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[make_character(attack=0, health=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (12, 12)
