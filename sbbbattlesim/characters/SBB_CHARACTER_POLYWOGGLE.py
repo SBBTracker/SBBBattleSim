@@ -18,8 +18,8 @@ class PolywoggleSlay(OnAttackAndKill):
             # TODO how to handle tribe complexity
 
             new_char = char(
-                attack=char._attack + self.manager._base_attack - (2 if self.manager.golden else 1),
-                health=char._health + self.manager._base_health - (2 if self.manager.golden else 1),
+                attack=char._attack + max(1, self.manager._base_attack - (2 if self.manager.golden else 1)),
+                health=char._health + max(1, self.manager._base_health - (2 if self.manager.golden else 1)),
                 golden=self.manager.golden,
                 position=self.manager.position,
                 player=self.manager.player,

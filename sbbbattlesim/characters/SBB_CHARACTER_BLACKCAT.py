@@ -3,7 +3,9 @@ from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe
+import logging
 
+logger = logging.getLogger(__name__)
 
 class BlackCatLastBreath(OnDeath):
     last_breath = True
@@ -20,7 +22,8 @@ class BlackCatLastBreath(OnDeath):
             tribes=['evil', 'animal'],
             cost=1
         )
-        self.manager.player.summon(self.manager.position, [cat])
+
+        self.manager.player.summon(self.manager.position, [cat], *args, **kwargs)
 
 
 class CharacterType(Character):

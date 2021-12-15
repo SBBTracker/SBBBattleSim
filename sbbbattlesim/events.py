@@ -107,11 +107,11 @@ class OnAttackAndKill(SSBBSEvent):
     '''A character attacks something and kills it'''
     slay = None
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, from_yaga=False, *args, **kwargs):
         response = self.handle(*args, **kwargs)
 
         if self.slay and not response:
-            return 'OnSlay', [], {}
+            return 'OnSlay', [], {'from_yaga': from_yaga}
 
         return response
 
@@ -196,26 +196,21 @@ class EventManager:
         _evt_lambda  = lambda : self._temp.get(event, []) + self._events.get(event, [])
         evts = _evt_lambda()
         evts_set = set(_evt_lambda())
-        finished_evts = set()
         last_evt = None
         while True:
             for evt in sorted(evts, key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True):
                 yield evt
                 last_evt = evt
-                finished_evts.add(evt)
 
-                new_evts_set = {s for s in set(_evt_lambda()) - finished_evts if s.priority < last_evt.priority}
+                new_evts_set = {s for s in set(_evt_lambda()) if s.priority < last_evt.priority}
 
-                if (evts_set - finished_evts) != new_evts_set - finished_evts:
-                    new_evts = _evt_lambda()
+                if evts_set != new_evts_set:
                     evts = list(new_evts_set)
                     evts_set = set(evts)
 
-            if not evts_set - finished_evts:
+            if not evts_set:
                 break
-
-
-
+                
 
     def clear_temp(self):
         self._temp = collections.defaultdict(list)

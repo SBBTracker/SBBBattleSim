@@ -9,14 +9,14 @@ logger = logging.getLogger(__name__)
 
 
 class BabaYagaOnSlayBuff(OnSlay):
-    def handle(self, source, stack, *args, **kwargs):
-        if isinstance(source, OnSlay):
+    def handle(self, source, stack, from_yaga=False, *args, **kwargs):
+        if isinstance(source, OnSlay) or from_yaga:
             return
 
         for _ in range(2 if self.baba_yaga.golden else 1):
             with stack.open(source=self, *args, **kwargs) as executor:
                 logger.debug(f'Baba Yaga Triggering OnAttackAndKill {source} ({args} {kwargs})')
-                executor.execute(source, *args, **kwargs)
+                executor.execute(source, from_yaga=True, *args, **kwargs)
 
 
 class BabaYagaSupportBuff(SupportBuff):

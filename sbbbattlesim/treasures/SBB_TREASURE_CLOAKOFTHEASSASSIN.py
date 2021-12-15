@@ -14,8 +14,8 @@ class TreasureType(Treasure):
     _level = 3
 
     def buff(self, target_character, *args, **kwargs):
-        logger.debug(f'IS THIS A SLAY??? {target_character}  {target_character.slay}')
         if target_character.slay:
-            for _ in range(self.mimic + 1):
-                Buff(reason=StatChangeCause.CLOAK_OF_THE_ASSASSIN, source=self, targets=[target_character],
-                     health=3, attack=3,  temp=True, *args, **kwargs).resolve()
+            if not (target_character.id == "SBB_CHARACTER_QUESTINGPRINCESS" and target_character.golden):
+                for _ in range(self.mimic + 1):
+                    Buff(reason=StatChangeCause.CLOAK_OF_THE_ASSASSIN, source=self, targets=[target_character],
+                         health=3, attack=3,  temp=True, *args, **kwargs).resolve()
