@@ -60,11 +60,11 @@ def test_pumpkin_with_friends_dying():
     assert board.p1.characters[4]._level == 4
 
 @pytest.mark.parametrize('golden', (True, False))
-def test_lonely_pumpkin_dying(golden):
+def test_pumpkin_summoning_cats(golden):
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_PUMPKINKING', position=5, tribes=[Tribe.EVIL], golden=golden),
-            make_character(position=1, tribes=[Tribe.EVIL]),
+            make_character(position=1, _level=2, tribes=[Tribe.EVIL]),
         ],
     )
     enemy = make_player(
@@ -77,8 +77,4 @@ def test_lonely_pumpkin_dying(golden):
     board.p2.resolve_board()
 
     summoned_unit = board.p1.characters[1]
-    assert summoned_unit is not pk
-    assert summoned_unit._level == 5
-    if golden:
-        assert summoned_unit.attack == summoned_unit._attack * 2
-        assert summoned_unit.health == summoned_unit._health * 2
+    assert board.p1.characters[1].id == "SBB_CHARACTER_CAT"
