@@ -58,3 +58,23 @@ def test_pumpkin_with_friends_dying():
     assert board.p1.characters[2]._level == 2
     assert board.p1.characters[3]._level == 3
     assert board.p1.characters[4]._level == 4
+
+@pytest.mark.parametrize('golden', (True, False))
+def test_pumpkin_summoning_cats(golden):
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_PUMPKINKING', position=5, tribes=[Tribe.EVIL], golden=golden),
+            make_character(position=1, _level=2, tribes=[Tribe.EVIL]),
+        ],
+    )
+    enemy = make_player(
+        characters=[make_character(attack=500, health=500)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    pk = board.p1.characters[1]
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    summoned_unit = board.p1.characters[1]
+    assert board.p1.characters[1].id == "SBB_CHARACTER_CAT"
