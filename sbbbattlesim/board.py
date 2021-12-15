@@ -62,8 +62,12 @@ def _who_goes_first(player):
     HERMES_BOOTS = '''SBB_TREASURE_HERMES'BOOTS'''
     TIGER = '''SBB_HERO_THECOLLECTOR'''
     MIMIC = '''SBB_TREASURE_TREASURECHEST'''
+    DRAC = '''SBB_HERO_DRACULA'''
 
     cnt = 0
+    if player.hero.id == DRAC:
+        cnt += 1
+        
     if player.treasures.get(HERMES_BOOTS):
         cnt += 1
         if player.treasures.get(MIMIC):
