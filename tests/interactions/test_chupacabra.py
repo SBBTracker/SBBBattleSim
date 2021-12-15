@@ -22,7 +22,7 @@ def test_chup(golden):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    final_stats = (3, 3) if golden else (2, 2)
+    final_stats = (5, 1) if golden else (3, 1)
 
     for i in [2, 5, 6]:
         assert (board.p1.characters[i].attack, board.p1.characters[i].health) == final_stats

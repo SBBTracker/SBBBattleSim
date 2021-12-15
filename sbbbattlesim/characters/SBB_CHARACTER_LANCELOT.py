@@ -17,8 +17,8 @@ class CharacterType(Character):
     display_name = 'Lancelot'
     quest = True
 
-    _attack = 7
-    _health = 7
+    _attack = 9
+    _health = 9
     _level = 5
     _tribes = {Tribe.GOOD, Tribe.PRINCE}
 

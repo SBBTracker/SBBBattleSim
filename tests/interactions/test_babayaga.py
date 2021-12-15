@@ -10,7 +10,7 @@ def test_yaga_slay(golden):
         characters=[
             make_character(id='SBB_CHARACTER_BABAYAGA', position=6, attack=3, health=6, golden=golden),
             make_character(id='SBB_CHARACTER_CATBURGLAR', position=2),
-            make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7)
+            make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7, attack=1, health=1)
         ],
         treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''
@@ -24,7 +24,7 @@ def test_yaga_slay(golden):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    final_stats = (4, 4) if golden else (3, 3)
+    final_stats = (4, 1) if golden else (3, 1)
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == final_stats
 
 

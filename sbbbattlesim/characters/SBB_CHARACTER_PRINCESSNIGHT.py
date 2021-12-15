@@ -1,10 +1,10 @@
 from sbbbattlesim.characters import Character
-from sbbbattlesim.utils import Tribe
-
+from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.action import Buff
 
 class CharacterType(Character):
     display_name = 'Princess Wight'
-
+    aura = True
     quest = True
 
     _attack = 2
@@ -12,4 +12,8 @@ class CharacterType(Character):
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.PRINCESS}
 
-    # TODO fucking do
+    def buff(self, target_character, *args, **kwargs):
+        if Tribe.DWARF in target_character.tribes and target_character != self:
+            modifier = 2 if self.golden else 1
+            Buff(reason=StatChangeCause.AURA_BUFF, source=self, targets=[target_character],
+                 attack=modifier, health=modifier, temp=True, *args, **kwargs).resolve()

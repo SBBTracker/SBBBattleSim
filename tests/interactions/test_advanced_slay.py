@@ -13,7 +13,7 @@ def test_riverwish_yaga(golden, mimic, evil_eye):
             make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=5, attack=5, health=5, golden=False),
             make_character(id='SBB_CHARACTER_BABAYAGA', position=6, attack=3, health=6, golden=golden),
             make_character(position=2),
-            make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7)
+            make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7, attack= 1, health=1)
         ],
         treasures=[
             'SBB_TREASURE_HELMOFCOMMAND' if evil_eye else '',
@@ -44,7 +44,7 @@ def test_riverwish_yaga(golden, mimic, evil_eye):
     final_stats = (final_stat, final_stat)
 
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == final_stats
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == final_stats
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (final_stat, 1)
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -55,7 +55,7 @@ def test_double_yaga(mimic, evil_eye):
             make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=5, health=5, golden=False),
             make_character(id='SBB_CHARACTER_BABAYAGA', position=6, attack=3, health=6, golden=False),
             make_character(id='SBB_CHARACTER_CATBURGLAR', position=2, attack=1, health=1),
-            make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7)
+            make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7, attack=1, health=1)
         ],
         treasures=[
             'SBB_TREASURE_HELMOFCOMMAND' if evil_eye else '',
@@ -80,4 +80,4 @@ def test_double_yaga(mimic, evil_eye):
     final_stat = 1 + 1 + slay_count * slay_multiplyer * 2
     final_stats = (final_stat, final_stat)
 
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == final_stats
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (final_stat, 1)

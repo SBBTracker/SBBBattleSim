@@ -43,7 +43,7 @@ def test_reduplicator_craft():
 
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_DWARVENARTIFICER", position=1, health=1),
+            make_character(id="SBB_CHARACTER_DWARVENARTIFICER", position=1, attack=1, health=1),
         ],
         treasures=[
             'SBB_TREASURE_MIRRORUNIVERSE',
@@ -67,7 +67,7 @@ def test_reduplicator_craft():
     assert char2
     assert char1.id == char2.id
 
-    assert (char1.attack, char1.health) == (7, 7)
+    assert (char1.attack, char1.health) == (5, 5)
     assert (char1.attack, char1.health) == (char2.attack, char2.health)
 
 
