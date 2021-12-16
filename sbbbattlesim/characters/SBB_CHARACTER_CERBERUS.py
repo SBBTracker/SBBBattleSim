@@ -11,15 +11,14 @@ class GrimSoulOnDeath(OnDeath):
     last_breath = True
 
     def handle(self, stack, *args, **kwargs):
-
         targets = self.manager.player.valid_characters(lambda char: char.slay and char.id!='SBB_CHARACTER_CERBERUS')
         if targets:
             target = random.choice(targets)
             itr = 2 if self.manager.golden else 1
             for _ in range(itr):
-                with stack.open(source=self) as executor:
-                    slays = [evt for evt in target.get('OnAttackAndKill') if evt.slay]
-                    for slay in slays:
+                slays = [evt for evt in target.get('OnAttackAndKill') if evt.slay]
+                for slay in slays:
+                    with stack.open(killed_character=None) as executor:
                         logger.debug(f'Grim soul Triggering OnAttackAndKill({args} {kwargs})')
                         executor.execute(slay, killed_character=None, *args, **kwargs)
 

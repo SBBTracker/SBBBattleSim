@@ -9,7 +9,7 @@ from sbbbattlesim.utils import Tribe
 class PolywoggleSlay(OnAttackAndKill):
     slay = True
 
-    def handle(self, killed_character, *args, **kwargs):
+    def handle(self, killed_character, stack, *args, **kwargs):
         golden_promotion = (2 if self.woggle.golden else 1)
         _lambda = lambda char: char._level == min(self.manager.player.level + golden_promotion, 6)
         valid_chars = list(character_registry.filter(_lambda=_lambda))

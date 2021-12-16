@@ -107,11 +107,11 @@ class OnAttackAndKill(SSBBSEvent):
     '''A character attacks something and kills it'''
     slay = None
 
-    def __call__(self, from_yaga=False, *args, **kwargs):
+    def __call__(self, *args, **kwargs):
         response = self.handle(*args, **kwargs)
 
         if self.slay and not response:
-            return 'OnSlay', [], {'from_yaga': from_yaga}
+            return 'OnSlay', [], {}
 
         return response
 
@@ -255,6 +255,7 @@ class EventExecutor:
         logger.debug(f'Closing Executor with ({self.args} {self.kwargs})')
 
     def execute(self, event, *args, **kwargs):
+        logger.error(f'{args}, {kwargs}')
         response = event(stack=self.stack, *args, **kwargs)
         self.stack.stack.append(event)
 
