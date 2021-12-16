@@ -1,10 +1,10 @@
 import random
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDeath, OnSummon
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class WombatsInDisguiseOnSummon(OnSummon):
@@ -16,7 +16,7 @@ class WombatsInDisguiseOnSummon(OnSummon):
 
         for char in summoned_characters:
             if char is self.summon:
-                Buff(reason=StatChangeCause.WOMBATS_IN_DISGUISE_BUFF, source=self.wombat, targets=[char],
+                Buff(reason=ActionReason.WOMBATS_IN_DISGUISE_BUFF, source=self.wombat, targets=[char],
                      attack=attack_buff, health=health_buff, temp=False).resolve()
 
 

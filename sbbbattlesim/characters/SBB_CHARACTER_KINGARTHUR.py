@@ -1,7 +1,7 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 
 class PrinceArthurOnStart(OnStart):
@@ -10,7 +10,7 @@ class PrinceArthurOnStart(OnStart):
         royals = self.arthur.player.valid_characters(
             _lambda=lambda char: char.golden and (Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes)
         )
-        Buff(source=self.arthur, reason=StatChangeCause.PRINCEARTHUR_BUFF, targets=royals,
+        Buff(source=self.arthur, reason=ActionReason.PRINCEARTHUR_BUFF, targets=royals,
              attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
 

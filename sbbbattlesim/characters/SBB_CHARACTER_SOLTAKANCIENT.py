@@ -1,14 +1,14 @@
 import logging
 
 from sbbbattlesim import utils
-from sbbbattlesim.action import AuraBuff
+from sbbbattlesim.action import Aura
 from sbbbattlesim.characters import Character
 from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
 
-class SoltakAuraBuff(AuraBuff):
+class SoltakAuraBuff(Aura):
     def _apply(self, char, *args, **kwargs):
         logger.debug(f'{self.source.pretty_print()} is protecting {char.pretty_print()}')
         char.invincible = True

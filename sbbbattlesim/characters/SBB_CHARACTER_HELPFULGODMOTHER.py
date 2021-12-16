@@ -1,6 +1,6 @@
-from sbbbattlesim.action import Buff, EventAura, AuraBuff
+from sbbbattlesim.action import Buff, Aura, Aura, ActionReason
 from sbbbattlesim.characters import Character
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):
@@ -14,8 +14,8 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = AuraBuff(source=self, health=2 if self.golden else 1,
-                                  _lambda=lambda char: Tribe.GOOD in char.tribes and char is not self)
+        self.aura_buff = Aura(source=self, health=2 if self.golden else 1,
+                              _lambda=lambda char: Tribe.GOOD in char.tribes and char is not self)
 
     def buff(self, target_character, *args, **kwargs):
         self.aura_buff.execute(target_character)

@@ -1,9 +1,9 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDamagedAndSurvived
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class AngryBuff(OnDamagedAndSurvived):
     def handle(self, stack, *args, **kwargs):
         stat_change = 4 if self.manager.golden else 2
-        Buff(reason=StatChangeCause.ANGRY_BUFF, source=self.manager,
+        Buff(reason=ActionReason.ANGRY_BUFF, source=self.manager,
              targets=self.manager.player.valid_characters(_lambda=lambda char: Tribe.DWARF in char.tribes),
              attack=stat_change, health=stat_change, temp=False, stack=stack,
              ).resolve()

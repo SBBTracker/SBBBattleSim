@@ -1,6 +1,6 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.heros import Hero
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class HeroType(Hero):
@@ -10,8 +10,9 @@ class HeroType(Hero):
     def __init__(self, mirhi_buff=0, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.mirhi_buff = mirhi_buff
+        self.aura_buff = Aura(reason=ActionReason.FATES_BUFF, source=self,
+                              _lambda=lambda char: Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes,
+                              attack=1 * self.mirhi_buff, health=2 * self.mirhi_buff, )
 
     def buff(self, target_character, *args, **kwargs):
-        if Tribe.PRINCE in target_character.tribes or Tribe.PRINCESS in target_character.tribes:
-            Buff(reason=StatChangeCause.MIRHI_BUFF, source=self, targets=[target_character],
-                 attack=1 * self.mirhi_buff, health=2 * self.mirhi_buff, temp=True, *args, **kwargs).resolve()
+        self.aura_buff.execute(target_character)

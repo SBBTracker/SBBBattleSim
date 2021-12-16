@@ -1,7 +1,7 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
-from sbbbattlesim.utils import find_strongest_character, find_weakest_character, StatChangeCause, Tribe
+from sbbbattlesim.utils import find_strongest_character, find_weakest_character, Tribe
 
 
 class RobinWoodOnFightStart(OnStart):
@@ -10,11 +10,11 @@ class RobinWoodOnFightStart(OnStart):
         weakest_allied_char = find_weakest_character(self.robin_wood.player)
 
         if strongest_enemy_char:
-            Buff(reason=StatChangeCause.ROBIN_WOOD_DEBUFF, source=self.robin_wood, targets=[strongest_enemy_char],
+            Buff(reason=ActionReason.ROBIN_WOOD_DEBUFF, source=self.robin_wood, targets=[strongest_enemy_char],
                  attack=-30 if self.robin_wood.golden else -15, temp=False, stack=stack).resolve()
 
         if weakest_allied_char:
-            Buff(reason=StatChangeCause.ROBIN_WOOD_BUFF, source=self.robin_wood, targets=[weakest_allied_char],
+            Buff(reason=ActionReason.ROBIN_WOOD_BUFF, source=self.robin_wood, targets=[weakest_allied_char],
                  attack=30 if self.robin_wood.golden else 15, temp=False, stack=stack).resolve()
 
 

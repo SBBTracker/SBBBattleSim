@@ -1,9 +1,9 @@
 import collections
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath, OnSummon, OnStart
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 import logging
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ class PuffPuffDeath(OnDeath):
 
         buff = 2 if self.puff.golden else 1
         puffpuffs = self.manager.player.valid_characters(_lambda=lambda char: char.id == self.puff.id)
-        Buff(reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff, targets=puffpuffs,
+        Buff(reason=ActionReason.PUFF_PUFF_BUFF, source=self.puff, targets=puffpuffs,
              attack=buff, health=buff, stack=stack).execute()
 
         # in case of random summon
@@ -56,7 +56,7 @@ class PuffPuffOnSummon(OnSummon):
         golden_multipler = 2 if self.puff.golden else 1
         puff_buff = (puffbuffs.get(self.puff.player.id) or 0) * golden_multipler
         Buff(attack=puff_buff, health=puff_buff, temp=False,
-             reason=StatChangeCause.PUFF_PUFF_BUFF, source=self.puff,
+             reason=ActionReason.PUFF_PUFF_BUFF, source=self.puff,
              targets=[self.puff]).resolve()
 
 

@@ -1,9 +1,8 @@
 import random
 
 from sbbbattlesim import utils
-from sbbbattlesim.action import Damage
+from sbbbattlesim.action import Damage, ActionReason
 from sbbbattlesim.spells import NonTargetedSpell
-from sbbbattlesim.utils import StatChangeCause
 
 
 class SpellType(NonTargetedSpell):
@@ -24,4 +23,4 @@ class SpellType(NonTargetedSpell):
                     targets.append(char)
 
             # TODO figure out if it goes left/right or right/left
-            Damage(damage=4, reason=StatChangeCause.FIREBALL, source=self, targets=targets).resolve()
+            Damage(damage=4, reason=ActionReason.FIREBALL, source=self, targets=targets).resolve()

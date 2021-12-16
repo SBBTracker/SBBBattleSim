@@ -1,9 +1,9 @@
 import random
 
-from sbbbattlesim.action import Damage, EventAura
+from sbbbattlesim.action import Damage, Aura, ActionReason
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class AncientSarcophagusOnDeath(OnDeath):
@@ -13,7 +13,7 @@ class AncientSarcophagusOnDeath(OnDeath):
         for _ in range(self.ancient_sarcophagus.mimic + 1):
             valid_targets = self.manager.player.opponent.valid_characters()
             if valid_targets:
-                Damage(damage=3, reason=StatChangeCause.ANCIENT_SARCOPHAGUS, source=self.ancient_sarcophagus,
+                Damage(damage=3, reason=ActionReason.ANCIENT_SARCOPHAGUS, source=self.ancient_sarcophagus,
                        targets=[random.choice(valid_targets)]).resolve()
 
 
@@ -25,7 +25,7 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = EventAura(event=AncientSarcophagusOnDeath, source=self, ancient_sarcophagus=self,
+        self.aura_buff = Aura(event=AncientSarcophagusOnDeath, source=self, ancient_sarcophagus=self,
                                    _lambda=lambda char: Tribe.EVIL in char.tribes)
 
     def buff(self, target_character, *args, **kwargs):

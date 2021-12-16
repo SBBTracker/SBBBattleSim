@@ -1,8 +1,7 @@
 import logging
 
-from sbbbattlesim.action import Buff, AuraBuff
+from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
 
 logger = logging.getLogger(__name__)
 
@@ -16,8 +15,8 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         stats = 10 * (self.mimic + 1)
-        self.aura_buff = AuraBuff(reason=StatChangeCause.STONEHELM, source=self, health=stats,
-                                  _lambda=lambda char: char.position == 1)
+        self.aura_buff = Aura(reason=ActionReason.STONEHELM, source=self, health=stats,
+                              _lambda=lambda char: char.position == 1)
 
     def buff(self, target_character, *args, **kwargs):
         self.aura_buff.execute(target_character)

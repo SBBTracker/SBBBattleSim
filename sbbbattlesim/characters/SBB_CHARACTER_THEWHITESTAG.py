@@ -1,7 +1,7 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnPreAttack
-from sbbbattlesim.utils import get_behind_targets, Tribe, StatChangeCause
+from sbbbattlesim.utils import get_behind_targets, Tribe
 
 
 class TheWhiteStagOnPreAttack(OnPreAttack):
@@ -10,7 +10,7 @@ class TheWhiteStagOnPreAttack(OnPreAttack):
         targetted_chars = [c for c in self.manager.player.valid_characters() if c.position in behind_targets]
         modifier = 6 if self.manager.golden else 3
 
-        Buff(reason=StatChangeCause.THE_WHITE_STAG_BUFF, source=self.stag, targets=targetted_chars,
+        Buff(reason=ActionReason.THE_WHITE_STAG_BUFF, source=self.stag, targets=targetted_chars,
              attack=modifier, health=modifier, temp=False).resolve()
 
 

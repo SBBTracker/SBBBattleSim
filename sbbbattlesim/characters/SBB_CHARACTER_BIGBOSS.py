@@ -1,6 +1,6 @@
-from sbbbattlesim.action import Buff, AuraBuff
+from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.characters import Character
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):
@@ -15,7 +15,7 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         modifier = 4 if self.golden else 2
-        self.aura_buff = AuraBuff(reason=StatChangeCause.AURA_BUFF, source=self, attack=modifier, health=modifier)
+        self.aura_buff = Aura(reason=ActionReason.AURA_BUFF, source=self, attack=modifier, health=modifier)
 
     def buff(self, target_character, *args, **kwargs):
         if Tribe.DWARF in target_character.tribes and target_character != self:

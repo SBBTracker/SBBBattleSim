@@ -2,7 +2,8 @@ import pytest
 
 from sbbbattlesim import Board
 from sbbbattlesim.treasures import registry as treasure_registry
-from sbbbattlesim.utils import Keyword, Tribe, StatChangeCause
+from sbbbattlesim.utils import Keyword, Tribe
+from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 
 
@@ -894,7 +895,7 @@ def test_deck_of_many_things(mimic, _):
     board.p2.resolve_board()
 
     wizardbuffs = [
-        r for r in board.p1.characters[1]._action_history if r.reason == StatChangeCause.MERLIN_BUFF
+        r for r in board.p1.characters[1]._action_history if r.reason == ActionReason.MERLIN_BUFF
     ]
 
     if mimic:

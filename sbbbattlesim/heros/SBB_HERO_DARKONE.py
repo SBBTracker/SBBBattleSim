@@ -1,7 +1,7 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, Aura, DynamicStat, ActionReason
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.heros import Hero
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 
 class EvellaAura(OnDeath):
@@ -18,13 +18,13 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.animal_deaths = 0
+        self.animal_deaths = DynamicStat(0)
+        self.aura_buff = (
+            Aura(event=EvellaAura, evella=self, _lambda=lambda char: Tribe.ANIMAL in char.tribes),
+            Aura(reason=ActionReason.EVELLA_BUFF, source=self, attack=self.animal_deaths,
+                 _lambda=lambda char: Tribe.EVIL in char.tribes)
+        )
 
     def buff(self, target_character, *args, **kwargs):
-
-        if Tribe.ANIMAL in target_character.tribes:
-            target_character.register(EvellaAura, temp=True, evella=self)
-
-        if Tribe.EVIL in target_character.tribes:
-            Buff(reason=StatChangeCause.EVELLA_BUFF, source=self, targets=[target_character],
-                 attack=self.animal_deaths, temp=True, *args, **kwargs).resolve()
+        for aura in self.aura_buff:
+            aura.execute(target_character)

@@ -1,8 +1,8 @@
 from sbbbattlesim import utils
 from sbbbattlesim.characters import Character
-from sbbbattlesim.action import Damage
+from sbbbattlesim.action import Damage, ActionReason
 from sbbbattlesim.events import OnStart
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):

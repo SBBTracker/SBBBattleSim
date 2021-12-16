@@ -1,7 +1,6 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.events import OnResolveBoard, OnStart, OnDeath
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
 
 
 class DraculasSaberOnDeath(OnDeath):
@@ -9,9 +8,9 @@ class DraculasSaberOnDeath(OnDeath):
 
     def handle(self, stack, *args, **kwargs):
         for _ in range(self.saber.mimic + 1):
-            Buff(reason=StatChangeCause.DRACULAS_SABER_BUFF, source=self.saber,
+            Buff(reason=ActionReason.DRACULAS_SABER_BUFF, source=self.saber,
                  targets=self.saber.player.valid_characters(),
-                 attack=2, health=1,  temp=False, stack=stack).resolve()
+                 attack=2, health=1, temp=False, stack=stack).resolve()
 
 
 class DraculasSaberOnResolveBoard(OnResolveBoard):

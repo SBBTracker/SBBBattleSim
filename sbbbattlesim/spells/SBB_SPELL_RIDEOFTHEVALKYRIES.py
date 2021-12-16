@@ -1,6 +1,5 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.spells import NonTargetedSpell
-from sbbbattlesim.utils import StatChangeCause
 
 
 class SpellType(NonTargetedSpell):
@@ -8,5 +7,5 @@ class SpellType(NonTargetedSpell):
     _level = 4
 
     def cast(self, player, *args, **kwargs):
-        Buff(reason=StatChangeCause.RIDE_OF_THE_VALKYRIES, source=self, targets=player.valid_characters(),
+        Buff(reason=ActionReason.RIDE_OF_THE_VALKYRIES, source=self, targets=player.valid_characters(),
              attack=3, temp=False, *args, **kwargs).resolve()

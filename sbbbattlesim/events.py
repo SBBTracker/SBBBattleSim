@@ -8,12 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class SSBBSEvent:
-    def __init__(self, manager, priority=0, **kwargs):
+    def __init__(self, manager, source=None, priority=0):
         self.manager = manager
         self.priority = priority
-
-        for kw, arg in kwargs.items():
-            setattr(self, kw, arg)
+        self.source = source
 
     def __call__(self, *args, **kwargs):
         # TODO Add more logging???

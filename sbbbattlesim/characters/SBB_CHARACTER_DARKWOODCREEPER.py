@@ -1,13 +1,13 @@
-from sbbbattlesim.action import Buff, EventAura
+from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDamagedAndSurvived
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 
 class DarkwoodCreeperOnDamage(OnDamagedAndSurvived):
     def handle(self, stack, *args, **kwargs):
         Buff(
-            reason=StatChangeCause.DARKWOOD_CREEPER_BUFF,
+            reason=ActionReason.DARKWOOD_CREEPER_BUFF,
             source=self.darkwood,
             targets=[self.manager],
             attack=2 if self.darkwood.golden else 1,
@@ -27,7 +27,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = EventAura(reason=StatChangeCause.AURA_BUFF, source=self, darkwood=self, event=DarkwoodCreeperOnDamage)
+        self.aura_buff = Aura(reason=ActionReason.AURA_BUFF, source=self, darkwood=self, event=DarkwoodCreeperOnDamage)
 
     def buff(self, target_character, *args, **kwargs):
         self.aura_buff.execute(target_character)

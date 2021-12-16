@@ -1,6 +1,6 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.spells import TargetedSpell
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class SpellType(TargetedSpell):
@@ -8,7 +8,7 @@ class SpellType(TargetedSpell):
     _level = 3
 
     def cast(self, target, *args, **kwargs):
-        Buff(reason=StatChangeCause.BEAUTYS_INFLUENCE, source=self, targets=[target],
+        Buff(reason=ActionReason.BEAUTYS_INFLUENCE, source=self, targets=[target],
              health=4, attack=0, temp=False, *args, **kwargs).resolve()
 
         target.tribes.remove(Tribe.EVIL)

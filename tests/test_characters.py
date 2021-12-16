@@ -2,7 +2,8 @@ import pytest
 
 from sbbbattlesim import Board
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
+from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 
 
@@ -67,7 +68,7 @@ def test_support(char, golden, horn):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
 
-    assert board.p1.characters[1]._action_history[0].reason == StatChangeCause.SUPPORT_BUFF
+    assert board.p1.characters[1]._action_history[0].reason == ActionReason.SUPPORT_BUFF
 
 
 class FakePlayer:
@@ -205,7 +206,7 @@ def test_wombats_in_disguise():
     wombat_spawn = player.characters.get(1)
 
     assert wombat_spawn
-    assert StatChangeCause.WOMBATS_IN_DISGUISE_BUFF in [r.reason for r in wombat_spawn._action_history]
+    assert ActionReason.WOMBATS_IN_DISGUISE_BUFF in [r.reason for r in wombat_spawn._action_history]
 
 
 def test_doombreath():

@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import SupportBuff, EventSupport
+from sbbbattlesim.action import Support
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSlay
 from sbbbattlesim.utils import Tribe
@@ -19,7 +19,7 @@ class BabaYagaOnSlayBuff(OnSlay):
                 executor.execute(source, *args, **kwargs)
 
 
-class BabaYagaSupportBuff(SupportBuff):
+class BabaYagaSupportBuff(Support):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.applied_buffs = {}
@@ -45,7 +45,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.support_buff = EventSupport(source=self, event=BabaYagaOnSlayBuff, baba_yaga=self)
+        self.support_buff = Support(source=self, event=BabaYagaOnSlayBuff, baba_yaga=self)
 
     def buff(self, target_character, *args, **kwargs):
         self.support_buff.execute(target_character, *args, **kwargs)

@@ -1,9 +1,8 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.events import OnSummon
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +12,7 @@ class SummoningPortalBuff(OnSummon):
         for char in summoned_characters:
             self.portal.buff_count += 1
             for _ in range(self.portal.mimic + 1):
-                Buff(reason=StatChangeCause.SUMMONING_PORTA, source=self.portal, targets=[char],
+                Buff(reason=ActionReason.SUMMONING_PORTA, source=self.portal, targets=[char],
                      attack=self.portal.buff_count, health=self.portal.buff_count, temp=False, stack=stack).resolve()
 
 

@@ -1,19 +1,19 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnBuff
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
 
 class DoublyOnBuff(OnBuff):
     def handle(self, reason, stack, attack, health, *args, **kwargs):
-        if reason == StatChangeCause.DOUBLEY_BUFF:
+        if reason == ActionReason.DOUBLEY_BUFF:
             return
         golden_multiplier = 2 if self.doubly.golden else 1
-        Buff(reason=StatChangeCause.DOUBLEY_BUFF, source=self.doubly, targets=[self.doubly],
+        Buff(reason=ActionReason.DOUBLEY_BUFF, source=self.doubly, targets=[self.doubly],
              attack=attack * golden_multiplier, health=health * golden_multiplier, stack=stack).resolve()
 
 

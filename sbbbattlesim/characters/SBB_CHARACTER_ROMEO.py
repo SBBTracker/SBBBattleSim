@@ -1,8 +1,8 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDeath, OnSummon
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 JULIET_ID = 'SBB_CHARACTER_JULIET'
 
@@ -15,7 +15,7 @@ class RomeoOnSummon(OnSummon):
         for char in summoned_characters:
             if char is self.juliet:
                 modifier = 14 if self.romeo.golden else 7
-                Buff(reason=StatChangeCause.ROMEO_BUFF, source=self.romeo, targets=[char],
+                Buff(reason=ActionReason.ROMEO_BUFF, source=self.romeo, targets=[char],
                      attack=modifier, health=modifier, temp=False).resolve()
 
 

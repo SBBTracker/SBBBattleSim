@@ -1,9 +1,9 @@
 import logging
 
-from sbbbattlesim.action import Buff, EventAura
+from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnBuff
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class EchoWoodBuff(OnBuff):
                 health_change = max(0, gold_multiplier * health)
 
                 if attack_change > 0 or health_change > 0:
-                    Buff(reason=StatChangeCause.ECHOWOOD_BUFF, source=self.manager, targets=[self.echo_wood],
+                    Buff(reason=ActionReason.ECHOWOOD_BUFF, source=self.manager, targets=[self.echo_wood],
                          attack=gold_multiplier * attack, health=gold_multiplier * health,
                          temp=False, stack=stack, is_from_echowood=True).resolve()
 
@@ -37,7 +37,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = EventAura(source=self, echo_wood=self, event=EchoWoodBuff, _lambda=lambda char: char is not self)
+        self.aura_buff = Aura(source=self, echo_wood=self, event=EchoWoodBuff, _lambda=lambda char: char is not self)
 
     def buff(self, target_character, *args, **kwargs):
         self.aura_buff.execute(target_character)

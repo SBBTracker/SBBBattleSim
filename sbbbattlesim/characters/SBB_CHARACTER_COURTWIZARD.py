@@ -1,10 +1,10 @@
 import logging
 
-from sbbbattlesim.action import AuraBuff, EventAura
+from sbbbattlesim.action import Aura, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.combat import attack
 from sbbbattlesim.events import OnDeath
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class CourtWizardOnDeathBuff(OnDeath):
             (stat_history_element.reason for stat_history_element in reversed(self.manager._action_history) if
              stat_history_element.damage > 0))
 
-        if death_reason == StatChangeCause.DAMAGE_WHILE_DEFENDING:
+        if death_reason == ActionReason.DAMAGE_WHILE_DEFENDING:
             attack(
                 attack_position=self.court_wizard.position,
                 attacker=self.manager.player,
@@ -39,9 +39,9 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = EventAura(reason=StatChangeCause.AURA_BUFF, source=self, court_wizard=self,
-                                   _lambda=lambda char: Tribe.PRINCESS in char.tribes or Tribe.PRINCE in char.tribes,
-                                   event=CourtWizardOnDeathBuff)
+        self.aura_buff = Aura(reason=ActionReason.AURA_BUFF, source=self, court_wizard=self,
+                              _lambda=lambda char: Tribe.PRINCESS in char.tribes or Tribe.PRINCE in char.tribes,
+                              event=CourtWizardOnDeathBuff)
 
     def buff(self, target_character, *args, **kwargs):
         self.aura_buff.execute(target_character)

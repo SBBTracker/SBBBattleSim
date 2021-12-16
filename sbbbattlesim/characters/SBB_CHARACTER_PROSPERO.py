@@ -1,8 +1,8 @@
-from sbbbattlesim.action import Buff, AuraBuff, PlayerEvent
+from sbbbattlesim.action import Buff, Aura, Action, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSummon
 
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 
 class BearstineOnSummon(OnSummon):
@@ -14,7 +14,7 @@ class BearstineOnSummon(OnSummon):
             stat_multplier = 2 if self.bearstine.golden else 1
 
             previous_bearstine_buffs = [stat_change for stat_change in char._action_history if
-                                        stat_change.reason == StatChangeCause.BEARSTINE_BUFF]
+                                        stat_change.reason == ActionReason.BEARSTINE_BUFF]
             previous_bearstine_attack_buffs = sum(stat_change.attack for stat_change in previous_bearstine_buffs)
             if "SBB_TREASURE_WHIRLINGBLADES" in self.manager.treasures:
                 if '''SBB_TREASURE_TREASURECHEST''' in self.manager.treasures:
@@ -27,7 +27,7 @@ class BearstineOnSummon(OnSummon):
             attack_buff = (char.attack - previous_bearstine_attack_buffs) * stat_multplier
             health_buff = (char.health - previous_bearstine_health_buffs) * stat_multplier
 
-            Buff(reason=StatChangeCause.BEARSTINE_BUFF, source=self.bearstine, targets=[char],
+            Buff(reason=ActionReason.BEARSTINE_BUFF, source=self.bearstine, targets=[char],
                  attack=attack_buff, health=health_buff, temp=False, stack=stack).resolve()
             char.player.resolve_board()
 
@@ -44,9 +44,8 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         modifier = 4 if self.golden else 2
-        self.aura_buff = AuraBuff(source=self, attack=modifier, health=modifier,
-                                   _lambda=lambda char: Tribe.ANIMAL in char.tribes and char != self)
-        self.player_buff = PlayerEvent(source=self, event=BearstineOnSummon, priority=-20, bearstine=self)
+        self.aura_buff = Aura(source=self, attack=modifier, health=modifier, _lambda=lambda char: Tribe.ANIMAL in char.tribes and char != self)
+        self.player_buff = Action(source=self, event=BearstineOnSummon, player_event=True, priority=-20, bearstine=self, reason=ActionReason.BEARSTINE_BUFF)
 
     def buff(self, target_character, *args, **kwargs):
         self.aura_buff.execute(target_character)

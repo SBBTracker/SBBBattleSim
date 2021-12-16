@@ -1,8 +1,7 @@
 import random
 
-from sbbbattlesim.action import Damage
+from sbbbattlesim.action import Damage, ActionReason
 from sbbbattlesim.spells import NonTargetedSpell
-from sbbbattlesim.utils import StatChangeCause
 
 
 class SpellType(NonTargetedSpell):
@@ -19,7 +18,7 @@ class SpellType(NonTargetedSpell):
             Damage(
                 damage=0,
                 targets=[target],
-                reason=StatChangeCause.SHRIVEL,
+                reason=ActionReason.SHRIVEL,
                 source=self,
                 attack=-12,
                 health=-12,

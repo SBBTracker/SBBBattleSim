@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import AuraBuff
+from sbbbattlesim.action import Aura
 from sbbbattlesim.events import OnLastBreath
 from sbbbattlesim.heros import Hero
 
@@ -21,7 +21,7 @@ class MeurteDoubleLastBreath(OnLastBreath):
                 executor.execute(last_breaths[-1])
 
 
-class MuerteAuraBuff(AuraBuff):
+class MuerteAuraBuff(Aura):
     def execute(self, character):
         character.register(MeurteDoubleLastBreath, meurte=self.source, priority=999)
 
@@ -32,8 +32,9 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = MuerteAuraBuff(source=self)
         self.triggered = False
+        self.aura_buff = MuerteAuraBuff(event=MeurteDoubleLastBreath, source=self, priority=999, meurte=self,
+                                        _lambda=lambda char: not self.triggered)
 
     def buff(self, target_character, *args, **kwargs):
         if self.triggered:

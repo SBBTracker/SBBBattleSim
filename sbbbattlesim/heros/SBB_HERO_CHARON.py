@@ -1,7 +1,6 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Aura, Aura, ActionReason
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.heros import Hero
-from sbbbattlesim.utils import StatChangeCause
 
 
 class CharonOnDeath(OnDeath):
@@ -16,8 +15,9 @@ class CharonOnDeath(OnDeath):
             return  # This has already procced
         self.charon.triggered = True
 
-        Buff(reason=StatChangeCause.CHARON_BUFF, source=self.charon, targets=[self.manager],
+        Buff(reason=ActionReason.CHARON_BUFF, source=self.charon, targets=[self.manager],
              attack=2, health=1, stack=stack).execute()
+
 
 
 class HeroType(Hero):
@@ -27,6 +27,7 @@ class HeroType(Hero):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triggered = False
+        self.aura_buff = Aura(event=CharonOnDeath, priority=999, charon=self)
 
     def buff(self, target_character, *args, **kwargs):
         target_character.register(CharonOnDeath, priority=999, charon=self)

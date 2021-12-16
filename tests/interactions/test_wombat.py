@@ -1,7 +1,8 @@
 import pytest
 
 from sbbbattlesim import Board
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
+from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 
 
@@ -30,7 +31,7 @@ def test_wombat_dying(golden, level, repeat):
     assert summoned_char.golden == golden
 
     wombat_buffs = [
-        r for r in board.p1.characters[1]._action_history if r.reason == StatChangeCause.WOMBATS_IN_DISGUISE_BUFF
+        r for r in board.p1.characters[1]._action_history if r.reason == ActionReason.WOMBATS_IN_DISGUISE_BUFF
     ]
 
     assert len(wombat_buffs) == 1

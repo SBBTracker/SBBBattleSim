@@ -1,7 +1,8 @@
 import pytest
 
 from sbbbattlesim import Board
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
+from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 from sbbbattlesim.events import OnDeath
 
@@ -65,7 +66,7 @@ def test_courtwizard_diesandproccs():
     assert not unit.dead
 
     wizardmummy = [
-        r for r in wizard._action_history if r.reason == StatChangeCause.WRETCHED_MUMMY_EXPLOSION
+        r for r in wizard._action_history if r.reason == ActionReason.WRETCHED_MUMMY_EXPLOSION
     ]
 
     assert wizardmummy

@@ -1,12 +1,12 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDamagedAndSurvived
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 
 class BrocLeeOnDamageAndSurvived(OnDamagedAndSurvived):
     def handle(self, stack, *args, **kwargs):
-        Buff(reason=StatChangeCause.BROC_LEE_BUFF, source=self.manager, targets=[self.manager],
+        Buff(reason=ActionReason.BROC_LEE_BUFF, source=self.manager, targets=[self.manager],
              attack=20 if self.manager.golden else 10, temp=False, stack=stack).resolve()
 
 

@@ -1,7 +1,7 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class AshwoodElmOnStart(OnStart):
@@ -10,7 +10,7 @@ class AshwoodElmOnStart(OnStart):
         modifier = 2 if self.ashwood.golden else 1
         attack_change = base_attack_change * modifier
 
-        Buff(reason=StatChangeCause.ASHWOOD_ELM_BUFF, source=self.ashwood,
+        Buff(reason=ActionReason.ASHWOOD_ELM_BUFF, source=self.ashwood,
              targets=self.ashwood.player.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes),
              attack=attack_change, temp=False, stack=stack).resolve()
 

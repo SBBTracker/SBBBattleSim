@@ -1,13 +1,13 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnAttackAndKill, OnSpellCast
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 
 class AonOnSpell(OnSpellCast):
     def handle(self, caster, spell, target, stack, *args, **kwargs):
         stat_gain = (2 if self.aon.golden else 1)
-        Buff(reason=StatChangeCause.AON_BUFF, source=self.aon,
+        Buff(reason=ActionReason.AON_BUFF, source=self.aon,
              targets=self.aon.player.valid_characters(_lambda=lambda c: Tribe.MAGE in c.tribes),
              attack=stat_gain, stack=stack).resolve()
 

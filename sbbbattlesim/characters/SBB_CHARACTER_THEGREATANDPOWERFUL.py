@@ -1,7 +1,7 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSpellCast, OnStart, OnSummon
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 import logging
 
 logger = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ class StormKingOnSummon(OnSummon):
         golden_multipler = 4 if self.storm_king.golden else 2
         storm_king_buff = (spells_cast or 0) * golden_multipler
 
-        Buff(reason=StatChangeCause.STORM_KING_BUFF, source=self.storm_king, targets=[self.storm_king],
+        Buff(reason=ActionReason.STORM_KING_BUFF, source=self.storm_king, targets=[self.storm_king],
              attack=storm_king_buff, health=storm_king_buff, temp=False).resolve()
 
 
@@ -40,7 +40,7 @@ class StormKingOnSpellCast(OnSpellCast):
     def handle(self, stack, *args, **kwargs):
         stat_buff = 4 if self.storm_king.golden else 2
 
-        Buff(reason=StatChangeCause.STORM_KING_BUFF, source=self.storm_king, targets=[self.storm_king],
+        Buff(reason=ActionReason.STORM_KING_BUFF, source=self.storm_king, targets=[self.storm_king],
              attack=stat_buff, health=stat_buff, temp=False, *args, **kwargs).resolve()
 
 

@@ -1,7 +1,6 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
 
 
 class TreasureType(Treasure):
@@ -26,8 +25,8 @@ class TreasureType(Treasure):
                             change_dt[char] = (char.health - char.attack, 0)
 
                     for char, (attack, health) in change_dt.items():
-                        Buff(reason=StatChangeCause.ROUND_TABLE_BUFF, source=self.table, targets=[char],
-                             health=health, attack=attack,  temp=False, stack=stack).resolve()
+                        Buff(reason=ActionReason.ROUND_TABLE_BUFF, source=self.table, targets=[char],
+                             health=health, attack=attack, temp=False, stack=stack).resolve()
                         self.table.player.resolve_board()
 
         self.player.board.register(RoundTableBuff)

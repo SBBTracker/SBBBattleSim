@@ -1,9 +1,9 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ class LordyBuffOnStart(OnStart):
             _lambda=lambda char: Tribe.DWARF in char.tribes or char.id == 'SBB_CHARACTER_PRINCESSNIGHT'
         )
         stat_change = len(dwarfes) * (4 if self.lordy.golden else 2)
-        Buff(reason=StatChangeCause.LORDY_BUFF, source=self.lordy, targets=dwarfes,
+        Buff(reason=ActionReason.LORDY_BUFF, source=self.lordy, targets=dwarfes,
              attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
 

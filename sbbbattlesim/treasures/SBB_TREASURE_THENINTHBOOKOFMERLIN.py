@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import EventAura
+from sbbbattlesim.action import Aura
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import random_combat_spell, Tribe
@@ -26,7 +26,7 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = EventAura(event=NinthBookOnDeath, source=self, book=self,
+        self.aura_buff = Aura(event=NinthBookOnDeath, source=self, book=self,
                                   _lambda=lambda char: Tribe.MAGE in char.tribes)
 
     def buff(self, target_character, *args, **kwargs):

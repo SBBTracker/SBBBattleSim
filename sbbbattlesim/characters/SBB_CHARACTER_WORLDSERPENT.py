@@ -1,7 +1,7 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnAttackAndKill
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class JormungandrOnAttackAndKill(OnAttackAndKill):
@@ -9,7 +9,7 @@ class JormungandrOnAttackAndKill(OnAttackAndKill):
 
     def handle(self, killed_character, stack, *args, **kwargs):
         modifier = 40 if self.manager.golden else 20
-        Buff(reason=StatChangeCause.SLAY, source=self.manager, targets=[self.manager],
+        Buff(reason=ActionReason.SLAY, source=self.manager, targets=[self.manager],
              attack=modifier, health=modifier, temp=False, stack=stack).resolve()
 
 
