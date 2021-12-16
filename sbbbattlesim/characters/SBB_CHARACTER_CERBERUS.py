@@ -15,15 +15,12 @@ class GrimSoulOnDeath(OnDeath):
         if targets:
             target = random.choice(targets)
             itr = 2 if self.manager.golden else 1
+            slays = [evt for evt in target.get('OnAttackAndKill') if evt.slay]
             for _ in range(itr):
-                slays = [evt for evt in target.get('OnAttackAndKill') if evt.slay]
-                for slay in slays:
-                    with stack.open(killed_character=None) as executor:
+                with stack.open(killed_character=None) as executor:  # does golden grim soul open two stacks or just the one. If just the one, flip this w/ the above for loop
+                    for slay in slays:
                         logger.debug(f'Grim soul Triggering OnAttackAndKill({args} {kwargs})')
                         executor.execute(slay, killed_character=None, *args, **kwargs)
-
-
-
 
 
 class CharacterType(Character):
