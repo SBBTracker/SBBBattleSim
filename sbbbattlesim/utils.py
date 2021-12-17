@@ -71,15 +71,6 @@ class Tribe(enum.Enum):
     EVIL = 'evil'
 
 
-class Keyword(enum.Enum):
-    SUPPORT = 'support'
-    FLYING = 'flying'
-    SLAY = 'slay'
-    LAST_BREATH = 'last breath'
-    RANGED = 'ranged'
-    QUEST = 'quest'
-
-
 def get_support_targets(position, horn=False):
     if horn:
         return [1, 2, 3, 4]

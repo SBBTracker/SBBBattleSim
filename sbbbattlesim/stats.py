@@ -12,15 +12,6 @@ class BoardStats:
     damage: int
 
 
-def win_rate(results: List[BoardStats]) -> Dict[str, float]:
-    win_rate = collections.defaultdict(float)
-    for pid, boards in results.items():
-        total = sum(len(v) for v in results.values())
-        win_rate[pid] = round(((len(results.get(pid, [])) / total) * 100), 2)
-
-    return win_rate
-
-
 def calculate_damage(player: Player) -> int:
     if player is None:
         return 0

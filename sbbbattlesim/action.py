@@ -208,7 +208,6 @@ class Action:
         self.health = health
         self.damage = damage
         self.heal = heal
-        self.temp = temp
 
         self.event = event
         self.player_event = player_event
@@ -249,17 +248,11 @@ class Action:
             self._event_buffer[char].append(registered)
 
         if self.attack != 0 or self.health != 0:
-            if self.temp:
-                char._temp_attack += self.attack
-                char._temp_health += self.health
-            else:
-                char._base_attack += self.attack
-                char._base_health += self.health
+            char._base_attack += self.attack
+            char._base_health += self.health
 
             # TRIGGER ON BUFF
-            char('OnBuff', reason=self.reason, source=self.source,
-                 attack=self.attack, health=self.health, damage=self.damage, temp=self.temp,
-                 *args, **kwargs)
+            char('OnBuff', reason=self.reason, source=self.source, attack=self.attack, health=self.health, *args, **kwargs)
 
         if self.damage != 0:
             if char.invincible and self.reason != ActionReason.DAMAGE_WHILE_ATTACKING:
@@ -363,11 +356,11 @@ class Buff(Action):
 
 class Support(Buff):
     def __init__(self, *args, **kwargs):
-        kwargs = dict(reason=ActionReason.SUPPORT_BUFF, temp=True) | kwargs
+        kwargs = dict(reason=ActionReason.SUPPORT_BUFF) | kwargs
         super().__init__(*args, **kwargs)
 
 
 class Aura(Buff):
     def __init__(self, *args, **kwargs):
-        kwargs = dict(reason=ActionReason.AURA_BUFF, temp=True) | kwargs
+        kwargs = dict(reason=ActionReason.AURA_BUFF) | kwargs
         super().__init__(*args, **kwargs)
