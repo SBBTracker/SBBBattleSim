@@ -29,6 +29,27 @@ def test_romeo_summons_dead_juliet(golden):
     assert board.p1.characters[6].id == juliet.id
 
 
+def test_romeo_summons_dead_juliet():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_ROMEO', position=5, attack=1, health=1),
+            make_character(id='SBB_CHARACTER_JULIET', attack=7, health=7, position=1),
+        ],
+    )
+    enemy = make_player(
+        characters=[make_character(id="SBB_CHARACTER_DOOMBREATH", attack=7, health=7)],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    juliet = board.p1.characters[2]
+    winner, loser = board.fight(limit=2)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert board.p1.characters[1] is juliet
+
 def test_romeo_doesnt_summon_anything():
     player = make_player(
         characters=[
