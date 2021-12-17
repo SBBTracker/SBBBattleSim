@@ -12,7 +12,7 @@ def test_crafty_raw(num_treasures, golden):
     treasures = ['''SBB_TREASURE_HERMES'BOOTS''', '''SBB_TREASURE_BADMOON''', '''SBB_TREASURE_BOOKOFHEROES''']
     treasures = treasures[:num_treasures]
 
-    fs = (2 if golden else 1) + len(treasures) * (6 if golden else 3)
+    fs = (4 if golden else 2) + len(treasures) * (4 if golden else 2)
     player = make_player(
         raw=True,
         characters=[
@@ -27,7 +27,7 @@ def test_crafty_raw(num_treasures, golden):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert (board.p1.characters[1]._base_attack, board.p1.characters[1]._base_health) == ((2, 2) if golden else (1, 1))
+    assert (board.p1.characters[1]._base_attack, board.p1.characters[1]._base_health) == ((4, 4) if golden else (2, 2))
 
 
 @pytest.mark.parametrize('num_treasures', (0, 1, 2, 3))
@@ -36,11 +36,11 @@ def test_crafty(num_treasures, golden):
     treasures = ['''SBB_TREASURE_HERMES'BOOTS''', '''SBB_TREASURE_BADMOON''', '''SBB_TREASURE_BOOKOFHEROES''']
     treasures = treasures[:num_treasures]
 
-    fs = (2 if golden else 1) + len(treasures) * (6 if golden else 3)
+    fs = (4 if golden else 2) + len(treasures) * (4 if golden else 2)
     player = make_player(
         raw=False,
         characters=[
-            make_character(id="SBB_CHARACTER_DWARVENARTIFICER", position=1, attack=(2 if golden else 1), health=(2 if golden else 1), golden=golden)
+            make_character(id="SBB_CHARACTER_DWARVENARTIFICER", position=1, attack=(4 if golden else 2), health=(4 if golden else 2), golden=golden)
         ],
         treasures=treasures
     )
@@ -87,7 +87,7 @@ def test_crafty_spawn(num_treasures, golden):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    fs = 1 + len(treasures) * (6 if golden else 3)
-    fs2 = fs + (1 if golden else 0)
+    fs = 1 + len(treasures) * (4 if golden else 2)
+    fs2 = fs + (3 if golden else 1)
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (fs2, fs2)
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (fs, fs)

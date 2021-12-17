@@ -19,8 +19,12 @@ class PumpkinKingOnDeath(OnDeath):
             key=lambda char: char._level, reverse=True
         )
         for dead in dead_in_order[:7]:
-            summon_choices = list(character_registry.filter(
-                _lambda=lambda char: char._level > 1 and char._level == dead._level - 1 and Tribe.EVIL in char._tribes))
+            if dead._level > 2:
+                summon_choices = list(character_registry.filter(
+                    _lambda=lambda char: (char._level > 1 and char._level == dead._level - 1 and Tribe.EVIL in char._tribes)))
+            else:
+                summon_choices = [character_registry['SBB_CHARACTER_CAT']]
+
             if summon_choices:
                 summons.append(random.choice(summon_choices).new(
                     player=self.manager.player,
@@ -34,8 +38,8 @@ class PumpkinKingOnDeath(OnDeath):
 class CharacterType(Character):
     display_name = 'Great Pumpkin King'
 
-    _attack = 5
-    _health = 5
+    _attack = 10
+    _health = 10
     _level = 6
     _tribes = {Tribe.EVIL, Tribe.MONSTER}
 

@@ -32,7 +32,7 @@ class CharacterType(Character):
     support = True
 
     _attack = 4
-    _health = 4
+    _health = 8
     _level = 4
     _tribes = {Tribe.GOOD, Tribe.PRINCESS}
 

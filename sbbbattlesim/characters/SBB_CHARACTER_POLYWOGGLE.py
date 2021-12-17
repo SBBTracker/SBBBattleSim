@@ -9,7 +9,7 @@ from sbbbattlesim.utils import Tribe
 class PolywoggleSlay(OnAttackAndKill):
     slay = True
 
-    def handle(self, killed_character, *args, **kwargs):
+    def handle(self, killed_character, stack, *args, **kwargs):
         golden_promotion = (2 if self.woggle.golden else 1)
         _lambda = lambda char: char._level == min(self.manager.player.level + golden_promotion, 6)
         valid_chars = list(character_registry.filter(_lambda=_lambda))
@@ -18,8 +18,8 @@ class PolywoggleSlay(OnAttackAndKill):
             # TODO how to handle tribe complexity
 
             new_char = char(
-                attack=char._attack + self.manager._base_attack - (2 if self.manager.golden else 1),
-                health=char._health + self.manager._base_health - (2 if self.manager.golden else 1),
+                attack=char._attack + max(1, self.manager._base_attack - (2 if self.manager.golden else 1)),
+                health=char._health + max(1, self.manager._base_health - (2 if self.manager.golden else 1)),
                 golden=self.manager.golden,
                 position=self.manager.position,
                 player=self.manager.player,

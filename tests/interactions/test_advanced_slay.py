@@ -13,7 +13,7 @@ def test_riverwish_yaga(golden, mimic, evil_eye):
             make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=5, attack=5, health=5, golden=False),
             make_character(id='SBB_CHARACTER_BABAYAGA', position=6, attack=3, health=6, golden=golden),
             make_character(position=2),
-            make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7)
+            make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7, attack= 1, health=1)
         ],
         treasures=[
             'SBB_TREASURE_HELMOFCOMMAND' if evil_eye else '',
@@ -44,7 +44,7 @@ def test_riverwish_yaga(golden, mimic, evil_eye):
     final_stats = (final_stat, final_stat)
 
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == final_stats
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == final_stats
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (final_stat, 1)
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -55,7 +55,7 @@ def test_double_yaga(mimic, evil_eye):
             make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=5, health=5, golden=False),
             make_character(id='SBB_CHARACTER_BABAYAGA', position=6, attack=3, health=6, golden=False),
             make_character(id='SBB_CHARACTER_CATBURGLAR', position=2, attack=1, health=1),
-            make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7)
+            make_character(id="SBB_CHARACTER_SHADOWASSASSIN", position=7, attack=1, health=1)
         ],
         treasures=[
             'SBB_TREASURE_HELMOFCOMMAND' if evil_eye else '',
@@ -80,4 +80,80 @@ def test_double_yaga(mimic, evil_eye):
     final_stat = 1 + 1 + slay_count * slay_multiplyer * 2
     final_stats = (final_stat, final_stat)
 
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == final_stats
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (final_stat, 1)
+
+
+def test_complicated_grimsoul():
+    player = make_player(
+        hero="SBB_HERO_MILITARYLEADER",
+        characters=[
+            make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=5, health=5, golden=False),
+            make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=6, attack=5, health=5, golden=False),
+            make_character(id='SBB_CHARACTER_CERBERUS', position=2, attack=10, health=10, golden=False)
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[make_character(attack=0, health=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (12, 12)
+
+
+def test_complicated_grimsoul_two():
+    player = make_player(
+        hero="SBB_HERO_MILITARYLEADER",
+        characters=[
+            make_character(id='SBB_CHARACTER_CERBERUS', position=3, attack=10, health=10, golden=False),
+            make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=6, attack=5, health=5, golden=False),
+            make_character(id='SBB_CHARACTER_CERBERUS', position=2, attack=10, health=10, golden=False)
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[make_character(attack=0, health=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+
+    leftgrim = board.p1.characters[2]
+    rightgrim = board.p1.characters[3]
+    assert rightgrim.attack + leftgrim.attack == 21
+    assert rightgrim.health + leftgrim.health == 21
+
+
+def test_trophy_grimsoul_blackcat():
+    player = make_player(
+        hero="SBB_HERO_MILITARYLEADER",
+        characters=[
+            make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=5, health=5, golden=False),
+            make_character(id='SBB_CHARACTER_BLACKCAT', position=2, attack=5, health=5, golden=False),
+            make_character(id='SBB_CHARACTER_CERBERUS', position=1, attack=10, health=10, golden=False)
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[make_character(attack=0, health=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert board.p1.characters[3].id == "SBB_CHARACTER_CAT"
+    assert board.p1.characters[4].id == "SBB_CHARACTER_CAT"
+    assert board.p1.characters[6].id == "SBB_CHARACTER_CAT"
+    assert board.p1.characters[7].id == "SBB_CHARACTER_CAT"

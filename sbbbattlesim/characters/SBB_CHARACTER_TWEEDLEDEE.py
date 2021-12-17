@@ -13,7 +13,7 @@ class TweedleDeeLastBreath(OnDeath):
         self.priority = sbbbattlesim.SUMMONING_PRIORITY
 
     def handle(self, *args, **kwargs):
-        attack, health = (4, 6) if self.manager.golden else (2, 3)
+        attack, health = (self.manager.max_health * 2, self.manager.attack * 2) if self.manager.golden else (self.manager.max_health, self.manager.attack)
         tweedle_dum = [
             character_registry['Tweedle Dum'](
                 self.manager.player, self.manager.position, attack, health,

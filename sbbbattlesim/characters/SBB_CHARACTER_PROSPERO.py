@@ -6,7 +6,7 @@ from sbbbattlesim.utils import Tribe, StatChangeCause
 
 
 class CharacterType(Character):
-    display_name = 'Bearstine'
+    display_name = 'Bearstainr'
 
     aura = True
 

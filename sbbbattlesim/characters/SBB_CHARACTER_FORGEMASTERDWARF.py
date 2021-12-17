@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class LordyBuffOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
         dwarfes = self.lordy.player.valid_characters(
-            _lambda=lambda char: Tribe.DWARF in char.tribes or char.id == 'SBB_CHARACTER_PRINCESSNIGHT'
+            _lambda=lambda char: Tribe.DWARF in char.tribes
         )
         stat_change = len(dwarfes) * (4 if self.lordy.golden else 2)
         Buff(reason=StatChangeCause.LORDY_BUFF, source=self.lordy, targets=dwarfes,

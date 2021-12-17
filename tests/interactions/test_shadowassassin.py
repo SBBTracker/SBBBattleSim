@@ -23,5 +23,5 @@ def test_shadow_assassin(golden):
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    final_stats = (3, 3) if golden else (2, 2)
+    final_stats = (3, 1) if golden else (2, 1)
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == final_stats

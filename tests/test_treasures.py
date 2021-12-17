@@ -620,12 +620,14 @@ def test_deepstone_mine(mimic, tiger, on):
 @pytest.mark.parametrize('mimic', (True, False))
 @pytest.mark.parametrize('tiger', (True, False))
 @pytest.mark.parametrize('on', (True, False))
-def test_cloak_of_the_assassin(mimic, tiger, on):
+@pytest.mark.parametrize('unit', ('SBB_CHARACTER_NIGHTSTALKER', 'SBB_CHARACTER_QUESTINGPRINCESS'))
+@pytest.mark.parametrize('golden', (True, False))
+def test_cloak_of_the_assassin(mimic, tiger, on, unit, golden):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
         characters=[
-            make_character(id='SBB_CHARACTER_NIGHTSTALKER' if on else ''),
+            make_character(id=unit if on else '', golden=golden),
         ],
         treasures=[
             'SBB_TREASURE_CLOAKOFTHEASSASSIN',
@@ -642,7 +644,7 @@ def test_cloak_of_the_assassin(mimic, tiger, on):
         characters=[make_character(id='Enemy', attack=0)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    winner, loser = board.fight(limit=0)
     board.p1.resolve_board()
     board.p2.resolve_board()
 
@@ -650,8 +652,16 @@ def test_cloak_of_the_assassin(mimic, tiger, on):
     char = player.characters[1]
 
     assert char
-    assert char.attack == 1 + (3 * mimic_multiplyer) + 1 if on else 1
-    assert char.health == 1 + (3 * mimic_multiplyer) + 1 if on else 1
+
+    if on and unit == 'SBB_CHARACTER_QUESTINGPRINCESS' and golden:
+        assert char.attack == 1, char.attack
+        assert char.health == 1, char.health
+    elif unit in ['SBB_CHARACTER_QUESTINGPRINCESS', 'SBB_CHARACTER_NIGHTSTALKER']:
+        final_stats = 1 + (3 * mimic_multiplyer) if on else 1
+        assert char.attack == final_stats, (char.attack, final_stats)
+        assert char.health == final_stats, (char.health, final_stats)
+    else:
+        raise ValueError('bad unit')
 
 
 @pytest.mark.parametrize('mimic', (True, False))

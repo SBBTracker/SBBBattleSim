@@ -61,8 +61,8 @@ def test_donkey_fallingstars():
     for pos in range(1, 8):
         char = board.p1.characters[pos]
         if pos <= 3:
-            assert char.attack == 1
-            assert char.health == 1
+            assert char.attack == 1, pos
+            assert char.health == 1, pos
         elif pos == 5:
             assert char.attack == 0
             assert char.health == 3
@@ -113,3 +113,37 @@ def test_donkey_fallingstars_fullboard(board_full):
                 assert char is donkey
             else:
                 assert char is None
+
+
+def test_donkey_fallingstars_summondragon():
+    player = make_player(
+        characters=[
+            make_character(position=1, attack=0, health=2),
+        ],
+    )
+    enemy = make_player(
+        characters=[
+            make_character(health=5)
+        ],
+        spells=["SBB_SPELL_FALLINGSTARS"]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+
+    class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
+
+        def handle(self, *args, **kwargs):
+            summon = character_registry["SBB_CHARACTER_LIGHTNINGDRAGON"].new(
+                player=self.manager.player,
+                position=self.manager.position,
+                golden=False
+            )
+            self.manager.player.summon(self.manager.position, [summon])
+
+    board.p1.characters[1].register(FakeTrojanDonkeySummon)
+    winner, loser = board.fight(limit=0)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert board.p2.characters[1] is None
+    assert board.p1.graveyard[0]._action_history[-1].source == board.p2.graveyard[0]
+
