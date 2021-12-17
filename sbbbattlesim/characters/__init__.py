@@ -29,6 +29,8 @@ class Character(EventManager):
     _level = 0
     _tribes = set()
 
+    deactivated = False
+
     def __init__(self, player, position, attack, health, golden, tribes, cost, *args, **kwargs):
         super().__init__()
         self.player = player
@@ -136,7 +138,7 @@ class Registry(object):
         logger.debug(f'Registered {name} - {character}')
 
     def filter(self, _lambda=lambda char_cls: True):
-        return (char_cls for id, char_cls in self.characters.items() if id not in CHARACTER_EXCLUSION and _lambda(char_cls) and char_cls._level > 1)
+        return (char_cls for id, char_cls in self.characters.items() if id not in CHARACTER_EXCLUSION and _lambda(char_cls) and char_cls._level > 1 and not char_cls.deactivated)
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):

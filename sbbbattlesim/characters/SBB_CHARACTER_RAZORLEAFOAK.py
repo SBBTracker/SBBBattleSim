@@ -18,6 +18,8 @@ class CharacterType(Character):
     _level = 4
     _tribes = {Tribe.EVIL, Tribe.TREANT}
 
+    deactivated = True
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.register(BrocLeeOnDamageAndSurvived)

@@ -27,9 +27,9 @@ class CharacterType(Character):
     display_name = 'Monster Book'
     last_breath = True
 
-    _attack = 10
-    _health = 5
-    _level = 5
+    _attack = 7
+    _health = 3
+    _level = 4
     _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
     def __init__(self, *args, **kwargs):

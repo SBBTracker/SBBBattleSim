@@ -89,7 +89,7 @@ def test_sad_dracula(on):
     shadow_assassin = player.characters.get(5)
 
     assert shadow_assassin
-    assert shadow_assassin.attack == (2 if on else 1) and shadow_assassin.health == (2 if on else 1)
+    assert shadow_assassin.attack == (2 if on else 1) and shadow_assassin.health == 1
 
 
 @pytest.mark.parametrize('on', (True, False))

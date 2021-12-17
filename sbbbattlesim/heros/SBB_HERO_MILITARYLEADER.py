@@ -10,8 +10,9 @@ logger = logging.getLogger(__name__)
 class LastBreathConvertedToOnAttackAndKillEvent(OnAttackAndKill):
     slay = True
 
-    def handle(self, killed_character, *args, **kwargs):
-        self.on_death_event(*args, **kwargs)
+    def handle(self, killed_character, stack, *args, **kwargs):
+        with stack.open() as executor:
+            executor.execute(self.on_death_event, *args, **kwargs)
 
 
 def convert_on_death_to_on_attack_and_kill(char):

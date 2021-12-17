@@ -13,7 +13,6 @@ class DeckOfManyThingsOnStart(OnStart):
                 self.player.cast_spell(spell.id)
 
 
-# todo can only cast spells of current level or below
 class TreasureType(Treasure):
     display_name = 'Deck of Many Things'
 

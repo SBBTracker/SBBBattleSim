@@ -27,7 +27,7 @@ class PhoenixFeatherOnDeath(OnDeath):
                         tribes=self.manager.tribes,
                         cost=self.manager.cost
                     )
-                    new_char._action_history = copy.deepcopy(self.manager._action_history)  #TODO this need to be part of a new copy function
+                    new_char._action_history = copy.copy(self.manager._action_history)  #TODO this need to be part of a new copy function
 
                     self.manager.player.summon(self.manager.position, [new_char], *args, **kwargs)
 

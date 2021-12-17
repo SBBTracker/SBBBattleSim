@@ -20,8 +20,8 @@ class AngryBuff(OnDamagedAndSurvived):
 class CharacterType(Character):
     display_name = 'Angry'
 
-    _attack = 4
-    _health = 10
+    _attack = 5
+    _health = 15
     _level = 5
     _tribes = {Tribe.DWARF}
 

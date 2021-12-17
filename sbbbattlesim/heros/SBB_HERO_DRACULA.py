@@ -8,7 +8,7 @@ class SadDraculaOnAttackAndKill(OnAttackAndKill):
 
     def handle(self, killed_character, stack, *args, **kwargs):
        Buff(reason=ActionReason.SAD_DRACULA_SLAY, source=self.sad_dracula, targets=[self.manager],
-            attack=3, stack=stack).resolve()
+            attack=2, stack=stack).resolve()
 
 
 class HeroType(Hero):

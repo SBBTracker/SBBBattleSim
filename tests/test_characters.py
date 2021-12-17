@@ -104,7 +104,7 @@ def test_slay(char, golden):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
 
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (3, 2)
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (3, 1)
 
 
 @pytest.mark.parametrize('golden', (True, False))
