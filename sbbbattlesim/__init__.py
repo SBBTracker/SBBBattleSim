@@ -9,10 +9,7 @@ from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
 from sbbbattlesim.exceptions import SBBBSCrocException
 
-SUMMONING_PRIORITY = 10
-
 logger = logging.getLogger(__name__)
-
 
 def setup():
     configure_logging()

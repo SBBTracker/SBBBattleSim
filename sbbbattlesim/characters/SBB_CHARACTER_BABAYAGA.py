@@ -13,7 +13,7 @@ class BabaYagaOnSlayBuff(OnSlay):
         if isinstance(source, OnSlay):
             return
 
-        for _ in range(2 if self.baba_yaga.golden else 1):
+        for _ in range(2 if self.source.golden else 1):
             with stack.open(source=self, *args, **kwargs) as executor:
                 logger.debug(f'Baba Yaga Triggering OnAttackAndKill {source} ({args} {kwargs})')
                 executor.execute(source, *args, **kwargs)

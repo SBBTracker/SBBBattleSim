@@ -162,21 +162,13 @@ class EventManager:
         self._events[event_base].put((event.priority, event))
         return event
 
-    def unregister(self, event):
-        event_base = inspect.getmro(event.__class__)[1].__name__
-        try:
-            self._events.get(event_base).remove(event)
-        except ValueError:
-            pass
-
     def get(self, event):
-        events = self._events[event]
-        event_buffer = queue.PriorityQueue()
+        event_queue = self._events[event]
         priority = None
 
-        while events.not_empty:
-            next_event = events.get()
-            event_buffer.put((next_event.priority, next_event))
+        while event_queue.not_empty:
+            next_event = event_queue.get()
+            event_queue.put((next_event.priority, next_event))
 
             if priority:
                 if next_event.priority < priority:
@@ -186,23 +178,14 @@ class EventManager:
 
             yield next_event
 
-        self._events[event] = event_buffer
-
-        # return sorted(self._temp.get(event, []) + self._events.get(event, []),
-        #               key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True)
-
     def __call__(self, event, stack=None, *args, **kwargs):
         logger.debug(f'{self.pretty_print()} triggered event {event}')
-
-        handlers = self.get(event)
-        if not handlers:
-            return
 
         # If an event stack already exists use it otherwise make a new stack
         stack = stack or EventStack(self)
 
         with stack.open(*args, **kwargs) as executor:
-            for evt in handlers:
+            for evt in self.get(event):
                 logger.debug(f'Firing {evt} with {args} {kwargs}')
                 executor.execute(evt, *args, **kwargs)
 

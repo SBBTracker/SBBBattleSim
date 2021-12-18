@@ -55,3 +55,4 @@ class Registry(object):
 
 
 registry = Registry()
+print('Heroes')

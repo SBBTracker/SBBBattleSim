@@ -2,7 +2,7 @@ import pytest
 
 from sbbbattlesim import Board
 from sbbbattlesim.treasures import registry as treasure_registry
-from sbbbattlesim.utils import Keyword, Tribe
+from sbbbattlesim.utils import Tribe
 from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 
@@ -12,8 +12,7 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('treasure', treasure_registry.keys())
 def test_treasure(treasure, mimic, tiger):
     player = make_player(
-        characters=[make_character(position=i, keywords=[kw for kw in Keyword], tribes=[tribe for tribe in Tribe]) for i
-                    in range(1, 8)],
+        characters=[make_character(position=i, tribes=[tribe for tribe in Tribe]) for i in range(1, 8)],
         treasures=[treasure]
     )
 

@@ -2,7 +2,7 @@ import pytest
 
 from sbbbattlesim import Board
 from sbbbattlesim.spells import registry as spell_registry
-from sbbbattlesim.utils import Keyword, Tribe
+from sbbbattlesim.utils import Tribe
 from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 
@@ -10,8 +10,7 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('spell', spell_registry.keys())
 def test_spell(spell):
     player = make_player(
-        characters=[make_character(id='GENERIC', attack=1, position=1, keywords=[kw.value for kw in Keyword],
-                                   tribes=[tribe.value for tribe in Tribe])],
+        characters=[make_character(id='GENERIC', attack=1, position=1, tribes=[tribe.value for tribe in Tribe])],
         spells=[spell]
     )
     enemy = make_player(

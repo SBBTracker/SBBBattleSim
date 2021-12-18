@@ -63,3 +63,4 @@ class Registry(object):
 
 
 registry = Registry()
+print('Treasure')

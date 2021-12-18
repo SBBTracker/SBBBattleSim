@@ -1,7 +1,7 @@
 import pytest
 
 from sbbbattlesim import Board
-from sbbbattlesim.utils import Keyword, Tribe
+from sbbbattlesim.utils import Tribe
 from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 

@@ -1,7 +1,6 @@
 import logging
 import pkgutil
 from collections import OrderedDict
-from dataclasses import dataclass
 
 from sbbbattlesim.action import Damage
 from sbbbattlesim.events import EventManager
@@ -138,16 +137,17 @@ class Registry(object):
         logger.debug(f'Registered {name} - {character}')
 
     def filter(self, _lambda=lambda char_cls: True):
-        return (char_cls for id, char_cls in self.characters.items() if id not in CHARACTER_EXCLUSION and _lambda(char_cls) and char_cls._level > 1 and not char_cls.deactivated)
+        return (
+            char_cls for id, char_cls in self.characters.items()
+            if id not in CHARACTER_EXCLUSION and _lambda(char_cls)
+               and char_cls._level > 1
+               and not char_cls.deactivated
+        )
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
-            try:
-                character = __import__(name, globals(), locals(), ['CharacterType'], 1)
-                self.register(name, character.CharacterType)
-            except Exception as exc:
-                logger.exception('Error loading characters: {}'.format(name))
-                raise exc
+            character = __import__(name, globals(), locals(), ['CharacterType'], 1)
+            self.register(name, character.CharacterType)
 
 
 registry = Registry()
