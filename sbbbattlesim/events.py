@@ -146,37 +146,49 @@ class OnResolveBoard(SSBBSEvent):
 
 class EventManager:
     def __init__(self):
-        self._events = collections.defaultdict(queue.PriorityQueue)
+        self._events = collections.defaultdict(list)
 
     def pretty_print(self):
         return self.__repr__()
 
-    def register(self, event, **kwargs):
+    def register(self, event, priority=0, source=None):
         event_base = inspect.getmro(event)[1].__name__
         logger.debug(f'{self.pretty_print()} Registered {event_base} - {event.__class__.__name__}')
 
         if not event.is_valid():
             raise ValueError
 
-        event = event(manager=self, **kwargs)
-        self._events[event_base].put((event.priority, event))
+        event = event(manager=self, source=source or self, priority=priority)
+        self._events[event_base].append(event)
         return event
 
+    def unregister(self, event):
+        event_base = inspect.getmro(event.__class__)[1].__name__
+        try:
+            self._events.get(event_base, []).remove(event)
+        except ValueError:
+            pass
+
     def get(self, event):
-        event_queue = self._events[event]
-        priority = None
+        evts = self._events.get(event, [])
+        if not evts:
+            return
 
-        while event_queue.not_empty:
-            next_event = event_queue.get()
-            event_queue.put((next_event.priority, next_event))
+        evts = sorted(evts, key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True)
+        evts_set = set(self._events.get(event, []))
+        while True:
+            evt = evts[0]
+            yield evt
+            last_priority = evt.priority
 
-            if priority:
-                if next_event.priority < priority:
-                    continue
+            new_evts_set = {s for s in set(self._events.get(event, [])) if s.priority <= last_priority}
 
-            priority = priority or next_event.priority
+            if evts_set != new_evts_set:
+                evts = list(sorted(new_evts_set, key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True))
+                evts_set = set(evts)
 
-            yield next_event
+            if not evts_set:
+                break
 
     def __call__(self, event, stack=None, *args, **kwargs):
         logger.debug(f'{self.pretty_print()} triggered event {event}')

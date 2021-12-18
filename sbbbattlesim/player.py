@@ -28,6 +28,8 @@ class Player(EventManager):
 
         self.stateful_effects = {}
 
+        logger.debug('HELLO')
+
         self.id = id
         self.opponent = None
         self.level = level
@@ -105,6 +107,8 @@ class Player(EventManager):
                         self.aura_buffs.update(set(treasure.aura_buff))
                     except TypeError:
                         self.aura_buffs.add(treasure.aura_buff)
+
+        logger.debug('WORLD')
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'

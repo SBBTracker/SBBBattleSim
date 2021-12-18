@@ -12,8 +12,8 @@ class DoublyOnBuff(OnBuff):
     def handle(self, reason, stack, attack, health, *args, **kwargs):
         if reason == ActionReason.DOUBLEY_BUFF:
             return
-        golden_multiplier = 2 if self.doubly.golden else 1
-        Buff(reason=ActionReason.DOUBLEY_BUFF, source=self.doubly, targets=[self.doubly],
+        golden_multiplier = 2 if self.source.golden else 1
+        Buff(reason=ActionReason.DOUBLEY_BUFF, source=self.source, targets=[self.source],
              attack=attack * golden_multiplier, health=health * golden_multiplier, stack=stack).resolve()
 
 
@@ -28,4 +28,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(DoublyOnBuff, doubly=self, priority=9999)
+        self.register(DoublyOnBuff, priority=9999)
