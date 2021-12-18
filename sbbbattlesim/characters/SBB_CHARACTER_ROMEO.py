@@ -14,7 +14,7 @@ class RomeoOnSummon(OnSummon):
         self.triggered = True
         for char in summoned_characters:
             if char is self.juliet:
-                modifier = 14 if self.romeo.golden else 7
+                modifier = 14 if self.source.golden else 7
                 Buff(reason=ActionReason.ROMEO_BUFF, source=self.romeo, targets=[char],
                      attack=modifier, health=modifier, temp=False).resolve()
 
@@ -34,13 +34,13 @@ class RomeoLastBreath(OnDeath):
                 health=max(juliet._base_health, 1),
                 tribes=juliet.tribes,
                 golden=juliet.golden,
-                position=self.romeo.position,
+                position=self.source.position,
                 cost=juliet.cost,
                 player=juliet.player,
             )
             self.juliet = new_juliet
 
-            self.manager.player.register(RomeoOnSummon, juliet=self.juliet, romeo=self.romeo, triggered=False)
+            self.manager.player.register(RomeoOnSummon, source=new_juliet, romeo=self.romeo, triggered=False)
             self.manager.player.summon(self.manager.position, [new_juliet])
 
 
@@ -55,4 +55,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(RomeoLastBreath, romeo=self)
+        self.register(RomeoLastBreath)

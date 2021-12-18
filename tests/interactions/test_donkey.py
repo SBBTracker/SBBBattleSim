@@ -19,8 +19,7 @@ def test_donkey_surviving(golden, level, repeat):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p1.characters[2] is not None
     if golden:

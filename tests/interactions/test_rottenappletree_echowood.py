@@ -18,7 +18,6 @@ def test_echowood_rottenappletree():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 1)

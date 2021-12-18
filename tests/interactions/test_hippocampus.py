@@ -22,8 +22,7 @@ def test_hippocampus(golden, summoner_id):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     if summoner_id == 'SBB_CHARACTER_PRINCESSPEEP':
         if golden:
@@ -66,8 +65,7 @@ def test_summon_hippocampus():
     donkey.register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     hippocampus1 = board.p1.characters[2]
     assert (hippocampus1.attack, hippocampus1.health) == (hippocampus1._attack, hippocampus1._health+2)

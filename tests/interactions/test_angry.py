@@ -26,8 +26,6 @@ def test_angry(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     if golden:
         angry_final_stats = (9, 6)

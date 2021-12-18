@@ -18,8 +18,7 @@ def test_wickedwitch(golden):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     if golden:
         final_stats = (7, 5)

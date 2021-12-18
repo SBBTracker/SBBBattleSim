@@ -10,9 +10,8 @@ class TheWhiteStagOnPreAttack(OnPreAttack):
         targetted_chars = [c for c in self.manager.player.valid_characters() if c.position in behind_targets]
         modifier = 6 if self.manager.golden else 3
 
-        Buff(reason=ActionReason.THE_WHITE_STAG_BUFF, source=self.stag, targets=targetted_chars,
+        Buff(reason=ActionReason.THE_WHITE_STAG_BUFF, source=self.source, targets=targetted_chars,
              attack=modifier, health=modifier, temp=False).resolve()
-
 
 
 class CharacterType(Character):
@@ -26,4 +25,4 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.register(TheWhiteStagOnPreAttack, stag=self)
+        self.register(TheWhiteStagOnPreAttack)

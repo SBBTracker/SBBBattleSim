@@ -6,9 +6,9 @@ from sbbbattlesim.utils import Tribe
 
 class SpellWeaverOnSpell(OnSpellCast):
     def handle(self, caster, spell, target, stack, *args, **kwargs):
-        stat_gain = (2 if self.weaver.golden else 1)
-        if not self.weaver.dead:
-            Buff(reason=ActionReason.SPELL_WEAVER, source=self.weaver, targets=[self.weaver],
+        stat_gain = (2 if self.source.golden else 1)
+        if not self.source.dead:
+            Buff(reason=ActionReason.SPELL_WEAVER, source=self.source, targets=[self.source],
                  attack=stat_gain, stack=stack).resolve()
 
 
@@ -23,4 +23,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.register(SpellWeaverOnSpell, weaver=self)
+        self.player.register(SpellWeaverOnSpell, source=self)

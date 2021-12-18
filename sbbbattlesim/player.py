@@ -28,8 +28,6 @@ class Player(EventManager):
 
         self.stateful_effects = {}
 
-        logger.debug('HELLO')
-
         self.id = id
         self.opponent = None
         self.level = level
@@ -80,7 +78,6 @@ class Player(EventManager):
                 attack_multiplier = 3
 
         if raw:
-            self.resolve_board()
             for char in self.__characters.values():
                 if char:
                     char._base_health -= char._temp_health
@@ -107,8 +104,6 @@ class Player(EventManager):
                         self.aura_buffs.update(set(treasure.aura_buff))
                     except TypeError:
                         self.aura_buffs.add(treasure.aura_buff)
-
-        logger.debug('WORLD')
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
@@ -187,9 +182,6 @@ class Player(EventManager):
         for other things too'''
         summoned_characters = [self.spawn(char, char.position) for char in characters]
 
-        # Now that we have summoned units, make sure they have the buffs they should
-        self.resolve_board(summoned_characters=summoned_characters, *args, **kwargs)
-
         self('OnSummon', summoned_characters=summoned_characters)
 
         return summoned_characters
@@ -204,9 +196,6 @@ class Player(EventManager):
 
             summoned_characters.append(self.spawn(char, pos))
 
-        # Now that we have summoned units, make sure they have the buffs they should
-        self.resolve_board(summoned_characters=summoned_characters, *args, **kwargs)
-
         # The player handles on-summon effects
         stack = self('OnSummon', summoned_characters=summoned_characters)
 
@@ -215,15 +204,12 @@ class Player(EventManager):
     def transform(self, pos, character, *args, **kwargs):
         if self.__characters[pos] is not None:
             self.spawn(character, pos)
-            self.resolve_board(summoned_characters=[character], *args, **kwargs)
 
             # TODO wrap this into a nice helper function to be used in the attack slot getter as well
             if self._attack_slot == pos:
                 self._attack_slot += 1
                 if self._attack_slot > 7:
                     self.attack_slot = 1
-
-        character.player.opponent.resolve_board()
 
     def valid_characters(self, _lambda=lambda char: True):
         """

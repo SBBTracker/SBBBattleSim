@@ -19,8 +19,7 @@ def test_bearstain_black_cat_dying(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_stats = (15, 15) if golden else (6, 6)
     assert board.p1.characters[1].display_name == 'Cat'
@@ -38,8 +37,7 @@ def test_bearstain_black_cat_living(golden):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_stats = (5, 5) if golden else (3, 3)
     assert board.p1.characters[1].attack, board.p1.characters[1].health == final_stats
@@ -59,8 +57,7 @@ def test_two_bearstain_black_cat_dying(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_stats = (45, 45) if golden else (15, 15)
     assert board.p1.characters[1].display_name == 'Cat'
@@ -95,8 +92,7 @@ def test_summon_bearstain():
     donkey.register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     bearstain = board.p1.characters[2]
     assert (bearstain.attack, bearstain.health) == (bearstain._attack, bearstain._health)

@@ -25,8 +25,7 @@ def test_raw_fanny(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     if golden:
         final_stats = (1, 1)
@@ -51,8 +50,7 @@ def test_singingswords_bossy():
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (6, 3)
     assert (board.p1.characters[1]._base_attack, board.p1.characters[1]._base_health) == (1, 1)

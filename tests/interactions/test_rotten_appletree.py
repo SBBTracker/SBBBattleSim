@@ -15,8 +15,7 @@ def test_rotten_appletree():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p2.characters[1].health == 1
 
@@ -38,8 +37,7 @@ def test_rotten_appletree_support():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p2.characters[1].health == 1
 
@@ -66,8 +64,7 @@ def test_rotten_appletree_health_support_dies():
     board.p2.resolve_board()
     assert board.p2.characters[1].health == 1003
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert backchar.dead
     assert frontchar.dead
@@ -96,8 +93,7 @@ def test_rotten_appletree_attack_support_dies():
     assert board.p2.characters[1].attack == 4
 
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert frontchar.health == 1
     assert backchar.dead

@@ -17,9 +17,6 @@ def fight(attacker, defender, turn=0, limit=-1, **kwargs):
 
     logger.debug(f'********************NEW ROUND OF COMBAT: turn={turn}')
 
-    attacker.resolve_board()
-    defender.resolve_board()
-
     logger.info(f'Attacker {attacker.pretty_print()}')
     logger.info(f'Defender {defender.pretty_print()}')
 

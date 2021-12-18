@@ -8,39 +8,39 @@ logger = logging.getLogger(__name__)
 
 class StormKingOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
-        current_buff = self.storm_king.player._spells_cast
+        current_buff = self.source.player._spells_cast
 
         current_attack = int(
-            (self.storm_king.attack - (self.storm_king._attack * (2 if self.storm_king.golden else 1))) / (
-                4 if self.storm_king.golden else 2))
+            (self.source.attack - (self.source._attack * (2 if self.source.golden else 1))) / (
+                4 if self.source.golden else 2))
         current_health = int(
-            (self.storm_king.health - (self.storm_king._health * (2 if self.storm_king.golden else 1))) / (
-                4 if self.storm_king.golden else 2))
+            (self.source.health - (self.source._health * (2 if self.source.golden else 1))) / (
+                4 if self.source.golden else 2))
 
         new_buff = min(current_attack, current_health)
 
-        self.storm_king.player._spells_cast = min(current_buff, new_buff) if current_buff is not None else new_buff
+        self.source.player._spells_cast = min(current_buff, new_buff) if current_buff is not None else new_buff
 
 
 class StormKingOnSummon(OnSummon):
     def handle(self, summoned_characters, stack, *args, **kwargs):
-        if not self.storm_king in summoned_characters:
+        if not self.source in summoned_characters:
             return
 
-        spells_cast = self.storm_king.player._spells_cast
+        spells_cast = self.source.player._spells_cast
 
-        golden_multipler = 4 if self.storm_king.golden else 2
+        golden_multipler = 4 if self.source.golden else 2
         storm_king_buff = (spells_cast or 0) * golden_multipler
 
-        Buff(reason=ActionReason.STORM_KING_BUFF, source=self.storm_king, targets=[self.storm_king],
+        Buff(reason=ActionReason.STORM_KING_BUFF, source=self.source, targets=[self.source],
              attack=storm_king_buff, health=storm_king_buff, temp=False).resolve()
 
 
 class StormKingOnSpellCast(OnSpellCast):
     def handle(self, stack, *args, **kwargs):
-        stat_buff = 4 if self.storm_king.golden else 2
+        stat_buff = 4 if self.source.golden else 2
 
-        Buff(reason=ActionReason.STORM_KING_BUFF, source=self.storm_king, targets=[self.storm_king],
+        Buff(reason=ActionReason.STORM_KING_BUFF, source=self.source, targets=[self.source],
              attack=stat_buff, health=stat_buff, temp=False, *args, **kwargs).resolve()
 
 
@@ -56,9 +56,9 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.player.register(StormKingOnSpellCast, storm_king=self)
-        self.player.register(StormKingOnSummon, storm_king=self, priority=-15)
-        self.player.board.register(StormKingOnStart, storm_king=self, priority=9000)
+        self.player.register(StormKingOnSpellCast, source=self)
+        self.player.register(StormKingOnSummon, source=self, priority=-15)
+        self.player.board.register(StormKingOnStart, source=self, priority=9000)
 
     @classmethod
     def new(cls, *args, **kwargs):

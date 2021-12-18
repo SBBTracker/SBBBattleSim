@@ -24,8 +24,7 @@ def test_crafty_raw(num_treasures, golden):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1]._base_attack, board.p1.characters[1]._base_health) == ((4, 4) if golden else (2, 2))
 
@@ -48,8 +47,7 @@ def test_crafty(num_treasures, golden):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (fs, fs)
 
@@ -84,8 +82,7 @@ def test_crafty_spawn(num_treasures, golden):
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     fs = 1 + len(treasures) * (4 if golden else 2)
     fs2 = fs + (3 if golden else 1)

@@ -17,8 +17,7 @@ def test_darkwood_ranged():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p1.characters[1].attack == 1
 
@@ -37,8 +36,7 @@ def test_darkwood_melee(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_attack = 3 if golden else 2
     assert board.p1.characters[1].attack == final_attack
@@ -58,7 +56,6 @@ def test_darkwood_soltak_defending():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p1.characters[5].attack == 2

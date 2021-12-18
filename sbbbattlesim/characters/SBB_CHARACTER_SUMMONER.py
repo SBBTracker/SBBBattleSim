@@ -6,9 +6,9 @@ from sbbbattlesim.utils import Tribe
 
 class AonOnSpell(OnSpellCast):
     def handle(self, caster, spell, target, stack, *args, **kwargs):
-        stat_gain = (2 if self.aon.golden else 1)
-        Buff(reason=ActionReason.AON_BUFF, source=self.aon,
-             targets=self.aon.player.valid_characters(_lambda=lambda c: Tribe.MAGE in c.tribes),
+        stat_gain = (2 if self.source.golden else 1)
+        Buff(reason=ActionReason.AON_BUFF, source=self.source,
+             targets=self.source.player.valid_characters(_lambda=lambda c: Tribe.MAGE in c.tribes),
              attack=stat_gain, stack=stack).resolve()
 
 
@@ -29,5 +29,5 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.register(AonOnSpell, aon=self)
+        self.player.register(AonOnSpell, source=self)
         self.register(AonSlay)

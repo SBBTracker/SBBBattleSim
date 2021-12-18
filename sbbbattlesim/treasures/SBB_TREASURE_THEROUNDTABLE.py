@@ -27,6 +27,5 @@ class TreasureType(Treasure):
                     for char, (attack, health) in change_dt.items():
                         Buff(reason=ActionReason.ROUND_TABLE_BUFF, source=self.table, targets=[char],
                              health=health, attack=attack, temp=False, stack=stack).resolve()
-                        self.table.player.resolve_board()
 
         self.player.board.register(RoundTableBuff)

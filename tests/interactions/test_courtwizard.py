@@ -24,8 +24,7 @@ def test_courtwizard(tribe):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     if tribe in [Tribe.PRINCE, Tribe.PRINCESS]:
         assert board.p1.characters[1] is None and board.p1.characters[2] is None
@@ -57,8 +56,7 @@ def test_courtwizard_diesandproccs():
     assert wizard
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert mummy.dead
     assert prince.dead
@@ -108,8 +106,7 @@ def test_courtwizard_noattack_eveniftoken():
     unit.register(FakeOndeathFallingstars, priority=9999)
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
 
     assert unit.dead
@@ -135,7 +132,6 @@ def test_courtwizard_ranged():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (3, 6)

@@ -24,8 +24,7 @@ def test_reduplicator_bearstain():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
     char1 = player.characters[1]
@@ -56,8 +55,7 @@ def test_reduplicator_craft():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
     char1 = player.characters[1]
@@ -89,8 +87,7 @@ def test_reduplicator_juliet():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
     char1 = player.characters[2]
@@ -124,8 +121,7 @@ def test_reduplicator_wombat(r):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
     char1 = player.characters[1]
@@ -156,8 +152,7 @@ def test_reduplicator_puffpuff():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
     char1 = player.characters[1]
@@ -188,8 +183,7 @@ def test_reduplicator_stormking():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
     char1 = player.characters[1]
@@ -227,8 +221,7 @@ def test_reduplicator_does_it_waste(expend):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     triggered = board.p1.treasures['SBB_TREASURE_REDUPLICATOR'][0].triggered
     if expend:

@@ -6,12 +6,12 @@ from sbbbattlesim.utils import Tribe
 
 class AshwoodElmOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
-        base_attack_change = self.ashwood.health
-        modifier = 2 if self.ashwood.golden else 1
+        base_attack_change = self.source.health
+        modifier = 2 if self.source.golden else 1
         attack_change = base_attack_change * modifier
 
-        Buff(reason=ActionReason.ASHWOOD_ELM_BUFF, source=self.ashwood,
-             targets=self.ashwood.player.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes),
+        Buff(reason=ActionReason.ASHWOOD_ELM_BUFF, source=self.source,
+             targets=self.source.player.valid_characters(_lambda=lambda char: Tribe.TREANT in char.tribes),
              attack=attack_change, temp=False, stack=stack).resolve()
 
 class CharacterType(Character):
@@ -25,4 +25,4 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.player.board.register(AshwoodElmOnStart, priority=70, ashwood=self)
+        self.player.board.register(AshwoodElmOnStart, priority=70, source=self)

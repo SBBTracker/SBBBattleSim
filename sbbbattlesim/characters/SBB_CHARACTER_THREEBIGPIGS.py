@@ -38,4 +38,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(ThreeBigPigsDeath, priority=sbbbattlesim.SUMMONING_PRIORITY)
+        self.register(ThreeBigPigsDeath)

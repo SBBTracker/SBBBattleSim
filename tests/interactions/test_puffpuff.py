@@ -26,8 +26,7 @@ def test_puffpuff_spawn(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (2, 2)
 
@@ -52,8 +51,7 @@ def test_puffpuff_spawn_high_health(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (2, 2)
 
@@ -78,8 +76,7 @@ def test_puffpuff_spawn_high_attack(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (2, 2)
 
@@ -106,8 +103,7 @@ def test_puffpuff_spawn_with_large(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (51, 51)
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (45, 45)
@@ -134,8 +130,7 @@ def test_puffpuff_spawn_with_large_golden(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (20, 20)
 
@@ -163,8 +158,7 @@ def test_puffpuff_spawn_with_large_and_echowood(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (45, 45)
     assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (51, 51)
@@ -200,8 +194,7 @@ def test_puff_spawn(golden, r, raw):
     board.p1.characters[7].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (34, 34) if golden else (17, 17), (board.p1.characters[6].attack, board.p1.characters[6].health)
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (21, 21) if golden else (11, 11), (board.p1.characters[1].attack, board.p1.characters[1].health)

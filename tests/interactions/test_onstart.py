@@ -32,8 +32,7 @@ def test_onstart_trees(roundtable):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     ashwood = board.p1.characters[2]
     elderwood = board.p1.characters[5]
@@ -71,8 +70,7 @@ def test_onstart_arthur_and_lordy():
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     arthur = board.p1.characters[2]
     lordy = board.p1.characters[3]
@@ -108,8 +106,7 @@ def test_echowood_shoulder_roundtable():
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     _evil = board.p1.characters[2]
     good = board.p1.characters[5]

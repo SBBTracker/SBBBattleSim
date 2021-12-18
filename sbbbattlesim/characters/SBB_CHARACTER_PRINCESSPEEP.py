@@ -9,12 +9,12 @@ class PrincessPeepDeath(OnDeath):
     last_breath = True
 
     def handle(self, *args, **kwargs):
-        stat = 2 if self.manager.golden else 1
+        stat = 2 if self.source.golden else 1
 
         sheep = [
             character_registry['SBB_CHARACTER_SHEEP'](
-                player=self.manager.player,
-                position=self.manager.position,
+                player=self.source.player,
+                position=self.source.position,
                 attack=stat,
                 health=stat,
                 golden=False,
@@ -38,4 +38,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(PrincessPeepDeath, priority=sbbbattlesim.SUMMONING_PRIORITY)
+        self.register(PrincessPeepDeath)

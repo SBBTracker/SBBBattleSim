@@ -26,8 +26,7 @@ def test_fairy_godmother(golden, limit):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=limit)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     fairy_stats = (board.p1.characters[5].attack, board.p1.characters[5].health)
 

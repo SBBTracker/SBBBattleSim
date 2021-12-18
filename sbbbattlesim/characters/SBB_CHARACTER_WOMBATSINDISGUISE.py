@@ -11,12 +11,12 @@ class WombatsInDisguiseOnSummon(OnSummon):
 
     def handle(self, summoned_characters, stack, *args, **kwargs):
 
-        attack_buff = self.wombat.attack * (2 if self.wombat.golden else 1)
-        health_buff = self.wombat.max_health * (2 if self.wombat.golden else 1)
+        attack_buff = self.source.attack * (2 if self.source.golden else 1)
+        health_buff = self.source.max_health * (2 if self.source.golden else 1)
 
         for char in summoned_characters:
-            if char is self.summon:
-                Buff(reason=ActionReason.WOMBATS_IN_DISGUISE_BUFF, source=self.wombat, targets=[char],
+            if char is self.kwargs['summon']:
+                Buff(reason=ActionReason.WOMBATS_IN_DISGUISE_BUFF, source=self.source, targets=[char],
                      attack=attack_buff, health=health_buff, temp=False).resolve()
 
 
@@ -34,7 +34,7 @@ class WombatsInDisguiseOnDeath(OnDeath):
                 golden=self.manager.golden
             )
 
-            summon.player.register(WombatsInDisguiseOnSummon, wombat=self.manager, summon=summon)
+            summon.player.register(WombatsInDisguiseOnSummon, source=self.manager, summon=summon)
             self.manager.player.summon(self.manager.position, [summon])
 
 

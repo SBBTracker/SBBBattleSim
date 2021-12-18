@@ -22,7 +22,6 @@ def test_mummy(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p2.characters[5].health == 90 if golden else 95

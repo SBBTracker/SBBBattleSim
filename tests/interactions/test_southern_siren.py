@@ -21,8 +21,7 @@ def test_southern_siren(attacker_golden, defender_golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     units_to_check = []
     units_to_check.append(board.p1.characters[2])

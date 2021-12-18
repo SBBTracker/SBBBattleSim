@@ -18,8 +18,7 @@ def test_babybear_dying(golden, limit):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=limit)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     if limit == 1:
         assert board.p1.characters[6].id == 'SBB_CHARACTER_PAPABEAR'

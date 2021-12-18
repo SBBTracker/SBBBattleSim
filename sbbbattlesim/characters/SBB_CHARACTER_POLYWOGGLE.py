@@ -10,7 +10,7 @@ class PolywoggleSlay(OnAttackAndKill):
     slay = True
 
     def handle(self, killed_character, stack, *args, **kwargs):
-        golden_promotion = (2 if self.woggle.golden else 1)
+        golden_promotion = (2 if self.source.golden else 1)
         _lambda = lambda char: char._level == min(self.manager.player.level + golden_promotion, 6)
         valid_chars = list(character_registry.filter(_lambda=_lambda))
         if valid_chars:
@@ -39,4 +39,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(PolywoggleSlay, woggle=self)
+        self.register(PolywoggleSlay)

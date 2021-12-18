@@ -26,8 +26,6 @@ def test_riverwish_yaga(golden, mimic, evil_eye):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     yaga_multiplier = 2 if golden else 1
     evil_eye_additor = yaga_multiplier if evil_eye else 0
@@ -68,8 +66,6 @@ def test_double_yaga(mimic, evil_eye):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     evil_eye_additor = 1 if evil_eye else 0
     mimic_multiplier = 2 if mimic else 1
@@ -100,8 +96,6 @@ def test_complicated_grimsoul():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (12, 12)
 
@@ -123,9 +117,6 @@ def test_complicated_grimsoul_two():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
-
 
     leftgrim = board.p1.characters[2]
     rightgrim = board.p1.characters[3]
@@ -150,8 +141,6 @@ def test_trophy_grimsoul_blackcat():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert board.p1.characters[3].id == "SBB_CHARACTER_CAT"
     assert board.p1.characters[4].id == "SBB_CHARACTER_CAT"

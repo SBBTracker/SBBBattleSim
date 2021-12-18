@@ -241,10 +241,10 @@ class Action:
 
         if self.event and (not self.player_registered if self.player_event else True):
             if self.player_event:
-                registered = char.player.register(self.event, priority=self.priority, *args, **kwargs)
+                registered = char.player.register(self.event, priority=self.priority, source=self.source, *args, **kwargs)
                 self.player_registered = True
             else:
-                registered = char.register(self.event, priority=self.priority, *args, **kwargs)
+                registered = char.register(self.event, priority=self.priority, source=self.source, *args, **kwargs)
             self._event_buffer[char].append(registered)
 
         if self.attack != 0 or self.health != 0:

@@ -21,8 +21,7 @@ def test_grimsoul(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_stats = (5, 5) if golden else (3, 3)
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == final_stats

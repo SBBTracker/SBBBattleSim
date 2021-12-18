@@ -131,8 +131,7 @@ def test_shrivel():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     char = board.p2.characters[1]
     assert char
@@ -155,8 +154,7 @@ def test_shrivel_speed(survives):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     char = board.p2.characters[1]
     if survives:
@@ -178,8 +176,7 @@ def test_shrivel_speed2(survives):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     char = board.p2.characters[1]
     if survives:
@@ -202,8 +199,7 @@ def test_spells_damaging_darkwood():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     char = board.p2.characters[1]
     assert (char.attack, char.health) == (1, 2)
@@ -226,8 +222,7 @@ def test_multiple_spells():
     frontchar = board.p2.characters[1]
     backchar = board.p2.characters[5]
     winner, loser = board.fight(limit=-1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert frontchar._action_history[0].reason == ActionReason.FIREBALL
     assert set([statchange.reason for statchange in backchar._action_history]) == {ActionReason.FIREBALL,

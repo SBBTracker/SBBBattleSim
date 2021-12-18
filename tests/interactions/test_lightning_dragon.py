@@ -23,8 +23,7 @@ def test_lightning_dragon():
     backline = board.p2.characters[5]
 
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert dragon.dead
     assert not frontline.dead

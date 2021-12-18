@@ -25,8 +25,7 @@ def test_simple_drac_sabre(mimic):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=3)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_stats = (9, 5) if mimic else (5, 3)
 
@@ -54,7 +53,6 @@ def test_proc_order_drac_sabre(direction):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (4, 1)

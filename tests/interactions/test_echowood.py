@@ -25,8 +25,7 @@ def test_echowood_queenofhearts():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     golden_final_stats = (9, 9)
 
@@ -53,8 +52,7 @@ def test_echowood_supported_token():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 4)
 
@@ -72,8 +70,7 @@ def test_bearstain_echowood():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p1.characters[7].attack, board.p1.characters[7].health == (6, 6)
 
@@ -95,8 +92,7 @@ def test_echowood_evil_queen():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (5, 5)
 
@@ -119,8 +115,7 @@ def test_echowood_pumpkin():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (2, 2)
 
@@ -143,8 +138,7 @@ def test_echowood_pumpkin_support():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 4)
 
@@ -166,8 +160,7 @@ def test_echowood_romeo():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     juliet = board.p1.characters[2]
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (8, 8)
 
@@ -191,8 +184,7 @@ def test_echowood_slay_vainpire(survives, phoenix_feather):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     juliet = board.p1.characters[2]
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == ((2, 2) if (survives or phoenix_feather) else (1, 1))
 
@@ -214,8 +206,7 @@ def test_echowood_slay_lancelot(survives):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     juliet = board.p1.characters[2]
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == ((3, 3) if survives else (1, 1))
 
@@ -237,8 +228,7 @@ def test_echowood_romeo_juliet():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     juliet = board.p1.characters[2]
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (8, 8)
 
@@ -275,8 +265,7 @@ def test_multiple_echowoods_with_summon():
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 1)
     assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 1)
@@ -314,8 +303,7 @@ def test_multiple_echowoods_with_summon():
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 1)
     assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 1)
@@ -355,8 +343,7 @@ def test_multiple_echowoods_with_summon_and_health_support():
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 4)
     assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 4)
@@ -396,8 +383,7 @@ def test_multiple_echowoods_with_summon_and_health_support():
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 4)
     assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 4)
@@ -436,8 +422,7 @@ def test_multiple_echowoods_with_summon_and_health_support_not_raw():
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 4)
     assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 4)
@@ -475,8 +460,7 @@ def test_multiple_echowoods_with_summoningportal():
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (2, 2)
     assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (2, 2)
@@ -521,8 +505,7 @@ def test_multiple_echowoods_with_summoningportal_summontwo(r):
     board.p1.characters[2].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 4)
     assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (3, 3)
@@ -568,8 +551,7 @@ def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood(r):
     board.p1.characters[2].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (2, 2)
     assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (3, 3)
@@ -627,8 +609,7 @@ def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood_onspawn(r
     board.p1.register(FakeTrojanDonkeyOnSummonSummon)
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (2, 2)
     assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (3, 3)
@@ -659,8 +640,7 @@ def test_medusa_echowood():
     winner, loser = board.fight(limit=1)
     echo = board.p2.characters[7]
 
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (echo.attack, echo.health) == (4, 4)
 

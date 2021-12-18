@@ -8,11 +8,19 @@ from typing import List
 
 logger = logging.getLogger(__name__)
 
-@dataclass
+
 class SSBBSEvent:
-    manager: 'EventManager'
-    source: ('Character', 'Hero', 'Spell', 'Treasure')
-    priority: int = 0
+    def __init__(
+            self,
+            manager: ('EventManager', 'Character', 'Player', 'Board'),
+            source: ('Character', 'Hero', 'Spell', 'Treasure'),
+            priority: int = 0,
+            **kwargs
+    ):
+        self.manager = manager
+        self.source = source
+        self.priority = priority
+        self.kwargs = kwargs
 
     @classmethod
     def is_valid(cls):
@@ -146,7 +154,9 @@ class OnResolveBoard(SSBBSEvent):
 
 class EventManager:
     def __init__(self):
-        self._events = collections.defaultdict(list)
+        self._events = collections.defaultdict(queue.PriorityQueue)
+        self._event_buffer = queue.PriorityQueue()
+        self._removed = []
 
     def pretty_print(self):
         return self.__repr__()
@@ -159,36 +169,38 @@ class EventManager:
             raise ValueError
 
         event = event(manager=self, source=source or self, priority=priority)
-        self._events[event_base].append(event)
+        self._events[event_base].put_nowait(event)
         return event
 
     def unregister(self, event):
-        event_base = inspect.getmro(event.__class__)[1].__name__
-        try:
-            self._events.get(event_base, []).remove(event)
-        except ValueError:
-            pass
+        self._removed.append(event)
 
     def get(self, event):
-        evts = self._events.get(event, [])
-        if not evts:
-            return
+        events_queue = self._events[event]
+        priority = None
 
-        evts = sorted(evts, key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True)
-        evts_set = set(self._events.get(event, []))
         while True:
-            evt = evts[0]
-            yield evt
-            last_priority = evt.priority
-
-            new_evts_set = {s for s in set(self._events.get(event, [])) if s.priority <= last_priority}
-
-            if evts_set != new_evts_set:
-                evts = list(sorted(new_evts_set, key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True))
-                evts_set = set(evts)
-
-            if not evts_set:
+            try:
+                next_event = events_queue.get_nowait()
+            except queue.Empty:
                 break
+
+            if next_event in self._removed:
+                # self._removed.remove(next_event) # Maybe?
+                continue
+
+            self._event_buffer.put(next_event)
+
+            if priority:
+                if next_event.priority < priority:
+                    continue
+
+            priority = priority or next_event.priority
+
+            yield next_event
+
+        self._events[event] = self._event_buffer
+        self._event_buffer = queue.PriorityQueue()
 
     def __call__(self, event, stack=None, *args, **kwargs):
         logger.debug(f'{self.pretty_print()} triggered event {event}')

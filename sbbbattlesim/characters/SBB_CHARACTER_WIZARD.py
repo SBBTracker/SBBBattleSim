@@ -6,9 +6,9 @@ from sbbbattlesim.utils import Tribe
 
 class WizardFamiliarOnSpell(OnSpellCast):
     def handle(self, caster, spell, target, stack, *args, **kwargs):
-        stat_gain = (2 if self.wizard_familiar.golden else 1)
-        if not self.wizard_familiar.dead:
-            Buff(reason=ActionReason.WIZARDS_FAMILIAR, source=self.wizard_familiar, targets=[self.wizard_familiar],
+        stat_gain = (2 if self.source.golden else 1)
+        if not self.source.dead:
+            Buff(reason=ActionReason.WIZARDS_FAMILIAR, source=self.source, targets=[self.source],
                  attack=stat_gain, health=stat_gain, stack=stack).resolve()
 
 
@@ -22,4 +22,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.register(WizardFamiliarOnSpell, wizard_familiar=self)
+        self.player.register(WizardFamiliarOnSpell, source=self)

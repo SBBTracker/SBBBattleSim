@@ -18,8 +18,7 @@ def test_lonely_pumpkin_dying(golden):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     pk = board.p1.characters[1]
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     summoned_unit = board.p1.characters[1]
     assert summoned_unit is not pk
@@ -51,8 +50,7 @@ def test_pumpkin_with_friends_dying():
     board.p1.characters[4]._level = 5
 
     winner, loser = board.fight(limit=5)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p1.characters[1]._level == 1
     assert board.p1.characters[2]._level == 2
@@ -73,8 +71,7 @@ def test_pumpkin_summoning_cats(golden):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     pk = board.p1.characters[1]
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     summoned_unit = board.p1.characters[1]
     assert summoned_unit, [i.pretty_print() for i in board.p1.valid_characters()]

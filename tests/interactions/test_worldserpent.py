@@ -19,8 +19,7 @@ def test_jormangundr(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_stats = (41, 41) if golden else (21, 21)
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats

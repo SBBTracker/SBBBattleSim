@@ -20,8 +20,7 @@ def test_riverwish(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_stats = (3, 3) if golden else (2, 2)
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == final_stats
@@ -40,7 +39,6 @@ def test_riverwish_cloakoftheassassin():
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (4, 4)

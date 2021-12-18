@@ -33,8 +33,7 @@ def test_madmim_singingswords(mimic):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (final_stats, 1)
 
@@ -59,8 +58,7 @@ def test_singingswords_bearstain():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (18, 6)
 
@@ -85,8 +83,7 @@ def test_singingswords_bearstain_unassumingsheep():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (96, 16)
 
@@ -111,8 +108,7 @@ def test_singingswords_dos_bearstain():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (50, 15)
 
@@ -133,8 +129,7 @@ def test_singingswords_mimic_roundtable():
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (48, 48)
@@ -152,8 +147,7 @@ def test_singingswords_mimic_roundtable():
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (9, 9)
@@ -179,8 +173,7 @@ def test_backline_blackcat():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (1, 1)
 
@@ -204,7 +197,6 @@ def test_multiple_echowoods():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (4, 1)

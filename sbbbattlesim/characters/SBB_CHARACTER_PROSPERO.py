@@ -29,7 +29,6 @@ class BearstineOnSummon(OnSummon):
 
             Buff(reason=ActionReason.BEARSTINE_BUFF, source=self.bearstine, targets=[char],
                  attack=attack_buff, health=health_buff, temp=False, stack=stack).resolve()
-            char.player.resolve_board()
 
 
 class CharacterType(Character):

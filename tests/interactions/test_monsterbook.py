@@ -25,8 +25,7 @@ def test_monsterbook_wizard_familar(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     for pos in [2, 3, 4]:
         wizardbuffs = [
@@ -55,8 +54,7 @@ def test_monsterbook_spellweaver(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     for pos in [2, 3, 4]:
         wizardbuffs = [
@@ -86,8 +84,7 @@ def test_monsterbook_aon(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     for pos in [2, 3, 4]:
         wizardbuffs = [

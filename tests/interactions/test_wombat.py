@@ -21,8 +21,7 @@ def test_wombat_dying(golden, level, repeat):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     summoned_char = board.p1.characters[1]
 
@@ -53,8 +52,7 @@ def test_charon_wombat():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     summoned_char = board.p1.characters[1]
 
@@ -88,8 +86,7 @@ def test_bearstain_wombat_phoenix():
     original_wombat = board.p1.characters[1]
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p1.characters[1] is original_wombat
     assert original_wombat._base_attack == 114

@@ -26,8 +26,7 @@ def test_stormking_spawn(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (1, 1)
 
@@ -64,8 +63,7 @@ def test_stormking_spawn_with_spell(r, golden, raw):
 
     board.register(CastFireballOnStart)
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (3, 3)
 
@@ -93,8 +91,7 @@ def test_stormking_cast_spell(r, golden, raw):
     board.register(CastFireballOnStart)
 
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == ((8, 8) if golden else (4, 4))
 
@@ -127,8 +124,7 @@ def test_many_stormking_cast_spell(r, golden, raw):
     board.register(CastFireballOnStart)
 
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     for pos in [1, 2, 3, 4]:
         assert (board.p1.characters[pos].attack, board.p1.characters[pos].health) == ((8, 8) if golden else (4, 4))
@@ -154,8 +150,7 @@ def test_storm_king_spawn_high_health(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (7, 7)
 
@@ -180,8 +175,7 @@ def test_stormking_spawn_high_attack(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (7, 7)
 
@@ -208,8 +202,7 @@ def test_stormking_spawn_with_large(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (52, 52)
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (51, 51)
@@ -236,8 +229,7 @@ def test_stormking_spawn_with_large_golden(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (25, 25)
 
@@ -264,8 +256,7 @@ def test_stormking_spawn_with_large_and_echowood(r, raw):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (49, 49)
     assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (50, 50)
@@ -301,8 +292,7 @@ def test_stormking_spawn(golden, r, raw):
     board.p1.characters[7].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (36, 36) if golden else (18, 18), board.p1.characters[6].pretty_print()
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (33, 33) if golden else (17, 17), board.p1.characters[1].pretty_print()

@@ -23,8 +23,7 @@ def test_charon(is_real):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
     dead = player.graveyard[0]
@@ -52,8 +51,7 @@ def test_evella(on, evil_back):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -81,8 +79,7 @@ def test_sad_dracula(on):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -103,8 +100,7 @@ def test_fate(on):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -127,8 +123,7 @@ def test_gepetto():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -150,8 +145,7 @@ def test_krampus(on):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -173,8 +167,7 @@ def test_mrsclaus(on):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -198,8 +191,7 @@ def test_merlin():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -230,8 +222,7 @@ def test_merlin_not_activate():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     enemy_char = board.p2.characters[1]
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -259,8 +250,7 @@ def test_jacks_giant(on):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -284,8 +274,7 @@ def test_mirhi(on):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -310,8 +299,7 @@ def test_trophy_hunter():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -330,8 +318,7 @@ def test_trophy_hunter():
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -355,8 +342,7 @@ def test_trophy_hunter_yaga():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -383,8 +369,7 @@ def test_trophy_hunter_friendlyspirit(limit):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=limit)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -416,8 +401,7 @@ def test_beauty(on):
 
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -445,8 +429,7 @@ def test_beauty_withtreasure(treasure):
 
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -470,8 +453,7 @@ def test_beauty_spawnedanimal():
 
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -495,8 +477,7 @@ def test_fallen_angel(tribes, attack, health):
 
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -520,8 +501,7 @@ def test_muerte():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
