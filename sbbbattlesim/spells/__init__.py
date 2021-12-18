@@ -76,4 +76,3 @@ class Registry(object):
 
 
 registry = Registry()
-print('Spells')

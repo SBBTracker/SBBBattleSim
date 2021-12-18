@@ -20,5 +20,4 @@ class CharacterType(Character):
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
-    def buff(self, target_character, *args, **kwargs):
-        target_character.register(ShadowAssassinOnSlay, temp=True, shadow_assassin=self)
+    

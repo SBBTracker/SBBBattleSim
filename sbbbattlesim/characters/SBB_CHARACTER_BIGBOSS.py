@@ -17,8 +17,5 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         modifier = 4 if self.golden else 2
-        self.aura_buff = Aura(reason=ActionReason.AURA_BUFF, source=self, attack=modifier, health=modifier,
+        self.aura = Aura(reason=ActionReason.AURA_BUFF, source=self, attack=modifier, health=modifier,
                               _lambda=lambda char: Tribe.DWARF in char.tribes)
-
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)

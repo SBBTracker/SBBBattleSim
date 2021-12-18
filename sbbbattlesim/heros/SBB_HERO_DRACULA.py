@@ -17,7 +17,6 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = Aura(event=SadDraculaOnAttackAndKill, sad_dracula=self, _lambda=lambda char: char.position == 1)
+        self.aura = Aura(event=SadDraculaOnAttackAndKill, sad_dracula=self, _lambda=lambda char: char.position == 1)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

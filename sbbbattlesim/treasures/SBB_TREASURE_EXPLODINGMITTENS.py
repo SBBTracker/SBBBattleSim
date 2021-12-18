@@ -20,7 +20,6 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = Aura(event=ExplodingMittensOnDeath, source=self, mitten=self)
+        self.aura = Aura(event=ExplodingMittensOnDeath, source=self, mitten=self)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

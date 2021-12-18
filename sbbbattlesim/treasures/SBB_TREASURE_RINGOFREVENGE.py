@@ -26,8 +26,7 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         self.feather_used = False
         stats = 3 * (self.mimic + 1)
-        self.aura_buff = Aura(event=RingOfRevengeBuff, source=self, ring_of_revenge=self,
+        self.aura = Aura(event=RingOfRevengeBuff, source=self, ring_of_revenge=self,
                                   _lambda=lambda char: char.position in range(1, 5))
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

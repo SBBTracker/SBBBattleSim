@@ -12,7 +12,6 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         self.feather_used = False
         stats = 3 * (self.mimic + 1)
-        self.aura_buff = Aura(reason=ActionReason.SIX_OF_SHIELDS, source=self, health=stats)
+        self.aura = Aura(reason=ActionReason.SIX_OF_SHIELDS, source=self, health=stats)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

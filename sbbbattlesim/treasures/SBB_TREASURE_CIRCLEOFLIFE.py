@@ -21,7 +21,6 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         stats = 2 * (self.mimic + 1)
-        self.aura_buff = Aura(event=TreeOfLifeHeal, source=self, tree=self)
+        self.aura = Aura(event=TreeOfLifeHeal, source=self, tree=self)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

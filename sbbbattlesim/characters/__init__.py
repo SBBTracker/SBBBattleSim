@@ -14,11 +14,8 @@ logic_path = __path__
 class Character(EventManager):
     display_name = ''
     id = ''
-    aura = False
     support = False
-    slay = False
     quest = False
-    last_breath = False
     flying = False
     ranged = False
 
@@ -48,9 +45,8 @@ class Character(EventManager):
         self.dead = False
         self.invincible = False
 
-        self.support_buff = None
-        self.aura_buff = None
-        self.player_buff = None
+        self.support = None
+        self.aura = None
 
         self._action_history = []
 
@@ -72,9 +68,6 @@ class Character(EventManager):
     @classmethod
     def valid(cls):
         return cls._attack != 0 or cls._health != 0 or cls._level != 0
-
-    def buff(self, target_character, *args, **kwargs):
-        raise NotImplementedError
 
     @property
     def slay(self):
@@ -103,14 +96,6 @@ class Character(EventManager):
             targets=[target],
             damage=self.attack,
         )
-
-    def clear_temp(self):
-        # logger.debug(f'{self.pretty_print()} clearing temp')
-        super().clear_temp()
-
-        self._temp_attack = 0
-        self._temp_health = 0
-        self.invincible = False
 
 
 CHARACTER_EXCLUSION = (
@@ -146,8 +131,10 @@ class Registry(object):
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
-            character = __import__(name, globals(), locals(), ['CharacterType'], 1)
-            self.register(name, character.CharacterType)
-
+            try:
+                character = __import__(name, globals(), locals(), ['CharacterType'], 1)
+                self.register(name, character.CharacterType)
+            except Exception as exc:
+                logger.exception('Error loading characters: {}'.format(name))
 
 registry = Registry()

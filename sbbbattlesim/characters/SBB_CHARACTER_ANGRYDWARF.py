@@ -17,6 +17,3 @@ class CharacterType(Character):
         stat_change = 4 if self.golden else 2
         self.support_buff = Support(source=self, _lambda=lambda char: Tribe.DWARF in char.tribes,
                                     health=stat_change, attack=stat_change)
-
-    def buff(self, target_character, *args, **kwargs):
-        self.support_buff.execute(target_character, *args, **kwargs)

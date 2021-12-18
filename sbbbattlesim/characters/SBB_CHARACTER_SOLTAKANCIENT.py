@@ -25,7 +25,6 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = SoltakAuraBuff(source=self, _lambda=lambda char: char.position in utils.get_behind_targets(self.position))
+        self.aura = SoltakAuraBuff(source=self, _lambda=lambda char: char.position in utils.get_behind_targets(self.position))
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

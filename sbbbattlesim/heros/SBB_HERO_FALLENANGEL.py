@@ -13,8 +13,8 @@ class FallenAngelOnStart(OnStart):
         attack_buff = 2 if len(self.angel.player.valid_characters(_lambda=lambda char: Tribe.EVIL in char.tribes)) >= 3 else 0
         health_buff = 2 if len(self.angel.player.valid_characters(_lambda=lambda char: Tribe.GOOD in char.tribes)) >= 3 else 0
 
-        self.angel.aura_buff.attack = attack_buff
-        self.angel.aura_buff.health = health_buff
+        self.angel.aura.attack = attack_buff
+        self.angel.aura.health = health_buff
 
 
 class HeroType(Hero):
@@ -26,7 +26,6 @@ class HeroType(Hero):
 
         self.player.board.register(FallenAngelOnStart, angel=self)
 
-        self.aura_buff = Aura(reason=ActionReason.FALLEN_ANGEL_BUFF, source=self, priority=1e99)
+        self.aura = Aura(reason=ActionReason.FALLEN_ANGEL_BUFF, source=self, priority=1e99)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

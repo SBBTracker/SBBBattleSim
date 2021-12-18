@@ -24,8 +24,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = Aura(source=self, oni_king=self, event=EvilQueenOnDeath, evil_queen=self,
+        self.aura = Aura(source=self, oni_king=self, event=EvilQueenOnDeath, evil_queen=self,
                                    _lambda=lambda char: Tribe.EVIL in char.tribes)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

@@ -1,6 +1,6 @@
 from sbbbattlesim.characters import Character
 from sbbbattlesim.utils import Tribe
-from sbbbattlesim.action import Buff, ActionReason
+from sbbbattlesim.action import Buff, ActionReason, Aura
 
 
 class CharacterType(Character):
@@ -13,8 +13,8 @@ class CharacterType(Character):
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.PRINCESS}
 
-    def buff(self, target_character, *args, **kwargs):
-        if Tribe.DWARF in target_character.tribes:
-            modifier = 2 if self.golden else 1
-            Buff(reason=ActionReason.AURA_BUFF, source=self, targets=[target_character],
-                 attack=modifier, health=modifier, temp=True, *args, **kwargs).resolve()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        modifier = 2 if self.golden else 1
+        self.aura = Aura(reason=ActionReason.PRINCESS_WIGHT_BUFF, source=self, attack=modifier, health=modifier,
+                         _lambda=lambda char: Tribe.DWARF in char.tribes)

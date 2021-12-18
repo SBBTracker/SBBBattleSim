@@ -28,8 +28,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = Aura(source=self, bearded_vulture=self, event=BeardedVultureOnDeath,
+        self.aura = Aura(source=self, bearded_vulture=self, event=BeardedVultureOnDeath,
                                    _lambda=lambda char: Tribe.ANIMAL in char.tribes and char is not self)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

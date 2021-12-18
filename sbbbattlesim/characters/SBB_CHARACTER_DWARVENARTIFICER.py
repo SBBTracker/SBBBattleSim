@@ -1,8 +1,15 @@
 from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnSummon, OnStart
+from sbbbattlesim.events import OnSummon, OnStart, OnSpawn
 from sbbbattlesim.utils import Tribe
 
+
+class CraftyOnSpawn(OnSpawn):
+    def handle(self, stack, *args, **kwargs):
+        golden_multipler = 2 if self.source.golden else 1
+        crafty_buff = 2 * len(self.source.player.treasures) * golden_multipler
+        Buff(reason=ActionReason.CRAFTY_BUFF, source=self.source, targets=[self.source],
+             attack=crafty_buff, health=crafty_buff, temp=True, *args, **kwargs).resolve()
 
 
 class CharacterType(Character):
@@ -17,14 +24,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # TODO Fix Crafty
-
-    def buff(self, target_character, *args, **kwargs):
-        if target_character is self:
-            golden_multipler = 2 if self.golden else 1
-            crafty_buff = 2 * len(self.player.treasures) * golden_multipler
-            Buff(reason=ActionReason.CRAFTY_BUFF, source=self, targets=[self],
-                 attack=crafty_buff, health=crafty_buff, temp=True, *args, **kwargs).resolve()
+        self.register(CraftyOnSpawn)
 
     @classmethod
     def new(cls, player, position, golden):

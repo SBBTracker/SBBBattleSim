@@ -47,7 +47,7 @@ SUPPORT_EXCLUSION = (
 
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('horn', (True, False))
-@pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: char.support is True))
+@pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: char.support))
 def test_support(char, golden, horn):
     '''Support units that apply buffs get tested to make sure that literally any buff is getting applied'''
     # Riverwish is a support but doesn't give stats so it won't be tested here
@@ -122,6 +122,9 @@ def test_last_breath(char, golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
+
+    print(board.p1.pretty_print())
+    print(board.p2.pretty_print())
 
     assert board.p1.hero.triggered
 

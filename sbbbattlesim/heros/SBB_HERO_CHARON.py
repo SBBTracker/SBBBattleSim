@@ -27,7 +27,6 @@ class HeroType(Hero):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triggered = False
-        self.aura_buff = Aura(event=CharonOnDeath, priority=999, charon=self)
+        self.aura = Aura(event=CharonOnDeath, priority=999, charon=self)
 
-    def buff(self, target_character, *args, **kwargs):
-        target_character.register(CharonOnDeath, priority=999, charon=self)
+    

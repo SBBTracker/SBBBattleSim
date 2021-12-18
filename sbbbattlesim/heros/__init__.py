@@ -10,16 +10,15 @@ logic_path = __path__
 class Hero:
     display_name = ''
     id = ''
-    aura = False
 
     def __init__(self, player):
         self.player = player
+        self.aura = None
 
     def pretty_print(self):
         return self.display_name
 
-    def buff(self, target_character, *args, **kwargs):
-        raise NotImplementedError
+    
 
 
 class Registry(object):
@@ -55,4 +54,3 @@ class Registry(object):
 
 
 registry = Registry()
-print('Heroes')

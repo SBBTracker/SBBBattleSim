@@ -27,7 +27,6 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = Aura(_action=convert_on_death_to_on_attack_and_kill)
+        self.aura = Aura(_action=convert_on_death_to_on_attack_and_kill)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

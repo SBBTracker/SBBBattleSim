@@ -30,5 +30,4 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         self.player.board.register(HeartWoodOnStart, priority=100, source=self)
 
-    def buff(self, target_character, *args, **kwargs):
-        pass
+    

@@ -14,8 +14,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = Aura(source=self, health=2 if self.golden else 1,
+        self.aura = Aura(source=self, health=2 if self.golden else 1,
                               _lambda=lambda char: Tribe.GOOD in char.tribes and char is not self)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

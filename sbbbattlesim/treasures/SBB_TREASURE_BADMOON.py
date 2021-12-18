@@ -18,7 +18,6 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = Aura(event=BadMoonSlayBuff, source=self, bad_moon=self)
+        self.aura = Aura(event=BadMoonSlayBuff, source=self, bad_moon=self)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

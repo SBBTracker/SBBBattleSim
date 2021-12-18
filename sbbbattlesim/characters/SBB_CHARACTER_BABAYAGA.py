@@ -46,6 +46,3 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.support_buff = Support(source=self, event=BabaYagaOnSlayBuff, baba_yaga=self)
-
-    def buff(self, target_character, *args, **kwargs):
-        self.support_buff.execute(target_character, *args, **kwargs)

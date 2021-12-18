@@ -12,13 +12,13 @@ logic_path = __path__
 class Treasure(EventManager):
     display_name = ''
     id = ''
-    aura = False
 
     _level = 0
 
     def __init__(self, player, mimic):
         self.player = player
         self.mimic = mimic
+        self.aura = None
 
     def pretty_print(self):
         return self.display_name
@@ -26,8 +26,7 @@ class Treasure(EventManager):
     def valid(self):
         return self._level != 0
 
-    def buff(self, target_character, *args, **kwargs):
-        raise NotImplementedError(self.display_name)
+    
 
 
 class Registry(object):
@@ -63,4 +62,3 @@ class Registry(object):
 
 
 registry = Registry()
-print('Treasure')

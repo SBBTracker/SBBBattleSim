@@ -40,6 +40,18 @@ class OnStart(SSBBSEvent):
         raise NotImplementedError
 
 
+class OnSpawn(SSBBSEvent):
+    '''Triggered after a unit spawns'''
+    def handle(self, stack, *args, **kwargs):
+        raise NotImplementedError
+
+
+class OnDespawn(SSBBSEvent):
+    '''Triggered after a unit despawns'''
+    def handle(self, stack, *args, **kwargs):
+        raise NotImplementedError
+
+
 class OnSummon(SSBBSEvent):
     '''A unit is summoned'''
     def handle(self, summoned_characters, stack, *args, **kwargs):

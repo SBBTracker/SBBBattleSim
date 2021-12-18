@@ -27,8 +27,7 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura_buff = Aura(event=BookOfHeroesOnAttackAndKillBuff, source=self, book=self,
+        self.aura = Aura(event=BookOfHeroesOnAttackAndKillBuff, source=self, book=self,
                                    _lambda=lambda char: Tribe.GOOD in char.tribes)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

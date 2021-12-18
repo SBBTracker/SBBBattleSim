@@ -1,6 +1,7 @@
 import logging
 import logging.config
 import os
+import traceback
 
 config = {
     'logging': {
@@ -14,6 +15,7 @@ config = {
 def configure_logging():
     try:
         program_logging_config = get_config('logging')
+        print(program_logging_config)
         python_logging_config = program_logging_config['logging_conf']
         python_logging_level = program_logging_config['logging_level']
 
@@ -24,8 +26,10 @@ def configure_logging():
         # Configure logging level
         if python_logging_level:
             logging.basicConfig(level=python_logging_level)
-    except:
-        logging.basicConfig(level='ERROR')
+    except Exception as e:
+        traceback.print_exc()
+        print('No Logger')
+        pass
 
 
 def get_config(*args):

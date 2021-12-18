@@ -18,5 +18,4 @@ class CharacterType(Character):
         self.support_buff = Support(source=self, _lambda=lambda char: Tribe.EVIL in char.tribes,
                                     attack=3 * golden_multiplyer, health=2 * golden_multiplyer)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.support_buff.execute(target_character, *args, **kwargs)
+    

@@ -11,6 +11,7 @@ from sbbbattlesim.exceptions import SBBBSCrocException
 
 logger = logging.getLogger(__name__)
 
+
 def setup():
     configure_logging()
     character_registry.autoregister()

@@ -83,27 +83,30 @@ class Player(EventManager):
                     char._base_health -= char._temp_health
                     char._base_attack -= int(char._temp_attack/attack_multiplier)
                     
-        self.aura_buffs = set()
+        self.auras = set()
         for char in self.valid_characters():
-            if char.aura and char.aura_buff:
+            if char.aura:
                 try:
-                    self.aura_buffs.update(set(char.aura_buff))
+                    self.auras.update(set(char.aura))
                 except TypeError:
-                    self.aura_buffs.add(char.aura_buff)
-
-            if char.player_buff is not None:
-                char.player_buff.execute()
+                    self.auras.add(char.aura)
 
         for tid, tl in self.treasures.items():
             if tid == '''SBB_TREASURE_WHIRLINGBLADES''':
                 continue
 
             for treasure in tl:
-                if treasure.aura and treasure.aura_buff:
+                if treasure.aura and treasure.aura:
                     try:
-                        self.aura_buffs.update(set(treasure.aura_buff))
+                        self.auras.update(set(treasure.aura))
                     except TypeError:
-                        self.aura_buffs.add(treasure.aura_buff)
+                        self.auras.add(treasure.aura)
+                        
+        if self.hero.aura:
+            try:
+                self.auras.update(set(self.hero.aura))
+            except TypeError:
+                self.auras.add(self.hero.aura)
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
@@ -151,11 +154,10 @@ class Player(EventManager):
         support_positions = utils.get_behind_targets(position)
         possible_supports = self.valid_characters(_lambda=lambda char: char.position in support_positions and char.support and char.support_buff)
         support_buffs = {char.support_buff for char in possible_supports}
-        for buff in sorted(support_buffs | self.aura_buffs, key=lambda b: b.priority, reverse=True):
+        for buff in sorted(support_buffs | self.auras, key=lambda b: b.priority, reverse=True):
             buff.execute(character)
 
-        if character.player_buff:
-            character.player_buff.execute()
+        character('OnSpawn')
 
         return character
 
@@ -169,8 +171,10 @@ class Player(EventManager):
         if character.support and character.support_buff:
             character.support_buff.roll_back()
 
-        if character.aura and character.aura_buff:
-            character.aura_buff.roll_back()
+        if character.aura and character.aura:
+            character.aura.roll_back()
+
+        character('OnDespawn')
 
     @property
     def characters(self):

@@ -33,7 +33,6 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.coin_trigger = False
-        self.aura_buff = Aura(event=CoinOfCharonOnDeath, source=self, priority=400, coin=self)
+        self.aura = Aura(event=CoinOfCharonOnDeath, source=self, priority=400, coin=self)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    

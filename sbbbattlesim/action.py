@@ -61,6 +61,7 @@ class ActionReason(enum.Enum):
     CRAFTY_BUFF = 142
     STORM_KING_BUFF = 143
     AON_BUFF = 144
+    PRINCESS_WIGHT_BUFF = 145
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202

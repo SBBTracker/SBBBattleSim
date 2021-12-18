@@ -20,7 +20,6 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         self.feather_used = False
         stats = 4 * (bool(self.mimic) + 1)
-        self.aura_buff = Aura(event=SpearOfAchillesAttack, source=self, spear=self)
+        self.aura = Aura(event=SpearOfAchillesAttack, source=self, spear=self)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.aura_buff.execute(target_character)
+    
