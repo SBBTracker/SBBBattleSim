@@ -22,6 +22,18 @@ class SSBBSEvent:
         self.priority = priority
         self.kwargs = kwargs
 
+    def __ge__(self, other):
+        return self.priority >= other.priority
+
+    def __lt__(self, other):
+        return not self.__ge__(other)
+
+    def __le__(self, other):
+        return self.priority <= other.priority
+
+    def __gt__(self, other):
+        return not self.__le__(other)
+
     @classmethod
     def is_valid(cls):
         return True
@@ -167,7 +179,6 @@ class OnResolveBoard(SSBBSEvent):
 class EventManager:
     def __init__(self):
         self._events = collections.defaultdict(queue.PriorityQueue)
-        self._event_buffer = queue.PriorityQueue()
         self._removed = []
 
     def pretty_print(self):
@@ -181,19 +192,22 @@ class EventManager:
             raise ValueError
 
         event = event(manager=self, source=source or self, priority=priority)
-        self._events[event_base].put_nowait(event)
+        self._events[event_base].put(event)
         return event
 
     def unregister(self, event):
+        logger.debuf(f'Unregistering {event}')
         self._removed.append(event)
 
     def get(self, event):
         events_queue = self._events[event]
+        event_buffer = queue.PriorityQueue()
         priority = None
 
         while True:
             try:
                 next_event = events_queue.get_nowait()
+                logger.debug(next_event)
             except queue.Empty:
                 break
 
@@ -201,7 +215,7 @@ class EventManager:
                 # self._removed.remove(next_event) # Maybe?
                 continue
 
-            self._event_buffer.put(next_event)
+            event_buffer.put(next_event)
 
             if priority:
                 if next_event.priority < priority:
@@ -211,8 +225,7 @@ class EventManager:
 
             yield next_event
 
-        self._events[event] = self._event_buffer
-        self._event_buffer = queue.PriorityQueue()
+        self._events[event] = event_buffer
 
     def __call__(self, event, stack=None, *args, **kwargs):
         logger.debug(f'{self.pretty_print()} triggered event {event}')

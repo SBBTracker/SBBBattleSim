@@ -8,8 +8,8 @@ class RiverwishMermaidOnAttackAndKill(OnAttackAndKill):
     slay = True
 
     def handle(self, killed_character, stack, *args, **kwargs):
-        stats = 2 if self.riverwish_mermaid.golden else 1
-        Buff(reason=ActionReason.SUPPORT_BUFF, source=self.riverwish_mermaid, targets=[self.manager],
+        stats = 2 if self.source.golden else 1
+        Buff(reason=ActionReason.SUPPORT_BUFF, source=self.source, targets=[self.manager],
              attack=stats, health=stats, temp=False, stack=stack).resolve()
 
 
@@ -19,7 +19,7 @@ class RiverwishMermaidSupportBuff(Support):
         self.applied_buffs = {}
 
     def _apply(self, char, *args, **kwargs):
-        event = char.register(RiverwishMermaidOnAttackAndKill, riverwish_mermaid=self.source, temp=True, *args, **kwargs)
+        event = char.register(RiverwishMermaidOnAttackAndKill, source=self.source, temp=True, *args, **kwargs)
         self.applied_buffs[char] = event
 
     def remove(self):
@@ -38,6 +38,6 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.support_buff = Support(source=self, event=RiverwishMermaidOnAttackAndKill, riverwish_mermaid=self)
+        self.support_buff = Support(source=self, event=RiverwishMermaidOnAttackAndKill, source=self)
 
     

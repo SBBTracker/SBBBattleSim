@@ -7,9 +7,9 @@ from sbbbattlesim.treasures import Treasure
 
 class JacksJumpingBeansOnStartBuff(OnStart):
     def handle(self, stack, *args, **kwargs):
-        for _ in range(self.beans.mimic + 1):
-            target_character = random.choice(self.beans.player.valid_characters())
-            Buff(reason=ActionReason.JACKS_JUMPING_BEANS, source=self.beans, targets=[target_character],
+        for _ in range(self.source.mimic + 1):
+            target_character = random.choice(self.source.player.valid_characters())
+            Buff(reason=ActionReason.JACKS_JUMPING_BEANS, source=self.source, targets=[target_character],
                  attack=4, health=4, temp=False, stack=stack).resolve()
 
 
@@ -20,4 +20,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(JacksJumpingBeansOnStartBuff, beans=self)
+        self.player.board.register(JacksJumpingBeansOnStartBuff, source=self)

@@ -16,7 +16,7 @@ class MirrorMirrorOnDeath(OnDeath):
                 tribes=self.manager.tribes,
                 cost=self.manager.cost,
                 # TODO does this copy the tribes of the card or of the class
-            ) for _ in range(1 + bool(self.mirror.mimic))
+            ) for _ in range(1 + self.source.mimic)
         ]
 
         self.manager.player.summon(self.manager.position, copies)
@@ -24,8 +24,8 @@ class MirrorMirrorOnDeath(OnDeath):
 
 class MirrorMirrorOnStart(OnStart):
     def handle(self, *args, **kwargs):
-        for char in self.mirror.player.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4)):
-            char.register(MirrorMirrorOnDeath, mirror=self.mirror)
+        for char in self.source.player.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4)):
+            char.register(MirrorMirrorOnDeath, source=self.source)
 
 
 class TreasureType(Treasure):
@@ -35,4 +35,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(MirrorMirrorOnStart, mirror=self)
+        self.player.board.register(MirrorMirrorOnStart, source=self)

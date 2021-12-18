@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 class IvoryOwlOnStartOnStartBuff(OnStart):
     def handle(self, stack, *args, **kwargs):
-        for _ in range(bool(self.owl.mimic) + 1):
-            Buff(reason=ActionReason.IVORY_OWL_BUFF, source=self.owl, targets=self.owl.player.valid_characters(),
+        for _ in range(bool(self.source.mimic) + 1):
+            Buff(reason=ActionReason.IVORY_OWL_BUFF, source=self.source, targets=self.source.player.valid_characters(),
                  attack=2, health=2, temp=False, stack=stack).resolve()
 
 
@@ -22,4 +22,4 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.player.board.register(IvoryOwlOnStartOnStartBuff, priority=120, owl=self)
+        self.player.board.register(IvoryOwlOnStartOnStartBuff, priority=120, source=self)

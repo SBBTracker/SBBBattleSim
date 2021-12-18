@@ -25,7 +25,7 @@ class BabaYagaSupportBuff(Support):
         self.applied_buffs = {}
 
     def execute(self, character, *args, **kwargs):
-        event = character.register(BabaYagaOnSlayBuff, baba_yaga=self.source, temp=True, *args, **kwargs)
+        event = character.register(BabaYagaOnSlayBuff, source=self.source, temp=True, *args, **kwargs)
         self.applied_buffs[character] = event
 
     def remove(self):
@@ -45,4 +45,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.support_buff = Support(source=self, event=BabaYagaOnSlayBuff, baba_yaga=self)
+        self.support_buff = Support(source=self, event=BabaYagaOnSlayBuff)

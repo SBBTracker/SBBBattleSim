@@ -15,13 +15,13 @@ class EchoWoodBuff(OnBuff):
         if not self.manager.dead:
             if (not temp or self.manager in summoned_characters) and (not is_from_echowood):
 
-                gold_multiplier = 2 if self.echo_wood.golden else 1
+                gold_multiplier = 2 if self.source.golden else 1
 
                 attack_change = max(0, gold_multiplier * attack)
                 health_change = max(0, gold_multiplier * health)
 
                 if attack_change > 0 or health_change > 0:
-                    Buff(reason=ActionReason.ECHOWOOD_BUFF, source=self.manager, targets=[self.echo_wood],
+                    Buff(reason=ActionReason.ECHOWOOD_BUFF, source=self.manager, targets=[self.source],
                          attack=gold_multiplier * attack, health=gold_multiplier * health,
                          temp=False, stack=stack, is_from_echowood=True).resolve()
 
@@ -37,6 +37,6 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(source=self, echo_wood=self, event=EchoWoodBuff, _lambda=lambda char: char is not self)
+        self.aura = Aura(source=self, source=self, event=EchoWoodBuff, _lambda=lambda char: char is not self)
 
     

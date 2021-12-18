@@ -62,7 +62,7 @@ class Player(EventManager):
         for spl in spells:
             if spl in utils.START_OF_FIGHT_SPELLS:
                 priority = spell_registry[spl]().priority
-                self.board.register(CastSpellOnStart, spell=spl, player=self, priority=priority)
+                self.board.register(CastSpellOnStart, source=spl, player=self, priority=priority)
 
         for char_data in characters:
             char = character_registry[char_data['id']](player=self, **char_data)
@@ -108,6 +108,10 @@ class Player(EventManager):
             except TypeError:
                 self.auras.add(self.hero.aura)
 
+        for char in self.valid_characters():
+            self.spawn(char, char.position)
+
+
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
 
@@ -151,9 +155,13 @@ class Player(EventManager):
         self.__characters[position] = character
         character.position = position
 
-        support_positions = utils.get_behind_targets(position)
-        possible_supports = self.valid_characters(_lambda=lambda char: char.position in support_positions and char.support and char.support_buff)
-        support_buffs = {char.support_buff for char in possible_supports}
+        support_buffs = set()
+        support_units = self.valid_characters(_lambda=lambda char: (char.position in [5, 6, 7]) and getattr(char, 'support_buff', None))
+        for su in support_units:
+            support_targets = utils.get_support_targets(su.position, 'SBB_TREASURE_BANNEROFCOMMAND' in self.treasures)
+            if position in support_targets:
+                support_buffs.add(su.support_buff)
+
         for buff in sorted(support_buffs | self.auras, key=lambda b: b.priority, reverse=True):
             buff.execute(character)
 
