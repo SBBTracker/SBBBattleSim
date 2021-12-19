@@ -473,11 +473,12 @@ def test_fallen_angel(tribes, attack, health):
         hero='SBB_HERO_FALLENANGEL',
     )
 
-    enemy = make_player()
+    enemy = make_player(
+        characters=[make_character(attack=0)]
+    )
 
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-
 
     player = board.p1
 
@@ -501,7 +502,6 @@ def test_muerte():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-
 
     player = board.p1
 

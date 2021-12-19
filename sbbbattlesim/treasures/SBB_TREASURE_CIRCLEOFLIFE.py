@@ -7,9 +7,9 @@ class TreeOfLifeHeal(OnDeath):
     last_breath = False
 
     def handle(self, stack, *args, **kwargs):
-        for _ in range(self.tree.mimic + 1):
-            Heal(reason=ActionReason.TREE_OF_LIFE, source=self.tree, targets=self.manager.player.valid_characters(),
-                 heal=-1, temp=False, stack=stack).resolve()
+        for _ in range(self.source.mimic + 1):
+            Heal(reason=ActionReason.TREE_OF_LIFE, source=self.source, targets=self.manager.player.valid_characters(),
+                 heal=-1, stack=stack).resolve()
 
 
 class TreasureType(Treasure):
@@ -21,6 +21,4 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         stats = 2 * (self.mimic + 1)
-        self.aura = Aura(event=TreeOfLifeHeal, source=self, tree=self)
-
-    
+        self.aura = Aura(event=TreeOfLifeHeal, source=self)

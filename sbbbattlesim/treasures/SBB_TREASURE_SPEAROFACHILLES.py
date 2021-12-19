@@ -5,9 +5,9 @@ from sbbbattlesim.treasures import Treasure
 
 class SpearOfAchillesAttack(OnPreAttack):
     def handle(self, stack, *args, **kwargs):
-        for _ in range(1 + bool(self.spear.mimic)):
-            Buff(reason=ActionReason.SPEAR_OF_ACHILLES, source=self.spear, targets=[self.manager],
-                 health=7, attack=7, temp=False, stack=stack).resolve()
+        for _ in range(1 + bool(self.source.mimic)):
+            Buff(reason=ActionReason.SPEAR_OF_ACHILLES, source=self.source, targets=[self.manager],
+                 health=7, attack=7, stack=stack).resolve()
 
 
 class TreasureType(Treasure):
@@ -20,6 +20,4 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         self.feather_used = False
         stats = 4 * (bool(self.mimic) + 1)
-        self.aura = Aura(event=SpearOfAchillesAttack, source=self, spear=self)
-
-    
+        self.aura = Aura(event=SpearOfAchillesAttack, source=self)

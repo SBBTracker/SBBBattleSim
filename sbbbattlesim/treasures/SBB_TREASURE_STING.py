@@ -15,7 +15,4 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         stats = 10 * (self.mimic + 1)
-        self.aura = Aura(reason=ActionReason.STING, source=self, attack=stats,
-                              _lambda=lambda char: char.position == 1)
-
-    
+        self.aura = Aura(reason=ActionReason.STING, source=self, attack=stats, _lambda=lambda char: char.position == 1)

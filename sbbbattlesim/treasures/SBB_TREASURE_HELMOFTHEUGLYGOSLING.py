@@ -7,10 +7,10 @@ class HelmOfTheUglyGoslingOnStartBuff(OnStart):
     priority = 50
 
     def handle(self, stack, *args, **kwargs):
-        for _ in range(bool(self.gosling.mimic) + 1):
-            weakest = sorted(self.gosling.player.valid_characters(), key=lambda char: char.attack)[0]
-            Buff(reason=ActionReason.HELM_OF_THE_UGLY_GOSLING, source=self.gosling, targets=[weakest],
-                 attack=15, health=15, temp=False, stack=stack).resolve()
+        for _ in range(bool(self.source.mimic) + 1):
+            weakest = sorted(self.source.player.valid_characters(), key=lambda char: char.attack)[0]
+            Buff(reason=ActionReason.HELM_OF_THE_UGLY_GOSLING, source=self.source, targets=[weakest],
+                 attack=15, health=15, stack=stack).resolve()
 
 
 class TreasureType(Treasure):
@@ -20,4 +20,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(HelmOfTheUglyGoslingOnStartBuff, gosling=self, priority=50)
+        self.player.board.register(HelmOfTheUglyGoslingOnStartBuff, source=self, priority=50)

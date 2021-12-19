@@ -15,5 +15,5 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         stat_change = 4 if self.golden else 2
-        self.support_buff = Support(source=self, _lambda=lambda char: Tribe.DWARF in char.tribes,
-                                    health=stat_change, attack=stat_change)
+        self.support = Support(source=self, _lambda=lambda char: Tribe.DWARF in char.tribes,
+                               health=stat_change, attack=stat_change)

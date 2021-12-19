@@ -19,7 +19,6 @@ class CharonOnDeath(OnDeath):
              attack=2, health=1, stack=stack).execute()
 
 
-
 class HeroType(Hero):
     display_name = 'Charon'
     aura = True
@@ -28,5 +27,3 @@ class HeroType(Hero):
         super().__init__(*args, **kwargs)
         self.triggered = False
         self.aura = Aura(event=CharonOnDeath, priority=999, source=self)
-
-    

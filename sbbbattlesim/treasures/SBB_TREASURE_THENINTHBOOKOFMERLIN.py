@@ -10,9 +10,10 @@ logger = logging.getLogger(__name__)
 
 class NinthBookOnDeath(OnDeath):
     last_breath = True
+
     # TODO Does this trigger twice or are there two last breaths
     def handle(self, *args, **kwargs):
-        for _ in range(bool(self.book.mimic) + 1):
+        for _ in range(bool(self.source.mimic) + 1):
             spell = random_combat_spell(self.manager.player.level)
             if spell:
                 self.manager.player.cast(spell)
@@ -26,7 +27,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(event=NinthBookOnDeath, source=self, book=self,
-                                  _lambda=lambda char: Tribe.MAGE in char.tribes)
-
-    
+        self.aura = Aura(event=NinthBookOnDeath, source=self, _lambda=lambda char: Tribe.MAGE in char.tribes)

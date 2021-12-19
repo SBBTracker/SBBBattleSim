@@ -13,9 +13,9 @@ class OtherHandOfVekna(OnDeath):
     def handle(self, stack, *args, **kwargs):
         positions = (1, 2, 3, 4) if self.manager.position in (1, 2, 3, 4) else (5, 6, 7)
         targets = self.manager.player.valid_characters(_lambda=lambda char: char.position in positions)
-        for _ in range(self.vekna.mimic + 1):
-            Buff(reason=ActionReason.OTHER_HAND_OF_VEKNA, source=self.vekna, targets=targets,
-                 health=1, attack=1, temp=False, stack=stack).resolve()
+        for _ in range(self.source.mimic + 1):
+            Buff(reason=ActionReason.OTHER_HAND_OF_VEKNA, source=self.source, targets=targets,
+                 health=1, attack=1, stack=stack).resolve()
 
 
 class TreasureType(Treasure):
@@ -26,6 +26,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(event=OtherHandOfVekna, source=self, vekna=self)
-
-    
+        self.aura = Aura(event=OtherHandOfVekna, source=self)

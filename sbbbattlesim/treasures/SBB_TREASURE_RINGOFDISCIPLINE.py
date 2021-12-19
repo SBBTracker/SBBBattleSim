@@ -13,5 +13,3 @@ class TreasureType(Treasure):
 
         stats = 3 * (self.mimic + 1)
         self.aura = Aura(reason=ActionReason.SIX_OF_SHIELDS, source=self, health=stats)
-
-    

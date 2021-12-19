@@ -21,6 +21,4 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         stats = 1 * (self.mimic + 1)
         self.aura = Aura(reason=ActionReason.CLOAK_OF_THE_ASSASSIN, source=self, health=stats, attack=stats,
-                              _lambda=lambda char: Tribe.ANIMAL in char.tribes, _action=_crown_tribe_shift)
-
-    
+                         _lambda=lambda char: Tribe.ANIMAL in char.tribes, _action=_crown_tribe_shift)

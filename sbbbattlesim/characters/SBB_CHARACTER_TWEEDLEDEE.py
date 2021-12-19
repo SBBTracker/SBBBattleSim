@@ -9,7 +9,8 @@ class TweedleDeeLastBreath(OnDeath):
     last_breath = True
 
     def handle(self, *args, **kwargs):
-        attack, health = (self.manager.max_health * 2, self.manager.attack * 2) if self.manager.golden else (self.manager.max_health, self.manager.attack)
+        attack, health = (self.manager.max_health * 2, self.manager.attack * 2) if self.manager.golden else (
+        self.manager.max_health, self.manager.attack)
         tweedle_dum = [
             character_registry['Tweedle Dum'](
                 self.manager.player, self.manager.position, attack, health,

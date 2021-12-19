@@ -10,10 +10,10 @@ class AncientSarcophagusOnDeath(OnDeath):
     last_breath = False
 
     def handle(self, *args, **kwargs):
-        for _ in range(self.ancient_sarcophagus.mimic + 1):
+        for _ in range(self.source.mimic + 1):
             valid_targets = self.manager.player.opponent.valid_characters()
             if valid_targets:
-                Damage(damage=3, reason=ActionReason.ANCIENT_SARCOPHAGUS, source=self.ancient_sarcophagus,
+                Damage(damage=3, reason=ActionReason.ANCIENT_SARCOPHAGUS, source=self.source,
                        targets=[random.choice(valid_targets)]).resolve()
 
 
@@ -25,7 +25,5 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(event=AncientSarcophagusOnDeath, source=self, ancient_sarcophagus=self,
-                                   _lambda=lambda char: Tribe.EVIL in char.tribes)
-
-    
+        self.aura = Aura(event=AncientSarcophagusOnDeath, source=self,
+                         _lambda=lambda char: Tribe.EVIL in char.tribes)

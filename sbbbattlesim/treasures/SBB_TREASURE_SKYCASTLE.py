@@ -14,6 +14,4 @@ class TreasureType(Treasure):
         self.feather_used = False
         stats = 4 * (bool(self.mimic) + 1)
         self.aura = Aura(reason=ActionReason.SKYCASTLE, source=self, attack=stats, health=stats,
-                              _lambda=lambda char: Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes)
-
-    
+                         _lambda=lambda char: Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes)

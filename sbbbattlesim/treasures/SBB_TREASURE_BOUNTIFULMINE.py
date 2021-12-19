@@ -13,6 +13,4 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         stats = 2 * (self.mimic + 1)
         self.aura = Aura(reason=ActionReason.DEEPSTONE_MINE, source=self, attack=stats, health=stats,
-                              _lambda=lambda char: Tribe.DWARF in char.tribes)
-
-    
+                         _lambda=lambda char: Tribe.DWARF in char.tribes)

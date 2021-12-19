@@ -8,8 +8,8 @@ class EvilQueenOnDeath(OnDeath):
     last_breath = False
 
     def handle(self, stack, *args, **kwargs):
-        stat_change = 4 if self.evil_queen.golden else 2
-        Buff(source=self.evil_queen, reason=ActionReason.EVILQUEEN_BUFF, targets=[self.evil_queen],
+        stat_change = 4 if self.source.golden else 2
+        Buff(source=self.source, reason=ActionReason.EVILQUEEN_BUFF, targets=[self.source],
              attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
 
@@ -24,7 +24,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(source=self, oni_king=self, event=EvilQueenOnDeath, evil_queen=self,
-                                   _lambda=lambda char: Tribe.EVIL in char.tribes)
-
-    
+        self.aura = Aura(source=self, event=EvilQueenOnDeath, _lambda=lambda char: Tribe.EVIL in char.tribes)

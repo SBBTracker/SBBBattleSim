@@ -8,9 +8,9 @@ class DarkwoodCreeperOnDamage(OnDamagedAndSurvived):
     def handle(self, stack, *args, **kwargs):
         Buff(
             reason=ActionReason.DARKWOOD_CREEPER_BUFF,
-            source=self.darkwood,
+            source=self.source,
             targets=[self.manager],
-            attack=2 if self.darkwood.golden else 1,
+            attack=2 if self.source.golden else 1,
             temp=False,
             stack=stack
         ).resolve()
@@ -27,6 +27,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(reason=ActionReason.AURA_BUFF, source=self, darkwood=self, event=DarkwoodCreeperOnDamage)
-
-    
+        self.aura = Aura(reason=ActionReason.AURA_BUFF, source=self, event=DarkwoodCreeperOnDamage)

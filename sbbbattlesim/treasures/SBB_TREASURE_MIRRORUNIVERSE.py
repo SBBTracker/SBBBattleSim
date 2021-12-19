@@ -1,3 +1,4 @@
+from sbbbattlesim.action import Aura
 from sbbbattlesim.events import OnDeath, OnStart
 from sbbbattlesim.treasures import Treasure
 
@@ -30,7 +31,7 @@ class MirrorMirrorOnStart(OnStart):
 
 class TreasureType(Treasure):
     display_name = 'Mirror Mirror'
-
+    aura = True
     _level = 7
 
     def __init__(self, *args, **kwargs):

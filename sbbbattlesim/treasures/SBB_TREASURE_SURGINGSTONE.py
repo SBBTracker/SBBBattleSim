@@ -12,6 +12,4 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         stats = 3 * (self.mimic + 1)
         self.aura = Aura(reason=ActionReason.RING_OF_RAGE, source=self, attack=stats,
-                              _lambda=lambda char: char.position == 1)
-
-    
+                         _lambda=lambda char: char.position == 1)

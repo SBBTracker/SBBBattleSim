@@ -10,10 +10,10 @@ logger = logging.getLogger(__name__)
 class SummoningPortalBuff(OnSummon):
     def handle(self, summoned_characters, stack, *args, **kwargs):
         for char in summoned_characters:
-            self.portal.buff_count += 1
-            for _ in range(self.portal.mimic + 1):
-                Buff(reason=ActionReason.SUMMONING_PORTA, source=self.portal, targets=[char],
-                     attack=self.portal.buff_count, health=self.portal.buff_count, temp=False, stack=stack).resolve()
+            self.source.buff_count += 1
+            for _ in range(self.source.mimic + 1):
+                Buff(reason=ActionReason.SUMMONING_PORTA, source=self.source, targets=[char],
+                     attack=self.source.buff_count, health=self.source.buff_count, stack=stack).resolve()
 
 
 class TreasureType(Treasure):
@@ -24,4 +24,4 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.buff_count = 0
-        self.player.register(SummoningPortalBuff, portal=self)
+        self.player.register(SummoningPortalBuff, source=self)

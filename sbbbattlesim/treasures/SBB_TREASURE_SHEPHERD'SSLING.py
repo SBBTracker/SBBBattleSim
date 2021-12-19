@@ -13,6 +13,4 @@ class TreasureType(Treasure):
         self.feather_used = False
         stats = 1 * (self.mimic + 1)
         self.aura = Aura(reason=ActionReason.NEEDLE_NOSE_DAGGERS, source=self, attack=stats, health=stats,
-                              _lambda=lambda char: char._level <= 3)
-
-    
+                         _lambda=lambda char: char._level <= 3)

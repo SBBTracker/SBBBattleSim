@@ -9,7 +9,7 @@ class CraftyOnSpawn(OnSpawn):
         golden_multipler = 2 if self.source.golden else 1
         crafty_buff = 2 * len(self.source.player.treasures) * golden_multipler
         Buff(reason=ActionReason.CRAFTY_BUFF, source=self.source, targets=[self.source],
-             attack=crafty_buff, health=crafty_buff, temp=True, *args, **kwargs).resolve()
+             attack=crafty_buff, health=crafty_buff, *args, **kwargs).resolve()
 
 
 class CharacterType(Character):

@@ -12,5 +12,3 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         stats = 1 * (self.mimic + 1)
         self.aura = Aura(reason=ActionReason.FOUNTAIN_OF_YOUTH, source=self, health=stats)
-
-    

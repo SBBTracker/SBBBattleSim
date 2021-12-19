@@ -18,8 +18,6 @@ class Hero:
     def pretty_print(self):
         return self.display_name
 
-    
-
 
 class Registry(object):
     heros = OrderedDict()

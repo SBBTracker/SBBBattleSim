@@ -9,13 +9,11 @@ JULIET_ID = 'SBB_CHARACTER_JULIET'
 
 class RomeoOnSummon(OnSummon):
     def handle(self, summoned_characters, stack, *args, **kwargs):
-        if self.triggered:
-            return
-        self.triggered = True
+        self.manager.unregister(self)
         for char in summoned_characters:
-            if char is self.juliet:
+            if char is self.kwargs['juliet']:
                 modifier = 14 if self.source.golden else 7
-                Buff(reason=ActionReason.ROMEO_BUFF, source=self.romeo, targets=[char],
+                Buff(reason=ActionReason.ROMEO_BUFF, source=self.source, targets=[char],
                      attack=modifier, health=modifier, temp=False).resolve()
 
 
@@ -40,7 +38,7 @@ class RomeoLastBreath(OnDeath):
             )
             self.juliet = new_juliet
 
-            self.manager.player.register(RomeoOnSummon, source=new_juliet, romeo=self.romeo, triggered=False)
+            self.manager.player.register(RomeoOnSummon, source=new_juliet, romeo=self.source, triggered=False)
             self.manager.player.summon(self.manager.position, [new_juliet])
 
 
@@ -55,4 +53,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(RomeoLastBreath)
+        self.register(RomeoLastBreath, source=self)

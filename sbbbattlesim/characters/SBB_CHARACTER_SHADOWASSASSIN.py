@@ -23,5 +23,3 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.aura = Aura(source=self, event=ShadowAssassinOnSlay)
-
-    

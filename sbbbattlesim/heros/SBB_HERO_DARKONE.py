@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff, Aura, DynamicStat, ActionReason
+from sbbbattlesim.action import Buff, Aura, DynamicStat, ActionReason, Action
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import Tribe
@@ -8,7 +8,8 @@ class EvellaAura(OnDeath):
     last_breath = False
 
     def handle(self, *args, **kwargs):
-        self.evella.animal_deaths += 1
+        targets = self.source.player.valid_characters(_lambda=lambda char: Tribe.EVIL in char.tribes)
+        Buff(reason=ActionReason.EVELLA_BUFF, source=self.source, attack=1, targets=targets).resolve()
 
 
 class HeroType(Hero):
@@ -17,9 +18,4 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.animal_deaths = DynamicStat(0)
-        self.aura = (
-            Aura(event=EvellaAura, evella=self, _lambda=lambda char: Tribe.ANIMAL in char.tribes),
-            Aura(reason=ActionReason.EVELLA_BUFF, source=self, attack=self.animal_deaths,
-                 _lambda=lambda char: Tribe.EVIL in char.tribes)
-        )
+        self.aura = Aura(event=EvellaAura, source=self, _lambda=lambda char: Tribe.ANIMAL in char.tribes),

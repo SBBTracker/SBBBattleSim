@@ -26,8 +26,6 @@ class Treasure(EventManager):
     def valid(self):
         return self._level != 0
 
-    
-
 
 class Registry(object):
     treasures = OrderedDict()

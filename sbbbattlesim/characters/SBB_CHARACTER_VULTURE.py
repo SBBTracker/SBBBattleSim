@@ -12,8 +12,8 @@ class BeardedVultureOnDeath(OnDeath):
     last_breath = False
 
     def handle(self, *args, **kwargs):
-        stat_change = 6 if self.bearded_vulture.golden else 3
-        Buff(source=self.bearded_vulture, reason=ActionReason.BEARDEDVULTURE_BUFF, targets=[self.bearded_vulture],
+        stat_change = 6 if self.source.golden else 3
+        Buff(source=self.source, reason=ActionReason.BEARDEDVULTURE_BUFF, targets=[self.source],
              attack=stat_change, health=stat_change, temp=False).resolve()
 
 
@@ -28,7 +28,5 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(source=self, bearded_vulture=self, event=BeardedVultureOnDeath,
-                                   _lambda=lambda char: Tribe.ANIMAL in char.tribes and char is not self)
-
-    
+        self.aura = Aura(source=self, event=BeardedVultureOnDeath,
+                         _lambda=lambda char: Tribe.ANIMAL in char.tribes and char is not self)

@@ -11,9 +11,9 @@ class RingOfRevengeBuff(OnDeath):
         for pos in utils.get_behind_targets(self.manager.position):
             char = self.manager.player.characters.get(pos)
             if char:
-                for _ in range(self.ring_of_revenge.mimic + 1):
-                    Buff(reason=ActionReason.RING_OF_REVENGE, source=self.ring_of_revenge, targets=[char],
-                         health=1, attack=1, temp=False, stack=stack).resolve()
+                for _ in range(self.source.mimic + 1):
+                    Buff(reason=ActionReason.RING_OF_REVENGE, source=self.source, targets=[char],
+                         health=1, attack=1, stack=stack).resolve()
 
 
 class TreasureType(Treasure):
@@ -26,7 +26,4 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
 
         stats = 3 * (self.mimic + 1)
-        self.aura = Aura(event=RingOfRevengeBuff, source=self, ring_of_revenge=self,
-                                  _lambda=lambda char: char.position in (1, 2, 3, 4))
-
-    
+        self.aura = Aura(event=RingOfRevengeBuff, source=self, _lambda=lambda char: char.position in (1, 2, 3, 4))

@@ -12,5 +12,3 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         stats = 5 * (bool(self.mimic) + 1)
         self.aura = Aura(reason=ActionReason.FAIRY_QUEENS_WAND, source=self, health=stats, attack=stats)
-
-    

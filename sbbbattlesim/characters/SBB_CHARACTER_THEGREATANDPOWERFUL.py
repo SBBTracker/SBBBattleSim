@@ -6,6 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class StormKingOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
         current_buff = self.source.player._spells_cast

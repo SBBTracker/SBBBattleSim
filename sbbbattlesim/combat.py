@@ -60,8 +60,10 @@ def attack(attack_position, attacker, defender, **kwargs):
         # the character may have died elsewhere in the stack
         return
 
-    front_characters = defender.valid_characters(_lambda=lambda char: char.position in front and char is not attack_character)
-    back_characters = defender.valid_characters(_lambda=lambda char: char.position in back and char is not attack_character)
+    front_characters = defender.valid_characters(
+        _lambda=lambda char: char.position in front and char is not attack_character)
+    back_characters = defender.valid_characters(
+        _lambda=lambda char: char.position in back and char is not attack_character)
     if attacker.characters.get(attack_position).flying:
         if any(back_characters):
             valid_defenders = back_characters
@@ -88,8 +90,10 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     # Pre Damage Event
     # These functions can change the characters in given positions like Medusa
-    attacker.characters.get(attack_position)('OnPreAttack', attack_position=attack_position, defend_position=defend_position, defend_player=defender, **kwargs)
-    defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position, defend_position=defend_position, attack_player=attacker, **kwargs)
+    attacker.characters.get(attack_position)('OnPreAttack', attack_position=attack_position,
+                                             defend_position=defend_position, defend_player=defender, **kwargs)
+    defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position,
+                                             defend_position=defend_position, attack_player=attacker, **kwargs)
 
     # We are pulling the latest attack_character and defend character incase they changed
     attack_character = attacker.characters.get(attack_position)
@@ -116,4 +120,3 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     # for cupid to work properly
     defend_character('OnPostDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
-

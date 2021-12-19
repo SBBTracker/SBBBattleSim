@@ -10,7 +10,7 @@ class JacksJumpingBeansOnStartBuff(OnStart):
         for _ in range(self.source.mimic + 1):
             target_character = random.choice(self.source.player.valid_characters())
             Buff(reason=ActionReason.JACKS_JUMPING_BEANS, source=self.source, targets=[target_character],
-                 attack=4, health=4, temp=False, stack=stack).resolve()
+                 attack=4, health=4, stack=stack).resolve()
 
 
 class TreasureType(Treasure):

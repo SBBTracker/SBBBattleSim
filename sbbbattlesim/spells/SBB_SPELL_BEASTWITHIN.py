@@ -14,7 +14,7 @@ class CatsCallOnDeath(OnDeath):
     priority = 1000
 
     def handle(self, *args, **kwargs):
-        if len(self.player.valid_characters(_lambda=front_row_lambda)) == 0:
+        if len(self.source.valid_characters(_lambda=front_row_lambda)) == 0:
             for pos in (1, 2, 3, 4):
                 cat = character_registry['SBB_CHARACTER_CAT'](
                     self.manager.player,
@@ -26,7 +26,7 @@ class CatsCallOnDeath(OnDeath):
                     tribes=['evil', 'animal'],
                     cost=1
                 )
-                self.player.summon_from_different_locations([cat])
+                self.source.summon_from_different_locations([cat])
 
 
 class SpellType(NonTargetedSpell):
@@ -35,4 +35,4 @@ class SpellType(NonTargetedSpell):
 
     def cast(self, player, *args, **kwargs):
         for char in player.valid_characters(_lambda=front_row_lambda):
-            char.register(CatsCallOnDeath, temp=False, player=player)
+            char.register(CatsCallOnDeath, temp=False, source=player)

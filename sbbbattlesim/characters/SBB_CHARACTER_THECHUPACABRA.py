@@ -17,7 +17,6 @@ class ChupacabraSlay(OnAttackAndKill):
              attack=modifier, temp=False, stack=stack).resolve()
 
 
-
 class CharacterType(Character):
     display_name = 'The Chupacabra'
 

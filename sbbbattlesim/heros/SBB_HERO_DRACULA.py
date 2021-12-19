@@ -7,8 +7,8 @@ class SadDraculaOnAttackAndKill(OnAttackAndKill):
     slay = True
 
     def handle(self, killed_character, stack, *args, **kwargs):
-       Buff(reason=ActionReason.SAD_DRACULA_SLAY, source=self.sad_dracula, targets=[self.manager],
-            attack=2, stack=stack).resolve()
+        Buff(reason=ActionReason.SAD_DRACULA_SLAY, source=self.source, targets=[self.manager],
+             attack=2, stack=stack).resolve()
 
 
 class HeroType(Hero):
@@ -17,6 +17,4 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(event=SadDraculaOnAttackAndKill, sad_dracula=self, _lambda=lambda char: char.position == 1)
-
-    
+        self.aura = Aura(event=SadDraculaOnAttackAndKill, source=self, _lambda=lambda char: char.position == 1)

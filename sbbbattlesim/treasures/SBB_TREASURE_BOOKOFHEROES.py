@@ -12,11 +12,11 @@ class BookOfHeroesOnAttackAndKillBuff(OnAttackAndKill):
     slay = False
 
     def handle(self, killed_character, stack, *args, **kwargs):
-        logger.debug(f'BOOK KILLED {killed_character.tribes} MIMIC {self.book.mimic}')
+        logger.debug(f'BOOK KILLED {killed_character.tribes} MIMIC {self.source.mimic}')
         if Tribe.EVIL in killed_character.tribes:
-            for _ in range(self.book.mimic + 1):
-                Buff(reason=ActionReason.BOOK_OF_HEROES, source=self.book, targets=[self.manager],
-                     attack=1, health=2, temp=False, stack=stack).resolve()
+            for _ in range(self.source.mimic + 1):
+                Buff(reason=ActionReason.BOOK_OF_HEROES, source=self.source, targets=[self.manager],
+                     attack=1, health=2, stack=stack).resolve()
 
 
 class TreasureType(Treasure):
@@ -27,7 +27,5 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(event=BookOfHeroesOnAttackAndKillBuff, source=self, book=self,
-                                   _lambda=lambda char: Tribe.GOOD in char.tribes)
-
-    
+        self.aura = Aura(event=BookOfHeroesOnAttackAndKillBuff, source=self,
+                         _lambda=lambda char: Tribe.GOOD in char.tribes)

@@ -19,7 +19,7 @@ class CourtWizardOnDeathBuff(OnDeath):
 
         if death_reason == ActionReason.DAMAGE_WHILE_DEFENDING:
             attack(
-                attack_position=self.court_wizard.position,
+                attack_position=self.source.position,
                 attacker=self.manager.player,
                 defender=self.manager.player.opponent,
                 **kwargs
@@ -39,8 +39,5 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(reason=ActionReason.AURA_BUFF, source=self, court_wizard=self,
-                              _lambda=lambda char: Tribe.PRINCESS in char.tribes or Tribe.PRINCE in char.tribes,
-                              event=CourtWizardOnDeathBuff)
-
-    
+        self.aura = Aura(event=CourtWizardOnDeathBuff, reason=ActionReason.AURA_BUFF, source=self,
+                         _lambda=lambda char: Tribe.PRINCESS in char.tribes or Tribe.PRINCE in char.tribes)

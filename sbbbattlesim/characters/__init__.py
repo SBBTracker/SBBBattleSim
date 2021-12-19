@@ -137,4 +137,5 @@ class Registry(object):
             except Exception as exc:
                 logger.exception('Error loading characters: {}'.format(name))
 
+
 registry = Registry()

@@ -15,12 +15,12 @@ class CoinOfCharonOnDeath(OnDeath):
             return
 
         # This should only proc once per combat
-        if self.coin.coin_trigger:
+        if self.source.coin_trigger:
             return  # This has already procced
-        self.coin.coin_trigger = True
+        self.source.coin_trigger = True
 
-        for _ in range(self.coin.mimic + 1):
-            Buff(reason=ActionReason.COIN_OF_CHARON, source=self.coin, targets=[self.manager],
+        for _ in range(self.source.mimic + 1):
+            Buff(reason=ActionReason.COIN_OF_CHARON, source=self.source, targets=[self.manager],
                  attack=4, health=4, stack=stack).execute()
 
 
@@ -33,6 +33,4 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.coin_trigger = False
-        self.aura = Aura(event=CoinOfCharonOnDeath, source=self, priority=400, coin=self)
-
-    
+        self.aura = Aura(event=CoinOfCharonOnDeath, source=self, priority=400)

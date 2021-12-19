@@ -13,6 +13,4 @@ class TreasureType(Treasure):
         super().__init__(*args, **kwargs)
         stats = 5 * (self.mimic + 1)
         self.aura = Aura(reason=ActionReason.DRAGON_NEST, source=self, health=stats, attack=stats,
-                              _lambda=lambda char: Tribe.DRAGON in char.tribes)
-
-    
+                         _lambda=lambda char: Tribe.DRAGON in char.tribes)

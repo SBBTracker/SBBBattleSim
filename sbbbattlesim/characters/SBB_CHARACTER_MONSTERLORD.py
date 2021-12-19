@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 class OniKingOnMonsterAttack(OnPreAttack):
     def handle(self, stack, *args, **kwargs):
-        stat_change = 20 if self.oni_king.golden else 10
-        Buff(source=self.oni_king, reason=ActionReason.ONIKING_BUFF, targets=[self.manager],
+        stat_change = 20 if self.source.golden else 10
+        Buff(source=self.source, reason=ActionReason.ONIKING_BUFF, targets=[self.manager],
              attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
 
@@ -26,6 +26,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(source=self, oni_king=self, event=OniKingOnMonsterAttack, _lambda=lambda char: Tribe.MONSTER in char.tribes)
-
-    
+        self.aura = Aura(source=self, event=OniKingOnMonsterAttack, _lambda=lambda char: Tribe.MONSTER in char.tribes)

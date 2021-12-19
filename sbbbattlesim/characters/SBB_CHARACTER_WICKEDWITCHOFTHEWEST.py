@@ -15,7 +15,5 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         golden_multiplyer = 2 if self.golden else 1
-        self.support_buff = Support(source=self, _lambda=lambda char: Tribe.EVIL in char.tribes,
-                                    attack=3 * golden_multiplyer, health=2 * golden_multiplyer)
-
-    
+        self.support = Support(source=self, _lambda=lambda char: Tribe.EVIL in char.tribes,
+                               attack=3 * golden_multiplyer, health=2 * golden_multiplyer)

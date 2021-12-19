@@ -10,12 +10,12 @@ logger = logging.getLogger(__name__)
 
 class HungryHungryHippocampusOnSummon(OnSummon):
     def handle(self, summoned_characters, stack, *args, **kwargs):
-        _lambda = lambda char: Tribe.ANIMAL in char.tribes and char is not self.hippo
+        _lambda = lambda char: Tribe.ANIMAL in char.tribes and char is not self.source
         num_animals = len(list(filter(_lambda, summoned_characters)))
-        modifier = 4 if self.hippo.golden else 2
+        modifier = 4 if self.source.golden else 2
 
-        if self.hippo in self.manager.characters.values():
-            Buff(source=self.hippo, reason=ActionReason.HUNGRYHUNGRYHIPPOCAMPUS_BUFF, targets=[self.hippo],
+        if self.source in self.manager.characters.values():
+            Buff(source=self.source, reason=ActionReason.HUNGRYHUNGRYHIPPOCAMPUS_BUFF, targets=[self.source],
                  health=num_animals * modifier, temp=False, stack=stack).resolve()
 
 
@@ -29,5 +29,5 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Action(source=self, event=HungryHungryHippocampusOnSummon, player_event=True, hippo=self,
+        self.aura = Action(source=self, event=HungryHungryHippocampusOnSummon, player_event=True,
                            reason=ActionReason.HUNGRYHUNGRYHIPPOCAMPUS_BUFF)

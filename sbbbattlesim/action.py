@@ -242,7 +242,8 @@ class Action:
 
         if self.event and (not self.player_registered if self.player_event else True):
             if self.player_event:
-                registered = char.player.register(self.event, priority=self.priority, source=self.source, *args, **kwargs)
+                registered = char.player.register(self.event, priority=self.priority, source=self.source, *args,
+                                                  **kwargs)
                 self.player_registered = True
             else:
                 registered = char.register(self.event, priority=self.priority, source=self.source, *args, **kwargs)
@@ -253,7 +254,8 @@ class Action:
             char._base_health += self.health
 
             # TRIGGER ON BUFF
-            char('OnBuff', reason=self.reason, source=self.source, attack=self.attack, health=self.health, *args, **kwargs)
+            char('OnBuff', reason=self.reason, source=self.source, attack=self.attack, health=self.health, *args,
+                 **kwargs)
 
         if self.damage != 0:
             if char.invincible and self.reason != ActionReason.DAMAGE_WHILE_ATTACKING:
@@ -280,10 +282,10 @@ class Action:
         '''
         if self.event and (self.player_registered if self.player_event else True):
             if self.player_event:
-                for registered in self._event_buffer.get(char.player):
+                for registered in self._event_buffer.get(char.player, []):
                     char.player.unregister(registered)
             else:
-                for registered in self._event_buffer.get(char):
+                for registered in self._event_buffer.get(char, []):
                     char.unregister(registered)
 
         if self.health != 0:
@@ -291,7 +293,6 @@ class Action:
 
         if self.attack != 0:
             char._attack -= self.attack
-
 
     def execute(self, character=None, *args, **kwargs):
         if self.state in (ActionState.RESOLVED, ActionState.ROLLED_BACK):

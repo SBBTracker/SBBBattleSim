@@ -6,7 +6,7 @@ from collections import OrderedDict, defaultdict
 from sbbbattlesim import utils
 from sbbbattlesim.action import Damage
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.events import EventManager, OnStart
+from sbbbattlesim.events import EventManager, OnStart, OnSetup
 from sbbbattlesim.heros import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry, TargetedSpell
 from sbbbattlesim.treasures import registry as treasure_registry
@@ -17,7 +17,14 @@ logger = logging.getLogger(__name__)
 
 class CastSpellOnStart(OnStart):
     def handle(self, *args, **kwargs):
-        self.player.cast_spell(self.spell, trigger_onspell=False)
+        self.source.cast_spell(self.kwargs['spell'], trigger_onspell=False)
+
+
+class PlayerOnSetup(OnSetup):
+    def handle(self, stack, *args, **kwargs):
+        # TODO Add Handling For raw=True
+        for char in self.source.valid_characters():
+            self.source.spawn(char, char.position)
 
 
 class Player(EventManager):
@@ -34,7 +41,7 @@ class Player(EventManager):
         self._last_attacker = None
         self._attack_chain = 0
 
-        #TODO Make a better implementation of this later
+        # TODO Make a better implementation of this later
         if 'spells_cast' in kwargs:
             self._spells_cast = kwargs['spells_cast']
         else:
@@ -44,6 +51,8 @@ class Player(EventManager):
 
         self._attack_slot = None
         self.graveyard = []
+
+        self.board.register(PlayerOnSetup, source=self, priority=0)
 
         self.treasures = collections.defaultdict(list)
         mimic = 'SBB_TREASURE_TREASURECHEST' in treasures
@@ -58,11 +67,10 @@ class Player(EventManager):
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
         logger.debug(f'{self.id} registering hero {self.hero.pretty_print()}')
 
-        import copy
         for spl in spells:
             if spl in utils.START_OF_FIGHT_SPELLS:
                 priority = spell_registry[spl]().priority
-                self.board.register(CastSpellOnStart, source=spl, player=self, priority=priority)
+                self.board.register(CastSpellOnStart, spell=spl, source=self, priority=priority)
 
         for char_data in characters:
             char = character_registry[char_data['id']](player=self, **char_data)
@@ -70,19 +78,19 @@ class Player(EventManager):
             self.__characters[char.position] = char
 
         # This is designed to remove temp buffs that were passed in
-        singingswords = 'SBB_TREASURE_WHIRLINGBLADES' in treasures
-        attack_multiplier = 1
-        if singingswords:
-            attack_multiplier = 2
-            if mimic:
-                attack_multiplier = 3
+        # singingswords = 'SBB_TREASURE_WHIRLINGBLADES' in treasures
+        # attack_multiplier = 1
+        # if singingswords:
+        #     attack_multiplier = 2
+        #     if mimic:
+        #         attack_multiplier = 3
+        #
+        # if raw:
+        #     for char in self.__characters.values():
+        #         if char:
+        #             char._base_health -= char._temp_health
+        #             char._base_attack -= int(char._temp_attack/attack_multiplier)
 
-        if raw:
-            for char in self.__characters.values():
-                if char:
-                    char._base_health -= char._temp_health
-                    char._base_attack -= int(char._temp_attack/attack_multiplier)
-                    
         self.auras = set()
         for char in self.valid_characters():
             if char.aura:
@@ -101,16 +109,12 @@ class Player(EventManager):
                         self.auras.update(set(treasure.aura))
                     except TypeError:
                         self.auras.add(treasure.aura)
-                        
+
         if self.hero.aura:
             try:
                 self.auras.update(set(self.hero.aura))
             except TypeError:
                 self.auras.add(self.hero.aura)
-
-        for char in self.valid_characters():
-            self.spawn(char, char.position)
-
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
@@ -121,7 +125,8 @@ class Player(EventManager):
 
         # Handle case where tokens are spawning in the same position
         # With the max chain of 5 as implemented to stop trophy hunter + croc + grim soul shenanigans
-        if (self.characters.get(self._attack_slot) is self._last_attacker) or (self._attack_chain >= 5) or (self._last_attacker is None):
+        if (self.characters.get(self._attack_slot) is self._last_attacker) or (self._attack_chain >= 5) or (
+                self._last_attacker is None):
             # Prevents the same character from attacking repeatedly
             if self._last_attacker is not None:
                 self._attack_slot += 1
@@ -155,12 +160,16 @@ class Player(EventManager):
         self.__characters[position] = character
         character.position = position
 
+        # TODO Add in Evil Eye stuff
+        # TODO Add in Singing Swords
         support_buffs = set()
-        support_units = self.valid_characters(_lambda=lambda char: (char.position in [5, 6, 7]) and getattr(char, 'support_buff', None))
-        for su in support_units:
-            support_targets = utils.get_support_targets(su.position, 'SBB_TREASURE_BANNEROFCOMMAND' in self.treasures)
-            if position in support_targets:
-                support_buffs.add(su.support_buff)
+        support_positions = (5, 6, 7) if 'SBB_TREASURE_BANNEROFCOMMAND' in self.treasures else utils.get_behind_targets(position)
+        support_units = self.valid_characters(_lambda=lambda char: (char.position in support_positions and char.support))
+        support_buffs = set([char.support for char in support_units])
+        # for su in support_units:
+        #     support_targets = utils.get_support_targets(su.position, 'SBB_TREASURE_BANNEROFCOMMAND' in self.treasures)
+        #     if position in support_targets:
+        #         support_buffs.add(su.support)
 
         for buff in sorted(support_buffs | self.auras, key=lambda b: b.priority, reverse=True):
             buff.execute(character)
@@ -176,8 +185,8 @@ class Player(EventManager):
         self.__characters[position] = None
         logger.info(f'{character.pretty_print()} died')
 
-        if character.support and character.support_buff:
-            character.support_buff.roll_back()
+        if character.support:
+            character.support.roll_back()
 
         if character.aura and character.aura:
             character.aura.roll_back()
@@ -258,4 +267,3 @@ class Player(EventManager):
             stack = self('OnSpellCast', caster=self, spell=spell, target=target)
 
         spell.cast(player=self, target=target, stack=stack)
-

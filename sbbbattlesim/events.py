@@ -19,7 +19,7 @@ class SSBBSEvent:
     ):
         self.manager = manager
         self.source = source
-        self.priority = priority
+        self.priority = priority * -1  # DO NOT TOUCH THIS
         self.kwargs = kwargs
 
     def __ge__(self, other):
@@ -46,22 +46,20 @@ class SSBBSEvent:
         raise NotImplementedError
 
 
+class OnSetup(SSBBSEvent):
+    '''On Setup of Brawl'''
+
+
 class OnStart(SSBBSEvent):
     '''Start of Brawl'''
-    def handle(self, stack, *args, **kwargs):
-        raise NotImplementedError
 
 
 class OnSpawn(SSBBSEvent):
     '''Triggered after a unit spawns'''
-    def handle(self, stack, *args, **kwargs):
-        raise NotImplementedError
 
 
 class OnDespawn(SSBBSEvent):
     '''Triggered after a unit despawns'''
-    def handle(self, stack, *args, **kwargs):
-        raise NotImplementedError
 
 
 class OnSummon(SSBBSEvent):
@@ -122,8 +120,6 @@ class OnPostDefend(SSBBSEvent):
 
 class OnDamagedAndSurvived(SSBBSEvent):
     '''A character gets damaged and doesn't die'''
-    def handle(self, stack, *args, **kwargs):
-        raise NotImplementedError
 
 
 class OnAttackAndKill(SSBBSEvent):
@@ -160,19 +156,13 @@ class OnSpellCast(SSBBSEvent):
 
 class OnBuff(SSBBSEvent):
     '''Triggered when something has a stat change'''
-    def handle(self, stack, attack=0, health=0, damage=0, reason='', temp=True, *args, **kwargs):
+    def handle(self, stack, attack, health, reason=None, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnSupport(SSBBSEvent):
     '''Triggered when something '''
     def handle(self, buffed, support, stack, *args, **kwargs):
-        raise NotImplementedError
-
-
-class OnResolveBoard(SSBBSEvent):
-    '''Triggers when a player attempts to resolve the board'''
-    def handle(self, stack, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -184,19 +174,19 @@ class EventManager:
     def pretty_print(self):
         return self.__repr__()
 
-    def register(self, event, priority=0, source=None):
+    def register(self, event, priority=0, source=None, **kwargs):
         event_base = inspect.getmro(event)[1].__name__
         logger.debug(f'{self.pretty_print()} Registered {event_base} - {event.__class__.__name__}')
 
         if not event.is_valid():
             raise ValueError
 
-        event = event(manager=self, source=source or self, priority=priority)
+        event = event(manager=self, source=source or self, priority=priority, **kwargs)
         self._events[event_base].put(event)
         return event
 
     def unregister(self, event):
-        logger.debuf(f'Unregistering {event}')
+        logger.debug(f'Unregistering {event}')
         self._removed.append(event)
 
     def get(self, event):
@@ -232,6 +222,9 @@ class EventManager:
 
         # If an event stack already exists use it otherwise make a new stack
         stack = stack or EventStack(self)
+
+        if self._events[event].empty():
+            return stack
 
         with stack.open(*args, **kwargs) as executor:
             for evt in self.get(event):

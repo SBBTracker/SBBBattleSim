@@ -7,10 +7,10 @@ from sbbbattlesim.utils import random_start_combat_spell
 
 class DeckOfManyThingsOnStart(OnStart):
     def handle(self, *args, **kwargs):
-        for _ in range(bool(self.deck.mimic) + 1):
-            spell = random_start_combat_spell(self.player.level)
+        for _ in range(bool(self.source.mimic) + 1):
+            spell = random_start_combat_spell(self.source.player.level)
             if spell:
-                self.player.cast_spell(spell.id)
+                self.source.player.cast_spell(spell.id)
 
 
 class TreasureType(Treasure):
@@ -20,4 +20,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(DeckOfManyThingsOnStart, deck=self, player=self.player)
+        self.player.board.register(DeckOfManyThingsOnStart, source=self)

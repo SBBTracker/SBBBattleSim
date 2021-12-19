@@ -13,5 +13,3 @@ class TreasureType(Treasure):
         self.feather_used = False
         stats = 1 * (self.mimic + 1)
         self.aura = Aura(reason=ActionReason.POWER_ORB, source=self, health=stats, attack=stats)
-
-    

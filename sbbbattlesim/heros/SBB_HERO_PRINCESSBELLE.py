@@ -17,6 +17,4 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(_action=beauty_tribe_shift)
-
-    
+        self.aura = Aura(_action=beauty_tribe_shift, source=self, priority=-100)

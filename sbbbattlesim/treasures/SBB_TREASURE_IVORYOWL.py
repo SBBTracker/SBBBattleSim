@@ -11,7 +11,7 @@ class IvoryOwlOnStartOnStartBuff(OnStart):
     def handle(self, stack, *args, **kwargs):
         for _ in range(bool(self.source.mimic) + 1):
             Buff(reason=ActionReason.IVORY_OWL_BUFF, source=self.source, targets=self.source.player.valid_characters(),
-                 attack=2, health=2, temp=False, stack=stack).resolve()
+                 attack=2, health=2, stack=stack).resolve()
 
 
 class TreasureType(Treasure):

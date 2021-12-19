@@ -15,6 +15,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.support_buff = Support(source=self, attack=20 if self.golden else 10)
-
-    
+        self.support = Support(source=self, attack=20 if self.golden else 10)

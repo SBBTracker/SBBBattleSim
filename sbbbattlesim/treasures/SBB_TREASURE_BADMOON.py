@@ -5,9 +5,9 @@ from sbbbattlesim.treasures import Treasure
 
 class BadMoonSlayBuff(OnSlay):
     def handle(self, source, stack, *args, **kwargs):
-        for _ in range(self.bad_moon.mimic + 1):
-            Buff(reason=ActionReason.BAD_MOON, source=self.bad_moon, targets=[self.manager],
-                 attack=1, health=2, temp=False, stack=stack).resolve()
+        for _ in range(self.source.mimic + 1):
+            Buff(reason=ActionReason.BAD_MOON, source=self.source, targets=[self.manager],
+                 attack=1, health=2, stack=stack).resolve()
 
 
 class TreasureType(Treasure):
@@ -18,6 +18,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(event=BadMoonSlayBuff, source=self, bad_moon=self)
-
-    
+        self.aura = Aura(event=BadMoonSlayBuff, source=self)

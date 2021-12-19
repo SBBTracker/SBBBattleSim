@@ -5,9 +5,9 @@ from sbbbattlesim.treasures import Treasure
 
 class RingOfMeteorsActivation(OnStart):
     def handle(self, *args, **kwargs):
-        for _ in range(self.ring.mimic + 1):
-            targets = self.ring.player.valid_characters() + self.ring.player.opponent.valid_characters()
-            Damage(damage=1, reason=ActionReason.RING_OF_METEORS, source=self.ring, targets=targets).resolve()
+        for _ in range(self.source.mimic + 1):
+            targets = self.source.player.valid_characters() + self.source.player.opponent.valid_characters()
+            Damage(damage=1, reason=ActionReason.RING_OF_METEORS, source=self.source, targets=targets).resolve()
 
 
 class TreasureType(Treasure):
@@ -17,4 +17,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(RingOfMeteorsActivation, ring=self, priority=-10)
+        self.player.board.register(event=RingOfMeteorsActivation, source=self, priority=-10)

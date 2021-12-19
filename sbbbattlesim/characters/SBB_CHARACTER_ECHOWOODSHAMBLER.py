@@ -10,10 +10,10 @@ logger = logging.getLogger(__name__)
 
 class EchoWoodBuff(OnBuff):
     def handle(self, stack, summoned_characters=[], is_from_echowood=False, attack=0, health=0, damage=0,
-               reason='', temp=True, source=None, *args, **kwargs):
+               reason='', source=None, *args, **kwargs):
 
         if not self.manager.dead:
-            if (not temp or self.manager in summoned_characters) and (not is_from_echowood):
+            if self.manager in summoned_characters and not is_from_echowood:
 
                 gold_multiplier = 2 if self.source.golden else 1
 
@@ -37,6 +37,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(source=self, source=self, event=EchoWoodBuff, _lambda=lambda char: char is not self)
-
-    
+        self.aura = Aura(source=self, event=EchoWoodBuff, _lambda=lambda char: char is not self)

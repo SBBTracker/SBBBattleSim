@@ -14,6 +14,7 @@ class AonOnSpell(OnSpellCast):
 
 class AonSlay(OnAttackAndKill):
     slay = True
+
     def handle(self, killed_character, *args, **kwargs):
         # discounts spells
         pass

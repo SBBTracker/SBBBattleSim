@@ -11,7 +11,5 @@ class HeroType(Hero):
         super().__init__(*args, **kwargs)
         self.mirhi_buff = mirhi_buff
         self.aura = Aura(reason=ActionReason.FATES_BUFF, source=self,
-                              _lambda=lambda char: Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes,
-                              attack=1 * self.mirhi_buff, health=2 * self.mirhi_buff, )
-
-    
+                         _lambda=lambda char: Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes,
+                         attack=1 * self.mirhi_buff, health=2 * self.mirhi_buff, )

@@ -4,7 +4,6 @@ from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe, random_combat_spell
 
-
 logger = logging.getLogger(__name__)
 
 

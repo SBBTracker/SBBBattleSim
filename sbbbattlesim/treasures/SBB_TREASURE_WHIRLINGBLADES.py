@@ -17,4 +17,5 @@ class TreasureType(Treasure):
             attack_multiplier = 1
 
         if target_character.position in [1, 2, 3, 4]:
-            Buff(targets=[target_character], attack=attack_override*attack_multiplier, source=self, reason=ActionReason.SINGINGSWORD_BUFF, temp=True, *args, **kwargs).resolve()
+            Buff(targets=[target_character], attack=attack_override * attack_multiplier, source=self,
+                 reason=ActionReason.SINGINGSWORD_BUFF, temp=True, *args, **kwargs).resolve()

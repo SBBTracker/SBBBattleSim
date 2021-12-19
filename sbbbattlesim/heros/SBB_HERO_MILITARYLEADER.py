@@ -12,13 +12,13 @@ class LastBreathConvertedToOnAttackAndKillEvent(OnAttackAndKill):
 
     def handle(self, killed_character, stack, *args, **kwargs):
         with stack.open() as executor:
-            executor.execute(self.on_death_event, *args, **kwargs)
+            executor.execute(self.source, *args, **kwargs)
 
 
 def convert_on_death_to_on_attack_and_kill(char):
     for on_death_event in char.get('OnDeath'):
         if on_death_event.last_breath:
-            char.register(LastBreathConvertedToOnAttackAndKillEvent, temp=True, on_death_event=on_death_event)
+            char.register(LastBreathConvertedToOnAttackAndKillEvent, source=on_death_event)
 
 
 class HeroType(Hero):
@@ -27,6 +27,4 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(_action=convert_on_death_to_on_attack_and_kill)
-
-    
+        self.aura = Aura(_action=convert_on_death_to_on_attack_and_kill, source=self)
