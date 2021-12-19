@@ -93,4 +93,4 @@ def test_temp_damage4():
     winner, loser = board.fight(limit=3)
 
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (1, 1)
+    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (8, 7)
