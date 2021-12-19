@@ -207,7 +207,7 @@ class Player(EventManager):
                     character.support.execute(c, on_init=on_init, raw=raw)
 
         if character.aura:
-            for c in self.valid_characters(_lambda=lambda char: char is not character):
+            for c in self.valid_characters():
                 logger.debug(f'character {character} is auraing {c} with {character.aura}')
                 character.aura.execute(c, on_init=on_init, raw=raw)
 

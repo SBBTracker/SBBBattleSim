@@ -44,6 +44,6 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         modifier = 4 if self.golden else 2
         self.aura = Aura(source=self, attack=modifier, health=modifier,
-                         _lambda=lambda char: Tribe.ANIMAL in char.tribes and char != self)
+                         _lambda=lambda char: Tribe.ANIMAL in char.tribes and char is not self)
         self.player_buff = Action(source=self, event=BearstineOnSummon, player_event=True, priority=-20, bearstine=self,
                                   reason=ActionReason.BEARSTINE_BUFF)

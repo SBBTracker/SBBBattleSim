@@ -29,4 +29,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(source=self, event=FairyGodmotherOnDeath, _lambda=lambda char: Tribe.GOOD in char.tribes)
+        self.aura = Aura(source=self, event=FairyGodmotherOnDeath, _lambda=lambda char: Tribe.GOOD in char.tribes, priority=-10)

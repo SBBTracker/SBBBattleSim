@@ -18,4 +18,4 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         modifier = 4 if self.golden else 2
         self.aura = Aura(reason=ActionReason.AURA_BUFF, source=self, attack=modifier, health=modifier,
-                         _lambda=lambda char: Tribe.DWARF in char.tribes)
+                         _lambda=lambda char: Tribe.DWARF in char.tribes and char is not self)

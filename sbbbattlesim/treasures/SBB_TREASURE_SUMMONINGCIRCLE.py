@@ -24,4 +24,4 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.buff_count = 0
-        self.player.register(SummoningPortalBuff, source=self)
+        self.player.register(SummoningPortalBuff, source=self, priority=-10)
