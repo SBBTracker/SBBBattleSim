@@ -64,7 +64,8 @@ def test_two_bearstain_black_cat_dying(golden):
     assert board.p1.characters[1].attack, board.p1.characters[1].health == final_stats
 
 
-def test_summon_bearstain():
+@pytest.mark.parametrize('dies', (True, False))
+def test_summon_bearstain(dies):
     characters = [
         make_character(position=1, attack=1, health=2, tribes=[Tribe.ANIMAL]),
     ]
@@ -73,8 +74,17 @@ def test_summon_bearstain():
         level=3,
         characters=characters
     )
+
+    enemy_characters = []
+    if dies:
+        enemy_characters.append(make_character(id="SBB_CHARACTER_BABYDRAGON", position=1, attack=300, health=300))
+
     enemy = make_player(
-        spells=["SBB_SPELL_FALLINGSTARS"]
+        spells=["SBB_SPELL_FALLINGSTARS"],
+        characters=enemy_characters,
+        treasures = [
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     donkey = board.p1.characters[1]
@@ -87,13 +97,17 @@ def test_summon_bearstain():
                 position=self.manager.position,
                 golden=False
             )
-            self.manager.player.summon(self.manager.position, [summon])
+            self.manager.player.summon(5, [summon])
 
     donkey.register(FakeTrojanDonkeySummon)
 
-    winner, loser = board.fight(limit=0)
+    winner, loser = board.fight(limit=(1 if dies else 0))
 
 
-    bearstain = board.p1.characters[2]
-    assert (bearstain.attack, bearstain.health) == (bearstain._attack, bearstain._health)
-    assert (donkey.attack, donkey.health) == (3, 3)
+    bearstain = board.p1.characters[5]
+    if dies:
+        assert bearstain is None, bearstain.pretty_print()
+        assert (donkey.attack, donkey.health) == (1, 2)
+    else:
+        assert (bearstain.attack, bearstain.health) == (bearstain._attack, bearstain._health)
+        assert (donkey.attack, donkey.health) == (3, 3)

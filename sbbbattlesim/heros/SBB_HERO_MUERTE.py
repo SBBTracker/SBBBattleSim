@@ -26,5 +26,4 @@ class HeroType(Hero):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triggered = False
-        self.aura = Aura(event=MeurteDoubleLastBreath, source=self, priority=999,
-                         _lambda=lambda char: not self.triggered)
+        self.aura = Aura(event=MeurteDoubleLastBreath, source=self, priority=999)

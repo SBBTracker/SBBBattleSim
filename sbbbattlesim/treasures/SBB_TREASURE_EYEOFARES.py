@@ -15,5 +15,5 @@ class TreasureType(Treasure):
                          _action=self.give_opponent_aura)
 
     def give_opponent_aura(self, _):
-        if self.aura not in self.player.opponent.auras:
-            self.player.opponent.auras.add(self.aura)
+        if self.aura not in self.player.opponent.treasure_auras:
+            self.player.opponent.treasure_auras.add(self.aura)

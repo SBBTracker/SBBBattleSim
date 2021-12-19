@@ -15,7 +15,7 @@ class DraculasSaberOnDeath(OnDeath):
 
 class DraculasSaberOnSetup(OnSetup):
     def handle(self, *args, **kwargs):
-        self.source.player.opponent.auras.add(Aura(event=DraculasSaberOnDeath, source=self.source))
+        self.source.player.opponent.treasure_auras.add(Aura(event=DraculasSaberOnDeath, source=self.source))
 
 
 class TreasureType(Treasure):

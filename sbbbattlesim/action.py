@@ -191,7 +191,6 @@ class Action:
             health: int = 0,
             damage: int = 0,
             heal: int = 0,
-            temp: bool = False,
             event: (SSBBSEvent, None) = None,
             player_event: bool = False,
             _action=None,
@@ -229,7 +228,7 @@ class Action:
     def __repr__(self):
         return f'{self.reason} {self.source.pretty_print()} >>> {[char.pretty_print() for char in self.targets]} ({self.args}, {self.kwargs})'
 
-    def _apply(self, char, *args, **kwargs):
+    def _apply(self, char, on_init=False, raw=False, *args, **kwargs):
         '''
         This is the core of any Action class and should not be touched unless you are making changes to ALL effects
         This should never be accessed outside an Action class or subclass
@@ -249,13 +248,15 @@ class Action:
                 registered = char.register(self.event, priority=self.priority, source=self.source, *args, **kwargs)
             self._event_buffer[char].append(registered)
 
-        if self.attack != 0 or self.health != 0:
-            char._base_attack += self.attack
-            char._base_health += self.health
+        if not raw:
+            if self.attack != 0 or self.health != 0:
+                char._base_attack += self.attack
+                char._base_health += self.health
 
-            # TRIGGER ON BUFF
-            char('OnBuff', reason=self.reason, source=self.source, attack=self.attack, health=self.health, *args,
-                 **kwargs)
+                # TRIGGER ON BUFF
+                if not on_init:
+                    char('OnBuff', reason=self.reason, source=self.source, attack=self.attack, health=self.health, *args,
+                         **kwargs)
 
         if self.damage != 0:
             if char.invincible and self.reason != ActionReason.DAMAGE_WHILE_ATTACKING:
@@ -280,6 +281,7 @@ class Action:
         This is the core function to specify how to reverse an action and should not be touched unless you are making changes to ALL effects
         This should never be accessed outside an Action class or subclass
         '''
+        logger.debug(f'Clearing char {char.pretty_print()}')
         if self.event and (self.player_registered if self.player_event else True):
             if self.player_event:
                 for registered in self._event_buffer.get(char.player, []):
@@ -289,10 +291,16 @@ class Action:
                     char.unregister(registered)
 
         if self.health != 0:
+            logger.debug(f'health to clear: {self.health} ; damage {char._damage} ; health {char._base_health}')
             char._damage -= min(char._damage, self.health)
+            char._base_health -= self.health
+            logger.debug(f'health after clear: {self.health} ; damage {char._damage} ; health {char._base_health}')
 
         if self.attack != 0:
-            char._attack -= self.attack
+            char._base_attack -= self.attack
+
+        logger.debug(f'finished clearing char {char.pretty_print()}')
+
 
     def execute(self, character=None, *args, **kwargs):
         if self.state in (ActionState.RESOLVED, ActionState.ROLLED_BACK):

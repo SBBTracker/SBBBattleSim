@@ -37,7 +37,6 @@ def test_echowood_queenofhearts():
 
 def test_echowood_supported_token():
     player = make_player(
-        # hero = "SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_BLACKCAT", position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
             make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=0, health=1),
@@ -52,7 +51,6 @@ def test_echowood_supported_token():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 4)
 

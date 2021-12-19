@@ -21,10 +21,10 @@ class CastSpellOnStart(OnStart):
 
 
 class PlayerOnSetup(OnSetup):
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, raw=False, *args, **kwargs):
         # TODO Add Handling For raw=True
-        for char in self.source.valid_characters():
-            self.source.spawn(char, char.position)
+        for char in reversed(self.source.valid_characters()):
+            self.source.spawn(char, char.position, on_init=True, raw=self.source.raw)
 
 
 class Player(EventManager):
@@ -40,6 +40,8 @@ class Player(EventManager):
         self.level = level
         self._last_attacker = None
         self._attack_chain = 0
+
+        self.raw = raw
 
         # TODO Make a better implementation of this later
         if 'spells_cast' in kwargs:
@@ -91,13 +93,16 @@ class Player(EventManager):
         #             char._base_health -= char._temp_health
         #             char._base_attack -= int(char._temp_attack/attack_multiplier)
 
-        self.auras = set()
+        self.treasure_auras = set()
+        self.character_auras = set()
+        self.hero_auras = set()
+
         for char in self.valid_characters():
             if char.aura:
                 try:
-                    self.auras.update(set(char.aura))
+                    self.character_auras.update(set(char.aura))
                 except TypeError:
-                    self.auras.add(char.aura)
+                    self.character_auras.add(char.aura)
 
         for tid, tl in self.treasures.items():
             if tid == '''SBB_TREASURE_WHIRLINGBLADES''':
@@ -106,15 +111,15 @@ class Player(EventManager):
             for treasure in tl:
                 if treasure.aura and treasure.aura:
                     try:
-                        self.auras.update(set(treasure.aura))
+                        self.treasure_auras.update(set(treasure.aura))
                     except TypeError:
-                        self.auras.add(treasure.aura)
+                        self.treasure_auras.add(treasure.aura)
 
         if self.hero.aura:
             try:
-                self.auras.update(set(self.hero.aura))
+                self.hero_auras.update(set(self.hero.aura))
             except TypeError:
-                self.auras.add(self.hero.aura)
+                self.hero_auras.add(self.hero.aura)
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
@@ -155,24 +160,55 @@ class Player(EventManager):
 
         return self._attack_slot
 
-    def spawn(self, character, position):
+    def spawn(self, character, position, on_init=False, raw=False):
         logger.info(f'Spawning {character.pretty_print()} in {position} position')
         self.__characters[position] = character
         character.position = position
 
-        # TODO Add in Evil Eye stuff
         # TODO Add in Singing Swords
-        support_buffs = set()
-        support_positions = (5, 6, 7) if 'SBB_TREASURE_BANNEROFCOMMAND' in self.treasures else utils.get_behind_targets(position)
-        support_units = self.valid_characters(_lambda=lambda char: (char.position in support_positions and char.support))
-        support_buffs = set([char.support for char in support_units])
-        # for su in support_units:
-        #     support_targets = utils.get_support_targets(su.position, 'SBB_TREASURE_BANNEROFCOMMAND' in self.treasures)
-        #     if position in support_targets:
-        #         support_buffs.add(su.support)
 
-        for buff in sorted(support_buffs | self.auras, key=lambda b: b.priority, reverse=True):
-            buff.execute(character)
+        banner_of_command = 'SBB_TREASURE_BANNEROFCOMMAND' in self.treasures
+        evileye = 'SBB_TREASURE_HELMOFCOMMAND' in self.treasures
+        mimic = 'SBB_TREASURE_TREASURECHEST' in self.treasures
+
+        support_itr = 1
+        if evileye:
+            support_itr = 2
+            if mimic:
+                support_itr = 3
+
+        if not on_init:
+            support_positions = (5, 6, 7) if banner_of_command else utils.get_behind_targets(position)
+            support_units = self.valid_characters(_lambda=lambda char: (char.position in support_positions and char.support))
+            support_buffs = set([char.support for char in support_units])
+        else:
+            support_buffs = set()
+
+        buffs = self.treasure_auras | self.hero_auras
+        if not on_init:
+            buffs = buffs | self.character_auras
+
+        for buff in sorted(buffs, key=lambda b: b.priority, reverse=True):
+            buff.execute(character, on_init=on_init, raw=raw)
+
+        if not on_init:
+            for support_buff in sorted(support_buffs, key=lambda b:b.priority, reverse=True):
+                for _ in range(support_itr):
+                    support_buff.execute(character, on_init=on_init, raw=raw)
+
+        if character.support:
+            pos_ls = utils.get_support_targets(position, banner_of_command)
+
+            for c in self.valid_characters(_lambda=lambda char: char.position in pos_ls):
+                logger.debug(f'character {character} is supporting {c} with {character.support}')
+                for _ in range(support_itr):
+                    character.support.execute(c, on_init=on_init, raw=raw)
+
+        if character.aura:
+            for c in self.valid_characters(_lambda=lambda char: char is not character):
+                logger.debug(f'character {character} is auraing {c} with {character.aura}')
+                character.aura.execute(c, on_init=on_init, raw=raw)
+
 
         character('OnSpawn')
 

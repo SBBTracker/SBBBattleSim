@@ -27,4 +27,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(reason=ActionReason.AURA_BUFF, source=self, event=DarkwoodCreeperOnDamage)
+        self.aura = Aura(reason=ActionReason.AURA_BUFF, source=self, event=DarkwoodCreeperOnDamage, priority=10)

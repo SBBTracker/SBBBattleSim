@@ -25,5 +25,6 @@ def test_bossy(golden):
     else:
         final_stats = (3, 3)
 
+    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (1, 1)
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 1)

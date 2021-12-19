@@ -24,7 +24,7 @@ class BabaYagaSupportBuff(Support):
         super().__init__(*args, **kwargs)
         self.applied_buffs = {}
 
-    def execute(self, character, *args, **kwargs):
+    def _apply(self, character, *args, **kwargs):
         event = character.register(BabaYagaOnSlayBuff, source=self.source, *args, **kwargs)
         self.applied_buffs[character] = event
 

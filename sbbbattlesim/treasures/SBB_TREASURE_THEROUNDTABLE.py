@@ -2,7 +2,6 @@ from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.events import OnStart
 from sbbbattlesim.treasures import Treasure
 
-# TODO Fix this
 class RoundTableBuff(OnStart):
     def handle(self, stack, *args, **kwargs):
         for _ in range(bool(self.source.mimic) + 1):

@@ -8,7 +8,7 @@ class ShadowAssassinOnSlay(OnSlay):
     def handle(self, source, stack, *args, **kwargs):
         attack_buff = 2 if self.source.golden else 1
         Buff(reason=ActionReason.SHADOW_ASSASSIN_ON_SLAY_BUFF, source=self.source, targets=[self.source],
-             attack=attack_buff, temp=False, stack=stack, *args, **kwargs).resolve()
+             attack=attack_buff, stack=stack, *args, **kwargs).resolve()
 
 
 class CharacterType(Character):

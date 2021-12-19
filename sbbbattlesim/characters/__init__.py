@@ -38,8 +38,6 @@ class Character(EventManager):
         self.tribes = {Tribe(tribe) for tribe in tribes}
         self.cost = cost
 
-        self._temp_attack = 0
-        self._temp_health = 0
         self._damage = 0
         self.slay_counter = 0
         self.dead = False
@@ -79,15 +77,15 @@ class Character(EventManager):
 
     @property
     def attack(self):
-        return max(self._base_attack + self._temp_attack, 0)
+        return max(self._base_attack, 0)
 
     @property
     def health(self):
-        return self._base_health + self._temp_health - self._damage
+        return self._base_health - self._damage
 
     @property
     def max_health(self):
-        return self._base_health + self._temp_health
+        return self._base_health
 
     def generate_attack(self, target, reason, attacker=False):
         return Damage(

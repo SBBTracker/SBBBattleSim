@@ -5,6 +5,7 @@ import queue
 import typing
 from dataclasses import dataclass, field
 from typing import List
+import copy
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,7 @@ class SSBBSEvent:
     ):
         self.manager = manager
         self.source = source
-        self.priority = priority * -1  # DO NOT TOUCH THIS
+        self.priority = priority
         self.kwargs = kwargs
 
     def __ge__(self, other):
@@ -168,8 +169,7 @@ class OnSupport(SSBBSEvent):
 
 class EventManager:
     def __init__(self):
-        self._events = collections.defaultdict(queue.PriorityQueue)
-        self._removed = []
+        self._events = collections.defaultdict(set)
 
     def pretty_print(self):
         return self.__repr__()
@@ -182,40 +182,53 @@ class EventManager:
             raise ValueError
 
         event = event(manager=self, source=source or self, priority=priority, **kwargs)
-        self._events[event_base].put(event)
+        self._events[event_base].add(event)
         return event
 
     def unregister(self, event):
         logger.debug(f'Unregistering {event}')
-        self._removed.append(event)
+        self._events[event] = self._events[event] - {event}
 
     def get(self, event):
-        events_queue = self._events[event]
-        event_buffer = queue.PriorityQueue()
+        evts = self._events[event]
+        evts_set = set(evts)
+
+        if not evts:
+            return
+
+        sorting_lambda = lambda x: (x.priority, getattr(x.manager, 'position', 0))
+        evts = sorted(evts, key=sorting_lambda, reverse=True)
+
         priority = None
 
+        logger.debug(f'{self} is starting event {event}')
+
         while True:
-            try:
-                next_event = events_queue.get_nowait()
-                logger.debug(next_event)
-            except queue.Empty:
+            if not evts:
                 break
 
-            if next_event in self._removed:
-                # self._removed.remove(next_event) # Maybe?
+            evt = evts[0]
+            evts = evts[1:]
+
+            if priority is None:
+                priority = evt.priority
+            elif evt.priority < priority:
+                priority = evt.priority
+            elif evt.priority > priority:
                 continue
 
-            event_buffer.put(next_event)
+            yield evt
 
-            if priority:
-                if next_event.priority < priority:
-                    continue
+            new_evts_set = self._events.get(event, set())
 
-            priority = priority or next_event.priority
+            if evts_set != new_evts_set:
+                evts_set = set(new_evts_set)
+                evts = sorted(new_evts_set, key=sorting_lambda, reverse=True)
 
-            yield next_event
+            if not evts:
+                break
 
-        self._events[event] = event_buffer
+        logger.debug(f'{self} is done with event {event}')
 
     def __call__(self, event, stack=None, *args, **kwargs):
         logger.debug(f'{self.pretty_print()} triggered event {event}')
@@ -223,7 +236,7 @@ class EventManager:
         # If an event stack already exists use it otherwise make a new stack
         stack = stack or EventStack(self)
 
-        if self._events[event].empty():
+        if not self._events[event]:
             return stack
 
         with stack.open(*args, **kwargs) as executor:
