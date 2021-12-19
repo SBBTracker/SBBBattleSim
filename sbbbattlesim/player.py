@@ -14,6 +14,7 @@ from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
+import sys
 
 class CastSpellOnStart(OnStart):
     def handle(self, *args, **kwargs):
@@ -72,6 +73,7 @@ class Player(EventManager):
         for spl in spells:
             if spl in utils.START_OF_FIGHT_SPELLS:
                 priority = spell_registry[spl]().priority
+
                 self.board.register(CastSpellOnStart, spell=spl, source=self, priority=priority)
 
         for char_data in characters:

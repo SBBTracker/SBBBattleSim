@@ -192,6 +192,7 @@ class EventManager:
     def get(self, event):
         evts = self._events[event]
         evts_set = set(evts)
+        processed_events = set()
 
         if not evts:
             return
@@ -210,6 +211,8 @@ class EventManager:
             evt = evts[0]
             evts = evts[1:]
 
+            processed_events.add(evt)
+
             if priority is None:
                 priority = evt.priority
             elif evt.priority < priority:
@@ -222,8 +225,8 @@ class EventManager:
             new_evts_set = self._events.get(event, set())
 
             if evts_set != new_evts_set:
-                evts_set = set(new_evts_set)
-                evts = sorted(new_evts_set, key=sorting_lambda, reverse=True)
+                evts_set = set(new_evts_set) - processed_events
+                evts = sorted(evts_set, key=sorting_lambda, reverse=True)
 
             if not evts:
                 break
