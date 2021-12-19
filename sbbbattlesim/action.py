@@ -327,7 +327,7 @@ class Action:
             if self.attack != 0 or self.health != 0:
                 char._base_attack += attack
                 char._base_health += health
-                char('OnBuff', reason=self.reason, source=self.source, attack=self.attack, health=self.health, *args, **kwargs)
+                char('OnBuff', reason=self.reason, source=self.source, attack=attack, health=health, *args, **kwargs)
 
         if targets:
             for char in targets:
