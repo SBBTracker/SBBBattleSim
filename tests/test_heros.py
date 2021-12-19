@@ -52,7 +52,6 @@ def test_evella(on, evil_back):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
 
-
     player = board.p1
 
     buffed_animal = player.characters.get(5)

@@ -301,7 +301,6 @@ class Action:
 
         logger.debug(f'finished clearing char {char.pretty_print()}')
 
-
     def execute(self, character=None, *args, **kwargs):
         if self.state in (ActionState.RESOLVED, ActionState.ROLLED_BACK):
             return
@@ -315,6 +314,26 @@ class Action:
                 self._apply(char, *args, **kwargs)
 
         self.state = ActionState.EXECUTED
+
+    def update(self, attack=0, health=0, targets=None, *args, **kwargs):
+        logger.debug(f'{self} updating (attack={attack}, health={health}) >>> {targets}')
+        args = (*self.args, *args)
+        kwargs = self.kwargs | kwargs
+
+        self.attack += attack
+        self.health += health
+
+        for char in self._char_buffer:
+            if self.attack != 0 or self.health != 0:
+                char._base_attack += attack
+                char._base_health += health
+                char('OnBuff', reason=self.reason, source=self.source, attack=self.attack, health=self.health, *args, **kwargs)
+
+        if targets:
+            for char in targets:
+                if char in self._char_buffer:
+                    continue
+                self._apply(char, *args, **kwargs)
 
     def roll_back(self):
         for char in self.targets or self._char_buffer:

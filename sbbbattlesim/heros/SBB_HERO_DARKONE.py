@@ -8,8 +8,7 @@ class EvellaAura(OnDeath):
     last_breath = False
 
     def handle(self, *args, **kwargs):
-        targets = self.source.player.valid_characters(_lambda=lambda char: Tribe.EVIL in char.tribes)
-        Buff(reason=ActionReason.EVELLA_BUFF, source=self.source, attack=1, targets=targets).resolve()
+        self.source.aura[1].update(attack=1)
 
 
 class HeroType(Hero):
@@ -18,4 +17,7 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(event=EvellaAura, source=self, _lambda=lambda char: Tribe.ANIMAL in char.tribes),
+        self.aura = (
+            Aura(event=EvellaAura, source=self, _lambda=lambda char: Tribe.ANIMAL in char.tribes),
+            Aura(reason=ActionReason.EVELLA_BUFF, source=self, _lambda=lambda char: Tribe.EVIL in char.tribes)
+        )

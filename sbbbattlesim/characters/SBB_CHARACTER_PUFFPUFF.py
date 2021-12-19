@@ -61,8 +61,6 @@ class PuffPuffOnSummon(OnSummon):
 
 
 class CharacterType(Character):
-    # TODO this will need to be revisited after the resolve board removal
-
     display_name = 'PUFF PUFF'
     last_breath = True
 
