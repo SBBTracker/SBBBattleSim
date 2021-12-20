@@ -23,7 +23,7 @@ class MeurteDoubleLastBreath(OnLastBreath):
 
 class MuerteAuraBuff(AuraBuff):
     def execute(self, character):
-        character.register(MeurteDoubleLastBreath, meurte=self.source, priority=999)
+        character.register(MeurteDoubleLastBreath, temp=True, meurte=self.source, priority=999)
 
 
 class HeroType(Hero):

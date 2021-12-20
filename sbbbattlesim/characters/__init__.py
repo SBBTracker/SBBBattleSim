@@ -105,12 +105,15 @@ class Character(EventManager):
         )
 
     def clear_temp(self):
-        # logger.debug(f'{self.pretty_print()} clearing temp')
+        logger.debug(f'{self.pretty_print()} clearing temp')
         super().clear_temp()
 
         self._temp_attack = 0
         self._temp_health = 0
         self.invincible = False
+
+        logger.debug(f'{self.pretty_print()} cleared temp')
+
 
 
 CHARACTER_EXCLUSION = (
