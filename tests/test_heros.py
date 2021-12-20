@@ -526,3 +526,65 @@ def test_muerte():
 
     assert player.characters[1].id == 'SBB_CHARACTER_CAT'
     assert player.characters[2].id == 'SBB_CHARACTER_CAT'
+
+
+def test_pup():
+    player = make_player(
+        characters=[
+            make_character()
+        ],
+        hero='SBB_HERO_GANDALF',
+    )
+
+    enemy = make_player()
+
+    board = Board({'1': player, '2': enemy})
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert board.p1.characters[1].attack == 1
+    assert board.p1.characters[1].health == 1
+
+
+def test_pup_shouldntbuff():
+    player = make_player(
+        characters=[
+            make_character(tribes=[], position=1),
+            make_character(id="SBB_CHARACTER_ANGRYDWARF", position=5)
+        ],
+        hero='SBB_HERO_GANDALF',
+    )
+
+    enemy = make_player()
+
+    board = Board({'1': player, '2': enemy})
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert board.p1.characters[1].attack == 1
+    assert board.p1.characters[1].health == 1
+
+def test_pup_shouldbuff():
+    player = make_player(
+        characters=[
+            make_character(tribes=[Tribe.DWARF], position=1),
+            make_character(id="SBB_CHARACTER_ANGRYDWARF", position=5)
+        ],
+        hero='SBB_HERO_GANDALF',
+    )
+
+    enemy = make_player()
+
+    board = Board({'1': player, '2': enemy})
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert board.p1.characters[1].attack == 5
+    assert board.p1.characters[1].health == 4

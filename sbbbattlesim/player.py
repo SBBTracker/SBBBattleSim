@@ -201,7 +201,9 @@ class Player(EventManager):
                         target = self.__characters.get(target_position)
                         if target:
                             char.buff(target, *args, **kwargs)
-                            char('OnSupport', buffed=target, support=char, *args, **kwargs)
+                            if getattr(char, 'support_buff', None):
+                                if char.support_buff._lambda(target):
+                                    char('OnSupport', buffed=target, support=char, *args, **kwargs)
 
         cloak_ls = self.treasures.get("SBB_TREASURE_CLOAKOFTHEASSASSIN", False)
         if cloak_ls:

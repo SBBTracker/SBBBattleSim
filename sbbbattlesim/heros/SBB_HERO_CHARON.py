@@ -29,4 +29,4 @@ class HeroType(Hero):
         self.triggered = False
 
     def buff(self, target_character, *args, **kwargs):
-        target_character.register(CharonOnDeath, priority=999, charon=self)
+        target_character.register(CharonOnDeath, temp=True, priority=999, charon=self)
