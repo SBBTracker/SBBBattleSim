@@ -65,6 +65,7 @@ class Action:
         This is the core of any Action class and should not be touched unless you are making changes to ALL effects
         This should never be accessed outside an Action class or subclass
         '''
+        logger.debug(f'{char.pretty_print()} has {char._temp_health} temp health and {char._temp_attack} temporary attack')
 
         args = (*self.args, *args)
         kwargs = self.kwargs | kwargs
@@ -112,6 +113,7 @@ class Action:
 
 
     def execute(self, character=None, *args, **kwargs):
+        logger.debug(f'Executing for character {character}')
         if self.state in (ActionState.RESOLVED, ActionState.ROLLED_BACK):
             return
 
@@ -132,6 +134,7 @@ class Action:
         self.state = ActionState.ROLLED_BACK
 
     def resolve(self):
+        logger.debug('Resolving for character {character}')
         if self.state == ActionState.CREATED:
             self.execute()
         elif self.state in (ActionState.RESOLVED, ActionState.ROLLED_BACK):
