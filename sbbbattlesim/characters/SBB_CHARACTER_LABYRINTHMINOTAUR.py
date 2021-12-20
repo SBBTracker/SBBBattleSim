@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import AuraBuff
 from sbbbattlesim.characters import Character
 from sbbbattlesim.utils import StatChangeCause, Tribe
 
@@ -14,5 +14,4 @@ class CharacterType(Character):
 
     def buff(self, target_character, *args, **kwargs):
         if Tribe.EVIL in target_character.tribes and target_character != self:
-            Buff(reason=StatChangeCause.AURA_BUFF, source=self, targets=[target_character],
-                 attack=2 if self.golden else 1, temp=True,  *args, **kwargs).resolve()
+            AuraBuff(source=self, targets=[target_character], attack=2 if self.golden else 1, *args, **kwargs).resolve()
