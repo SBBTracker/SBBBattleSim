@@ -74,17 +74,24 @@ class Player(EventManager):
             if mimic:
                 attack_multiplier = 3
 
-        if raw:
-            self.resolve_board()
-            for char in self.__characters.values():
-                if char:
-                    char._base_health -= char._temp_health
-                    char._base_attack -= int(char._temp_attack/attack_multiplier)
-                    
         self.aura_buffs = set()
         for char in self.valid_characters():
             if char.aura and char.aura_buff:
                 self.aura_buffs.add(char.aura_buff)
+
+        if raw:
+            logger.debug('Winding back stats')
+            for char in self.__characters.values():
+                if char:
+                    logger.debug(f'pre resolution, {char.pretty_print()} has {char._temp_health} temp health and {char._temp_attack} temp attack to unwind')
+            self.resolve_board()
+            for char in self.__characters.values():
+                if char:
+                    logger.debug(f'{char.pretty_print()} has {char._temp_health} temp health and {char._temp_attack} temp attack to unwind')
+                    char._base_health -= char._temp_health
+                    char._base_attack -= int(char._temp_attack/attack_multiplier)
+                    logger.debug(f'and is now {char.pretty_print()}')
+
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
