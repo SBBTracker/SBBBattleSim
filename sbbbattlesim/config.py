@@ -25,7 +25,7 @@ def configure_logging():
         if python_logging_level:
             logging.basicConfig(level=python_logging_level)
     except:
-        logging.basicConfig(level='DEBUG')
+        logging.basicConfig(level=logging.root.level)
 
 
 def get_config(*args):
