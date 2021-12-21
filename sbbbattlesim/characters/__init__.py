@@ -143,6 +143,7 @@ class Registry(object):
         return (char_cls for id, char_cls in self.characters.items() if id not in CHARACTER_EXCLUSION and _lambda(char_cls) and char_cls._level > 1 and not char_cls.deactivated)
 
     def autoregister(self):
+        logger.debug(f'Looking for characters to register in {logic_path}')
         for _, name, _ in pkgutil.iter_modules(logic_path):
             try:
                 character = __import__(name, globals(), locals(), ['CharacterType'], 1)
