@@ -197,16 +197,18 @@ class EventManager:
         evts = _evt_lambda()
         evts_set = set(_evt_lambda())
         last_evt = None
+        processed_events = set()
         while True:
             for evt in sorted(evts, key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True):
                 yield evt
                 last_evt = evt
+                processed_events.add(evt)
 
-                new_evts_set = {s for s in set(_evt_lambda()) if s.priority < last_evt.priority}
+                new_evts_set = {s for s in set(_evt_lambda()) if s.priority < last_evt.priority} - processed_events
 
                 if evts_set != new_evts_set:
                     evts = list(new_evts_set)
-                    evts_set = set(evts)
+                    evts_set = set(evts) - processed_events
 
             if not evts_set:
                 break
