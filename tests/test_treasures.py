@@ -1423,11 +1423,14 @@ def test_sword_of_fire_and_ice(mimic):
 
 
 @pytest.mark.parametrize('mimic', (True, False))
-def test_ninth_book_of_merlin(mimic):
+@pytest.mark.parametrize('on', (True, False))
+def test_ninth_book_of_merlin(mimic, on):
     player = make_player(
+        level=5,
         characters=[
             make_character(tribes=['mage']),
-            make_character(position=2),
+            make_character(position=5),
+            make_character(id='SBB_CHARACTER_WIZARD', position=6, attack=1, health=5),
         ],
         treasures=[
             'SBB_TREASURE_THENINTHBOOKOFMERLIN',
@@ -1436,24 +1439,34 @@ def test_ninth_book_of_merlin(mimic):
     )
 
     enemy = make_player(
-        characters=[make_character(id='Enemy', attack=0)],
+        characters=[make_character(id='Enemy', attack=1 if on else 0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    winner, loser = board.fight(1)
     board.p1.resolve_board()
     board.p2.resolve_board()
 
     player = board.p1
     mage = player.characters[1]
-    assert mage
-    not_mage = player.characters[2]
-    assert not_mage
+    not_mage = player.characters[5]
 
-    assert mage.last_breath
-    assert len([evt for evt in mage.get('OnDeath') if evt.last_breath]) == 1 + mimic
+    if on:
+        for pos in [6]:
+            wizardbuffs = [
+                r for r in board.p1.characters[pos]._action_history if r.reason == StatChangeCause.WIZARDS_FAMILIAR
+            ]
 
-    assert not not_mage.last_breath
-    assert len([evt for evt in not_mage.get('OnDeath') if evt.last_breath]) == 0
+            assert len(wizardbuffs) == 2 if mimic else 1
+
+    else:
+        assert mage
+        assert not_mage
+
+        assert mage.last_breath
+        assert len([evt for evt in mage.get('OnDeath') if evt.last_breath]) == 1 + mimic
+
+        assert not not_mage.last_breath
+        assert len([evt for evt in not_mage.get('OnDeath') if evt.last_breath]) == 0
 
 
 @pytest.mark.parametrize('mimic', (True, False))

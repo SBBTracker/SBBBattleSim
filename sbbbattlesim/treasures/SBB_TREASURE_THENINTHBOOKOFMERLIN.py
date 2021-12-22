@@ -11,10 +11,9 @@ class NinthBookOnDeath(OnDeath):
     last_breath = True
 
     def handle(self, *args, **kwargs):
-        for _ in range(bool(self.book.mimic) + 1):
-            spell = random_combat_spell(self.manager.player.level)
-            if spell:
-                self.manager.player.cast(spell)
+        spell = random_combat_spell(self.manager.player.level)
+        if spell:
+            self.manager.player.cast_spell(spell.id)
 
 
 class TreasureType(Treasure):
