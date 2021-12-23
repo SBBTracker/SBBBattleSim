@@ -185,8 +185,9 @@ class EventManager:
         return event
 
     def unregister(self, event):
-        logger.debug(f'Unregistering {event}')
-        self._events[event] = self._events[event] - {event}
+        event_base = inspect.getmro(event.__class__)[1].__name__
+        logger.debug(f'Unregistering {event} of type {event_base}')
+        self._events[event_base] = self._events[event_base] - {event}
 
     def get(self, event):
         evts = self._events[event]

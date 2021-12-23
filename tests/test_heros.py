@@ -63,6 +63,29 @@ def test_evella(on, evil_back):
     assert buffed_cat.attack == (2 if on else 1) and buffed_cat.health == 1
 
 
+def test_evella_lots():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_BLACKCAT', position=1, tribes=['animal', 'evil']),
+            make_character(id='SBB_CHARACTER_BLACKCAT', position=5, tribes=['animal', 'evil']),
+        ],
+        hero='SBB_HERO_DARKONE'
+    )
+    enemy = make_player(
+        characters=[make_character(id='GENERIC', position=1, attack=3, health=5)],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+
+    buffed_cat = player.characters.get(5)
+
+    assert buffed_cat
+    assert buffed_cat.attack == 4
+
+
 @pytest.mark.parametrize('on', (True, False))
 def test_sad_dracula(on):
     player = make_player(

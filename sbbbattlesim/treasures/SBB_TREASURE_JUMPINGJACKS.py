@@ -26,4 +26,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(event=OtherHandOfVekna, source=self)
+        self.aura = Aura(event=OtherHandOfVekna, source=self, priority=-10)
