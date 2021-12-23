@@ -954,7 +954,7 @@ def test_coin_of_charon(mimic, real_unit):
     player = make_player(
         characters=[
             make_character(),
-            make_character(id="SBB_CHARACTER_WIZARD" if real_unit else "", position=5)
+            make_character(id='''SBB_CHARACTER_WIZARD'SFAMILIAR''' if real_unit else "", position=5)
         ],
         treasures=[
             '''SBB_TREASURE_MONKEY'SPAW''',
@@ -1387,6 +1387,57 @@ def test_monkeys_paw(trigger, mimic):
 
 
 @pytest.mark.parametrize('mimic', (True, False))
+@pytest.mark.parametrize('trigger', (True, False))
+def test_monkeys_paw_raw(trigger, mimic):
+    if trigger:
+        if mimic:
+            base_stat = 13
+        else:
+            base_stat = 7
+    else:
+        base_stat = 1
+
+    player = make_player(
+        raw=True,
+        characters=[
+            make_character(position=i, attack=base_stat, health=base_stat) for i in range(7 - trigger)
+        ],
+        treasures=[
+            'SBB_TREASURE_HEXINGWAND',
+            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character(id='Enemy', attack=0)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    player = board.p1
+
+    assert len(player.valid_characters()) == (7 - trigger)
+    for char in player.valid_characters():
+        if not trigger:
+            assert char.attack == 1 and char.health == 1
+            assert char._temp_attack == 0
+            assert char._temp_health == 0
+        else:
+            if mimic:
+                assert char.attack == 13 and char.health == 13
+                assert char._temp_attack == 12
+                assert char._temp_health == 12
+            else:
+                assert char.attack == 7, (char.pretty_print(), [i.pretty_print() for i in player.valid_characters()], player.treasures['SBB_TREASURE_HEXINGWAND'][0].active)
+                assert char.health == 7
+                assert char._temp_attack == 6
+                assert char._temp_health == 6
+
+
+
+@pytest.mark.parametrize('mimic', (True, False))
 def test_sword_of_fire_and_ice(mimic):
     player = make_player(
         characters=[
@@ -1430,7 +1481,7 @@ def test_ninth_book_of_merlin(mimic, on):
         characters=[
             make_character(tribes=['mage']),
             make_character(position=5),
-            make_character(id='SBB_CHARACTER_WIZARD', position=6, attack=1, health=5),
+            make_character(id='''SBB_CHARACTER_WIZARD'SFAMILIAR''', position=6, attack=1, health=5),
         ],
         treasures=[
             'SBB_TREASURE_THENINTHBOOKOFMERLIN',

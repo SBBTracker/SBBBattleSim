@@ -79,6 +79,8 @@ class Player(EventManager):
             if char.aura and char.aura_buff:
                 self.aura_buffs.add(char.aura_buff)
 
+        self('OnPreStart')
+
         if raw:
             logger.debug('Winding back stats')
             for char in self.__characters.values():

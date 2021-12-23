@@ -33,3 +33,24 @@ def test_southern_siren(attacker_golden, defender_golden):
         assert utc is not None
         assert utc.golden is defender_golden
         assert utc.tribes == type(utc.tribes)([Tribe.DWARF])
+
+
+def test_southern_siren():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_LOBO', position=1, attack=1, health=1, golden=True),
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[make_character(attack=0, health=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+
+    assert board.p1.characters[2].position == 2
+    assert board.p1.characters[3].position == 3

@@ -41,6 +41,13 @@ class OnStart(SSBBSEvent):
         raise NotImplementedError
 
 
+class OnPreStart(SSBBSEvent):
+    '''Start of Brawl'''
+
+    def handle(self, stack, *args, **kwargs):
+        raise NotImplementedError
+
+
 class OnDeath(SSBBSEvent):
     '''A character dies'''
     last_breath = None
