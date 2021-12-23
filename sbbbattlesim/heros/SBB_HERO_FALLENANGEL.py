@@ -1,14 +1,14 @@
 import logging
 
 from sbbbattlesim.action import Buff
-from sbbbattlesim.events import OnStart
+from sbbbattlesim.events import OnPreStart
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import Tribe, StatChangeCause
 
 logger = logging.getLogger(__name__)
 
 
-class FallenAngelOnStart(OnStart):
+class FallenAngelOnStart(OnPreStart):
     def handle(self, *args, **kwargs):
         self.angel.angel_attack_buff = len(
             self.angel.player.valid_characters(_lambda=lambda char: Tribe.EVIL in char.tribes)) >= 3
@@ -26,7 +26,7 @@ class HeroType(Hero):
         self.angel_attack_buff = False
         self.angel_health_buff = False
 
-        self.player.board.register(FallenAngelOnStart, angel=self)
+        self.player.register(FallenAngelOnStart, angel=self)
 
     def buff(self, target_character, *args, **kwargs):
         if self.angel_health_buff or self.angel_attack_buff:

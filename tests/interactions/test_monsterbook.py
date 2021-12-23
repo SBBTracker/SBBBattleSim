@@ -11,9 +11,9 @@ def test_monsterbook_wizard_familar(golden):
         level=2,
         characters=[
             make_character(id='SBB_CHARACTER_MONSTERBOOK', position=1, attack=1, health=1, golden=golden),
-            make_character(id='SBB_CHARACTER_WIZARD', position=2, attack=1, health=5),
-            make_character(id='SBB_CHARACTER_WIZARD', position=3, attack=1, health=5),
-            make_character(id='SBB_CHARACTER_WIZARD', position=4, attack=1, health=5),
+            make_character(id='''SBB_CHARACTER_WIZARD'SFAMILIAR''', position=2, attack=1, health=5),
+            make_character(id='''SBB_CHARACTER_WIZARD'SFAMILIAR''', position=3, attack=1, health=5),
+            make_character(id='''SBB_CHARACTER_WIZARD'SFAMILIAR''', position=4, attack=1, health=5),
         ],
         treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''
