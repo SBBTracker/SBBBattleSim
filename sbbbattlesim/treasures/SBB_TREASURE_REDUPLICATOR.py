@@ -24,7 +24,7 @@ class ReduplicatorOnSummon(OnSummon):
                         tribes=copied_character.tribes,
                         cost=copied_character.cost
                     )
-                    self.manager.summon(new_character.position, [new_character], *args, **kwargs)
+                    self.manager.summon(new_character.position, [new_character], raw=True, *args, **kwargs)
 
 
 class TreasureType(Treasure):

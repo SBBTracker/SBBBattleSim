@@ -6,7 +6,7 @@ from sbbbattlesim.events import OnDeath
 class HumptyDumptyOnDeath(OnDeath):
     last_breath = False
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         self.manager.player.graveyard.remove(self.source)
 
 

@@ -8,7 +8,7 @@ from sbbbattlesim.utils import Tribe
 class TweedleDeeLastBreath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         attack, health = (self.manager.max_health * 2, self.manager.attack * 2) if self.manager.golden else (
         self.manager.max_health, self.manager.attack)
         tweedle_dum = [

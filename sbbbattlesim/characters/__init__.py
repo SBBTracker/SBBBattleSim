@@ -1,5 +1,6 @@
 import logging
 import pkgutil
+import traceback
 from collections import OrderedDict
 
 from sbbbattlesim.action import Damage
@@ -14,6 +15,8 @@ logic_path = __path__
 class Character(EventManager):
     display_name = ''
     id = ''
+    slay = False
+    last_breath = False
     support = False
     quest = False
     flying = False
@@ -87,7 +90,7 @@ class Character(EventManager):
     def max_health(self):
         return self._base_health
 
-    def generate_attack(self, target, reason, attacker=False):
+    def generate_attack(self, target, reason, attacking=False):
         return Damage(
             reason=reason,
             source=self,
@@ -129,11 +132,8 @@ class Registry(object):
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
-            try:
-                character = __import__(name, globals(), locals(), ['CharacterType'], 1)
-                self.register(name, character.CharacterType)
-            except Exception as exc:
-                logger.exception('Error loading characters: {}'.format(name))
+            character = __import__(name, globals(), locals(), ['CharacterType'], 1)
+            self.register(name, character.CharacterType)
 
 
 registry = Registry()

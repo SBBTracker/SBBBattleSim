@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class BlackCatLastBreath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         stat = 2 if self.manager.golden else 1
         cat = character_registry['SBB_CHARACTER_CAT'](
             self.manager.player,

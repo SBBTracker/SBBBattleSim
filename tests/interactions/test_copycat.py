@@ -17,6 +17,12 @@ def test_muerte_copycat_goodboy(golden):
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
+
+    '''
+    Stat Stacking Quick Math
+    1 > 2 > 6 > 18 > 36 > 108
+    '''
+
     enemy = make_player(
         characters=[
             make_character(),
@@ -40,8 +46,7 @@ def test_muerte_single_goodboy(golden):
         hero="SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5, golden=golden),
-            make_character(id="SBB_CHARACTER_GOODBOY", position=5, attack=1, health=1, tribes=[Tribe.GOOD],
-                           golden=True),
+            make_character(id="SBB_CHARACTER_GOODBOY", position=5, attack=1, health=1, tribes=[Tribe.GOOD], golden=True),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )

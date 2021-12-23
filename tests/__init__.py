@@ -1,3 +1,5 @@
+from sbbbattlesim import configure_logging
+
 PLAYER = {
     'characters': [],
     'treasures': [],
@@ -29,3 +31,5 @@ def make_character(**kwargs):
     character = CHARACTER.copy()
     character.update(kwargs)
     return character
+
+

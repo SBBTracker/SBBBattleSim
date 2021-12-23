@@ -6,7 +6,7 @@ from sbbbattlesim.treasures import Treasure
 class ExplodingMittensOnDeath(OnDeath):
     last_breath = False
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         for _ in range(bool(self.source.mimic) + 1):
             Damage(damage=1, reason=ActionReason.EXPLODING_MITTENS_DAMAGE, source=self.source,
                    targets=self.manager.player.opponent.valid_characters()).resolve()

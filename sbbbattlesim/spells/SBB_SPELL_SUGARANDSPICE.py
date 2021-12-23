@@ -1,15 +1,16 @@
 from sbbbattlesim.action import Buff, ActionReason
-from sbbbattlesim.spells import TargetedSpell
+from sbbbattlesim.spells import Spell
 from sbbbattlesim.utils import Tribe
 
 
-class SpellType(TargetedSpell):
+class SpellType(Spell):
     display_name = 'Sugar and Spice'
     _level = 2
 
-    def cast(self, target, *args, **kwargs):
+    def cast(self, target: 'Character' = None, *args, **kwargs):
         Buff(targets=[target], health=1, attack=1, temp=False, reason=ActionReason.SUGAR_AND_SPICE, source=self, *args,
              **kwargs)
 
-    def filter(self, char):
+    @classmethod
+    def filter(cls, char):
         return Tribe.GOOD in char.tribes

@@ -12,11 +12,11 @@ class NinthBookOnDeath(OnDeath):
     last_breath = True
 
     # TODO Does this trigger twice or are there two last breaths
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         for _ in range(bool(self.source.mimic) + 1):
             spell = random_combat_spell(self.manager.player.level)
             if spell:
-                self.manager.player.cast(spell)
+                self.manager.player.cast()
 
 
 class TreasureType(Treasure):

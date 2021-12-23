@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import Aura
+from sbbbattlesim.action import Aura, ActionReason
 from sbbbattlesim.events import OnLastBreath
 from sbbbattlesim.heros import Hero
 
@@ -16,7 +16,8 @@ class MeurteDoubleLastBreath(OnLastBreath):
         if last_breaths:
             self.source.triggered = True
             with stack.open(*args, **kwargs) as executor:
-                executor.execute(last_breaths[-1])
+                kwargs = kwargs | dict(reason=ActionReason.MEURTE_PROC)
+                executor.execute(last_breaths[-1], *args, **kwargs)
 
 
 class HeroType(Hero):
@@ -26,4 +27,4 @@ class HeroType(Hero):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triggered = False
-        self.aura = Aura(event=MeurteDoubleLastBreath, source=self, priority=999)
+        self.aura = Aura(event=MeurteDoubleLastBreath, source=self, priority=999, _lambda=lambda char: char.last_breath)

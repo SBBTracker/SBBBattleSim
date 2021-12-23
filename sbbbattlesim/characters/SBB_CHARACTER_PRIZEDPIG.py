@@ -7,7 +7,7 @@ from sbbbattlesim.utils import Tribe
 class PrizedPigLastBreath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         pass  # this is only relevant for things like trophy hunter
 
 

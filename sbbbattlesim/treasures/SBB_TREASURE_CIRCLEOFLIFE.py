@@ -6,7 +6,7 @@ from sbbbattlesim.treasures import Treasure
 class TreeOfLifeHeal(OnDeath):
     last_breath = False
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         for _ in range(self.source.mimic + 1):
             Heal(reason=ActionReason.TREE_OF_LIFE, source=self.source, targets=self.manager.player.valid_characters(),
                  heal=-1, stack=stack).resolve()

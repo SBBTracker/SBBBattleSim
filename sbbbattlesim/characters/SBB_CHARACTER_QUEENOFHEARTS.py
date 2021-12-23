@@ -7,7 +7,7 @@ from sbbbattlesim.utils import Tribe
 class EvilQueenOnDeath(OnDeath):
     last_breath = False
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         stat_change = 4 if self.source.golden else 2
         Buff(source=self.source, reason=ActionReason.EVILQUEEN_BUFF, targets=[self.source],
              attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()

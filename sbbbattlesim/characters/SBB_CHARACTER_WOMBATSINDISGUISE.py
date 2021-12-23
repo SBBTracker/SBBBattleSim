@@ -23,7 +23,7 @@ class WombatsInDisguiseOnSummon(OnSummon):
 class WombatsInDisguiseOnDeath(OnDeath):
     last_breath = True
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         _lambda = lambda char: char._level <= self.manager.player.level
         valid_summons = [*character_registry.filter(_lambda=_lambda)]
 

@@ -13,20 +13,6 @@ class RiverwishMermaidOnAttackAndKill(OnAttackAndKill):
              stack=stack).resolve()
 
 
-class RiverwishMermaidSupportBuff(Support):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.applied_buffs = {}
-
-    def _apply(self, char, *args, **kwargs):
-        event = char.register(RiverwishMermaidOnAttackAndKill, source=self.source, *args, **kwargs)
-        self.applied_buffs[char] = event
-
-    def remove(self):
-        for char, buff in self.applied_buffs:
-            char.remove(buff)
-
-
 class CharacterType(Character):
     display_name = 'Riverwish Mermaid'
     support = True

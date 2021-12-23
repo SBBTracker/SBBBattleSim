@@ -7,7 +7,7 @@ from sbbbattlesim.utils import Tribe
 class MonsterManualOnDeath(OnDeath):
     last_breath = False
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         for _ in range(self.source.mimic + 1):
             Buff(reason=ActionReason.MONSTER_MANUAL_BUFF, source=self.source, targets=[self.manager],
                  attack=2, stack=stack).execute()

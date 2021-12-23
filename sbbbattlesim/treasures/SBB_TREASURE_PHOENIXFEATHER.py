@@ -7,7 +7,7 @@ import copy
 class PhoenixFeatherOnDeath(OnDeath):
     last_breath = False
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         if not self.source.feather_used and self.manager in self.manager.player.graveyard:
 
             all_characters = self.manager.player.valid_characters() + [self.manager]

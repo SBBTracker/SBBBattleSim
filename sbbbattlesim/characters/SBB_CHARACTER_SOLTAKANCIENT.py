@@ -7,11 +7,20 @@ from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
-
 class SoltakAuraBuff(Aura):
     def _apply(self, char, *args, **kwargs):
+        if not self._lambda(char):
+            return
+
+        self._char_buffer.add(char)
+        char._action_history.append(self)
+
         logger.debug(f'{self.source.pretty_print()} is protecting {char.pretty_print()}')
         char.invincible = True
+
+    def _clear(self, char, *args, **kwargs):
+        logger.debug(f'{self.source.pretty_print()} is no longer protecting {char.pretty_print()}')
+        char.invincible = False
 
 
 class CharacterType(Character):
@@ -25,5 +34,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = SoltakAuraBuff(source=self,
-                                   _lambda=lambda char: char.position in utils.get_behind_targets(self.position))
+        self.aura = SoltakAuraBuff(source=self, _lambda=lambda char: char.position in utils.get_behind_targets(self.position))

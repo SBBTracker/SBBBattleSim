@@ -11,13 +11,17 @@ class Spell:
     display_name = ''
     id = ''
     level = 0
-    targeted = True
+    targeted = False
     priority = 0
 
-    def cast(self, *args, **kwargs):
+    def __init__(self, player: 'Player'):
+        self.player = player
+
+    def cast(self, target: 'Character' = None, *args, **kwargs):
         raise NotImplementedError
 
-    def filter(self, char):
+    @classmethod
+    def filter(cls, char):
         return True
 
     @classmethod
@@ -26,20 +30,6 @@ class Spell:
 
     def pretty_print(self):
         return self.display_name
-
-
-class TargetedSpell(Spell):
-    targeted = True
-
-    def cast(self, target, *args, **kwargs):
-        raise NotImplementedError
-
-
-class NonTargetedSpell(Spell):
-    targeted = False
-
-    def cast(self, player, *args, **kwargs):
-        raise NotImplementedError
 
 
 class Registry(object):
@@ -66,13 +56,8 @@ class Registry(object):
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
-            try:
-                spell = __import__(name, globals(), locals(), ['SpellType'], 1)
-                self.register(name, spell.SpellType)
-            except ImportError:
-                pass
-            except Exception as exc:
-                logger.exception('Error loading spells: {}'.format(name))
+            spell = __import__(name, globals(), locals(), ['SpellType'], 1)
+            self.register(name, spell.SpellType)
 
 
 registry = Registry()

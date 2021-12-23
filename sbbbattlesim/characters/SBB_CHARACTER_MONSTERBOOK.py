@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class MonsterBookOnDeath(OnDeath):
     last_breath = True
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         itr = (2 if self.source.golden else 1)
 
         for _ in range(itr):

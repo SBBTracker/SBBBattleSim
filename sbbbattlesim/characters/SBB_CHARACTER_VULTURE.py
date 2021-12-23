@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class BeardedVultureOnDeath(OnDeath):
     last_breath = False
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         stat_change = 6 if self.source.golden else 3
         Buff(source=self.source, reason=ActionReason.BEARDEDVULTURE_BUFF, targets=[self.source],
              attack=stat_change, health=stat_change, temp=False).resolve()

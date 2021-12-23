@@ -8,7 +8,7 @@ from sbbbattlesim.utils import Tribe
 class PrincessPeepDeath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         stat = 2 if self.source.golden else 1
 
         sheep = [

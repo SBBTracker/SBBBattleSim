@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import Aura
+from sbbbattlesim.action import Aura, ActionReason
 from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.heros import Hero
 
@@ -12,7 +12,7 @@ class LastBreathConvertedToOnAttackAndKillEvent(OnAttackAndKill):
 
     def handle(self, killed_character, stack, *args, **kwargs):
         with stack.open() as executor:
-            executor.execute(self.source, *args, **kwargs)
+            executor.execute(self.source, reason=ActionReason.TROPHY_HUNTER_PROC, *args, **kwargs)
 
 
 def convert_on_death_to_on_attack_and_kill(char):

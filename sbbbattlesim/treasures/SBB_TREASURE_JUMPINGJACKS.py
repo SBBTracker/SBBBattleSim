@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class OtherHandOfVekna(OnDeath):
     last_breath = False
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         positions = (1, 2, 3, 4) if self.manager.position in (1, 2, 3, 4) else (5, 6, 7)
         targets = self.manager.player.valid_characters(_lambda=lambda char: char.position in positions)
         for _ in range(self.source.mimic + 1):

@@ -7,7 +7,7 @@ from sbbbattlesim.treasures import Treasure
 class RingOfRevengeBuff(OnDeath):
     last_breath = False
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         for pos in utils.get_behind_targets(self.manager.position):
             char = self.manager.player.characters.get(pos)
             if char:

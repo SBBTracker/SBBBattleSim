@@ -7,7 +7,7 @@ from sbbbattlesim.utils import Tribe
 class BabyBearOnDeath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         stat = 4 if self.manager.golden else 2
         papa_bear = character_registry['SBB_CHARACTER_PAPABEAR'](
             player=self.manager.player,

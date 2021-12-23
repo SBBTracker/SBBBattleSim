@@ -1,5 +1,6 @@
 import logging
 import pkgutil
+import traceback
 from collections import OrderedDict
 
 logger = logging.getLogger(__name__)
@@ -42,13 +43,8 @@ class Registry(object):
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
-            try:
-                hero = __import__(name, globals(), locals(), ['HeroType'], 1)
-                self.register(name, hero.HeroType)
-            except ImportError:
-                pass
-            except Exception as exc:
-                logger.exception('Error loading heros: {}'.format(name))
+            hero = __import__(name, globals(), locals(), ['HeroType'], 1)
+            self.register(name, hero.HeroType)
 
 
 registry = Registry()

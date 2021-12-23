@@ -85,8 +85,7 @@ class FakePlayer:
 
 
 @pytest.mark.parametrize('golden', (True, False))
-@pytest.mark.parametrize('char', character_registry.filter(
-    _lambda=lambda char: any([e.slay for e in char(FakePlayer(), 0, 0, 0, False, set(), 0).get('OnAttackAndKill')])))
+@pytest.mark.parametrize('char', character_registry.filter(_lambda=lambda char: char.slay is True))
 def test_slay(char, golden):
     '''Triggers a slay, checks success by measuring against a shadow assassin. Liable to fail in the future... '''
 
@@ -125,9 +124,6 @@ def test_last_breath(char, golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-
-    print(board.p1.pretty_print())
-    print(board.p2.pretty_print())
 
     assert board.p1.hero.triggered
 

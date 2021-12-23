@@ -6,7 +6,7 @@ from sbbbattlesim.treasures import Treasure
 class MirrorMirrorOnDeath(OnDeath):
     last_breath = False
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         copies = [
             self.manager.__class__(
                 player=self.manager.player,

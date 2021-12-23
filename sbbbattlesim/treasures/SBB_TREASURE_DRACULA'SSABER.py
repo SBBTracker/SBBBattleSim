@@ -6,7 +6,7 @@ from sbbbattlesim.treasures import Treasure
 class DraculasSaberOnDeath(OnDeath):
     last_breath = False
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         for _ in range(self.source.mimic + 1):
             Buff(reason=ActionReason.DRACULAS_SABER_BUFF, source=self.source,
                  targets=self.source.player.valid_characters(),
@@ -15,7 +15,7 @@ class DraculasSaberOnDeath(OnDeath):
 
 class DraculasSaberOnSetup(OnSetup):
     def handle(self, *args, **kwargs):
-        self.source.player.opponent.treasure_auras.add(Aura(event=DraculasSaberOnDeath, source=self.source))
+        self.source.player.opponent.auras.add(Aura(event=DraculasSaberOnDeath, source=self.source))
 
 
 class TreasureType(Treasure):

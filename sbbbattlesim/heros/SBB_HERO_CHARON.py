@@ -6,7 +6,7 @@ from sbbbattlesim.heros import Hero
 class CharonOnDeath(OnDeath):
     last_breath = False
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         if self.manager._level < 2:
             return
 

@@ -6,9 +6,6 @@ from enum import Enum
 from typing import List
 
 from sbbbattlesim.events import SSBBSEvent
-from sbbbattlesim.heros import Hero
-from sbbbattlesim.spells import Spell
-from sbbbattlesim.treasures import Treasure
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +59,7 @@ class ActionReason(enum.Enum):
     STORM_KING_BUFF = 143
     AON_BUFF = 144
     PRINCESS_WIGHT_BUFF = 145
+    BOSSY_BUFF = 146
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202
@@ -146,47 +144,20 @@ class ActionReason(enum.Enum):
     LIGHTNING_BOLT = 455
     POISON_APPLE = 456
 
-
-@dataclass
-class DynamicStat:
-    s: int
-
-    def __add__(self, other):
-        self.s += other
-
-    def __sub__(self, other):
-        self.s -= other
-
-    def __eq__(self, other):
-        return self.s == other
-
-    def __ne__(self, other):
-        return self.s != other
-
-    def __lt__(self, other):
-        return self.s < other
-
-    def __le__(self, other):
-        return self.s <= other
-
-    def __gt__(self, other):
-        return self.s > other
-
-    def __ge__(self, other):
-        return self.s >= other
-
-    def __str__(self):
-        return str(self.s)
+    COPYCAT_PROC = 501
+    MEURTE_PROC = 502
+    TROPHY_HUNTER_PROC = 503
 
 
 class Action:
     def __init__(
             self,
             reason: ActionReason,
-            source: ('Character', Treasure, Hero, Spell),
+            source: ('Character', 'Treasure', 'Hero', 'Spell'),
             targets: (List['Character'], None) = None,
             _lambda=None,
             priority: int = 0,
+            multiplier: int = 1,
             attack: int = 0,
             health: int = 0,
             damage: int = 0,
@@ -203,9 +174,10 @@ class Action:
         self._lambda = _lambda or (lambda _: True)
         self._action = _action
         self.priority = priority
+        self.multiplier = multiplier
 
-        self.attack = attack
-        self.health = health
+        self.attack = attack * self.multiplier
+        self.health = health * self.multiplier
         self.damage = damage
         self.heal = heal
 
@@ -226,40 +198,26 @@ class Action:
         return self.__repr__()
 
     def __repr__(self):
-        return f'{self.reason} {self.source.pretty_print()} >>> {[char.pretty_print() for char in self.targets]} ({self.args}, {self.kwargs})'
+        return f'{self.reason} {self.source.pretty_print()}'
 
-    def _apply(self, char, on_init=False, raw=False, *args, **kwargs):
+    def _apply(self, char, *args, **kwargs):
         '''
         This is the core of any Action class and should not be touched unless you are making changes to ALL effects
         This should never be accessed outside an Action class or subclass
         '''
+        if self.attack != 0 or self.health != 0:
+            attack = self.attack
+            if char.position in (1, 2, 3, 4):
+                attack *= self.source.player.singing_sword_multiplier
+            char._base_attack += attack
+            char._base_health += self.health
 
-        args = (*self.args, *args)
-        kwargs = self.kwargs | kwargs
-        self._char_buffer.add(char)
-        char._action_history.append(self)
-
-        if self.event and (not self.player_registered if self.player_event else True):
-            if self.player_event:
-                registered = char.player.register(self.event, priority=self.priority, source=self.source, *args,
-                                                  **kwargs)
-                self.player_registered = True
-            else:
-                registered = char.register(self.event, priority=self.priority, source=self.source, *args, **kwargs)
-            self._event_buffer[char].append(registered)
-
-        if not raw:
-            if self.attack != 0 or self.health != 0:
-                char._base_attack += self.attack
-                char._base_health += self.health
-
-                # TRIGGER ON BUFF
-                if not on_init:
-                    char('OnBuff', reason=self.reason, source=self.source, attack=self.attack, health=self.health, *args,
-                         **kwargs)
+            # TRIGGER ON BUFF
+            char('OnBuff', reason=self.reason, source=self.source, attack=self.attack, health=self.health,
+                 *args, **kwargs)
 
         if self.damage != 0:
-            if char.invincible and self.reason != ActionReason.DAMAGE_WHILE_ATTACKING:
+            if char.invincible and self.reason != ActionReason.DAMAGE_WHILE_DEFENDING:
                 char('OnDamagedAndSurvived', damage=0, *args, **kwargs)
                 return
             char._damage += self.damage
@@ -282,14 +240,6 @@ class Action:
         This should never be accessed outside an Action class or subclass
         '''
         logger.debug(f'Clearing char {char.pretty_print()}')
-        if self.event and (self.player_registered if self.player_event else True):
-            if self.player_event:
-                for registered in self._event_buffer.get(char.player, []):
-                    char.player.unregister(registered)
-            else:
-                for registered in self._event_buffer.get(char, []):
-                    char.unregister(registered)
-
         if self.health != 0:
             logger.debug(f'health to clear: {self.health} ; damage {char._damage} ; health {char._base_health}')
             char._damage -= min(char._damage, self.health)
@@ -301,43 +251,82 @@ class Action:
 
         logger.debug(f'finished clearing char {char.pretty_print()}')
 
-    def execute(self, character=None, *args, **kwargs):
-        if self.state in (ActionState.RESOLVED, ActionState.ROLLED_BACK):
+    def _register(self, char, *args, **kwargs):
+        if not self.event:
             return
 
-        if character:
-            if not self._lambda(character):
-                return
-            self._apply(character, *args, **kwargs)
-        else:
-            for char in self.targets:
-                self._apply(char, *args, **kwargs)
+        if self.player_event and self.player_registered:
+            return
+
+        # Apply Events
+        manager = char.player if self.player_event else char
+        for _ in range(self.multiplier):
+            registered = manager.register(self.event, priority=self.priority, source=self.source, *args, **kwargs)
+            self._event_buffer[manager].append(registered)
+
+    def _unregister(self, char, *args, **kwargs):
+        if not self.event:
+            return
+
+        # Unregister Events
+        manager = char.player if self.player_event else char
+        events = self._event_buffer[manager]
+        for e in events:
+            manager.unregister(e)
+
+    def execute(self, character=None, *args, **kwargs):
+        for char in [character] if character else self.targets:
+            if not self._lambda(char):
+                continue
+
+            args = (*self.args, *args)
+            kwargs = self.kwargs | kwargs
+            self._char_buffer.add(char)
+            char._action_history.append(self)
+
+            if self.event:
+                self._register(character, *args, **kwargs)
+            self._apply(char, *args, **kwargs)
 
         self.state = ActionState.EXECUTED
 
     def update(self, attack=0, health=0, targets=None, *args, **kwargs):
-        logger.debug(f'{self} updating (attack={attack}, health={health}) >>> {targets}')
+        logger.debug(f'{self} updating (attack={attack}, health={health}) >>> {targets} ({args}, {kwargs})')
         args = (*self.args, *args)
         kwargs = self.kwargs | kwargs
 
         self.attack += attack
         self.health += health
 
-        for char in self._char_buffer:
-            if self.attack != 0 or self.health != 0:
-                char._base_attack += attack
+        if attack != 0 or health != 0:
+            for char in self._char_buffer:
+                char._base_attack += attack * (self.source.player.singing_sword_multiplier if char.position in (1, 2, 3, 4) else 1)
                 char._base_health += health
                 char('OnBuff', reason=self.reason, source=self.source, attack=attack, health=health, *args, **kwargs)
 
-        if targets:
-            for char in targets:
-                if char in self._char_buffer:
-                    continue
-                self._apply(char, *args, **kwargs)
+        for char in targets:
+            if char in self._char_buffer and not self._lambda(char):
+                continue
+
+            args = (*self.args, *args)
+            kwargs = self.kwargs | kwargs
+            self._char_buffer.add(char)
+            char._action_history.append(self)
+
+            if self.event:
+                self._register(char, *args, **kwargs)
+            self._apply(char, *args, **kwargs)
 
     def roll_back(self):
-        for char in self.targets or self._char_buffer:
+        logger.debug(f'{self} rolling back >>> {[char.pretty_print() for char in self._char_buffer]}')
+        for char in self._char_buffer:
             self._clear(char)
+
+            if char.health <= 0:
+                char.dead = True
+                logger.debug(f'{char.pretty_print()} marked for death')
+
+        self.resolve()
 
         self.state = ActionState.ROLLED_BACK
 
@@ -366,7 +355,7 @@ class Action:
 
         logger.info(f'These are the dead characters: {dead_characters}')
         for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
-            char('OnDeath')
+            char('OnDeath', reason=self.reason)
 
         self.state = ActionState.RESOLVED
 
@@ -384,9 +373,10 @@ class Buff(Action):
 
 
 class Support(Buff):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, multiplier=1, source=None, *args, **kwargs):
         kwargs = dict(reason=ActionReason.SUPPORT_BUFF) | kwargs
-        super().__init__(*args, **kwargs)
+        multiplier = source.player.support_itr
+        super().__init__(multiplier=multiplier, source=source, *args, **kwargs)
 
 
 class Aura(Buff):

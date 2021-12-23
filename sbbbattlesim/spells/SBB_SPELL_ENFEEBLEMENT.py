@@ -1,17 +1,17 @@
 import random
 
 from sbbbattlesim.action import Damage, ActionReason
-from sbbbattlesim.spells import NonTargetedSpell
+from sbbbattlesim.spells import Spell
 
 
-class SpellType(NonTargetedSpell):
+class SpellType(Spell):
     display_name = 'Shrivel'
     _level = 5
 
     priority = 130
 
-    def cast(self, player, *args, **kwargs):
-        valid_targets = player.opponent.valid_characters()
+    def cast(self, target: 'Character' = None, *args, **kwargs):
+        valid_targets = self.player.opponent.valid_characters()
         if valid_targets:
             target = random.choice(valid_targets)
             # target.change_stats(attack=-12, health=-12, temp=False, reason=StatChangeCause.SHRIVEL, source=self, *args, **kwargs)

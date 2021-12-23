@@ -1,14 +1,15 @@
-from sbbbattlesim.spells import TargetedSpell
+from sbbbattlesim.spells import Spell
 from sbbbattlesim.utils import Tribe
 
 
 # todo implement this if it can ever get cast in combat
-class SpellType(TargetedSpell):
+class SpellType(Spell):
     display_name = '''Evil Twin'''
     _level = 6
 
-    def cast(self, target, *args, **kwargs):
+    def cast(self, target: 'Character' = None, *args, **kwargs):
         pass
 
-    def filter(self, char):
+    @classmethod
+    def filter(cls, char):
         return Tribe.GOOD in char.tribes

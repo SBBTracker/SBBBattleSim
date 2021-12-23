@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff, Aura, DynamicStat, ActionReason, Action
+from sbbbattlesim.action import Buff, Aura, ActionReason, Action
 from sbbbattlesim.events import OnDeath
 from sbbbattlesim.heros import Hero
 from sbbbattlesim.utils import Tribe
@@ -7,7 +7,7 @@ from sbbbattlesim.utils import Tribe
 class EvellaAura(OnDeath):
     last_breath = False
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         self.source.aura[1].update(attack=1)
 
 

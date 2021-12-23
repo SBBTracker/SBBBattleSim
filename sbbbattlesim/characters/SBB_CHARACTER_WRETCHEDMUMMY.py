@@ -9,7 +9,7 @@ from sbbbattlesim.utils import Tribe
 class WretchedMummyDeath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         valid_targets = self.manager.player.opponent.valid_characters()
         if valid_targets:
             Damage(

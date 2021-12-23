@@ -50,13 +50,8 @@ class Registry(object):
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
-            try:
-                treasure = __import__(name, globals(), locals(), ['TreasureType'], 1)
-                self.register(name, treasure.TreasureType)
-            except ImportError:
-                pass
-            except Exception as exc:
-                logger.exception('Error loading treasure: {}'.format(name))
+            treasure = __import__(name, globals(), locals(), ['TreasureType'], 1)
+            self.register(name, treasure.TreasureType)
 
 
 registry = Registry()

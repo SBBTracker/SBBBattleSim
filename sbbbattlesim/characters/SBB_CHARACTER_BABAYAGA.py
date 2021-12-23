@@ -19,20 +19,6 @@ class BabaYagaOnSlayBuff(OnSlay):
                 executor.execute(source, *args, **kwargs)
 
 
-class BabaYagaSupportBuff(Support):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.applied_buffs = {}
-
-    def _apply(self, character, *args, **kwargs):
-        event = character.register(BabaYagaOnSlayBuff, source=self.source, *args, **kwargs)
-        self.applied_buffs[character] = event
-
-    def remove(self):
-        for char, buff in self.applied_buffs:
-            char.remove(buff)
-
-
 class CharacterType(Character):
     display_name = 'Baba Yaga'
     support = True

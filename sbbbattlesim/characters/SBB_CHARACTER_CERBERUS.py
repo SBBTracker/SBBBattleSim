@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class GrimSoulOnDeath(OnDeath):
     last_breath = True
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         targets = self.manager.player.valid_characters(lambda char: char.slay and char.id != 'SBB_CHARACTER_CERBERUS')
         if targets:
             target = random.choice(targets)

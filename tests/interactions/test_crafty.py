@@ -25,8 +25,7 @@ def test_crafty_raw(num_treasures, golden):
 
     winner, loser = board.fight(limit=2)
 
-
-    assert (board.p1.characters[1]._base_attack, board.p1.characters[1]._base_health) == ((4, 4) if golden else (2, 2))
+    assert (board.p1.characters[1]._base_attack, board.p1.characters[1]._base_health) == (fs, fs)
 
 
 @pytest.mark.parametrize('num_treasures', (0, 1, 2, 3))
@@ -48,8 +47,8 @@ def test_crafty(num_treasures, golden):
 
     winner, loser = board.fight(limit=2)
 
-
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (fs, fs)
+
 
 @pytest.mark.parametrize('num_treasures', (0, 1, 2, 3))
 @pytest.mark.parametrize('golden', (True, False))

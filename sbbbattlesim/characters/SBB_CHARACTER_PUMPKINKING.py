@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class PumpkinKingOnDeath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         summons = []
         dead_in_order = sorted(
             [char for char in self.manager.player.graveyard if Tribe.EVIL in char.tribes],

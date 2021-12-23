@@ -9,18 +9,19 @@ JULIET_ID = 'SBB_CHARACTER_JULIET'
 
 class RomeoOnSummon(OnSummon):
     def handle(self, summoned_characters, stack, *args, **kwargs):
-        self.manager.unregister(self)
         for char in summoned_characters:
             if char is self.kwargs['juliet']:
                 modifier = 14 if self.source.golden else 7
                 Buff(reason=ActionReason.ROMEO_BUFF, source=self.source, targets=[char],
                      attack=modifier, health=modifier, temp=False).resolve()
 
+        self.manager.unregister(self)
+
 
 class RomeoLastBreath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         dead_juliets = [j for j in self.manager.player.graveyard if j.id == JULIET_ID]
 
         if dead_juliets:
@@ -36,9 +37,8 @@ class RomeoLastBreath(OnDeath):
                 cost=juliet.cost,
                 player=juliet.player,
             )
-            self.juliet = new_juliet
 
-            self.manager.player.register(RomeoOnSummon, source=new_juliet, romeo=self.source, triggered=False)
+            self.manager.player.register(RomeoOnSummon, source=self.source, juliet=new_juliet)
             self.manager.player.summon(self.manager.position, [new_juliet])
 
 

@@ -1,5 +1,11 @@
 from sbbbattlesim.action import ActionReason, Aura
+from sbbbattlesim.events import OnSetup
 from sbbbattlesim.treasures import Treasure
+
+
+class EyeOfAresOnSetup(OnSetup):
+    def handle(self, stack, *args, **kwargs):
+        self.source.player.opponent.auras.add(self.source.aura)
 
 
 class TreasureType(Treasure):
@@ -11,9 +17,5 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         attack = 5 * (self.mimic + 1)
-        self.aura = Aura(reason=ActionReason.EYE_OF_ARES_BUFF, source=self, attack=attack,
-                         _action=self.give_opponent_aura)
-
-    def give_opponent_aura(self, _):
-        if self.aura not in self.player.opponent.treasure_auras:
-            self.player.opponent.treasure_auras.add(self.aura)
+        self.aura = Aura(reason=ActionReason.EYE_OF_ARES_BUFF, source=self, attack=attack)
+        self.player.board.register(EyeOfAresOnSetup, priority=100, source=self)

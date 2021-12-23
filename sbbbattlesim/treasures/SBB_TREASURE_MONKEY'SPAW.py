@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class CoinOfCharonOnDeath(OnDeath):
     last_breath = False
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         if self.manager._level < 2:
             return
 

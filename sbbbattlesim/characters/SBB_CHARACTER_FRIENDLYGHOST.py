@@ -9,7 +9,7 @@ from sbbbattlesim.utils import Tribe
 class FriendlySpiritLastBreath(OnDeath):
     last_breath = True
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         chars = self.manager.player.valid_characters()
         if not chars:
             return

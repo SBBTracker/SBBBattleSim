@@ -58,9 +58,14 @@ def test_charon_wombat():
 
     assert summoned_char is not None
 
-    stat_history = board.p1.characters[1]._action_history[0]
+    wombat_buff = None
+    for action in board.p1.characters[1]._action_history:
+        if action.reason == ActionReason.WOMBATS_IN_DISGUISE_BUFF:
+            wombat_buff = action
+            break
 
-    assert stat_history.attack, stat_history.health == (2, 3)
+    assert wombat_buff
+    assert wombat_buff.attack, wombat_buff.health == (2, 3)
 
 
 def test_bearstain_wombat_phoenix():

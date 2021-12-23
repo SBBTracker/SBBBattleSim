@@ -18,13 +18,12 @@ def test_courtwizard(tribe):
     )
     enemy = make_player(
         characters=[
-            make_character(position=1, tribes=[tribe]),
+            make_character(attack=10, position=1, tribes=[tribe]),
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=5)
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-
 
     if tribe in [Tribe.PRINCE, Tribe.PRINCESS]:
         assert board.p1.characters[1] is None and board.p1.characters[2] is None

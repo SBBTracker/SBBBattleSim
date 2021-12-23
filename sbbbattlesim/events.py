@@ -85,7 +85,7 @@ class OnDeath(SSBBSEvent):
 
         return response
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -175,13 +175,12 @@ class EventManager:
         return self.__repr__()
 
     def register(self, event, priority=0, source=None, **kwargs):
-        event_base = inspect.getmro(event)[1].__name__
-        logger.debug(f'{self.pretty_print()} Registered {event_base} - {event.__class__.__name__}')
-
         if not event.is_valid():
             raise ValueError
 
+        event_base = inspect.getmro(event)[1].__name__
         event = event(manager=self, source=source or self, priority=priority, **kwargs)
+        logger.debug(f'{self.pretty_print()} Registered {event_base} - {event.__class__.__name__}')
         self._events[event_base].add(event)
         return event
 
@@ -201,8 +200,6 @@ class EventManager:
         evts = sorted(evts, key=sorting_lambda, reverse=True)
 
         priority = None
-
-        logger.debug(f'{self} is starting event {event}')
 
         while True:
             if not evts:
@@ -231,13 +228,11 @@ class EventManager:
             if not evts:
                 break
 
-        logger.debug(f'{self} is done with event {event}')
-
     def __call__(self, event, stack=None, *args, **kwargs):
         logger.debug(f'{self.pretty_print()} triggered event {event}')
 
         # If an event stack already exists use it otherwise make a new stack
-        stack = stack or EventStack(self)
+        stack = stack or EventStack()
 
         if not self._events[event]:
             return stack
@@ -251,23 +246,22 @@ class EventManager:
 
 
 class EventExecutor:
-    def __init__(self, stack: 'EventStack', manager: EventManager, *args, **kwargs):
+    def __init__(self, stack: 'EventStack', *args, **kwargs):
         self.stack = stack
-        self.manager = manager
         self.args = args
         self.kwargs = kwargs
 
         self._react_buffer = []
 
     def __enter__(self):
-        logger.debug(f'Opening Executor with ({self.args} {self.kwargs})')
+        # logger.info(f'Opening Executor with ({self.args} {self.kwargs})')
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        for (react, rargs, rkwargs, source) in self._react_buffer:
+        for (react, rargs, rkwargs, source) in reversed(self._react_buffer):
             logger.info(f'{source} reaction {react} ({rargs} {rkwargs})')
-            self.manager(react, *rargs, **(rkwargs | {'source': source, 'stack': self.stack} | self.kwargs))
-        logger.debug(f'Closing Executor with ({self.args} {self.kwargs})')
+            source.manager(react, *rargs, **(rkwargs | {'source': source, 'stack': self.stack} | self.kwargs))
+        # logger.info(f'Closing Executor with ({self.args} {self.kwargs})')
 
     def execute(self, event, *args, **kwargs):
         response = event(stack=self.stack, *args, **kwargs)
@@ -279,17 +273,16 @@ class EventExecutor:
 
 @dataclass
 class EventStack:
-    manager: EventManager
     stack: List[SSBBSEvent] = field(default_factory=list)
 
     def __repr__(self):
-        return f'{self.manager.pretty_print()} - {[evt.__class__.__name__ for evt in self.stack]}'
+        return f'{[evt.__class__.__name__ for evt in self.stack]}'
 
     def __iter__(self):
         return self.stack.__iter__()
 
     def open(self, *args, **kwargs):
-        return EventExecutor(self, self.manager, *args, **kwargs)
+        return EventExecutor(stack=self, *args, **kwargs)
 
     def find(self, _lambda=lambda event: True):
         return (event for event in self.stack if _lambda(event))

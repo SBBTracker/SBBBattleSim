@@ -1,12 +1,16 @@
+import sys
+
 import pytest
 
 from sbbbattlesim import Board
-from tests import make_character, make_player
+from tests import make_player, make_character
 
+
+@pytest.mark.skipif('benchmark' not in sys.argv, reason='Only used for benchmarking')
 def test_tedious():
     import time
     t = time.perf_counter()
-    for _ in range(100):
+    for _ in range(1):
 
         player = make_player(
             characters=[
@@ -40,7 +44,3 @@ def test_tedious():
         board.fight()
 
     raise ValueError(time.perf_counter() - t)
-
-
-if __name__ == '__main__':
-    test_tedious()

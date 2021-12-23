@@ -2,9 +2,9 @@ import enum
 import logging
 import random
 
-from sbbbattlesim.spells import registry as spell_registry
-
 logger = logging.getLogger(__name__)
+
+from sbbbattlesim.spells import registry as spell_registry
 
 LOKI_SPELLS = (
     '''SBB_SPELL_TESTYOURMIGHT''',  # Magic Research
@@ -104,16 +104,17 @@ def get_spawn_positions(position):
     return spawn_order.get(position, ())
 
 
+
+
+
 def random_combat_spell(level):
-    valid_spells = [
-        *spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in COMBAT_SPELLS)]
+    valid_spells = list(spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in COMBAT_SPELLS))
     if valid_spells:
         return random.choice(valid_spells)
 
 
 def random_start_combat_spell(level):
-    valid_spells = [*spell_registry.filter(
-        _lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in START_OF_FIGHT_SPELLS)]
+    valid_spells = list(spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in START_OF_FIGHT_SPELLS))
     if valid_spells:
         return random.choice(valid_spells)
 
