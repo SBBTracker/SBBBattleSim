@@ -19,18 +19,7 @@ class PhoenixFeatherOnDeath(OnDeath):
                 self.manager.player.summon(self.manager.position, [self.manager])
 
                 if self.source.mimic:
-                    new_char = self.manager.__class__(
-                        self.manager.player,
-                        self.manager.position,
-                        self.manager._base_attack,
-                        self.manager._base_health,
-                        golden=self.manager.golden,
-                        tribes=self.manager.tribes,
-                        cost=self.manager.cost
-                    )
-                    new_char._action_history = copy.copy(
-                        self.manager._action_history)  # TODO this need to be part of a new copy function
-
+                    new_char = self.manager.copy()
                     self.manager.player.summon(self.manager.position, [new_char], *args, **kwargs)
 
                 self.source.feather_used = True

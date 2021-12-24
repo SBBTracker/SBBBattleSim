@@ -1,6 +1,7 @@
 import enum
 import logging
 import random
+from functools import cache
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +71,7 @@ class Tribe(enum.Enum):
     GOOD = 'good'
     EVIL = 'evil'
 
-
+@cache
 def get_support_targets(position, horn=False):
     if horn:
         return [1, 2, 3, 4]
@@ -80,7 +81,7 @@ def get_support_targets(position, horn=False):
         7: (3, 4)
     }.get(position, ())
 
-
+@cache
 def get_behind_targets(position):
     return {
         1: (5,),
@@ -89,7 +90,7 @@ def get_behind_targets(position):
         4: (7,)
     }.get(position, ())
 
-
+@cache
 def get_spawn_positions(position):
     spawn_order = {
         1: (1, 2, 3, 4, 5, 6, 7),
@@ -102,9 +103,6 @@ def get_spawn_positions(position):
     }
 
     return spawn_order.get(position, ())
-
-
-
 
 
 def random_combat_spell(level):

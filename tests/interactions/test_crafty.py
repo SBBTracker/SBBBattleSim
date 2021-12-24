@@ -1,7 +1,7 @@
 import pytest
 
 from sbbbattlesim import Board
-from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.characters import registry as character_registry, Character
 from sbbbattlesim.events import OnDamagedAndSurvived
 from tests import make_character, make_player
 
@@ -28,6 +28,7 @@ def test_crafty_raw(num_treasures, golden):
     assert (board.p1.characters[1]._base_attack, board.p1.characters[1]._base_health) == (fs, fs)
 
 
+@pytest.mark.skip
 @pytest.mark.parametrize('num_treasures', (0, 1, 2, 3))
 @pytest.mark.parametrize('golden', (True, False))
 def test_crafty(num_treasures, golden):

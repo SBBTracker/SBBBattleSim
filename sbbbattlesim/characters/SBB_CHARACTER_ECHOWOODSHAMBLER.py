@@ -16,8 +16,8 @@ class EchoWoodBuff(OnBuff):
             health_change = max(0, gold_multiplier * health)
 
             if attack_change > 0 or health_change > 0:
-                Buff(reason=ActionReason.ECHOWOOD_BUFF, source=self.source, targets=[self.source],
-                     attack=attack_change, health=health_change).resolve()
+                Buff(reason=ActionReason.ECHOWOOD_BUFF, source=self.source, attack=attack_change,
+                     health=health_change).execute(self.source)
 
 
 class CharacterType(Character):

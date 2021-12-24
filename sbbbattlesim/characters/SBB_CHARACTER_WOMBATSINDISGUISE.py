@@ -3,21 +3,8 @@ import random
 from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.events import OnDeath, OnSummon
+from sbbbattlesim.events import OnDeath
 from sbbbattlesim.utils import Tribe
-
-
-class WombatsInDisguiseOnSummon(OnSummon):
-
-    def handle(self, summoned_characters, stack, *args, **kwargs):
-
-        attack_buff = self.source.attack * (2 if self.source.golden else 1)
-        health_buff = self.source.max_health * (2 if self.source.golden else 1)
-
-        for char in summoned_characters:
-            if char is self.kwargs['summon']:
-                Buff(reason=ActionReason.WOMBATS_IN_DISGUISE_BUFF, source=self.source, targets=[char],
-                     attack=attack_buff, health=health_buff, temp=False).resolve()
 
 
 class WombatsInDisguiseOnDeath(OnDeath):
@@ -34,7 +21,12 @@ class WombatsInDisguiseOnDeath(OnDeath):
                 golden=self.manager.golden
             )
 
-            summon.player.register(WombatsInDisguiseOnSummon, source=self.manager, summon=summon)
+            attack_buff = self.source.attack * (2 if self.source.golden else 1)
+            health_buff = self.source.max_health * (2 if self.source.golden else 1)
+
+            Buff(reason=ActionReason.WOMBATS_IN_DISGUISE_BUFF, source=self.source,
+                 attack=attack_buff, health=health_buff, temp=False).execute(summon)
+
             self.manager.player.summon(self.manager.position, [summon])
 
 

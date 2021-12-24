@@ -45,6 +45,7 @@ class Character(EventManager):
         self.slay_counter = 0
         self.dead = False
         self.invincible = False
+        self.attack_multiplier = 1
 
         self.support = None
         self.aura = None
@@ -63,8 +64,24 @@ class Character(EventManager):
             cost=cls._level
         )
 
+    def copy(self):
+        new = self.__class__(
+            player=self.player,
+            position=self.position,
+            golden=self.golden,
+            attack=self._base_attack,
+            health=self._base_health,
+            tribes=self._tribes,
+            cost=self._level
+        )
+
+        for action in self._action_history:
+            action.execute(new, setup=True)
+
+        return new
+
     def pretty_print(self):
-        return f'''{"*" if self.golden else ""}{self.display_name}{"*" if self.golden else ""} ({self.attack}/{self.health})'''
+        return f'''{"*" if self.golden else ""}{self.display_name}{"*" if self.golden else ""} P{self.position} ({self.attack}/{self.health})'''
 
     @classmethod
     def valid(cls):
@@ -80,7 +97,7 @@ class Character(EventManager):
 
     @property
     def attack(self):
-        return max(self._base_attack, 0)
+        return max(self._base_attack, 0) * self.attack_multiplier
 
     @property
     def health(self):

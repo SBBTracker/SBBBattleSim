@@ -6,9 +6,12 @@ from sbbbattlesim.utils import Tribe
 
 class CraftyOnSpawn(OnSpawn):
     def handle(self, stack, *args, **kwargs):
-        crafty_buff = 2 * len(self.source.player.treasures) * (2 if self.source.golden else 1)
-        Buff(reason=ActionReason.CRAFTY_BUFF, source=self.source, targets=[self.source],
-             attack=crafty_buff, health=crafty_buff, *args, **kwargs).execute(*args, **kwargs)
+        already_buffed = next((True for action in self.source._action_history if action.reason == ActionReason.CRAFTY_BUFF), False)
+        if already_buffed:
+            return
+
+        buff = 2 * len(self.source.player.treasures) * (2 if self.source.golden else 1)
+        Buff(reason=ActionReason.CRAFTY_BUFF, source=self.source, attack=buff, health=buff, *args, **kwargs).execute(self.source)
 
 
 class CharacterType(Character):

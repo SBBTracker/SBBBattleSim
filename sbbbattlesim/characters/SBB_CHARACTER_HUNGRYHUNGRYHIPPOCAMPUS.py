@@ -29,5 +29,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Action(source=self, event=HungryHungryHippocampusOnSummon, player_event=True,
-                           reason=ActionReason.HUNGRYHUNGRYHIPPOCAMPUS_BUFF)
+        self.player.register(HungryHungryHippocampusOnSummon, source=self)

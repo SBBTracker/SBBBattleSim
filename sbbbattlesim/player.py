@@ -21,29 +21,26 @@ class CastSpellOnStart(OnStart):
 
 class PlayerOnSetup(OnSetup):
     def handle(self, stack, *args, **kwargs):
-        for char in self.source.valid_characters():
-            for buff in sorted(self.source.auras, key=lambda b: b.priority, reverse=True):
-                buff._register(char)
-                buff._char_buffer.add(char)
-                char._action_history.append(buff)
-                logger.debug(f'{buff} >>> {char}')
+        # TODO Change setup to True when raw gets removed
+        setup = self.kwargs.get('raw', False)
 
+        for char in self.source.valid_characters(_lambda=lambda char: char.position in (5, 6, 7)):
             if char.support:
                 support_targets = utils.get_support_targets(char.position, self.source.banner_of_command)
                 targets = self.source.valid_characters(_lambda=lambda c: c.position in support_targets)
-                for t in targets:
-                    char.support._register(t)
-                    char.support._char_buffer.add(char)
-                    t._action_history.append(char.support)
-                    logger.debug(f'{char.support} >>> {t}')
+                char.support.execute(setup=setup, *targets)
+
+        characters = self.source.valid_characters()
+        for buff in sorted(self.source.auras, key=lambda b: b.priority, reverse=True):
+            buff.execute(setup=setup, *characters)
 
 
 class Player(EventManager):
-    def __init__(self, characters, id, board, treasures, hero, hand, spells, level=0, *args, **kwargs):
+    def __init__(self, characters, id, board, treasures, hero, hand, spells, level=0, raw=False, *args, **kwargs):
         super().__init__()
         # Board is board
         self.board = board
-        self.board.register(PlayerOnSetup, source=self, priority=0)
+        self.board.register(PlayerOnSetup, source=self, priority=0, raw=raw)
 
         self.__characters = OrderedDict({i: None for i in range(1, 8)})
         self.stateful_effects = {}
@@ -108,9 +105,6 @@ class Player(EventManager):
                     self.auras.add(char.aura)
 
         for tid, tl in self.treasures.items():
-            if tid == '''SBB_TREASURE_WHIRLINGBLADES''':
-                continue
-
             for treasure in tl:
                 if treasure.aura and treasure.aura:
                     try:
@@ -123,6 +117,9 @@ class Player(EventManager):
                 self.auras.update(set(self.hero.aura))
             except TypeError:
                 self.auras.add(self.hero.aura)
+
+        for aura in self.auras:
+            logger.debug(f'{self.id} found aura {aura}')
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
@@ -168,24 +165,26 @@ class Player(EventManager):
         self.__characters[position] = character
         character.position = position
 
-        # TODO Add in Singing Swords
-
+        # Apply existing buffs
         support_positions = (5, 6, 7) if self.banner_of_command else utils.get_behind_targets(position)
         support_units = self.valid_characters(_lambda=lambda char: (char.position in support_positions and char.support))
         support_buffs = set([char.support for char in support_units])
-
         for buff in sorted(self.auras | support_buffs, key=lambda b: b.priority, reverse=True):
-            buff.update(targets=[character])
+            buff.execute(character)
 
+        # Apply new support buffs
         if character.support:
             pos_ls = utils.get_support_targets(position, self.banner_of_command)
-            for c in self.valid_characters(_lambda=lambda char: char.position in pos_ls):
-                logger.debug(f'character {character} is supporting {c} with {character.support}')
-                character.support.execute(c)
+            character.support.execute(*self.valid_characters(_lambda=lambda char: char.position in pos_ls))
 
+        # Apply new auras
         if character.aura:
-            self.auras.add(character.aura)
-            character.aura.update(targets=self.valid_characters())
+            try:
+                self.auras.update(set(character.aura))
+            except TypeError:
+                self.auras.add(character.aura)
+            character.aura.execute(*self.valid_characters())
+
         character('OnSpawn')
 
         return character

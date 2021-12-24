@@ -1,6 +1,7 @@
 import collections
 import enum
 import logging
+import typing
 from dataclasses import dataclass
 from enum import Enum
 from typing import List
@@ -154,7 +155,7 @@ class Action:
             self,
             reason: ActionReason,
             source: ('Character', 'Treasure', 'Hero', 'Spell'),
-            targets: (List['Character'], None) = None,
+            targets: (typing.List['Character'], None) = None,
             _lambda=None,
             priority: int = 0,
             multiplier: int = 1,
@@ -163,7 +164,6 @@ class Action:
             damage: int = 0,
             heal: int = 0,
             event: (SSBBSEvent, None) = None,
-            player_event: bool = False,
             _action=None,
             *args,
             **kwargs
@@ -182,8 +182,6 @@ class Action:
         self.heal = heal
 
         self.event = event
-        self.player_event = player_event
-        self.player_registered = False
 
         self.args = args
         self.kwargs = kwargs
@@ -192,7 +190,7 @@ class Action:
         self._char_buffer = set()
         self._event_buffer = collections.defaultdict(list)
 
-        logger.debug(f'New {self}')
+        logger.debug(f'New {self} atk={self.attack} hp={self.health}')
 
     def __str__(self):
         return self.__repr__()
@@ -206,15 +204,12 @@ class Action:
         This should never be accessed outside an Action class or subclass
         '''
         if self.attack != 0 or self.health != 0:
-            attack = self.attack
-            if char.position in (1, 2, 3, 4):
-                attack *= self.source.player.singing_sword_multiplier
-            char._base_attack += attack
+            char._base_attack += self.attack
             char._base_health += self.health
 
             # TRIGGER ON BUFF
-            char('OnBuff', reason=self.reason, source=self.source, attack=self.attack, health=self.health,
-                 *args, **kwargs)
+            char('OnBuff', reason=self.reason, source=self.source, attack=self.attack * char.attack_multiplier,
+                 health=self.health, *args, **kwargs)
 
         if self.damage != 0:
             if char.invincible and self.reason != ActionReason.DAMAGE_WHILE_DEFENDING:
@@ -246,6 +241,10 @@ class Action:
             char._base_health -= self.health
             logger.debug(f'health after clear: {self.health} ; damage {char._damage} ; health {char._base_health}')
 
+            if char.health <= 0:
+                char.dead = True
+                logger.debug(f'{char.pretty_print()} marked for death')
+
         if self.attack != 0:
             char._base_attack -= self.attack
 
@@ -255,40 +254,39 @@ class Action:
         if not self.event:
             return
 
-        if self.player_event and self.player_registered:
-            return
-
         # Apply Events
-        manager = char.player if self.player_event else char
         for _ in range(self.multiplier):
-            registered = manager.register(self.event, priority=self.priority, source=self.source, *args, **kwargs)
-            self._event_buffer[manager].append(registered)
+            registered = char.register(self.event, priority=self.priority, source=self.source, *args, **kwargs)
+            self._event_buffer[char].append(registered)
 
     def _unregister(self, char, *args, **kwargs):
         if not self.event:
             return
 
         # Unregister Events
-        manager = char.player if self.player_event else char
-        events = self._event_buffer[manager]
+        events = self._event_buffer[char]
         for e in events:
-            manager.unregister(e)
+            char.unregister(e)
 
-    def execute(self, character=None, *args, **kwargs):
-        for char in [character] if character else self.targets:
-            if not self._lambda(char):
+    def execute(self, *characters, **kwargs):
+        setup = kwargs.get('setup', False)
+        logger.debug(f'{self} execute ({characters}, {kwargs})')
+        for char in characters or self.targets:
+            if not self._lambda(char) or char in self._char_buffer:
                 continue
 
-            args = (*self.args, *args)
+            args = self.args
             kwargs = self.kwargs | kwargs
             self._char_buffer.add(char)
             char._action_history.append(self)
 
             if self.event:
-                self._register(character, *args, **kwargs)
-            self._apply(char, *args, **kwargs)
+                self._register(char, *args, **kwargs)
+            if not setup:
+                self._apply(char, *args, **kwargs)
 
         self.state = ActionState.EXECUTED
+        return self
 
     def update(self, attack=0, health=0, targets=None, *args, **kwargs):
         logger.debug(f'{self} updating (attack={attack}, health={health}) >>> {targets} ({args}, {kwargs})')
@@ -300,34 +298,18 @@ class Action:
 
         if attack != 0 or health != 0:
             for char in self._char_buffer:
-                char._base_attack += attack * (self.source.player.singing_sword_multiplier if char.position in (1, 2, 3, 4) else 1)
+                char._base_attack += attack
                 char._base_health += health
-                char('OnBuff', reason=self.reason, source=self.source, attack=attack, health=health, *args, **kwargs)
+                char('OnBuff', reason=self.reason, source=self.source, attack=attack * char.attack_multiplier,
+                     health=health, *args, **kwargs)
 
-        for char in targets:
-            if char in self._char_buffer and not self._lambda(char):
-                continue
-
-            args = (*self.args, *args)
-            kwargs = self.kwargs | kwargs
-            self._char_buffer.add(char)
-            char._action_history.append(self)
-
-            if self.event:
-                self._register(char, *args, **kwargs)
-            self._apply(char, *args, **kwargs)
+        return self
 
     def roll_back(self):
         logger.debug(f'{self} rolling back >>> {[char.pretty_print() for char in self._char_buffer]}')
         for char in self._char_buffer:
             self._clear(char)
-
-            if char.health <= 0:
-                char.dead = True
-                logger.debug(f'{char.pretty_print()} marked for death')
-
         self.resolve()
-
         self.state = ActionState.ROLLED_BACK
 
     def resolve(self):

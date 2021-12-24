@@ -24,4 +24,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.support = Support(source=self, event=RiverwishMermaidOnAttackAndKill)
+        self.support = Support(source=self, event=RiverwishMermaidOnAttackAndKill, priority=100)

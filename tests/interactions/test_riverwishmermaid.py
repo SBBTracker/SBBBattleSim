@@ -40,5 +40,4 @@ def test_riverwish_cloakoftheassassin():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
 
-
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (4, 4)

@@ -34,8 +34,7 @@ class PuffPuffDeath(OnDeath):
 
         buff = 2 if self.source.golden else 1
         puffpuffs = self.manager.player.valid_characters(_lambda=lambda char: char.id == self.source.id)
-        Buff(reason=ActionReason.PUFF_PUFF_BUFF, source=self.source, targets=puffpuffs,
-             attack=buff, health=buff, stack=stack).execute()
+        Buff(reason=ActionReason.PUFF_PUFF_BUFF, source=self.source, attack=buff, health=buff, stack=stack).execute(*puffpuffs)
 
         # in case of random summon
         if not self.source.player.id in puffbuffs:

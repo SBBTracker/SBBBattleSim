@@ -13,18 +13,8 @@ class ReduplicatorOnSummon(OnSummon):
             if len(self.manager.valid_characters()) != 7:
                 self.source.triggered = True
                 for _ in range(self.source.mimic + 1):
-                    copied_character = summoned_characters[0]
-                    logger.debug(copied_character.pretty_print())
-                    new_character = character_registry[copied_character.id](
-                        player=copied_character.player,
-                        position=copied_character.position,
-                        attack=copied_character._base_attack,
-                        health=copied_character._base_health,
-                        golden=copied_character.golden,
-                        tribes=copied_character.tribes,
-                        cost=copied_character.cost
-                    )
-                    self.manager.summon(new_character.position, [new_character], raw=True, *args, **kwargs)
+                    new_char = summoned_characters[0].copy()
+                    self.manager.summon(new_char.position, [new_char], *args, **kwargs)
 
 
 class TreasureType(Treasure):

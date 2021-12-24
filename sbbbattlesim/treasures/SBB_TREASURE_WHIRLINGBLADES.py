@@ -1,34 +1,63 @@
-from sbbbattlesim.action import Buff, ActionReason, Aura
-from sbbbattlesim.events import OnBuff, OnSpawn
+import logging
+
+from sbbbattlesim.action import Buff, ActionReason, Aura, ActionState
+from sbbbattlesim.events import OnBuff, OnSpawn, OnSummon
 from sbbbattlesim.treasures import Treasure
 
-
-class SingingSwordsOnSpawn(OnSpawn):
-    def handle(self, stack, raw=False, on_init=False, *args, **kwargs):
-        if raw:
-            return
-
-        if self.manager.position in (1, 2, 3, 4):
-            attack = self.manager.attack
-            if self.source.mimic:
-                attack *= 2
-            Buff(reason=ActionReason.SINGINGSWORD_BUFF, source=self.source, attack=attack, *args, **kwargs).execute(
-                *args, **kwargs)
+logger = logging.getLogger(__name__)
 
 
-class SingingSwordsOnBuff(OnBuff):
-    def handle(self, stack, attack, health, reason=None, *args, **kwargs):
-        if self.source.mimic:
-            attack *= 2
-        Buff(reason=ActionReason.SINGINGSWORD_BUFF, source=self.source, attack=attack, *args, **kwargs).execute(*args, **kwargs)
+
+# class SingingSwordsOnBuff(OnBuff):
+#     def handle(self, stack, attack, health, reason=None, *args, **kwargs):
+#         if reason == ActionReason.SINGINGSWORD_BUFF or self.manager.position not in (1, 2, 3, 4):
+#             return
+#
+#         attack *= 2 if self.source.mimic else 1
+#         Buff(reason=reason, source=self.source, attack=attack).execute(self.manager)
+
+
+class SingingSwordsAura(Aura):
+    def __init__(self, *args, **kwargs):
+        kwargs = dict(reason=ActionReason.SINGINGSWORD_BUFF) | kwargs
+        super().__init__(*args, **kwargs)
+        self.multiplier = 3 if self.source.mimic else 2
+
+    def execute(self, *characters, **kwargs):
+        setup = kwargs.get('setup', False)
+        logger.debug(f'{self} execute ({characters}, {kwargs})')
+        for char in characters or self.targets:
+            if not self._lambda(char) or char in self._char_buffer:
+                continue
+
+            args = self.args
+            kwargs = self.kwargs | kwargs
+            self._char_buffer.add(char)
+            char._action_history.append(self)
+
+            # Custom Singing Sword Execute Logic
+            logger.debug(f'Applying Singing Swords {char.pretty_print()}')
+            starting_attack = char.attack
+            char.attack_multiplier = self.multiplier
+            if not setup:
+                char('OnBuff', reason=self.reason, source=self.source, attack=char.attack - starting_attack, health=0,
+                     *args, **kwargs)
+            else:
+                char._base_attack /= self.multiplier
+
+        self.state = ActionState.EXECUTED
+        return self
+
+    def _clear(self, char, *args, **kwargs):
+        char._attack_multiplier = 1
 
 
 class TreasureType(Treasure):
     display_name = 'Singing Swords'
     _level = 6
+    aura = True
 
-    # aura = True
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.aura = Aura(reason=ActionReason.SINGINGSWORD_BUFF, event=SingingSwordsOnBuff, source=self, _lambda=lambda char: char.position in (1, 2, 3, 4))
-    #     self.player.register(SingingSwordsOnSpawn, source=self)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.aura = SingingSwordsAura(source=self, priority=999)
+        # self.player.register(SingingSwordsOnSpawn, source=self, priority=999)

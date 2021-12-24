@@ -92,22 +92,21 @@ def test_bearstain_wombat_phoenix():
 
     winner, loser = board.fight(limit=1)
 
-
     assert board.p1.characters[1] is original_wombat
-    assert original_wombat._base_attack == 114
-    assert original_wombat._base_health == 98
+    assert original_wombat._base_attack == 120, original_wombat.pretty_print()
+    assert original_wombat._base_health == 104, original_wombat.pretty_print()
 
     wombat2 = board.p1.characters[2]
-    assert wombat2._base_attack == 114
-    assert wombat2._base_health == 98
+    assert wombat2._base_attack == 120
+    assert wombat2._base_health == 104
 
     wombat3 = board.p1.characters[3]
-    assert wombat3._base_attack == 114
-    assert wombat3._base_health == 98
+    assert wombat3._base_attack == 120
+    assert wombat3._base_health == 104
 
     wombat4 = board.p1.characters[4]
-    assert wombat4._base_attack == 204
-    assert wombat4._base_health == 176
+    assert wombat4._base_attack == 210
+    assert wombat4._base_health == 182
 
     char5 = board.p1.characters[5]
     assert char5 is not None

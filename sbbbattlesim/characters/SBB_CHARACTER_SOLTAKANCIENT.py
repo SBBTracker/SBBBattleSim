@@ -7,16 +7,19 @@ from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
+
 class SoltakAuraBuff(Aura):
-    def _apply(self, char, *args, **kwargs):
-        if not self._lambda(char):
-            return
+    def execute(self, *characters, **kwargs):
+        logger.debug(f'{self} execute ({characters}, {kwargs})')
+        for char in characters:
+            if not self._lambda(char):
+                continue
 
-        self._char_buffer.add(char)
-        char._action_history.append(self)
+            self._char_buffer.add(char)
+            char._action_history.append(self)
 
-        logger.debug(f'{self.source.pretty_print()} is protecting {char.pretty_print()}')
-        char.invincible = True
+            logger.debug(f'{self.source.pretty_print()} is protecting {char.pretty_print()}')
+            char.invincible = True
 
     def _clear(self, char, *args, **kwargs):
         logger.debug(f'{self.source.pretty_print()} is no longer protecting {char.pretty_print()}')
