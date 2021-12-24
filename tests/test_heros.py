@@ -528,24 +528,24 @@ def test_fallen_angel_raw(tribes, attack, health):
 
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     player = board.p1
+
+    fallen_angel_buff = player.hero.aura
+
+    if 'good' in tribes:
+        assert fallen_angel_buff.health == 2
+    else:
+        assert fallen_angel_buff.health == 0
+    if 'evil' in tribes:
+        assert fallen_angel_buff.attack == 2
+    else:
+        assert fallen_angel_buff.attack == 0
 
     for char in player.characters.values():
         if char:
             assert char.health == health
             assert char.attack == attack
-
-            if 'good' in tribes:
-                assert char._temp_health == 2
-            else:
-                assert char._temp_health == 0
-            if 'evil' in tribes:
-                assert char._temp_attack == 2
-            else:
-                assert char._temp_attack == 0
 
 
 def test_muerte():
@@ -581,8 +581,6 @@ def test_pup():
 
     board = Board({'1': player, '2': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert board.p1.characters[1].attack == 1
     assert board.p1.characters[1].health == 1
@@ -601,10 +599,6 @@ def test_pup_shouldntbuff():
 
     board = Board({'1': player, '2': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert board.p1.characters[1].attack == 1
     assert board.p1.characters[1].health == 1
@@ -622,10 +616,6 @@ def test_pup_shouldbuff():
 
     board = Board({'1': player, '2': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert board.p1.characters[1].attack == 5
     assert board.p1.characters[1].health == 4

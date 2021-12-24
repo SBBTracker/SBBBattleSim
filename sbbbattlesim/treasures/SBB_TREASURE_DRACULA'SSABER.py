@@ -8,14 +8,12 @@ class DraculasSaberOnDeath(OnDeath):
 
     def handle(self, stack, reason, *args, **kwargs):
         for _ in range(self.source.mimic + 1):
-            Buff(reason=ActionReason.DRACULAS_SABER_BUFF, source=self.source,
-                 targets=self.source.player.valid_characters(),
-                 attack=2, health=1, stack=stack).resolve()
+            Buff(reason=ActionReason.DRACULAS_SABER_BUFF, source=self.source, attack=2, health=1,).execute(*self.source.player.valid_characters())
 
 
 class DraculasSaberOnSetup(OnSetup):
     def handle(self, *args, **kwargs):
-        self.source.player.opponent.auras.add(Aura(event=DraculasSaberOnDeath, source=self.source))
+        self.source.player.opponent.auras.add(Aura(event=DraculasSaberOnDeath, source=self.source, priority=1000))
 
 
 class TreasureType(Treasure):

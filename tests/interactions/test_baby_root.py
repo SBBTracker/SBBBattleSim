@@ -1,19 +1,12 @@
 import pytest
 
 from sbbbattlesim import Board
+from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_baby_root(golden):
-
-    if golden:
-        temp_health = 6
-        base_health = 1
-    else:
-        temp_health = 3
-        base_health = 4
-
     player = make_player(
         raw=True,
         characters=[
@@ -25,10 +18,10 @@ def test_baby_root(golden):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
-    assert board.p1.characters[1]._temp_health == temp_health
-    assert board.p1.characters[1]._base_health == base_health
-    assert board.p1.characters[1]._base_attack == 1
-    assert board.p1.characters[1]._temp_attack == 0
+    baby_roof_buff = None
+    for action in board.p1.characters[1]._action_history:
+        if action.reason == ActionReason.SUPPORT_BUFF:
+            baby_roof_buff = action
+
+    assert baby_roof_buff.health == 6 if golden else 3

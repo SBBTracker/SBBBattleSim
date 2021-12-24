@@ -13,10 +13,9 @@ class NinthBookOnDeath(OnDeath):
 
     # TODO Does this trigger twice or are there two last breaths
     def handle(self, stack, reason, *args, **kwargs):
-        for _ in range(bool(self.source.mimic) + 1):
-            spell = random_combat_spell(self.manager.player.level)
-            if spell:
-                self.manager.player.cast()
+        spell = random_combat_spell(self.manager.player.level)
+        if spell:
+            self.manager.player.cast_spell(spell.id)
 
 
 class TreasureType(Treasure):
@@ -27,4 +26,5 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(event=NinthBookOnDeath, source=self, _lambda=lambda char: Tribe.MAGE in char.tribes)
+        self.aura = Aura(event=NinthBookOnDeath, source=self, _lambda=lambda char: Tribe.MAGE in char.tribes,
+                         multiplier=self.mimic + 1)

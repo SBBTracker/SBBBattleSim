@@ -24,15 +24,23 @@ class PlayerOnSetup(OnSetup):
         # TODO Change setup to True when raw gets removed
         setup = self.kwargs.get('raw', False)
 
-        for char in self.source.valid_characters(_lambda=lambda char: char.position in (5, 6, 7)):
-            if char.support:
-                support_targets = utils.get_support_targets(char.position, self.source.banner_of_command)
-                targets = self.source.valid_characters(_lambda=lambda c: c.position in support_targets)
-                char.support.execute(setup=setup, *targets)
+        for char in self.source.valid_characters():
+            # Apply existing buffs
+            support_positions = (5, 6, 7) if self.source.banner_of_command else utils.get_behind_targets(char.position)
+            support_units = self.source.valid_characters(_lambda=lambda char: (char.position in support_positions and char.support))
+            support_buffs = set([char.support for char in support_units])
+            for buff in sorted(self.source.auras | support_buffs, key=lambda b: b.priority, reverse=True):
+                buff.execute(char, setup=setup)
 
-        characters = self.source.valid_characters()
-        for buff in sorted(self.source.auras, key=lambda b: b.priority, reverse=True):
-            buff.execute(setup=setup, *characters)
+        # for char in self.source.valid_characters(_lambda=lambda char: char.position in (5, 6, 7)):
+        #     if char.support:
+        #         support_targets = utils.get_support_targets(char.position, self.source.banner_of_command)
+        #         targets = self.source.valid_characters(_lambda=lambda c: c.position in support_targets)
+        #         char.support.execute(setup=setup, *targets)
+        #
+        # characters = self.source.valid_characters()
+        # for buff in sorted(self.source.auras, key=lambda b: b.priority, reverse=True):
+        #     buff.execute(setup=setup, *characters)
 
 
 class Player(EventManager):
@@ -55,7 +63,6 @@ class Player(EventManager):
 
         # Treasure Counting
         self.banner_of_command = 'SBB_TREASURE_BANNEROFCOMMAND' in treasures
-        singing_sword = 'SBB_TREASURE_WHIRLINGBLADES' in treasures
         evileye = 'SBB_TREASURE_HELMOFCOMMAND' in treasures
         mimic = 'SBB_TREASURE_TREASURECHEST' in treasures
 
@@ -65,14 +72,6 @@ class Player(EventManager):
             if mimic:
                 self.support_itr = 3
         logger.debug(f'{self.id} support_itr = {self.support_itr}')
-
-
-        self.singing_sword_multiplier = 1
-        if singing_sword:
-            self.singing_sword_multiplier = 2
-            if mimic:
-                self.singing_sword_multiplier = 3
-        logger.debug(f'{self.id} singing_sword_multiplier = {self.singing_sword_multiplier}')
 
         self.treasures = collections.defaultdict(list)
         for tres in treasures:

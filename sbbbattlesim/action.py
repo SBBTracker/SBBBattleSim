@@ -360,6 +360,27 @@ class Support(Buff):
         multiplier = source.player.support_itr
         super().__init__(multiplier=multiplier, source=source, *args, **kwargs)
 
+    def execute(self, *characters, **kwargs):
+        setup = kwargs.get('setup', False)
+        logger.debug(f'{self} execute ({characters}, {kwargs})')
+        for char in characters or self.targets:
+            if not self._lambda(char) or char in self._char_buffer:
+                continue
+
+            args = self.args
+            kwargs = self.kwargs | kwargs
+            self._char_buffer.add(char)
+            char._action_history.append(self)
+
+            if self.event:
+                self._register(char, *args, **kwargs)
+            if not setup:
+                self._apply(char, *args, **kwargs)
+                char('OnSupport', buffed=char, support=self.source, **kwargs)
+
+        self.state = ActionState.EXECUTED
+        return self
+
 
 class Aura(Buff):
     def __init__(self, *args, **kwargs):

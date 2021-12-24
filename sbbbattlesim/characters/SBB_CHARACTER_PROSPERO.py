@@ -15,7 +15,9 @@ class BearstineOnSummon(OnSummon):
             previous_bearstine_health_buffs = sum(stat_change.health for stat_change in previous_bearstine_buffs)
             previous_bearstine_attack_buffs = sum(stat_change.attack for stat_change in previous_bearstine_buffs)
             if char.position in (1, 2, 3, 4):
-                previous_bearstine_attack_buffs *= self.source.player.singing_sword_multiplier
+                singing_sword = self.source.player.treasures.get('SBB_TREASURE_WHIRLINGBLADES', [None])[0]
+                if singing_sword:
+                    previous_bearstine_attack_buffs *= singing_sword.aura.multiplier
 
             stat_multplier = 2 if self.source.golden else 1
             attack_buff = (char.attack - previous_bearstine_attack_buffs) * stat_multplier

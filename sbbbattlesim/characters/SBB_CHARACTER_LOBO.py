@@ -8,6 +8,9 @@ class SouthernSirenSlay(OnAttackAndKill):
     slay = True
 
     def handle(self, killed_character, *args, **kwargs):
+        if not killed_character:
+            return
+
         modifier = 2 if self.manager.golden else 1
         chars = [
             character_registry[killed_character.id](

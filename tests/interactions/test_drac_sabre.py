@@ -54,5 +54,4 @@ def test_proc_order_drac_sabre(direction):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
 
-
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (4, 1)

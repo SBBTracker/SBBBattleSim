@@ -43,7 +43,7 @@ class SingingSwordsAura(Aura):
                 char('OnBuff', reason=self.reason, source=self.source, attack=char.attack - starting_attack, health=0,
                      *args, **kwargs)
             else:
-                char._base_attack /= self.multiplier
+                char._base_attack = int(char._base_attack/self.multiplier)
 
         self.state = ActionState.EXECUTED
         return self
@@ -59,5 +59,5 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = SingingSwordsAura(source=self, priority=999)
+        self.aura = SingingSwordsAura(source=self, priority=999, _lambda=lambda char: char.position in (1, 2, 3, 4))
         # self.player.register(SingingSwordsOnSpawn, source=self, priority=999)

@@ -5,8 +5,7 @@ from sbbbattlesim.heros import Hero
 
 class PupSupportBuff(OnSupport):
     def handle(self, buffed, support, *args, **kwargs):
-        Buff(reason=ActionReason.PUP_BUFF, source=self.pup, targets=[buffed],
-             attack=2, health=1).resolve()
+        Buff(reason=ActionReason.PUP_BUFF, source=self.source, attack=2, health=1).execute(buffed)
 
 
 class HeroType(Hero):
@@ -15,5 +14,4 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(reason=ActionReason.FATES_BUFF, source=self, _lambda=lambda char: char.golden,
-                         event=PupSupportBuff, pup=self)
+        self.aura = Aura(reason=ActionReason.PUP_BUFF, source=self, event=PupSupportBuff, priority=56)

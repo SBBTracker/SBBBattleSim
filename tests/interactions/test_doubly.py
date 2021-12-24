@@ -1,6 +1,8 @@
 from sbbbattlesim import Board
+from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 from sbbbattlesim.utils import Tribe
+
 
 def test_raw_doubly():
     player = make_player(
@@ -13,11 +15,14 @@ def test_raw_doubly():
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     dubly = board.p1.characters[1]
-    assert dubly.attack == 5
-    assert dubly.health == 5
-    assert dubly._temp_attack == 4
-    assert dubly._temp_health == 4
+    angry_buff = None
+    for action in dubly._action_history:
+        if action.reason == ActionReason.SUPPORT_BUFF:
+            angry_buff = action
+            break
+
+    assert angry_buff
+    assert angry_buff.attack == 2
+    assert angry_buff.health == 2
