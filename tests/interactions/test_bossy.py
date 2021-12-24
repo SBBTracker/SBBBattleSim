@@ -18,6 +18,14 @@ def test_bossy(golden):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
 
     if golden:
@@ -25,6 +33,5 @@ def test_bossy(golden):
     else:
         final_stats = (3, 3)
 
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (1, 1)
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 1)

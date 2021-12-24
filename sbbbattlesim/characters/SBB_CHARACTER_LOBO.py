@@ -17,8 +17,8 @@ class SouthernSirenSlay(OnAttackAndKill):
                 tribes=killed_character.tribes,
                 cost=killed_character.cost
             )
+            for _ in range(modifier)
         ]
-        chars = chars * modifier
 
         self.manager.player.summon(self.manager.position, chars)
 

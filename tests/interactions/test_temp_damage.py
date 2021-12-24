@@ -21,7 +21,8 @@ def test_temp_damage():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=3)
-
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 3)
 
@@ -42,7 +43,8 @@ def test_temp_damage2():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 5)
 
@@ -63,7 +65,8 @@ def test_temp_damage3():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 5)
 
@@ -91,6 +94,7 @@ def test_temp_damage4():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=3)
-
+    board.p1.resolve_board()
+    board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (8, 7)
