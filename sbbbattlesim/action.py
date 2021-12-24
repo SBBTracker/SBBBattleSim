@@ -28,7 +28,7 @@ class Action:
             priority: int = 0,
             attack: int = 0,
             health: int = 0,
-            damage: int = 0,
+            damage: (int, None) = None,
             heal: int = 0,
             temp: bool = False,
             *args,
@@ -82,22 +82,22 @@ class Action:
 
             # TRIGGER ON BUFF
             char('OnBuff', reason=self.reason, source=self.source,
-                 attack=self.attack, health=self.health, damage=self.damage, temp=self.temp,
+                 attack=self.attack, health=self.health, damage=self.damage or 0, temp=self.temp,
                  *args, **kwargs)
 
-        if self.damage != 0:
+        if self.damage not in  [0, None]:
             if char.invincible and self.reason != StatChangeCause.DAMAGE_WHILE_ATTACKING:
                 char('OnDamagedAndSurvived', damage=0, *args, **kwargs)
                 return
-            char._damage += self.damage
+            char._damage += self.damage or 0
 
         if self.heal != 0:
             char._damage = 0 if self.heal == -1 else max(char._damage - self.heal, 0)
 
-        if char.health <= 0:
+        if char.health <= 0 and self.damage is not None:
             char.dead = True
             logger.debug(f'{char.pretty_print()} marked for death')
-        elif self.damage > 0:
+        elif self.damage is not None and self.damage > 0:
             char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
 
     def _clear(self, char, *args, **kwargs):
@@ -113,7 +113,7 @@ class Action:
 
 
     def execute(self, character=None, *args, **kwargs):
-        logger.debug(f'Executing for character {character}')
+        logger.debug(f'Executing {self} for character {character}')
         if self.state in (ActionState.RESOLVED, ActionState.ROLLED_BACK):
             return
 

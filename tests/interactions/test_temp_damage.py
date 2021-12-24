@@ -97,4 +97,4 @@ def test_temp_damage4():
     board.p1.resolve_board()
     board.p2.resolve_board()
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (1, 1)
+    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (8, 7)
