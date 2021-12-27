@@ -25,3 +25,5 @@ def test_baby_root(golden):
             baby_roof_buff = action
 
     assert baby_roof_buff.health == 6 if golden else 3
+    baby_roof_buff.roll_back()
+    assert board.p1.characters[1].health == (1 if golden else 4)

@@ -248,6 +248,9 @@ class Action:
         if self.attack != 0:
             char._base_attack -= self.attack
 
+        char('OnBuff', reason=self.reason, source=self.source, attack=-1*self.attack,
+             health=-1*self.health)
+
         logger.debug(f'finished clearing char {char.pretty_print()}')
 
     def _register(self, char, *args, **kwargs):

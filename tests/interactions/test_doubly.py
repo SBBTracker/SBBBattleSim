@@ -26,3 +26,9 @@ def test_raw_doubly():
     assert angry_buff
     assert angry_buff.attack == 2
     assert angry_buff.health == 2
+
+    assert dubly.attack == 5
+    assert dubly.health == 5
+    angry_buff.roll_back()
+    assert dubly.attack == 1
+    assert dubly.health == 1
