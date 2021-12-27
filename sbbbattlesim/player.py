@@ -1,7 +1,7 @@
 import collections
 import logging
 import random
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from turtle import position
 
 from sbbbattlesim import utils
@@ -31,16 +31,6 @@ class PlayerOnSetup(OnSetup):
             support_buffs = set([char.support for char in support_units])
             for buff in sorted(self.source.auras | support_buffs, key=lambda b: b.priority, reverse=True):
                 buff.execute(char, setup=setup)
-
-        # for char in self.source.valid_characters(_lambda=lambda char: char.position in (5, 6, 7)):
-        #     if char.support:
-        #         support_targets = utils.get_support_targets(char.position, self.source.banner_of_command)
-        #         targets = self.source.valid_characters(_lambda=lambda c: c.position in support_targets)
-        #         char.support.execute(setup=setup, *targets)
-        #
-        # characters = self.source.valid_characters()
-        # for buff in sorted(self.source.auras, key=lambda b: b.priority, reverse=True):
-        #     buff.execute(setup=setup, *characters)
 
 
 class Player(EventManager):
@@ -213,11 +203,16 @@ class Player(EventManager):
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be
         able to summon from multiple points at once before running the onsummon stack. This may be useful
         for other things too'''
-        summoned_characters = [self.spawn(char, char.position) for char in characters]
 
-        self('OnSummon', summoned_characters=summoned_characters)
+        final_summoned_characters = []
+        pos2char = defaultdict(list)
+        for char in characters:
+            pos2char[char.position].append(char)
 
-        return summoned_characters
+        for pos, char_ls in pos2char.items():
+            final_summoned_characters.extend(self.summon(pos, char_ls))
+
+        return final_summoned_characters
 
     def summon(self, pos, characters, *args, **kwargs):
         summoned_characters = []

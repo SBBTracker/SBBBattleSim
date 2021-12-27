@@ -78,3 +78,29 @@ def test_pumpkin_summoning_cats(golden):
     assert summoned_unit.id == "SBB_CHARACTER_CAT"
     assert summoned_unit.golden == golden
 
+
+@pytest.mark.parametrize('golden', (True, False))
+def test_pumpkin_summoning_two_cats(golden):
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_PUMPKINKING', position=5, tribes=[Tribe.EVIL], golden=golden),
+            make_character(id='SBB_CHARACTER_BLACKCAT', position=1, _level=2, tribes=[Tribe.EVIL]),
+            make_character(id='SBB_CHARACTER_PROSPERO', position=7)
+        ],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    enemy = make_player(
+        characters=[make_character(attack=500, health=500)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    pk = board.p1.characters[1]
+    winner, loser = board.fight(limit=3)
+
+    for pos in [1, 2]:
+        summoned_unit = board.p1.characters[pos]
+        assert summoned_unit, [i.pretty_print() for i in board.p1.valid_characters()]
+        assert summoned_unit.id == "SBB_CHARACTER_CAT"
+        assert summoned_unit.golden == golden
+        assert summoned_unit.health == (8 if golden else 6)
+        assert summoned_unit.attack == (8 if golden else 6)
+

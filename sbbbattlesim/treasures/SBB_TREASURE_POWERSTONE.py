@@ -10,6 +10,5 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.feather_used = False
         stats = 1 * (self.mimic + 1)
         self.aura = Aura(reason=ActionReason.POWER_ORB, source=self, health=stats, attack=stats)

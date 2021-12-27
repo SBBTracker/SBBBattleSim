@@ -262,7 +262,6 @@ class EventExecutor:
         for (react, rargs, rkwargs, source) in reversed(self._react_buffer):
             logger.info(f'{source} reaction {react} ({rargs} {rkwargs})')
             source.manager(react, *rargs, **(rkwargs | {'source': source, 'stack': self.stack} | self.kwargs))
-        # logger.info(f'Closing Executor with ({self.args} {self.kwargs})')
 
     def execute(self, event, *args, **kwargs):
         response = event(stack=self.stack, *args, **kwargs)

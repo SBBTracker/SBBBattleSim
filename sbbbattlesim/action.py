@@ -355,7 +355,7 @@ class Buff(Action):
 
 
 class Support(Buff):
-    def __init__(self, multiplier=1, source=None, *args, **kwargs):
+    def __init__(self, source=None, *args, **kwargs):
         kwargs = dict(reason=ActionReason.SUPPORT_BUFF) | kwargs
         multiplier = source.player.support_itr
         super().__init__(multiplier=multiplier, source=source, *args, **kwargs)

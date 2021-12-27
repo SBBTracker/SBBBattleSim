@@ -10,7 +10,6 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.feather_used = False
         stats = 1 * (self.mimic + 1)
         self.aura = Aura(reason=ActionReason.NOBLE_STEED, source=self, health=stats, attack=stats,
                          _lambda=lambda char: char.quest)

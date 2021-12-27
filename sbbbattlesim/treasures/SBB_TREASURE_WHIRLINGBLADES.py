@@ -60,4 +60,3 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.aura = SingingSwordsAura(source=self, priority=999, _lambda=lambda char: char.position in (1, 2, 3, 4))
-        # self.player.register(SingingSwordsOnSpawn, source=self, priority=999)

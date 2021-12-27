@@ -18,6 +18,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.feather_used = False
-        stats = 4 * (bool(self.mimic) + 1)
         self.aura = Aura(event=SpearOfAchillesAttack, source=self)
