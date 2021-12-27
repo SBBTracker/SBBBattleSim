@@ -48,3 +48,5 @@ def test_complex_trees():
             assert (char.attack, char.health) == (104, 104)
         else:
             raise ValueError('How did you get something in this position')
+
+

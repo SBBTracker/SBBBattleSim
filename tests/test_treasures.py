@@ -1677,6 +1677,31 @@ def test_phoenix_feather(mimic, on):
         assert player.characters[5] is not None
 
 
+def test_phoenix_feather_attackorder():
+    player = make_player(
+        characters=[
+            make_character(position=1, attack=0, health=100),
+            make_character(position=5, attack=1, health=1),
+            make_character(position=6, attack=5, health=5)
+        ],
+        treasures=[
+            'SBB_TREASURE_PHOENIXFEATHER',
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+
+    enemy = make_player(
+        characters=[make_character(attack=1, health=100)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    player = board.p2
+    p1char = player.characters[1]
+
+    winner, loser = board.fight(limit=3)
+
+    assert player.characters[1].health == 98
+
+
 @pytest.mark.parametrize('mimic', (True, False))
 def test_spear_of_achilles(mimic):
     player = make_player(
