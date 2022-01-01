@@ -68,15 +68,17 @@ def test_charon_wombat():
     assert wombat_buff.attack, wombat_buff.health == (2, 3)
 
 
-def test_bearstain_wombat_phoenix():
+@pytest.mark.parametrize('repeat', range(30))
+def test_bearstain_wombat_phoenix(repeat):
     '''This is an interesting one -- The 1st unit comes back from Phoenix Feather, the 2nd and 3rd are Reduplicators, and the 4th is a copy of the 1st and gets buffed again with the same buffs the 1st received'''
     player = make_player(
         level=2,
         raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_WOMBATSINDISGUISE', position=1, attack=30, health=26, golden=True, tribes=[Tribe.ANIMAL]),
-            make_character(id='SBB_CHARACTER_PROSPERO', position=6, golden=False),
-            make_character(id='SBB_CHARACTER_PROSPERO', position=7, golden=True),
+            make_character(id='SBB_CHARACTER_PROSPERO', position=5, golden=False),
+            make_character(id='SBB_CHARACTER_PROSPERO', position=6, golden=True),
+            make_character(position=7)
         ],
         treasures=[
             "SBB_TREASURE_PHOENIXFEATHER",

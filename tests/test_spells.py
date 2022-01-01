@@ -139,6 +139,21 @@ def test_shrivel():
     assert char.attack == 0 and char.health == 1
 
 
+def test_shrivel_phoenixfeather():
+    player = make_player(
+        characters=[make_character()],
+        treasures=['SBB_TREASURE_PHOENIXFEATHER']
+    )
+    enemy = make_player(
+        spells=['''SBB_SPELL_ENFEEBLEMENT''', ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    unit = board.p1.characters[1]
+    winner, loser = board.fight(limit=-1)
+
+    assert board.p1.characters[1] is unit
+
+
 @pytest.mark.parametrize('survives', (True, False))
 def test_shrivel_speed(survives):
     player = make_player(

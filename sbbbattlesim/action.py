@@ -226,8 +226,6 @@ class Action:
         elif self.damage > 0:
             char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
 
-        if callable(self._action):
-            self._action(char)
 
     def _clear(self, char, *args, **kwargs):
         '''
@@ -287,6 +285,9 @@ class Action:
                 self._register(char, *args, **kwargs)
             if not setup:
                 self._apply(char, *args, **kwargs)
+
+            if callable(self._action):
+                self._action(char)
 
         self.state = ActionState.EXECUTED
         return self
@@ -380,6 +381,9 @@ class Support(Buff):
             if not setup:
                 self._apply(char, *args, **kwargs)
                 char('OnSupport', buffed=char, support=self.source, **kwargs)
+
+            if callable(self._action):
+                self._action(char)
 
         self.state = ActionState.EXECUTED
         return self

@@ -26,7 +26,6 @@ class RomeoLastBreath(OnDeath):
 
         if dead_juliets:
             juliet = max(dead_juliets, key=lambda juliet: (juliet.attack, juliet.health))
-            juliet._damage = 0
 
             new_juliet = character_registry[juliet.id](
                 attack=juliet._base_attack,
@@ -39,7 +38,7 @@ class RomeoLastBreath(OnDeath):
             )
 
             self.manager.player.register(RomeoOnSummon, source=self.source, juliet=new_juliet)
-            self.manager.player.summon(self.manager.position, [new_juliet])
+            self.manager.player.summon(self.source.position, [new_juliet])
 
 
 class CharacterType(Character):

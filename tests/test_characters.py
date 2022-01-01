@@ -24,11 +24,13 @@ def test_character(char, attack, golden):
     char = make_character(id=char.id, golden=golden)
     generic_char = make_character(position=7, tribes=[tribe.value for tribe in Tribe])
     player = make_player(
+        raw=True,
         level=2,
         characters=[char, generic_char],
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if attack else []
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character()],
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if not attack else []
     )
@@ -55,6 +57,7 @@ def test_support(char, golden, horn):
         return
 
     player = make_player(
+        raw=True,
         characters=[
             make_character(id=char.id, position=7 if horn else 5, golden=golden),
             make_character(tribes=[tribe.value for tribe in Tribe])
@@ -64,7 +67,7 @@ def test_support(char, golden, horn):
             "SBB_TREASURE_BANNEROFCOMMAND" if horn else '',
         ]
     )
-    enemy = make_player()
+    enemy = make_player(raw=True)
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
 
@@ -90,6 +93,7 @@ def test_slay(char, golden):
     '''Triggers a slay, checks success by measuring against a shadow assassin. Liable to fail in the future... '''
 
     player = make_player(
+        raw=True,
         level=2,
         characters=[
             make_character(id=char.id, position=1, golden=golden),
@@ -98,6 +102,7 @@ def test_slay(char, golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(position=1, attack=0, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -115,10 +120,12 @@ def test_last_breath(char, golden):
     '''Loads in every last breath and makes sure it triggers muerte'''
     last_breath = make_character(id=char.id, position=1, attack=0, health=1, golden=golden)
     player = make_player(
+        raw=True,
         hero='SBB_HERO_MUERTE',
         characters=[last_breath],
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=50, health=50)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
@@ -131,12 +138,14 @@ def test_last_breath(char, golden):
 @pytest.mark.parametrize('golden', (True, False))
 def test_baba_yaga(golden):
     player = make_player(
+        raw=True,
         characters=[
-            make_character(id='SBB_CHARACTER_LANCELOT', position=1, attack=1, health=1),
+            make_character(id='SBB_CHARACTER_LANCELOT', position=1, attack=7 if golden else 4, health=1),
             make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=0, health=1, golden=golden)
         ],
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=0, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -145,19 +154,23 @@ def test_baba_yaga(golden):
     player = board.p1
 
     if golden:
-        assert player.characters[1].attack == 7
+        assert player.characters[1].attack == 13
+        assert player.characters[1].health == 7
     else:
-        assert player.characters[1].attack == 5
+        assert player.characters[1].attack == 8
+        assert player.characters[1].health == 5
 
 
 def test_soltak():
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_SOLTAKANCIENT', position=1, attack=0, health=1),
             make_character(id='PROTECTED', position=5)
         ],
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='SBB_CHARACTER_BABYDRAGON', health=2)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
@@ -172,12 +185,14 @@ def test_soltak():
 
 def test_trojan_donkey():
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_TROJANDONKEY', position=1, attack=1, health=2)
         ],
         level=3
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character()],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
@@ -191,12 +206,14 @@ def test_trojan_donkey():
 
 def test_wombats_in_disguise():
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_WOMBATSINDISGUISE')
         ],
         level=3
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character()],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
@@ -213,12 +230,14 @@ def test_wombats_in_disguise():
 
 def test_doombreath():
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_DOOMBREATH')
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=2),
             make_character(position=5),

@@ -42,11 +42,39 @@ def test_romeo_summons_dead_juliet():
         ]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    juliet = board.p1.characters[2]
+
     winner, loser = board.fight(limit=2)
 
+    juliet = board.p1.characters[5]
+    assert board.p1.characters[5] is juliet
+    assert board.p1.characters[1] is None
 
-    assert board.p1.characters[1] is juliet
+
+def test_romeo_summons_dead_juliet_with_mihri():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_ROMEO', position=5, attack=2, health=3),
+            make_character(id='SBB_CHARACTER_JULIET', attack=2, health=3, position=1),
+        ],
+        hero='SBB_HERO_KINGLION',
+        mirhi_buff=1,
+        raw=True
+    )
+    enemy = make_player(
+        raw=True,
+        characters=[make_character(id="SBB_CHARACTER_DOOMBREATH", attack=7, health=7)],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+
+    juliet = board.p1.characters[5]
+    assert juliet.attack == 9
+    assert juliet.health == 10
+    assert board.p1.characters[1] is None
+
 
 def test_romeo_doesnt_summon_anything():
     player = make_player(
