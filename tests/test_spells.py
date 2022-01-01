@@ -10,10 +10,12 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('spell', spell_registry.keys())
 def test_spell(spell):
     player = make_player(
+        raw=True,
         characters=[make_character(id='GENERIC', attack=1, position=1, tribes=[tribe.value for tribe in Tribe])],
         spells=[spell]
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=1, attack=1, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -22,6 +24,7 @@ def test_spell(spell):
 
 def test_falling_stars():
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1),
             make_character(position=2),
@@ -34,7 +37,7 @@ def test_falling_stars():
         ],
         spells=['''SBB_SPELL_FALLINGSTARS''', ]
     )
-    enemy = make_player()
+    enemy = make_player(raw=True)
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
 
@@ -50,9 +53,11 @@ def test_falling_stars():
 @pytest.mark.parametrize('repeat', range(30))
 def test_lightning_bolt(repeat):
     player = make_player(
+        raw=True,
         spells=['''SBB_SPELL_LIGHTNINGBOLT''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=5, attack=1, health=10),
             make_character(position=1, attack=1, health=10)
@@ -70,9 +75,11 @@ def test_lightning_bolt(repeat):
 
 def test_fire_ball():
     player = make_player(
+        raw=True,
         spells=['''SBB_SPELL_FIREBALL''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=2, health=4),
             make_character(position=5, health=4),
@@ -106,9 +113,11 @@ def test_fire_ball():
 
 def test_fire_ball_backline():
     player = make_player(
+        raw=True,
         spells=['''SBB_SPELL_FIREBALL''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=6, health=5),
         ],
@@ -122,9 +131,11 @@ def test_fire_ball_backline():
 
 def test_shrivel():
     player = make_player(
+        raw=True,
         spells=['''SBB_SPELL_ENFEEBLEMENT''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(attack=4, health=13),
         ],
@@ -145,6 +156,7 @@ def test_shrivel_phoenixfeather():
         treasures=['SBB_TREASURE_PHOENIXFEATHER']
     )
     enemy = make_player(
+        raw=True,
         spells=['''SBB_SPELL_ENFEEBLEMENT''', ]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -157,9 +169,11 @@ def test_shrivel_phoenixfeather():
 @pytest.mark.parametrize('survives', (True, False))
 def test_shrivel_speed(survives):
     player = make_player(
+        raw=True,
         spells=['''SBB_SPELL_ENFEEBLEMENT''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(attack=0, health=(13 if survives else 11)),
         ],
@@ -169,7 +183,6 @@ def test_shrivel_speed(survives):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
-
 
     char = board.p2.characters[1]
     if survives:
@@ -181,9 +194,11 @@ def test_shrivel_speed(survives):
 @pytest.mark.parametrize('survives', (True, False))
 def test_shrivel_speed2(survives):
     player = make_player(
+        raw=True,
         spells=['''SBB_SPELL_ENFEEBLEMENT''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(id="SBB_CHARACTER_KINGARTHUR", attack=0, health=(13 if survives else 11), golden=True,
                            tribes=[Tribe.PRINCE]),
@@ -191,7 +206,6 @@ def test_shrivel_speed2(survives):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
-
 
     char = board.p2.characters[1]
     if survives:
@@ -202,12 +216,14 @@ def test_shrivel_speed2(survives):
 
 def test_spells_damaging_darkwood():
     player = make_player(
+        raw=True,
         spells=[
             '''SBB_SPELL_ENFEEBLEMENT''',
             '''SBB_SPELL_FALLINGSTARS'''
         ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(id="SBB_CHARACTER_DARKWOODCREEPER", attack=12, health=15),
         ],
@@ -215,19 +231,20 @@ def test_spells_damaging_darkwood():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=-1)
 
-
     char = board.p2.characters[1]
     assert (char.attack, char.health) == (1, 2)
 
 
 def test_multiple_spells():
     player = make_player(
+        raw=True,
         spells=[
             '''SBB_SPELL_FIREBALL''',
             '''SBB_SPELL_LIGHTNINGBOLT'''
         ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(attack=0, health=4, position=1),
             make_character(attack=0, health=14, position=5),
@@ -238,17 +255,17 @@ def test_multiple_spells():
     backchar = board.p2.characters[5]
     winner, loser = board.fight(limit=-1)
 
-
     assert frontchar._action_history[0].reason == ActionReason.FIREBALL
     assert set([statchange.reason for statchange in backchar._action_history]) == {ActionReason.FIREBALL,
                                                                                    ActionReason.LIGHTNING_BOLT}
 
-
 def test_earthquake():
     player = make_player(
+        raw=True,
         spells=['''SBB_SPELL_EARTHQUAKE''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=1, health=2),
             make_character(position=2, health=3),
@@ -269,9 +286,11 @@ def test_earthquake():
 
 def test_earthquake_peeps():
     player = make_player(
+        raw=True,
         spells=['''SBB_SPELL_EARTHQUAKE''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=1, health=1),
             make_character(id="SBB_CHARACTER_PRINCESSPEEP", position=2, ),
@@ -293,9 +312,11 @@ def test_earthquake_peeps():
 
 def test_poison_apple():
     player = make_player(
+        raw=True,
         spells=['''SBB_SPELL_POISONAPPLE''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(health=99),
         ],
@@ -311,9 +332,11 @@ def test_poison_apple():
 
 def test_disintegrate():
     player = make_player(
+        raw=True,
         spells=['''SBB_SPELL_DISINTEGRATE''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(health=30),
         ],
@@ -328,9 +351,11 @@ def test_disintegrate():
 
 def test_pigomorph():
     player = make_player(
+        raw=True,
         spells=['''SBB_SPELL_PIGOMORPH''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(),
         ],
@@ -345,10 +370,12 @@ def test_pigomorph():
 
 def test_cats_call():
     player = make_player(
+        raw=True,
         characters=[make_character()],
         spells=['''SBB_SPELL_BEASTWITHIN''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=2),
         ],
@@ -364,6 +391,7 @@ def test_cats_call():
 
 def test_toil_and_trouble():
     player = make_player(
+        raw=True,
         characters=[
             make_character(attack=0),
             make_character(position=2, attack=0),
@@ -371,6 +399,7 @@ def test_toil_and_trouble():
         spells=['''SBB_SPELL_MENAGERIE''', ]
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(),
         ],
