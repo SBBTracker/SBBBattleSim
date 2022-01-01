@@ -1,5 +1,5 @@
 from sbbbattlesim.action import Buff, Aura, ActionReason
-from sbbbattlesim.heros import Hero
+from sbbbattlesim.heroes import Hero
 from sbbbattlesim.utils import Tribe
 
 
@@ -10,6 +10,6 @@ class HeroType(Hero):
     def __init__(self, mihri_buff=0, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.mihri_buff = mihri_buff
-        self.aura = Aura(reason=ActionReason.MIRHI_BUFF, source=self,
+        self.aura = Aura(reason=ActionReason.MIHRI_BUFF, source=self,
                          _lambda=lambda char: Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes,
                          attack=1 * self.mihri_buff, health=2 * self.mihri_buff, )

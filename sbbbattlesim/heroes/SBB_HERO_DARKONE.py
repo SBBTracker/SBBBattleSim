@@ -1,6 +1,6 @@
 from sbbbattlesim.action import Buff, Aura, ActionReason, Action
 from sbbbattlesim.events import OnDeath
-from sbbbattlesim.heros import Hero
+from sbbbattlesim.heroes import Hero
 from sbbbattlesim.utils import Tribe
 
 

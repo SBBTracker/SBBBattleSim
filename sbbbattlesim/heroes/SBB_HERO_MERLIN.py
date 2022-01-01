@@ -3,7 +3,7 @@ import random
 
 from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.events import OnSpellCast
-from sbbbattlesim.heros import Hero
+from sbbbattlesim.heroes import Hero
 
 logger = logging.getLogger(__name__)
 

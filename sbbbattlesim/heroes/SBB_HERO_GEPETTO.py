@@ -1,6 +1,6 @@
 from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.events import OnSummon
-from sbbbattlesim.heros import Hero
+from sbbbattlesim.heroes import Hero
 
 
 class GeppettoOnSummon(OnSummon):

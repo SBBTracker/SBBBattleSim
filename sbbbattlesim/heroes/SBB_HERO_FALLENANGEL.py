@@ -2,7 +2,7 @@ import logging
 
 from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.events import OnSetup
-from sbbbattlesim.heros import Hero
+from sbbbattlesim.heroes import Hero
 from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)

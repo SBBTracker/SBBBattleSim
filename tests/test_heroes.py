@@ -329,7 +329,7 @@ def test_jacks_giant(on):
 
 
 @pytest.mark.parametrize('on', (True, False))
-def test_mirhi(on):
+def test_mihri(on):
     player = make_player(
         raw=True,
         characters=[
@@ -337,7 +337,7 @@ def test_mirhi(on):
             make_character(id='ROYAL', position=2, tribes=['princess'] if on else [])
         ],
         hero='SBB_HERO_KINGLION',
-        mirhi_buff=5
+        mihri_buff=5
     )
 
     enemy = make_player(raw=True)
@@ -349,17 +349,17 @@ def test_mirhi(on):
     for pos in [1, 2]:
         royal = player.characters.get(pos)
 
-        mirhi_buff = None
+        mihri_buff = None
         for action in royal._action_history:
-            if action.reason == ActionReason.MIRHI_BUFF:
-                mirhi_buff = action
+            if action.reason == ActionReason.MIHRI_BUFF:
+                mihri_buff = action
                 break
 
         if on:
-            assert mirhi_buff.attack == 5
-            assert mirhi_buff.health == 10
+            assert mihri_buff.attack == 5
+            assert mihri_buff.health == 10
         else:
-            assert mirhi_buff is None
+            assert mihri_buff is None
 
 
 def test_trophy_hunter():

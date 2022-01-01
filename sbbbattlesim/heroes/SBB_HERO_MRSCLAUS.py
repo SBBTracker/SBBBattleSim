@@ -1,5 +1,5 @@
 from sbbbattlesim.action import Buff, Aura, ActionReason
-from sbbbattlesim.heros import Hero
+from sbbbattlesim.heroes import Hero
 from sbbbattlesim.utils import Tribe
 
 

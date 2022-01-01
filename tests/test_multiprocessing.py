@@ -6,7 +6,7 @@ from sbbbattlesim.simulate import _process
 from tests import make_character, make_player
 
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.heros import registry as hero_registry
+from sbbbattlesim.heroes import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
 

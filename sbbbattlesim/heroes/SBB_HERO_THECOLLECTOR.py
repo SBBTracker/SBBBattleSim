@@ -1,4 +1,4 @@
-from sbbbattlesim.heros import Hero
+from sbbbattlesim.heroes import Hero
 
 
 class HeroType(Hero):

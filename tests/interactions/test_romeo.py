@@ -57,7 +57,7 @@ def test_romeo_summons_dead_juliet_with_mihri():
             make_character(id='SBB_CHARACTER_JULIET', attack=2, health=3, position=1),
         ],
         hero='SBB_HERO_KINGLION',
-        mirhi_buff=1,
+        mihri_buff=1,
         raw=True
     )
     enemy = make_player(

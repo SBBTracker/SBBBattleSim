@@ -117,7 +117,7 @@ class ActionReason(enum.Enum):
     KRAMPUS_BUFF = 308
     CHARON_BUFF = 309
     SAD_DRACULA_SLAY = 310
-    MIRHI_BUFF = 311
+    MIHRI_BUFF = 311
     FALLEN_ANGEL_BUFF = 312
     PUP_BUFF = 313
 

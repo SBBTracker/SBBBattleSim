@@ -1,6 +1,6 @@
 from sbbbattlesim.action import Aura
 from sbbbattlesim.characters import Character
-from sbbbattlesim.heros import Hero
+from sbbbattlesim.heroes import Hero
 from sbbbattlesim.utils import Tribe
 
 

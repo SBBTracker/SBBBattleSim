@@ -1,6 +1,6 @@
 from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.events import OnDeath
-from sbbbattlesim.heros import Hero
+from sbbbattlesim.heroes import Hero
 
 
 class CharonOnDeath(OnDeath):

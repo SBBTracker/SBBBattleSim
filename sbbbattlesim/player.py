@@ -7,7 +7,7 @@ from turtle import position
 from sbbbattlesim import utils
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import EventManager, OnStart, OnSetup
-from sbbbattlesim.heros import registry as hero_registry
+from sbbbattlesim.heroes import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
 
