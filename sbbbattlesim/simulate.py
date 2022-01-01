@@ -26,6 +26,7 @@ def from_state(state: dict):
         spells = []
         level = 0
         hand = []
+        counter = 0
 
         for data in player_data:
             if data.zone == 'Character':
@@ -44,6 +45,7 @@ def from_state(state: dict):
                 treasures.append(data.content_id)
             elif data.zone == 'Hero':
                 hero = data.content_id
+                counter = data.counter
                 level = int(data.level)
             elif data.zone == 'Spell':
                 spells.append(data.content_id)
@@ -55,6 +57,7 @@ def from_state(state: dict):
             'spells': spells,
             'level': level,
             'hand': hand,
+            'mihri_buff': counter,
             'raw': True
         }
 
