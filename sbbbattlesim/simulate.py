@@ -57,9 +57,10 @@ def from_state(state: dict):
             'spells': spells,
             'level': level,
             'hand': hand,
-            'mihri_buff': counter,
             'raw': True
         }
+        if hero == "SBB_HERO_KINGLION":
+            sim_data[player]['mihri_buff'] = counter
 
     assert isinstance(sim_data, dict)
 
