@@ -12,8 +12,7 @@ def test_valid_character(char):
     char = character_registry[char.id]
     assert char.valid()
     assert char.display_name
-    assert next(character_registry.filter(
-        _lambda=lambda char_cls: char_cls.id != char.id and char_cls.display_name == char.display_name), True)
+    assert next(character_registry.filter(_lambda=lambda char_cls: char_cls.id != char.id and char_cls.display_name == char.display_name), True)
 
 
 @pytest.mark.parametrize('attack', (True, False))

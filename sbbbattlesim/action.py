@@ -19,6 +19,7 @@ class ActionState(Enum):
 
 
 class ActionReason(enum.Enum):
+    TEST = -1
     DAMAGE_WHILE_ATTACKING = 1
     DAMAGE_WHILE_DEFENDING = 2
     SUPPORT_BUFF = 3
@@ -190,7 +191,7 @@ class Action:
         self._char_buffer = set()
         self._event_buffer = collections.defaultdict(list)
 
-        logger.debug(f'New {self} atk={self.attack} hp={self.health}')
+        logger.debug(f'New {self} atk={self.attack} hp={self.health} dmg={self.damage} heal={self.heal}')
 
     def __str__(self):
         return self.__repr__()
@@ -211,13 +212,13 @@ class Action:
             char('OnBuff', reason=self.reason, source=self.source, attack=self.attack * char.attack_multiplier,
                  health=self.health, *args, **kwargs)
 
-        if self.damage != 0:
+        if self.damage > 0:
             if char.invincible and self.reason != ActionReason.DAMAGE_WHILE_DEFENDING:
                 char('OnDamagedAndSurvived', damage=0, *args, **kwargs)
                 return
             char._damage += self.damage
 
-        if self.heal != 0:
+        if self.heal > 0 or self.heal == -1:
             char._damage = 0 if self.heal == -1 else max(char._damage - self.heal, 0)
 
         if char.health <= 0:
@@ -359,34 +360,15 @@ class Buff(Action):
 
 
 class Support(Buff):
-    def __init__(self, source=None, *args, **kwargs):
+    def __init__(self, source=None, attack: int = 0, health: int = 0, *args, **kwargs):
         kwargs = dict(reason=ActionReason.SUPPORT_BUFF) | kwargs
         multiplier = source.player.support_itr
-        super().__init__(multiplier=multiplier, source=source, *args, **kwargs)
 
-    def execute(self, *characters, **kwargs):
-        setup = kwargs.get('setup', False)
-        logger.debug(f'{self} execute ({characters}, {kwargs})')
-        for char in characters or self.targets:
-            if not self._lambda(char) or char in self._char_buffer:
-                continue
+        if source.player.hero.id == 'SBB_HERO_GANDALF':
+            attack += 2
+            health += 1
 
-            args = self.args
-            kwargs = self.kwargs | kwargs
-            self._char_buffer.add(char)
-            char._action_history.append(self)
-
-            if self.event:
-                self._register(char, *args, **kwargs)
-            if not setup:
-                self._apply(char, *args, **kwargs)
-                char('OnSupport', buffed=char, support=self.source, **kwargs)
-
-            if callable(self._action):
-                self._action(char)
-
-        self.state = ActionState.EXECUTED
-        return self
+        super().__init__(multiplier=multiplier, source=source, attack=attack, health=health, *args, **kwargs)
 
 
 class Aura(Buff):

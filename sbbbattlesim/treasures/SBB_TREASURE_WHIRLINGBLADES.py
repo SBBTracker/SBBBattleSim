@@ -36,6 +36,7 @@ class SingingSwordsAura(Aura):
             char._action_history.append(self)
 
             # Custom Singing Sword Execute Logic
+            # TODO If doubly implements multiplyers this needs to update
             logger.debug(f'Applying Singing Swords {char.pretty_print()}')
             starting_attack = char.attack
             char.attack_multiplier = self.multiplier
