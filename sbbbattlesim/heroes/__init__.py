@@ -21,25 +21,25 @@ class Hero:
 
 
 class Registry(object):
-    heros = OrderedDict()
+    heroes = OrderedDict()
 
     def __getitem__(self, item):
-        return self.heros.get(item, Hero)
+        return self.heroes.get(item, Hero)
 
     def __getattr__(self, item):
-        return getattr(self.heros, item)
+        return getattr(self.heroes, item)
 
     def __contains__(self, item):
-        return item in self.heros
+        return item in self.heroes
 
     def register(self, name, hero):
-        assert name not in self.heros
+        assert name not in self.heroes
         hero.id = name
-        self.heros[name] = hero
+        self.heroes[name] = hero
         logger.debug(f'Registered {name} - {hero}')
 
     def filter(self, _lambda=lambda hero_cls: True):
-        return (hero_cls for id, hero_cls in self.heros.items() if _lambda(hero_cls))
+        return (hero_cls for id, hero_cls in self.heroes.items() if _lambda(hero_cls))
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
