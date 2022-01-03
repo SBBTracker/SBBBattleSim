@@ -98,8 +98,7 @@ def test_apply_debuff():
 
 
 @pytest.mark.parametrize('_lambda', (True, False))
-@pytest.mark.parametrize('setup', (True, False))
-def test_execute(_lambda, setup):
+def test_execute(_lambda):
     attack_buff, health_buff = 1, 1
     attack_start, health_start = 1, 1
     attack_final, health_final = attack_start + attack_buff, health_start + health_buff
@@ -123,17 +122,41 @@ def test_execute(_lambda, setup):
 
     # Execute with setup=True
     # This should NOT change stats
-    action.execute(char, setup=setup)
-    if setup:
-        assert (char._base_attack, char._base_health) == (attack_start, health_start)
-    else:
-        assert (char._base_attack, char._base_health) == (attack_final, health_final)
+    action.execute(char)
+    assert (char._base_attack, char._base_health) == (attack_final, health_final)
 
     # Execute on the same character
     # This should NOT change stats
     action.execute(char)
     assert (char._base_attack, char._base_health) == (attack_final, health_final)
 
+
+@pytest.mark.parametrize('setup', (True, False))
+def test_setup(setup):
+    attack_buff, health_buff = 1, 1
+    attack_start, health_start = 2, 2
+
+    board, player = create_test_setup(
+        PLAYER=make_player(
+            characters=[
+                make_character(attack=attack_start, health=health_start)
+            ]
+        )
+    )
+    char = player.characters[1]
+    action = TestAction(source=char, attack=attack_buff, health=health_buff)
+
+    assert (char._base_attack, char._base_health) == (attack_start, health_start)
+
+    action.execute(char, setup=setup)
+    if setup:
+        assert (char._base_attack, char._base_health) == (attack_start, health_start)
+        action.roll_back()
+        assert (char._base_attack, char._base_health) == (attack_start - attack_buff, health_start - health_buff)
+    else:
+        assert (char._base_attack, char._base_health) == (attack_start + attack_buff, health_start + health_buff)
+        action.roll_back()
+        assert (char._base_attack, char._base_health) == (attack_start, health_start)
 
 def test_rollback():
     attack_buff, health_buff = 1, 1
@@ -149,6 +172,7 @@ def test_rollback():
         )
     )
     char = player.characters[1]
+    action = TestAction(source=char, attack=attack_buff, health=health_buff)
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
 
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
