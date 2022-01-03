@@ -87,7 +87,7 @@ def test_easter_egg(mimic, tiger, on, num):
 @pytest.mark.parametrize('tiger', (True, False))
 @pytest.mark.parametrize('good', (True, False))
 @pytest.mark.parametrize('evil', (True, False))
-def test_book_of_heros(mimic, tiger, good, evil):
+def test_book_of_heroes(mimic, tiger, good, evil):
     starting_attack, starting_health = 1, 2
 
     player = make_player(
