@@ -464,8 +464,9 @@ def test_dancing_sword(mimic, tiger):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
-            make_character()
+            make_character(id="SBB_CHARACTER_BLACKCAT")
         ],
         treasures=[
             'SBB_TREASURE_SHARPENINGSTONE',
@@ -479,7 +480,8 @@ def test_dancing_sword(mimic, tiger):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
-        characters=[make_character(id='Enemy', attack=0)]
+        raw=True,
+        characters=[make_character(id='Enemy', attack=1)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
@@ -497,9 +499,10 @@ def test_shepherds_sling(mimic, tiger):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_PRINCESSPEEP'),
-            make_character(id='SBB_CHARACTER_COPYCAT', position=2)
+            make_character(id='SBB_CHARACTER_COPYCAT', position=5)
         ],
         treasures=[
             '''SBB_TREASURE_SHEPHERD'SSLING''',
@@ -513,7 +516,8 @@ def test_shepherds_sling(mimic, tiger):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
-        characters=[make_character(id='Enemy', attack=0)]
+        raw=True,
+        characters=[make_character(id='Enemy', attack=1)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
@@ -525,7 +529,7 @@ def test_shepherds_sling(mimic, tiger):
     assert char.attack == 1 + (1 * mimic_multiplyer)
     assert char.health == 1 + (1 * mimic_multiplyer)
 
-    unbuffed = player.characters[2]
+    unbuffed = player.characters[5]
 
     assert unbuffed
     assert unbuffed.attack == 1
@@ -539,6 +543,7 @@ def test_ancient_sarcophagus(mimic, tiger, on):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
             make_character(tribes=['evil'] if on else [], attack=0),
         ],
@@ -554,6 +559,7 @@ def test_ancient_sarcophagus(mimic, tiger, on):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=1, position=i) for i in range(1, mimic_multiplyer + 1)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -570,6 +576,7 @@ def test_bad_moon(mimic, tiger, on):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_QUESTINGPRINCESS' if on else '', ),
         ],
@@ -585,6 +592,7 @@ def test_bad_moon(mimic, tiger, on):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=0)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -605,6 +613,7 @@ def test_deepstone_mine(mimic, tiger, on):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
             make_character(tribes=['dwarf'] if on else []),
         ],
@@ -620,6 +629,7 @@ def test_deepstone_mine(mimic, tiger, on):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=0)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -628,9 +638,13 @@ def test_deepstone_mine(mimic, tiger, on):
     player = board.p1
     char = player.characters[1]
 
-    assert char
-    assert char.attack == (1 + (2 * mimic_multiplyer) if on else 1)
-    assert char.health == (1 + (2 * mimic_multiplyer) if on else 1)
+    buffs = [
+        r for r in char._action_history if r.reason == ActionReason.DEEPSTONE_MINE
+    ]
+
+    assert sum([d.attack for d in buffs]) == ((2*mimic_multiplyer) if on else 0)
+    assert sum([d.health for d in buffs]) == ((2*mimic_multiplyer) if on else 0)
+
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -642,6 +656,7 @@ def test_cloak_of_the_assassin(mimic, tiger, on, unit, golden):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
             make_character(id=unit if on else '', golden=golden),
         ],
@@ -657,6 +672,7 @@ def test_cloak_of_the_assassin(mimic, tiger, on, unit, golden):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=0)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -667,15 +683,21 @@ def test_cloak_of_the_assassin(mimic, tiger, on, unit, golden):
 
     assert char
 
+    buffs = [
+        r for r in char._action_history if r.reason == ActionReason.CLOAK_OF_THE_ASSASSIN
+    ]
+
     if on and unit == 'SBB_CHARACTER_QUESTINGPRINCESS' and golden:
-        assert char.attack == 1, char.attack
-        assert char.health == 1, char.health
+        assert sum([d.attack for d in buffs]) == 0
+        assert sum([d.health for d in buffs]) == 0
     elif unit in ['SBB_CHARACTER_QUESTINGPRINCESS', 'SBB_CHARACTER_NIGHTSTALKER']:
-        final_stats = 1 + (3 * mimic_multiplyer) if on else 1
-        assert char.attack == final_stats, (char.attack, final_stats)
-        assert char.health == final_stats, (char.health, final_stats)
+        final_stats = (3 * mimic_multiplyer) if on else 0
+        assert sum([d.attack for d in buffs]) == final_stats
+        assert sum([d.health for d in buffs]) == final_stats
     else:
         raise ValueError('bad unit')
+
+
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -684,8 +706,9 @@ def test_eye_of_ares(mimic, tiger):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
-            make_character(),
+            make_character(id='SBB_CHARACTER_BLACKCAT'),
         ],
         treasures=[
             'SBB_TREASURE_EYEOFARES',
@@ -699,17 +722,17 @@ def test_eye_of_ares(mimic, tiger):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
-        characters=[make_character(id='Enemy')]
+        raw=True,
+        characters=[make_character(id='SBB_CHARACTER_BLACKCAT')]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    winner, loser = board.fight(limit=1)
 
     player = board.p1
-    for player in [board.p1, board.p2]:
-        dead = player.graveyard[0]
-
-        assert dead
-        assert dead.attack == 1 + (5 * mimic_multiplyer)
+    for e, player in enumerate([board.p1, board.p2]):
+        char = player.characters[1]
+        assert char.attack == 5*mimic_multiplyer + 1, e
+        assert char.health == 1
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -718,8 +741,9 @@ def test_power_orb(mimic, tiger):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
-            make_character(),
+            make_character(id='SBB_CHARACTER_BLACKCAT'),
         ],
         treasures=[
             'SBB_TREASURE_POWERSTONE',
@@ -733,7 +757,8 @@ def test_power_orb(mimic, tiger):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
-        characters=[make_character(id='Enemy', attack=0)]
+        raw=True,
+        characters=[make_character(id='Enemy', attack=1)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
@@ -752,6 +777,7 @@ def test_ring_of_revenge(mimic, tiger):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1),
             make_character(position=5),
@@ -768,6 +794,7 @@ def test_ring_of_revenge(mimic, tiger):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
+        raw=True,
         characters=[make_character()],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -787,8 +814,9 @@ def test_sting(mimic, tiger, on):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
-            make_character(position=1 if on else 2),
+            make_character(id="SBB_CHARACTER_BLACKCAT", position=1 if on else 2),
         ],
         treasures=[
             'SBB_TREASURE_STING',
@@ -802,7 +830,8 @@ def test_sting(mimic, tiger, on):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
-        characters=[make_character(attack=0)],
+        raw=True,
+        characters=[make_character(attack=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
@@ -820,8 +849,9 @@ def test_haunted_helm(mimic, tiger, on):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
-            make_character(position=1 if on else 2),
+            make_character(id="SBB_CHARACTER_BLACKCAT", position=1 if on else 2),
         ],
         treasures=[
             'SBB_TREASURE_STONEHELM',
@@ -835,7 +865,8 @@ def test_haunted_helm(mimic, tiger, on):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
-        characters=[make_character(attack=0)],
+        raw=True,
+        characters=[make_character(attack=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
@@ -854,6 +885,7 @@ def test_tell_tale_quiver(mimic, tiger, ranged, back):
     mimic_multiplyer = sum([mimic, tiger]) + 1
 
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_FOXTAILARCHER' if ranged else '', position=5 if back else 1),
         ],
@@ -869,6 +901,7 @@ def test_tell_tale_quiver(mimic, tiger, ranged, back):
         player['treasures'].append('SBB_TREASURE_TREASURECHEST')
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -877,8 +910,12 @@ def test_tell_tale_quiver(mimic, tiger, ranged, back):
     player = board.p1
     char = player.characters[5 if back else 1]
 
-    assert char.attack == (1 + (3 * mimic_multiplyer) if ranged and back else 1)
-    assert char.health == (1 + (3 * mimic_multiplyer) if ranged and back else 1)
+    buffs = [
+        r for r in char._action_history if r.reason == ActionReason.TELL_TALE_QUIVER
+    ]
+
+    assert sum([d.attack for d in buffs]) == (3*mimic_multiplyer if back and ranged else 0)
+    assert sum([d.health for d in buffs]) == (3*mimic_multiplyer if back and ranged else 0)
 
 
 @pytest.mark.parametrize('_', range(20))
@@ -886,6 +923,7 @@ def test_tell_tale_quiver(mimic, tiger, ranged, back):
 def test_deck_of_many_things(mimic, _):
     #todo test level cast is correct
     player = make_player(
+        raw=True,
         hero='SBB_HERO_MERLIN',
         level=6,
         characters=[
@@ -898,6 +936,7 @@ def test_deck_of_many_things(mimic, _):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -913,11 +952,11 @@ def test_deck_of_many_things(mimic, _):
         assert len(wizardbuffs) == 1
 
 
-
 @pytest.mark.parametrize('mimic', (True, False))
 @pytest.mark.parametrize('on', (True, False))
 def test_other_hand_of_vekna(mimic, on):
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1),
             make_character(position=2 if on else 5),
@@ -930,6 +969,7 @@ def test_other_hand_of_vekna(mimic, on):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character()],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -950,6 +990,7 @@ def test_other_hand_of_vekna(mimic, on):
 @pytest.mark.parametrize('real_unit', (True, False))
 def test_coin_of_charon(mimic, real_unit):
     player = make_player(
+        raw=True,
         characters=[
             make_character(),
             make_character(id='''SBB_CHARACTER_WIZARD'SFAMILIAR''' if real_unit else "", position=5)
@@ -961,6 +1002,7 @@ def test_coin_of_charon(mimic, real_unit):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(), make_character(position=2)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -997,6 +1039,7 @@ def test_reduplicator(mimic, full_board):
         characters.append(make_character(position=3, health=5))
 
     player = make_player(
+        raw=True,
         characters=characters,
         treasures=[
             'SBB_TREASURE_REDUPLICATOR',
@@ -1005,6 +1048,7 @@ def test_reduplicator(mimic, full_board):
     )
 
     enemy = make_player(
+        raw=True,
         spells=[
             "SBB_SPELL_EARTHQUAKE"
         ]
@@ -1047,12 +1091,12 @@ def test_reduplicator(mimic, full_board):
         raise ValueError('Nonsense state')
 
 
-
 @pytest.mark.parametrize('mimic', (True, False))
 def test_moonsong_horn(mimic):
     player = make_player(
+        raw=True,
         characters=[
-            make_character(),
+            make_character(id="SBB_CHARACTER_BLACKCAT"),
         ],
         treasures=[
             'SBB_TREASURE_POWERGEM',
@@ -1061,7 +1105,8 @@ def test_moonsong_horn(mimic):
     )
 
     enemy = make_player(
-        characters=[make_character(id='Enemy', attack=0)]
+        raw=True,
+        characters=[make_character(id='Enemy', attack=1)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
@@ -1082,8 +1127,9 @@ def test_moonsong_horn(mimic):
 @pytest.mark.parametrize('mimic', (True, False))
 def test_six_of_shields(mimic):
     player = make_player(
+        raw=True,
         characters=[
-            make_character(),
+            make_character(id="SBB_CHARACTER_BLACKCAT"),
         ],
         treasures=[
             'SBB_TREASURE_RINGOFDISCIPLINE',
@@ -1092,7 +1138,8 @@ def test_six_of_shields(mimic):
     )
 
     enemy = make_player(
-        characters=[make_character(id='Enemy', attack=0)]
+        raw=True,
+        characters=[make_character(id='Enemy', attack=1)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
@@ -1113,6 +1160,7 @@ def test_six_of_shields(mimic):
 @pytest.mark.parametrize('on', (True, False))
 def test_sky_castle(mimic, on):
     player = make_player(
+        raw=True,
         characters=[
             make_character(tribes=[Tribe.PRINCE] if on else []),
             make_character(tribes=[Tribe.PRINCESS] if on else [], position=2),
@@ -1124,6 +1172,7 @@ def test_sky_castle(mimic, on):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=0)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1134,17 +1183,22 @@ def test_sky_castle(mimic, on):
     for char in [player.characters[1], player.characters[2]]:
         assert char
 
-        final = 5
+        final = 4
         if mimic:
-            final = 9
+            final = 8
 
-        assert char.attack == (final if on else 1)
-        assert char.health == (final if on else 1)
+        buffs = [
+            r for r in char._action_history if r.reason == ActionReason.SKYCASTLE
+        ]
+
+        assert sum([d.attack for d in buffs]) == (final if on else 0)
+        assert sum([d.health for d in buffs]) == (final if on else 0)
 
 
 @pytest.mark.parametrize('mimic', (True, False))
 def test_summoning_portal(mimic):
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_BLACKCAT'),
             make_character(id='SBB_CHARACTER_BLACKCAT', position=2),
@@ -1156,6 +1210,7 @@ def test_summoning_portal(mimic):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=0)],
         spells=['SBB_SPELL_EARTHQUAKE']
     )
@@ -1189,8 +1244,9 @@ def test_summoning_portal(mimic):
 @pytest.mark.parametrize('mimic', (True, False))
 def test_ring_of_rage(mimic):
     player = make_player(
+        raw=True,
         characters=[
-            make_character(),
+            make_character(id="SBB_CHARACTER_BLACKCAT"),
         ],
         treasures=[
             'SBB_TREASURE_SURGINGSTONE',
@@ -1199,7 +1255,8 @@ def test_ring_of_rage(mimic):
     )
 
     enemy = make_player(
-        characters=[make_character(id='Enemy', attack=0)]
+        raw=True,
+        characters=[make_character(id='Enemy', attack=1)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
@@ -1218,6 +1275,7 @@ def test_ring_of_rage(mimic):
 
 def test_tree_of_life():
     player = make_player(
+        raw=True,
         characters=[
             make_character(health=2),
             make_character(health=2, position=2),
@@ -1228,6 +1286,7 @@ def test_tree_of_life():
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=1, health=2)],
         spells=['SBB_SPELL_FALLINGSTARS']
     )
@@ -1244,6 +1303,7 @@ def test_tree_of_life():
 @pytest.mark.parametrize('mimic', (True, False))
 def test_draculas_saber(mimic):
     player = make_player(
+        raw=True,
         characters=[
             make_character(),
         ],
@@ -1254,6 +1314,7 @@ def test_draculas_saber(mimic):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1275,6 +1336,7 @@ def test_draculas_saber(mimic):
 @pytest.mark.parametrize('mimic', (True, False))
 def test_exploding_mittens(mimic):
     player = make_player(
+        raw=True,
         characters=[
             make_character(attack=0),
         ],
@@ -1285,6 +1347,7 @@ def test_exploding_mittens(mimic):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1298,6 +1361,7 @@ def test_exploding_mittens(mimic):
 @pytest.mark.parametrize('mimic', (True, False))
 def test_helm_of_the_ugly_gosling(mimic):
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1),
             make_character(position=2),
@@ -1309,6 +1373,7 @@ def test_helm_of_the_ugly_gosling(mimic):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1333,31 +1398,37 @@ def test_helm_of_the_ugly_gosling(mimic):
 @pytest.mark.parametrize('trigger', (True, False))
 def test_monkeys_paw(trigger, mimic):
     player = make_player(
+        raw=True,
         characters=[
-            make_character(position=i) for i in range(7 - trigger)
+            make_character(id="SBB_CHARACTER_BLACKCAT" if i==1 else '', position=i) for i in range(1, 8-trigger)
         ],
         treasures=[
             'SBB_TREASURE_HEXINGWAND',
-            'SBB_TREASURE_TREASURECHEST' if mimic else ''
+            'SBB_TREASURE_TREASURECHEST' if mimic else '',
+            '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
 
     enemy = make_player(
-        characters=[make_character(id='Enemy', attack=0)],
+        raw=True,
+        characters=[make_character(id='Enemy', attack=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
 
     player = board.p1
 
-    for char in player.valid_characters():
-        if not trigger:
-            assert char.attack == 1 and char.health == 1
+    char = player.characters[1]
+    assert char
+    assert char.id == "SBB_CHARACTER_CAT"
+
+    if not trigger:
+        assert char.attack == 1 and char.health == 1
+    else:
+        if mimic:
+            assert char.attack == 13 and char.health == 13, len(player.valid_characters())
         else:
-            if mimic:
-                assert char.attack == 13 and char.health == 13
-            else:
-                assert char.attack == 7 and char.health == 7
+            assert char.attack == 7 and char.health == 7, len(player.valid_characters())
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -1382,7 +1453,7 @@ def test_monkeys_paw_raw(trigger, mimic):
         ]
     )
 
-    enemy = make_player(
+    enemy = make_player(raw=True,
         characters=[make_character(id='Enemy', attack=0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1405,6 +1476,7 @@ def test_monkeys_paw_raw(trigger, mimic):
 @pytest.mark.parametrize('mimic', (True, False))
 def test_sword_of_fire_and_ice(mimic):
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1),
             make_character(position=5)
@@ -1417,6 +1489,7 @@ def test_sword_of_fire_and_ice(mimic):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1430,10 +1503,17 @@ def test_sword_of_fire_and_ice(mimic):
 
     buff = 12 if mimic else 6
 
-    assert front.health == 1 + buff
-    assert front.attack == 1
-    assert back.health == 1
-    assert back.attack == 1 + buff
+    fbuffs = [
+        r for r in front._action_history if r.reason == ActionReason.SWORD_OF_FIRE_AND_ICE
+    ]
+    bbuffs = [
+        r for r in back._action_history if r.reason == ActionReason.SWORD_OF_FIRE_AND_ICE
+    ]
+
+    assert sum([d.attack for d in fbuffs]) == 0
+    assert sum([d.health for d in fbuffs]) == buff
+    assert sum([d.attack for d in bbuffs]) == buff
+    assert sum([d.health for d in bbuffs]) == 0
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -1453,6 +1533,7 @@ def test_ninth_book_of_merlin(mimic, on):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=1 if on else 0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1484,6 +1565,7 @@ def test_ninth_book_of_merlin(mimic, on):
 @pytest.mark.parametrize('mimic', (True, False))
 def test_ivory_owl(mimic):
     player = make_player(
+        raw=True,
         characters=[
             make_character(),
         ],
@@ -1494,6 +1576,7 @@ def test_ivory_owl(mimic):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1510,8 +1593,9 @@ def test_ivory_owl(mimic):
 
 
 @pytest.mark.parametrize('mimic', (True, False))
-def test_spear_of_achilies(mimic):
+def test_spear_of_achilies_attack(mimic):
     player = make_player(
+        raw=True,
         characters=[
             make_character(),
         ],
@@ -1522,6 +1606,7 @@ def test_spear_of_achilies(mimic):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(id='Enemy', attack=0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1540,8 +1625,9 @@ def test_spear_of_achilies(mimic):
 @pytest.mark.parametrize('mimic', (True, False))
 def test_fairy_queens_wand(mimic):
     player = make_player(
+        raw=True,
         characters=[
-            make_character(),
+            make_character(id="SBB_CHARACTER_BLACKCAT"),
         ],
         treasures=[
             'SBB_TREASURE_FAIRYQUEENSWAND',
@@ -1550,7 +1636,8 @@ def test_fairy_queens_wand(mimic):
     )
 
     enemy = make_player(
-        characters=[make_character(id='Enemy', attack=0)]
+        raw=True,
+        characters=[make_character(id='Enemy', attack=1)]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
@@ -1569,8 +1656,9 @@ def test_fairy_queens_wand(mimic):
 @pytest.mark.parametrize('on', (True, False))
 def test_magic_sword_100(mimic, on):
     player = make_player(
+        raw=True,
         characters=[
-            make_character(position=1 if on else 5),
+            make_character(id="SBB_CHARACTER_BLACKCAT", position=1 if on else 5),
         ],
         treasures=[
             'SBB_TREASURE_MAGICSWORD+100',
@@ -1579,7 +1667,8 @@ def test_magic_sword_100(mimic, on):
     )
 
     enemy = make_player(
-        characters=[make_character(attack=0)],
+        raw=True,
+        characters=[make_character(attack=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
@@ -1596,6 +1685,7 @@ def test_magic_sword_100(mimic, on):
 @pytest.mark.parametrize('on', (True, False))
 def test_mirror_mirror(mimic, on):
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1 if on else 5),
         ],
@@ -1606,6 +1696,7 @@ def test_mirror_mirror(mimic, on):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character()],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1632,6 +1723,7 @@ def test_mirror_mirror(mimic, on):
 @pytest.mark.parametrize('mimic', (True, False))
 def test_round_table(mimic):
     player = make_player(
+        raw=True,
         characters=[
             make_character(attack=0),
         ],
@@ -1642,6 +1734,7 @@ def test_round_table(mimic):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1657,6 +1750,7 @@ def test_round_table(mimic):
 @pytest.mark.parametrize('mimic', (True, False))
 def test_round_table_echowood(mimic):
     player = make_player(
+        raw=True,
         characters=[
             make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", attack=11, health=1, position=1),
             make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", attack=1, health=1, position=2),
@@ -1692,6 +1786,7 @@ def test_round_table_echowood(mimic):
 @pytest.mark.parametrize('on', (True, False))
 def test_phoenix_feather(mimic, on):
     player = make_player(
+        raw=True,
         characters=[
             make_character(attack=5 if on else 1),
             make_character(attack=1 if on else 5, position=5)
@@ -1703,6 +1798,7 @@ def test_phoenix_feather(mimic, on):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character()],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1728,6 +1824,7 @@ def test_phoenix_feather(mimic, on):
 
 def test_phoenix_feather_attackorder():
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1, attack=0, health=100),
             make_character(position=5, attack=1, health=1),
@@ -1740,6 +1837,7 @@ def test_phoenix_feather_attackorder():
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=1, health=100)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
@@ -1752,8 +1850,9 @@ def test_phoenix_feather_attackorder():
 
 
 @pytest.mark.parametrize('mimic', (True, False))
-def test_spear_of_achilles(mimic):
+def test_spear_of_achilles2(mimic):
     player = make_player(
+        raw=True,
         characters=[
             make_character()
         ],
@@ -1764,6 +1863,7 @@ def test_spear_of_achilles(mimic):
     )
 
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=0)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})

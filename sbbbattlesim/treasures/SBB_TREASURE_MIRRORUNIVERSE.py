@@ -14,7 +14,7 @@ class MirrorMirrorOnDeath(OnDeath):
                 attack=1,
                 health=1,
                 golden=False,
-                tribes=self.manager.tribes,
+                tribes=self.manager._tribes,
                 cost=self.manager.cost,
                 # TODO does this copy the tribes of the card or of the class
             ) for _ in range(1 + self.source.mimic)
@@ -26,7 +26,7 @@ class MirrorMirrorOnDeath(OnDeath):
 class MirrorMirrorOnStart(OnStart):
     def handle(self, *args, **kwargs):
         for char in self.source.player.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4)):
-            char.register(MirrorMirrorOnDeath, source=self.source)
+            char.register(MirrorMirrorOnDeath, source=self.source, priority=999)
 
 
 class TreasureType(Treasure):

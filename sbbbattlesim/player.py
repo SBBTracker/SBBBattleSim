@@ -63,6 +63,8 @@ class Player(EventManager):
                 self.support_itr = 3
         logger.debug(f'{self.id} support_itr = {self.support_itr}')
 
+        self.auras = set()
+
         self.treasures = collections.defaultdict(list)
         for tres in treasures:
             treasure = treasure_registry[tres]
@@ -83,8 +85,6 @@ class Player(EventManager):
             char = character_registry[char_data['id']](player=self, **char_data)
             logger.debug(f'{self.id} registering character {char.pretty_print()}')
             self.__characters[char.position] = char
-
-        self.auras = set()
 
         for char in self.valid_characters():
             if char.aura:
