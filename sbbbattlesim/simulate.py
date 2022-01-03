@@ -74,7 +74,7 @@ def simulate_brawl(data: dict, k: int, raw: dict) -> List[BoardStats]:
     results = []
     for _ in range(k):
         board = Board(deepcopy(data))
-        board.fight(limit=-1)
+        board.fight(limit=100)
         results.append(calculate_stats(board))
 
     return results
