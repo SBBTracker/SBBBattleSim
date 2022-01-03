@@ -99,6 +99,9 @@ def attack(attack_position, attacker, defender, **kwargs):
     attack_character = attacker.characters.get(attack_position)
     defend_character = defender.characters.get(defend_position)
 
+    if attack_character is None or defend_character is None:
+        return
+
     attacker_damage = defend_character.generate_attack(target=attack_character, reason=ActionReason.DAMAGE_WHILE_DEFENDING, attacking=False)
     defender_damage = attack_character.generate_attack(target=defend_character, reason=ActionReason.DAMAGE_WHILE_ATTACKING, attacking=True)
 
