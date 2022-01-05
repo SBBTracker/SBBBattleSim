@@ -62,6 +62,7 @@ class ActionReason(enum.Enum):
     AON_BUFF = 144
     PRINCESS_WIGHT_BUFF = 145
     BOSSY_BUFF = 146
+    TWEEDLEDEE_BUFF = 147
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202
