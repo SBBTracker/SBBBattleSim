@@ -19,7 +19,7 @@ class FriendlySpiritLastBreath(OnDeath):
         char = random.choice(chars)
         Buff(reason=ActionReason.FRIENDLY_SPIRIT_BUFF, source=self.manager, targets=[char],
              attack=self.manager.attack * golden_multiplyer, health=self.manager.max_health * golden_multiplyer,
-             temp=False, stack=stack).execute()
+             stack=stack).execute()
 
 
 class CharacterType(Character):

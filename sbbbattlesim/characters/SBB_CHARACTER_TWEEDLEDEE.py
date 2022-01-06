@@ -10,22 +10,13 @@ class TweedleDeeLastBreath(OnDeath):
     last_breath = True
 
     def handle(self, stack, reason, *args, **kwargs):
-        attack, health = (self.manager.max_health * 2, self.manager.attack * 2) if self.manager.golden else (
-        self.manager.max_health, self.manager.attack)
-        tweedle_dum = [
-            character_registry['Tweedle Dum'](
-                self.manager.player, self.manager.position, 0, 1,
-                golden=False, keywords=[], tribes=['dwarf'], cost=1
-            )
-        ]
-
-        self.manager.player.summon(self.manager.position, tweedle_dum)
-        Buff(reason=ActionReason.TWEEDLEDEE_BUFF, source=self.manager, targets=tweedle_dum,
-             attack=attack, health=health,
-             temp=False, stack=stack).execute().resolve()
-        Buff(reason=ActionReason.TWEEDLEDEE_BUFF, source=self.manager, targets=tweedle_dum,
-             health=-1,
-             temp=False, stack=stack).execute().resolve()
+        attack, health = (self.manager.max_health * 2, self.manager.attack * 2) if self.manager.golden else (self.manager.max_health, self.manager.attack)
+        tweedle_dum = character_registry['SBB_CHARACTER_TWEEDLEDUM'].new(self.manager.player, self.manager.position, golden=False)
+        self.manager.player.summon(self.manager.position, [tweedle_dum])
+        Buff(reason=ActionReason.TWEEDLEDEE_BUFF, source=self.manager, attack=attack, health=health, stack=stack).execute(tweedle_dum)
+        # Buff(reason=ActionReason.TWEEDLEDEE_BUFF, source=self.manager, targets=tweedle_dum,
+        #      health=-1,
+        #      temp=False, stack=stack).execute().resolve()
 
 
 class CharacterType(Character):

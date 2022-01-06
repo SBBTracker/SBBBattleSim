@@ -224,7 +224,7 @@ class Action:
 
         if char.health <= 0:
             char.dead = True
-            logger.debug(f'{char.pretty_print()} marked for death')
+            logger.debug(f'{char.pretty_print()} marked for death in execution')
         elif self.damage > 0:
             char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
 
@@ -243,7 +243,7 @@ class Action:
 
             if char.health <= 0:
                 char.dead = True
-                logger.debug(f'{char.pretty_print()} marked for death')
+                logger.debug(f'{char.pretty_print()} marked for death B')
 
         if self.attack != 0:
             char._base_attack -= self.attack
@@ -285,7 +285,7 @@ class Action:
 
             if self.event:
                 self._register(char, *args, **kwargs)
-            if not setup:
+            if not setup and any(v != 0 for v in (self.attack, self.health, self.damage, self.heal)):
                 self._apply(char, *args, **kwargs)
 
             if callable(self._action):
