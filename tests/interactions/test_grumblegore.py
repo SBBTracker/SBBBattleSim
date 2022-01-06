@@ -17,13 +17,18 @@ def test_grumblegore(golden):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
 
+    char = board.p1.characters[1]
+    buffs = [
+        r for r in char._action_history
+    ]
 
-    if golden:
-        final_stats = (21, 1)
-    else:
-        final_stats = (11, 1)
+    healthbuffs = sum([b.health for b in buffs])
+    attackbuffs = sum([b.attack for b in buffs])
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == final_stats
+    assert attackbuffs == (20 if golden else 10)
+    assert healthbuffs == 0
+
+
 
 
 def test_grumblegore_ranged():

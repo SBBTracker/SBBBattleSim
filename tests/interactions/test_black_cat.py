@@ -7,11 +7,13 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 def test_black_cat_dying(golden):
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_BLACKCAT', position=6, golden=golden),
         ],
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=500, health=500)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})

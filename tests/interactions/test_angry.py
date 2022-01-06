@@ -8,6 +8,7 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 def test_angry(golden):
     player = make_player(
+        raw=True,
         characters=[
             make_character(
                 id="SBB_CHARACTER_DWARFMINER", position=1, attack=1, health=2,
@@ -17,6 +18,7 @@ def test_angry(golden):
         ],
     )
     enemy = make_player(
+        raw=True,
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''],
         characters=[
             make_character(position=1, attack=1, health=1),

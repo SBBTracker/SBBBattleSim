@@ -8,6 +8,7 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 def test_muerte_copycat_goodboy(golden):
     player = make_player(
+        raw=True,
         hero="SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5, golden=golden),
@@ -24,6 +25,7 @@ def test_muerte_copycat_goodboy(golden):
     '''
 
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(),
             make_character()
@@ -43,6 +45,7 @@ def test_muerte_copycat_goodboy(golden):
 @pytest.mark.parametrize('golden', (True, False))
 def test_muerte_single_goodboy(golden):
     player = make_player(
+        raw=True,
         hero="SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5, golden=golden),
@@ -51,6 +54,7 @@ def test_muerte_single_goodboy(golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(),
             make_character()
@@ -71,6 +75,7 @@ def test_muerte_single_goodboy(golden):
 def test_copycat_queenofhearts():
     '''Copycat should not trigger queenofhearts ondeath buff'''
     player = make_player(
+        raw=True,
         hero="SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5),
@@ -80,6 +85,7 @@ def test_copycat_queenofhearts():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character()
         ],

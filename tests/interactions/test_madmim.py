@@ -18,9 +18,14 @@ def test_madmim(golden):
     winner, loser = board.fight(limit=2)
 
 
-    if golden:
-        final_stats = (7, 1)
-    else:
-        final_stats = (4, 1)
+    char = board.p1.characters[1]
+    buffs = [
+        r for r in char._action_history
+    ]
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == final_stats
+    healthbuffs = sum([b.health for b in buffs])
+    attackbuffs = sum([b.attack for b in buffs])
+
+    assert attackbuffs == (6 if golden else 3)
+    assert healthbuffs == 0
+

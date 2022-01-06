@@ -35,6 +35,7 @@ class PlayerOnSetup(OnSetup):
 
 class Player(EventManager):
     def __init__(self, characters, id, board, treasures, hero, hand, spells, level=0, raw=False, *args, **kwargs):
+        raw=True
         super().__init__()
         # Board is board
         self.board = board
@@ -119,10 +120,11 @@ class Player(EventManager):
 
         # Handle case where tokens are spawning in the same position
         # With the max chain of 5 as implemented to stop trophy hunter + croc + grim soul shenanigans
-        if (self.characters.get(self._attack_slot) is self._last_attacker) or (self._attack_chain >= 5) or (
-                self._last_attacker is None):
+        attack_slot_char = self.characters.get(self._attack_slot)
+        if (self._attack_chain >= 5) or (self._last_attacker is None) or (attack_slot_char is not None and attack_slot_char.has_attacked):
             # Prevents the same character from attacking repeatedly
             if self._last_attacker is not None:
+                self._last_attacker.has_attacked = False
                 self._attack_slot += 1
             self._attack_chain = 0
         else:
@@ -144,6 +146,7 @@ class Player(EventManager):
         # If we have not found an attacker just return None
         if found_attacker:
             self._last_attacker = self.characters.get(self._attack_slot)
+            self._last_attacker.has_attacked = True
         else:
             return None
 

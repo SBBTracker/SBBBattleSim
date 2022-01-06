@@ -18,9 +18,15 @@ def test_green_knight(golden):
     winner, loser = board.fight(limit=2)
 
 
-    if golden:
-        final_stats = (1, 21)
-    else:
-        final_stats = (1, 11)
+    char = board.p1.characters[1]
+    buffs = [
+        r for r in char._action_history
+    ]
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == final_stats
+    healthbuffs = sum([b.health for b in buffs])
+    attackbuffs = sum([b.attack for b in buffs])
+
+    assert attackbuffs == 0
+    assert healthbuffs == (20 if golden else 10)
+
+

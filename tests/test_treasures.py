@@ -1827,8 +1827,8 @@ def test_phoenix_feather_attackorder():
         raw=True,
         characters=[
             make_character(position=1, attack=0, health=100),
-            make_character(position=5, attack=1, health=1),
-            make_character(position=6, attack=5, health=5)
+            make_character(position=6, attack=1, health=1),
+            make_character(position=5, attack=5, health=5)
         ],
         treasures=[
             'SBB_TREASURE_PHOENIXFEATHER',
@@ -1838,7 +1838,7 @@ def test_phoenix_feather_attackorder():
 
     enemy = make_player(
         raw=True,
-        characters=[make_character(attack=1, health=100)],
+        characters=[make_character(attack=5, health=100)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     player = board.p2
@@ -1846,7 +1846,7 @@ def test_phoenix_feather_attackorder():
 
     winner, loser = board.fight(limit=3)
 
-    assert player.characters[1].health == 98
+    assert player.characters[1].health == 90
 
 
 @pytest.mark.parametrize('mimic', (True, False))

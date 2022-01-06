@@ -9,6 +9,7 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('repeat', range(30))
 def test_donkey_surviving(golden, level, repeat):
     player = make_player(
+        raw=True,
         level=level,
         characters=[
             make_character(id='SBB_CHARACTER_TROJANDONKEY', attack=1, health=3, position=1, golden=golden),
@@ -19,7 +20,6 @@ def test_donkey_surviving(golden, level, repeat):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-
 
     assert board.p1.characters[2] is not None
     if golden:

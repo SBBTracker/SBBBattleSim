@@ -80,7 +80,8 @@ def test_pumpkin_summoning_cats(golden):
 
 
 @pytest.mark.parametrize('golden', (True, False))
-def test_pumpkin_summoning_two_cats(golden):
+@pytest.mark.parametrize('r', range(30))
+def test_pumpkin_summoning_two_cats(golden, r):
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_PUMPKINKING', position=5, tribes=[Tribe.EVIL], golden=golden),
@@ -93,6 +94,7 @@ def test_pumpkin_summoning_two_cats(golden):
         characters=[make_character(attack=500, health=500)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
+    board.p1.characters[5]._level = 0  # hacky fix
     pk = board.p1.characters[1]
     winner, loser = board.fight(limit=3)
 

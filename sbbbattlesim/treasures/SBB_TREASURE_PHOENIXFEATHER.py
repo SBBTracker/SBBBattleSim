@@ -15,6 +15,7 @@ class PhoenixFeatherOnDeath(OnDeath):
             if self.manager.attack >= max_attack:
                 self.manager._damage = 0
                 self.manager.dead = False
+                self.manager.has_attacked = False
                 self.manager.player.graveyard.remove(self.manager)
                 self.manager.player.summon(self.manager.position, [self.manager])
 

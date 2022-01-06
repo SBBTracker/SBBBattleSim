@@ -10,6 +10,7 @@ from sbbbattlesim.events import OnDeath
 @pytest.mark.parametrize('tribe', (Tribe.PRINCE, Tribe.PRINCESS, Tribe.DWARF))
 def test_courtwizard(tribe):
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1),
             make_character(position=2)
@@ -17,6 +18,7 @@ def test_courtwizard(tribe):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(attack=10, position=1, tribes=[tribe]),
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=5)
@@ -32,6 +34,7 @@ def test_courtwizard(tribe):
 def test_courtwizard_diesandproccs():
     '''If court wizard dies and procs, no error should thrown and it should not attack'''
     player = make_player(
+        raw=True,
         characters=[
             make_character(id="SBB_CHARACTER_WRETCHEDMUMMY", position=1),
             make_character(position=2)
@@ -39,6 +42,7 @@ def test_courtwizard_diesandproccs():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=1, tribes=[Tribe.PRINCE]),
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=5)
@@ -72,6 +76,7 @@ def test_courtwizard_noattack_eveniftoken():
     '''This test makes sure that no nonsense occurs like a peep spawning sheep in the court wizar's location
     and then court wizard;'s buff making the sheep attack because the wizard is already dead'''
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1),
             make_character(position=2, health=2)
@@ -79,6 +84,7 @@ def test_courtwizard_noattack_eveniftoken():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=1, tribes=[Tribe.PRINCE]),
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=6),
@@ -119,6 +125,7 @@ def test_courtwizard_noattack_eveniftoken():
 
 def test_courtwizard_ranged():
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_COURTWIZARD', position=6, attack=3, health=6),
         ],
@@ -127,6 +134,7 @@ def test_courtwizard_ranged():
         ]
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=1, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})

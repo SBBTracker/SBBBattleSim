@@ -2,7 +2,7 @@ import pytest
 
 from sbbbattlesim import Board
 from tests import make_character, make_player
-
+from sbbbattlesim.characters import registry as character_registry
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_riverwish(golden):
@@ -29,7 +29,7 @@ def test_riverwish(golden):
 def test_riverwish_cloakoftheassassin():
     player = make_player(
         characters=[
-            make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=5, attack=1, health=1),
+            make_character(spawn_char=character_registry['SBB_CHARACTER_RIVERWISHMERMAID'], position=5, attack=1, health=1),
             make_character(position=1, attack=1, health=1)
         ],
         treasures=[

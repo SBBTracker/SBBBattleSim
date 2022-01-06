@@ -5,27 +5,24 @@ from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
 
-
-def test_egg_feather():
+def test_slog():
     player = make_player(
         raw=True,
-        treasures=['''SBB_TREASURE_PHOENIXFEATHER'''],
         characters=[
             make_character(
-                id="SBB_CHARACTER_HUMPTYDUMPTY",position=1, attack=1, health=1,
-                golden=False
+                position=1, attack=1, health=101,
             ),
         ],
     )
     enemy = make_player(
         raw=True,
+        treasures=['''SBB_TREASURE_HERMES'BOOTS'''],
         characters=[
-            make_character(position=1, attack=1, health=1),
-         ],
+            make_character(position=1, attack=1, health=100),
+        ],
 
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    winner, loser = board.fight()
 
-
-    assert board.p1.characters[1] is None
+    assert board.p1.characters[1].health == 1

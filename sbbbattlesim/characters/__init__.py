@@ -52,6 +52,8 @@ class Character(EventManager):
 
         self._action_history = []
 
+        self.has_attacked = False
+
     @classmethod
     def new(cls, player, position, golden):
         return cls(

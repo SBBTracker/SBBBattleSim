@@ -8,12 +8,14 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('limit', (1, 2))
 def test_babybear_dying(golden, limit):
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_BABYBEAR', position=6,
                            attack=2 if golden else 1, health=2 if golden else 1, golden=golden),
         ],
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=500, health=500)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})

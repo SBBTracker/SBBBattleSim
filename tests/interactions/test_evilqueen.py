@@ -8,6 +8,7 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 def test_queenofhearts(golden):
     player = make_player(
+        raw=True,
         hero="SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_BLACKCAT", position=2, attack=1, health=1, tribes=[Tribe.EVIL]),
@@ -17,13 +18,13 @@ def test_queenofhearts(golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(health=3)
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=3)
-
 
     if golden:
         final_stats = (9, 9)
