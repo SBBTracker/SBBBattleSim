@@ -74,7 +74,7 @@ class Character(EventManager):
             attack=self._base_attack,
             health=self._base_health,
             tribes=self._tribes,
-            cost=self._level
+            cost=self._level,
         )
 
         for action in self._action_history:
