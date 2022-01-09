@@ -28,7 +28,6 @@ class SingingSwordsAura(Aura):
             # Custom Singing Sword Execute Logic
             # TODO If doubly implements multiplyers this needs to update
             logger.debug(f'Applying Singing Swords {char.pretty_print()}')
-            starting_multiplyer = char.attack_multiplier
 
             starting_attack = char.attack
             char.attack_multiplier = self.multiplier
@@ -36,9 +35,7 @@ class SingingSwordsAura(Aura):
                 char('OnBuff', reason=self.reason, source=self.source, attack=char.attack - starting_attack, health=0,
                      *args, **kwargs)
             else:
-                multiplyer_ratio = char.attack_multiplier / starting_multiplyer
-                logger.debug(f'Multiplyer ratio is {multiplyer_ratio}')
-                char._base_attack = int(char._base_attack/multiplyer_ratio)
+                char._base_attack = int(char._base_attack/char.attack_multiplier)
 
         self.state = ActionState.EXECUTED
         return self
