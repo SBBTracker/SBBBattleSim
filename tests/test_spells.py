@@ -368,6 +368,30 @@ def test_pigomorph():
     assert char.id == 'SBB_CHARACTER_PIG'
 
 
+@pytest.mark.parametrize('r', range(30))
+def test_pigomorph_repeated(r):
+    player = make_player(
+        raw=True,
+        spells=['''SBB_SPELL_PIGOMORPH''', '''SBB_SPELL_PIGOMORPH''']
+    )
+    enemy = make_player(
+        raw=True,
+        characters=[
+            make_character(),
+            make_character(position=2),
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=-1)
+
+    char = board.p2.characters[1]
+    assert char
+    assert char.id == 'SBB_CHARACTER_PIG'
+
+    char = board.p2.characters[2]
+    assert char
+    assert char.id == 'SBB_CHARACTER_PIG'
+
 def test_cats_call():
     player = make_player(
         raw=True,

@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 
 from sbbbattlesim import Board
@@ -19,6 +21,7 @@ def test_valid_character(char):
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('char', character_registry.filter())
 def test_character(char, attack, golden):
+    logger = logging.getLogger(__name__)
     '''Run a combat, results dont matter. This will either crash or pass'''
     char = make_character(id=char.id, golden=golden)
     generic_char = make_character(position=7, tribes=[tribe.value for tribe in Tribe])
@@ -34,7 +37,11 @@ def test_character(char, attack, golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if not attack else []
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=5)
+    try:
+        winner, loser = board.fight(limit=5)
+    except:
+        logger.error(f"{char['id']}")
+        raise
 
 
 SUPPORT_EXCLUSION = (

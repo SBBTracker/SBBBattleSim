@@ -102,8 +102,8 @@ def attack(attack_position, attacker, defender, **kwargs):
     if attack_character is None or defend_character is None:
         return
 
-    attacker_damage = defend_character.generate_attack(target=attack_character, reason=ActionReason.DAMAGE_WHILE_DEFENDING, attacking=False)
-    defender_damage = attack_character.generate_attack(target=defend_character, reason=ActionReason.DAMAGE_WHILE_ATTACKING, attacking=True)
+    attacker_damage = defend_character.generate_attack(target=attack_character, source=defend_character, reason=ActionReason.DAMAGE_WHILE_DEFENDING, attacking=False)
+    defender_damage = attack_character.generate_attack(target=defend_character, source=attack_character, reason=ActionReason.DAMAGE_WHILE_ATTACKING, attacking=True)
 
     if not attack_character.ranged:
         attacker_damage.execute()

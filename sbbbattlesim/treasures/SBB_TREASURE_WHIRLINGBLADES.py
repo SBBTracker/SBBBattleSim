@@ -7,16 +7,6 @@ from sbbbattlesim.treasures import Treasure
 logger = logging.getLogger(__name__)
 
 
-
-# class SingingSwordsOnBuff(OnBuff):
-#     def handle(self, stack, attack, health, reason=None, *args, **kwargs):
-#         if reason == ActionReason.SINGINGSWORD_BUFF or self.manager.position not in (1, 2, 3, 4):
-#             return
-#
-#         attack *= 2 if self.source.mimic else 1
-#         Buff(reason=reason, source=self.source, attack=attack).execute(self.manager)
-
-
 class SingingSwordsAura(Aura):
     def __init__(self, *args, **kwargs):
         kwargs = dict(reason=ActionReason.SINGINGSWORD_BUFF) | kwargs

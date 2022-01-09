@@ -13,9 +13,9 @@ class CharacterType(Character):
     _level = 6
     _tribes = {Tribe.EVIL, Tribe.DRAGON}
 
-    def generate_attack(self, target, reason, attacking=False):
+    def generate_attack(self, source, target, reason, attacking=False):
         if not attacking:
-            return super().generate_attack(target=target, reason=reason, attacking=attacking)
+            return super().generate_attack(target=target, source=source, reason=reason, attacking=attacking)
 
         behind_targets = utils.get_behind_targets(target.position)
         targets = [target, *[char for char in self.player.opponent.valid_characters(

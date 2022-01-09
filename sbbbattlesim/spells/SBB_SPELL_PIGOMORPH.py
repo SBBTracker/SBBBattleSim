@@ -12,7 +12,7 @@ class SpellType(Spell):
     _level = 6
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
-        valid_targets = self.player.opponent.valid_characters()
+        valid_targets = self.player.opponent.valid_characters(lambda char: char.id not in [PIGOMORPH_ID])
         if valid_targets:
             target = random.choice(valid_targets)
             pig = character_registry[PIGOMORPH_ID](

@@ -344,8 +344,12 @@ class Action:
                 dead_character_dict[char.player].append(char)
         self._char_buffer = set()
 
-        for player, dead_characters in dead_character_dict.items():
-            player.despawn(*sorted(dead_characters, key=lambda _char: _char.position, reverse=True), reason=self.reason)
+        if dead_character_dict:
+            char_ls = [self.source.player, self.source.player.opponent]
+            for player in char_ls:
+                if player in dead_character_dict:
+                    dead_characters = dead_character_dict[player]
+                    player.despawn(*sorted(dead_characters, key=lambda _char: _char.position, reverse=True), reason=self.reason)
 
         self.state = ActionState.RESOLVED
 
