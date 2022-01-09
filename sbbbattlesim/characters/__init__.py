@@ -30,7 +30,7 @@ class Character(EventManager):
 
     deactivated = False
 
-    def __init__(self, player, position, attack, health, golden, tribes, cost, *args, **kwargs):
+    def __init__(self, player, position, attack, health, golden, tribes, cost, attack_multiplier=1, *args, **kwargs):
         super().__init__()
         self.player = player
 
@@ -45,7 +45,7 @@ class Character(EventManager):
         self.slay_counter = 0
         self.dead = False
         self.invincible = False
-        self.attack_multiplier = 1
+        self.attack_multiplier = attack_multiplier
 
         self.support = None
         self.aura = None
@@ -74,7 +74,8 @@ class Character(EventManager):
             attack=self._base_attack,
             health=self._base_health,
             tribes=self._tribes,
-            cost=self._level
+            cost=self._level,
+            attack_multiplier=self.attack_multiplier
         )
 
         for action in self._action_history:
