@@ -345,25 +345,7 @@ class Action:
         self._char_buffer = set()
 
         for player, dead_characters in dead_character_dict.items():
-            player.despawn(*dead_characters, reason=self.reason)
-
-        # characters = self._char_buffer
-        # self._char_buffer = set()
-        #
-        # dead_characters = [char for char in self._char_buffer if char.dead and char not in char.player.graveyard]
-        #
-        # for char in characters:
-        #     if char in char.player.graveyard:
-        #         logger.debug(f'{char.pretty_print()} already in graveyard')
-        #         continue
-        #
-        #     if char.dead:
-        #         dead_characters.append(char)
-        #         char.player.despawn(char)
-        #
-        # logger.info(f'These are the dead characters: {dead_characters}')
-        # for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
-        #     char('OnDeath', reason=self.reason)
+            player.despawn(*sorted(dead_characters, key=lambda _char: _char.position, reverse=True), reason=self.reason)
 
         self.state = ActionState.RESOLVED
 

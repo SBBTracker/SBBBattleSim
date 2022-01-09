@@ -1196,7 +1196,8 @@ def test_sky_castle(mimic, on):
 
 
 @pytest.mark.parametrize('mimic', (True, False))
-def test_summoning_portal(mimic):
+@pytest.mark.parametrize('r', range(30))
+def test_summoning_portal(mimic, r):
     player = make_player(
         raw=True,
         characters=[

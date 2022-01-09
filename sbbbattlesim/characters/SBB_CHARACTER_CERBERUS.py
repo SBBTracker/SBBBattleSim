@@ -12,7 +12,7 @@ class GrimSoulOnDeath(OnDeath):
     last_breath = True
 
     def handle(self, stack, reason, *args, **kwargs):
-        targets = self.manager.player.valid_characters(lambda char: char.slay and char.id != 'SBB_CHARACTER_CERBERUS')
+        targets = self.manager.player.valid_characters(lambda char: char.slay and char.id not in ['SBB_CHARACTER_CERBERUS', 'SBB_CHARACTER_LOBO'])
         if targets:
             target = random.choice(targets)
             itr = 2 if self.manager.golden else 1
