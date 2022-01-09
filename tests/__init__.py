@@ -78,8 +78,6 @@ class TestEvent(SSBBSEvent):
         self.triggered = True
 
 
-
-
 class SpawnOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
         spawn = self.source.spawn_char.new(player=self.source.player, golden=False, position=self.source.spawn_pos)

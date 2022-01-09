@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 
 from sbbbattlesim import Board
@@ -6,6 +8,10 @@ from sbbbattlesim.utils import Tribe
 from sbbbattlesim.action import ActionReason
 from sbbbattlesim.characters import registry as character_registry
 from tests import make_character, make_player
+
+
+logger = logging.getLogger(__name__)
+
 
 @pytest.mark.parametrize('is_real', (True, False))
 def test_charon(is_real):
@@ -60,6 +66,8 @@ def test_evella(on, evil_back):
 
     player = board.p1
 
+    logger.debug(player.pretty_print())
+
     buffed_animal = player.characters.get(5)
     buffed_cat = player.characters.get(1)
 
@@ -107,7 +115,7 @@ def test_sad_dracula(on):
     )
     enemy = make_player(
         raw=True,
-        characters=[make_character(id='GENERIC', position=1)],
+        characters=[make_character(id='GENERIC', position=2)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()

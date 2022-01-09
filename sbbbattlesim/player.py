@@ -181,22 +181,34 @@ class Player(EventManager):
 
         return character
 
-    def despawn(self, character):
-        logger.info(f'Despawning {character.pretty_print()}')
-        position = character.position
-        self.graveyard.append(character)
-        self.__characters[position] = None
-        logger.info(f'{character.pretty_print()} died')
+    def despawn(self, *characters, **kwargs):
+        for char in characters:
+            logger.info(f'Despawning {char.pretty_print()}')
+            position = char.position
+            self.graveyard.append(char)
+            self.__characters[position] = None
+            logger.info(f'{char.pretty_print()} died')
+            char('Despawn', **kwargs)
 
-        if character.support:
-            character.support.roll_back()
+        for char in characters:
+            char('OnDeath', **kwargs)
 
-        if character.aura:
-            character.aura.roll_back()
+        for char in characters:
+            if char.support:
+                char.support.roll_back()
 
-        character('OnDespawn')
+            if char.aura:
+                logger.debug(f'{self.id} Auras for spawning is {self.auras}')
 
-        return character
+                try:
+                    self.auras -= set(char.aura)
+                except TypeError:
+                    try:
+                        self.auras.remove(char.aura)
+                    except KeyError:
+                        pass
+
+                char.aura.roll_back()
 
     @property
     def characters(self):

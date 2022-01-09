@@ -104,7 +104,7 @@ def test_queenofhearts_dies():
     winner, loser = board.fight(limit=1)
 
     assert qoh.attack == 3
-    assert qoh.health == 6
+    assert qoh._base_health == 6
 
 
 def test_support_dies():

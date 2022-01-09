@@ -71,6 +71,7 @@ class Tribe(enum.Enum):
     GOOD = 'good'
     EVIL = 'evil'
 
+
 @cache
 def get_support_targets(position, horn=False):
     if horn:
@@ -81,6 +82,7 @@ def get_support_targets(position, horn=False):
         7: (3, 4)
     }.get(position, ())
 
+
 @cache
 def get_behind_targets(position):
     return {
@@ -89,6 +91,7 @@ def get_behind_targets(position):
         3: (6, 7),
         4: (7,)
     }.get(position, ())
+
 
 @cache
 def get_spawn_positions(position):

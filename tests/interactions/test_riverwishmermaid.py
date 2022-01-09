@@ -1,7 +1,7 @@
 import pytest
 
 from sbbbattlesim import Board
-from tests import make_character, make_player
+from tests import make_character, make_player, SpawnOnStart
 from sbbbattlesim.characters import registry as character_registry
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -21,7 +21,6 @@ def test_riverwish(golden):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
 
-
     final_stats = (3, 3) if golden else (2, 2)
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == final_stats
 
@@ -29,7 +28,8 @@ def test_riverwish(golden):
 def test_riverwish_cloakoftheassassin():
     player = make_player(
         characters=[
-            make_character(spawn_char=character_registry['SBB_CHARACTER_RIVERWISHMERMAID'], position=5, attack=1, health=1),
+            make_character(id='SPAWN_TEST', spawn_char=character_registry['SBB_CHARACTER_RIVERWISHMERMAID'],
+                           spawn_pos=5, position=7, attack=1, health=1),
             make_character(position=1, attack=1, health=1)
         ],
         treasures=[

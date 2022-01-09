@@ -311,10 +311,21 @@ class Action:
 
         return self
 
-    def roll_back(self):
-        logger.debug(f'{self} rolling back >>> {[char.pretty_print() for char in self._char_buffer]}')
-        for char in self._char_buffer:
-            self._clear(char)
+    def roll_back(self, *characters, **kwargs):
+        char_iter = characters or self._char_buffer.copy()
+        logger.debug(f'{self} rolling back >>> {[char.pretty_print() for char in char_iter]}')
+        for char in char_iter:
+            if char not in self._char_buffer:
+                continue
+
+            args = self.args
+            kwargs = self.kwargs | kwargs
+
+            if self.event:
+                self._unregister(char, *args, **kwargs)
+            if any(v != 0 for v in (self.attack, self.health, self.damage, self.heal)):
+                self._clear(char, *args, **kwargs)
+
         self.resolve()
         self.state = ActionState.ROLLED_BACK
 
@@ -327,23 +338,32 @@ class Action:
 
         logger.debug(f'RESOLVING DAMAGE FOR {self}')
 
-        characters = self._char_buffer
+        dead_character_dict = collections.defaultdict(list)
+        for char in self._char_buffer:
+            if char.dead and char not in char.player.graveyard:
+                dead_character_dict[char.player].append(char)
         self._char_buffer = set()
 
-        dead_characters = []
+        for player, dead_characters in dead_character_dict.items():
+            player.despawn(*dead_characters, reason=self.reason)
 
-        for char in characters:
-            if char in char.player.graveyard:
-                logger.debug(f'{char.pretty_print()} already in graveyard')
-                continue
-
-            if char.dead:
-                dead_characters.append(char)
-                char.player.despawn(char)
-
-        logger.info(f'These are the dead characters: {dead_characters}')
-        for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
-            char('OnDeath', reason=self.reason)
+        # characters = self._char_buffer
+        # self._char_buffer = set()
+        #
+        # dead_characters = [char for char in self._char_buffer if char.dead and char not in char.player.graveyard]
+        #
+        # for char in characters:
+        #     if char in char.player.graveyard:
+        #         logger.debug(f'{char.pretty_print()} already in graveyard')
+        #         continue
+        #
+        #     if char.dead:
+        #         dead_characters.append(char)
+        #         char.player.despawn(char)
+        #
+        # logger.info(f'These are the dead characters: {dead_characters}')
+        # for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
+        #     char('OnDeath', reason=self.reason)
 
         self.state = ActionState.RESOLVED
 
