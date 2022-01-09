@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class DoublyOnBuff(OnBuff):
     def handle(self, reason, stack, attack, health, *args, **kwargs):
-        if reason == ActionReason.DOUBLEY_BUFF:
+        if reason in [ActionReason.DOUBLEY_BUFF, ActionReason.SINGINGSWORD_BUFF]:
             return
         golden_multiplier = 2 if self.source.golden else 1
         Buff(reason=ActionReason.DOUBLEY_BUFF, source=self.source, targets=[self.source],

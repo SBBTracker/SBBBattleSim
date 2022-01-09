@@ -9,12 +9,13 @@ logger = logging.getLogger(__name__)
 
 class SingingSwordsAura(Aura):
     def __init__(self, *args, **kwargs):
-        kwargs = dict(reason=ActionReason.SINGINGSWORD_BUFF) | kwargs
+        kwargs =  kwargs | dict(reason=ActionReason.SINGINGSWORD_BUFF)
         super().__init__(*args, **kwargs)
         self.multiplier = 3 if self.source.mimic else 2
 
     def execute(self, *characters, **kwargs):
         setup = kwargs.get('setup', False)
+        from_copy = kwargs.get('from_copy', False)
         logger.debug(f'{self} execute ({characters}, {kwargs})')
         for char in characters or self.targets:
             if not self._lambda(char) or char in self._char_buffer:
@@ -31,7 +32,7 @@ class SingingSwordsAura(Aura):
 
             starting_attack = char.attack
             char.attack_multiplier = self.multiplier
-            if not setup:
+            if not setup or from_copy:
                 char('OnBuff', reason=self.reason, source=self.source, attack=char.attack - starting_attack, health=0,
                      *args, **kwargs)
             else:

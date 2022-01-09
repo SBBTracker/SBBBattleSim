@@ -78,7 +78,7 @@ class Character(EventManager):
         )
 
         for action in self._action_history:
-            action.execute(new, setup=True)
+            action.execute(new, setup=True, from_copy=True)
 
         return new
 
