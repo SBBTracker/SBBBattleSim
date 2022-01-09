@@ -91,3 +91,24 @@ def test_riverwish_cloakoftheassassin_doubledip2():
     winner, loser = board.fight(limit=0)
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (4, 4)
+
+
+def test_riverwish_cloakoftheassassin_dies():
+    player = make_player(
+        characters=[
+            make_character(id='SPAWN_TEST', spawn_char=character_registry['SBB_CHARACTER_RIVERWISHMERMAID'],
+                           spawn_pos=5, position=5, attack=1, health=1),
+            make_character(position=1, attack=1, health=1)
+        ],
+        treasures=[
+            '''SBB_TREASURE_CLOAKOFTHEASSASSIN'''
+        ]
+    )
+    enemy = make_player(
+        characters=[make_character(id='SBB_CHARACTER_BABYDRAGON', attack=30, health=30)],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+
+    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (1, 1), [i.pretty_print() for i in board.p1.valid_characters()]
