@@ -194,6 +194,7 @@ class Player(EventManager):
             char('OnDeath', **kwargs)
 
         for char in characters:
+            #TODO If events need to be deregistered when they die it should be in here after all events are called.
             if char.support:
                 char.support.roll_back()
 
