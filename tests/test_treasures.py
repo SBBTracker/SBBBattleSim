@@ -1720,6 +1720,34 @@ def test_mirror_mirror(mimic, on):
         assert char is None
 
 
+def test_mirror_mirror_evil_goddboy():
+    player = make_player(
+        raw=True,
+        characters=[
+            make_character(id="SBB_CHARACTER_GOODBOY", tribes=['evil'], position=1),
+        ],
+        treasures=[
+            'SBB_TREASURE_MIRRORUNIVERSE',
+        ]
+    )
+
+    enemy = make_player(
+        raw=True,
+        characters=[make_character()],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    player = board.p1
+    char = player.characters[1]
+
+    assert char
+    assert char.tribes == {Tribe.GOOD, Tribe.ANIMAL}
+    assert char.attack == 2
+    assert char.health == 2
+    assert char.id == "SBB_CHARACTER_GOODBOY"
+
+
 @pytest.mark.parametrize('mimic', (True, False))
 def test_round_table(mimic):
     player = make_player(
