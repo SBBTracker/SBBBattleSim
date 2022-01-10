@@ -155,3 +155,30 @@ def test_aura_dies():
     final_stats = (2, 2)
     assert board.p1.characters[6] is None
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == final_stats
+
+
+def test_supported_unit_dies_and_comes_back():
+    player = make_player(
+        raw=True,
+        characters=[
+            make_character(id='SBB_CHARACTER_BABYROOT', position=6, attack=3, health=6),
+            make_character(id='SBB_CHARACTER_ECHOWOODSHAMBLER', position=7, attack=1, health=1),
+            make_character(attack=100, health=4, position=2),
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS''',
+            '''SBB_TREASURE_PHOENIXFEATHER'''
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(attack=100, health=1),
+        ],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+
+    assert board.p1.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
+    assert board.p1.characters[2] is not None
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (100, 4)
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 4)

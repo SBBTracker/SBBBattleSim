@@ -11,7 +11,6 @@ class DarkwoodCreeperOnDamage(OnDamagedAndSurvived):
             source=self.source,
             targets=[self.manager],
             attack=2 if self.source.golden else 1,
-            temp=False,
             stack=stack
         ).resolve()
 

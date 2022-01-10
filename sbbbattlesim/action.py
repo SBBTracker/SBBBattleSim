@@ -5,6 +5,7 @@ import typing
 from dataclasses import dataclass
 from enum import Enum
 from typing import List
+import inspect
 
 from sbbbattlesim.events import SSBBSEvent
 
@@ -167,6 +168,7 @@ class Action:
             heal: int = 0,
             event: (SSBBSEvent, None) = None,
             _action=None,
+            temp: bool = False,
             *args,
             **kwargs
     ):
@@ -177,6 +179,7 @@ class Action:
         self._action = _action
         self.priority = priority
         self.multiplier = multiplier
+        self.temp = temp
 
         self.attack = attack * self.multiplier
         self.health = health * self.multiplier
@@ -192,7 +195,7 @@ class Action:
         self._char_buffer = set()
         self._event_buffer = collections.defaultdict(list)
 
-        logger.debug(f'New {self} atk={self.attack} hp={self.health} dmg={self.damage} heal={self.heal}')
+        logger.debug(f'New {self} atk={self.attack} hp={self.health} dmg={self.damage} heal={self.heal} temp={self.temp} from_event_aura={self.event is not None}')
 
     def __str__(self):
         return self.__repr__()
@@ -317,6 +320,7 @@ class Action:
         for char in char_iter:
             if char not in self._char_buffer:
                 continue
+            self._char_buffer.remove(char)
 
             args = self.args
             kwargs = self.kwargs | kwargs
@@ -326,13 +330,12 @@ class Action:
             if any(v != 0 for v in (self.attack, self.health, self.damage, self.heal)):
                 self._clear(char, *args, **kwargs)
 
-        self.resolve()
         self.state = ActionState.ROLLED_BACK
 
     def resolve(self):
-        if self.state == ActionState.CREATED:
+        if self.state in (ActionState.CREATED, ActionState.ROLLED_BACK):
             self.execute()
-        elif self.state in (ActionState.RESOLVED, ActionState.ROLLED_BACK):
+        elif self.state in (ActionState.RESOLVED,):
             logger.debug(f'{self} ALREADY RESOLVED')
             return
 
@@ -351,24 +354,28 @@ class Action:
                     dead_characters = dead_character_dict[player]
                     player.despawn(*sorted(dead_characters, key=lambda _char: _char.position, reverse=True), reason=self.reason)
 
+
         self.state = ActionState.RESOLVED
 
 
 class Damage(Action):
-    pass
+    def __init__(self, temp=False, *args, **kwargs):
+        super().__init__(temp=False, *args, **kwargs)
 
 
 class Heal(Action):
-    pass
+    def __init__(self, temp=False, *args, **kwargs):
+        super().__init__(temp=False, *args, **kwargs)
 
 
 class Buff(Action):
-    pass
+    def __init__(self, temp=False, *args, **kwargs):
+        super().__init__(temp=temp, *args, **kwargs)
 
 
 class Support(Buff):
     def __init__(self, source=None, attack: int = 0, health: int = 0, *args, **kwargs):
-        kwargs = dict(reason=ActionReason.SUPPORT_BUFF) | kwargs
+        kwargs = dict(reason=ActionReason.SUPPORT_BUFF, temp=True) | kwargs
         multiplier = source.player.support_itr
 
         if source.player.hero.id == 'SBB_HERO_GANDALF':
@@ -380,5 +387,7 @@ class Support(Buff):
 
 class Aura(Buff):
     def __init__(self, *args, **kwargs):
-        kwargs = dict(reason=ActionReason.AURA_BUFF) | kwargs
+        kwargs = dict(reason=ActionReason.AURA_BUFF, temp=True) | kwargs
+
         super().__init__(*args, **kwargs)
+

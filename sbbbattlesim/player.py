@@ -2,14 +2,16 @@ import collections
 import logging
 import random
 from collections import OrderedDict, defaultdict
+from sbbbattlesim.treasures.SBB_TREASURE_PHOENIXFEATHER import PhoenixFeatherOnDeath
 from turtle import position
 
 from sbbbattlesim import utils
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.events import EventManager, OnStart, OnSetup
+from sbbbattlesim.events import EventManager, OnStart, OnSetup, OnDeath, OnLastBreath
 from sbbbattlesim.heroes import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
+from sbbbattlesim.action import ActionState
 
 logger = logging.getLogger(__name__)
 
@@ -154,6 +156,12 @@ class Player(EventManager):
 
     def spawn(self, character, position):
         logger.info(f'Spawning {character.pretty_print()} in {position} position')
+
+        # all my spawning homies hate temporary events
+        for action in character._action_history:
+            if action.temp:
+                action.roll_back(character)
+
         self.__characters[position] = character
         character.position = position
 
@@ -194,7 +202,7 @@ class Player(EventManager):
             char('OnDeath', **kwargs)
 
         for char in characters:
-            #TODO If events need to be deregistered when they die it should be in here after all events are called.
+
             if char.support:
                 char.support.roll_back()
 

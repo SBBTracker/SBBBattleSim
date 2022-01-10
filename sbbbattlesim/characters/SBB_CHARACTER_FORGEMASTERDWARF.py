@@ -15,7 +15,7 @@ class LordyBuffOnStart(OnStart):
         )
         stat_change = len(dwarfes) * (4 if self.source.golden else 2)
         Buff(reason=ActionReason.LORDY_BUFF, source=self.source, targets=dwarfes,
-             attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
+             attack=stat_change, health=stat_change, stack=stack).resolve()
 
 
 class CharacterType(Character):
