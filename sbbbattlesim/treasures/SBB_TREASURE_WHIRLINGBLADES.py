@@ -32,17 +32,33 @@ class SingingSwordsAura(Aura):
 
             starting_attack = char.attack
             char.attack_multiplier = self.multiplier
-            if not setup or from_copy:
+            if not setup:
                 char('OnBuff', reason=self.reason, source=self.source, attack=char.attack - starting_attack, health=0,
                      *args, **kwargs)
-            else:
+            elif not from_copy:
                 char._base_attack = int(char._base_attack/char.attack_multiplier)
 
         self.state = ActionState.EXECUTED
         return self
 
     def _clear(self, char, *args, **kwargs):
-        char._attack_multiplier = 1
+        char.attack_multiplier = 1
+
+    def roll_back(self, *characters, **kwargs):
+        char_iter = characters or self._char_buffer.copy()
+        logger.debug(f'{self} rolling back >>> {[char.pretty_print() for char in char_iter]}')
+        for char in char_iter:
+            if char not in self._char_buffer:
+                continue
+            self._char_buffer.remove(char)
+
+            args = self.args
+            kwargs = self.kwargs | kwargs
+
+            self._clear(char, *args, **kwargs)
+            logger.debug(f'After rolling back: {char.pretty_print()}')
+
+        self.state = ActionState.ROLLED_BACK
 
 
 class TreasureType(Treasure):

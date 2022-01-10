@@ -199,6 +199,40 @@ def test_echowood_slay_vainpire(survives, phoenix_feather):
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == ((2, 2) if (survives or phoenix_feather) else (1, 1))
 
 
+@pytest.mark.parametrize('last_treasure', ("SBB_TREASURE_REDUPLICATOR", "SBB_TREASURE_TREASURECHEST", ''))
+def test_echowood_phoenix_singingswords(last_treasure):
+    player = make_player(
+        raw=True,
+        characters=[
+            make_character(position=2, attack=6, health=6),
+            make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=7, attack=2, health=1),
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS''',
+            "SBB_TREASURE_PHOENIXFEATHER",
+            "SBB_TREASURE_WHIRLINGBLADES",
+            last_treasure
+        ]
+    )
+    enemy = make_player(
+        raw=True,
+        characters=[make_character(attack=6, health=6)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+
+    echowood = board.p1.characters[7]
+    assert echowood
+    assert echowood.health == 1
+    if last_treasure == 'SBB_TREASURE_REDUPLICATOR':
+        assert echowood.attack == 8, [i.pretty_print() for i in board.p1.valid_characters()]
+    elif last_treasure == "SBB_TREASURE_TREASURECHEST":
+        assert echowood.attack == 10
+    else:
+        assert echowood.attack == 5
+
+
+
 @pytest.mark.parametrize('survives', (True, False))
 def test_echowood_slay_lancelot(survives):
     player = make_player(
