@@ -255,13 +255,8 @@ class Player(EventManager):
 
     def transform(self, pos, character, *args, **kwargs):
         if self.__characters[pos] is not None:
+            character.has_attacked = self.__characters[pos].has_attacked
             self.spawn(character, pos)
-
-            # TODO wrap this into a nice helper function to be used in the attack slot getter as well
-            if self._attack_slot == pos:
-                self._attack_slot += 1
-                if self._attack_slot > 7:
-                    self.attack_slot = 1
 
     def valid_characters(self, _lambda=lambda char: True):
         """
