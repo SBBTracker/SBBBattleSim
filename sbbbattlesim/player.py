@@ -190,16 +190,19 @@ class Player(EventManager):
         return character
 
     def despawn(self, *characters, **kwargs):
-        for char in characters:
-            logger.info(f'Despawning {char.pretty_print()}')
-            position = char.position
-            self.graveyard.append(char)
-            self.__characters[position] = None
-            logger.info(f'{char.pretty_print()} died')
-            char('Despawn', **kwargs)
+        kill = kwargs.get('kill', True)
 
-        for char in characters:
-            char('OnDeath', **kwargs)
+        if kill:
+            for char in characters:
+                logger.info(f'Despawning {char.pretty_print()}')
+                position = char.position
+                self.graveyard.append(char)
+                self.__characters[position] = None
+                logger.info(f'{char.pretty_print()} died')
+                char('Despawn', **kwargs)
+
+            for char in characters:
+                char('OnDeath', **kwargs)
 
         for char in characters:
 
@@ -254,8 +257,10 @@ class Player(EventManager):
         return summoned_characters
 
     def transform(self, pos, character, *args, **kwargs):
-        if self.__characters[pos] is not None:
-            character.has_attacked = self.__characters[pos].has_attacked
+        char_to_transform = self.__characters[pos]
+        if char_to_transform is not None:
+            character.has_attacked = char_to_transform.has_attacked
+            self.despawn(char_to_transform, kill=False)
             self.spawn(character, pos)
 
     def valid_characters(self, _lambda=lambda char: True):
