@@ -6,7 +6,7 @@ import traceback
 config = {
     'logging': {
         'logging_conf': os.getenv('LOGGING_CONF', 'logging.ini'),
-        'logging_level': os.getenv('LOGGING_LEVEL', 'INFO'),
+        'logging_level': os.getenv('LOGGING_LEVEL', 'DEBUG'),
         'pretty_print': os.getenv('LOG_PRETTY_PRINT', False)
     }
 }

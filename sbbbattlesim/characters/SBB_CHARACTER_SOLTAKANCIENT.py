@@ -42,7 +42,6 @@ class SoltakAuraBuff(Aura):
         self.state = ActionState.ROLLED_BACK
 
 
-
 class CharacterType(Character):
     display_name = 'Soltak Ancient'
     aura = True

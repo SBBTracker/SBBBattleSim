@@ -60,7 +60,7 @@ def from_state(state: dict):
             'raw': True
         }
         if hero == "SBB_HERO_KINGLION":
-            sim_data[player]['mihri_buff'] = counter
+            sim_data[player]['mihri_buff'] = int(counter)
 
     assert isinstance(sim_data, dict)
 
