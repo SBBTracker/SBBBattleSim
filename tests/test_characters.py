@@ -238,7 +238,8 @@ def test_doombreath():
     player = make_player(
         raw=True,
         characters=[
-            make_character(id='SBB_CHARACTER_DOOMBREATH')
+            make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=5),
+            make_character(id='SBB_CHARACTER_DOOMBREATH', health=2)
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
@@ -252,7 +253,7 @@ def test_doombreath():
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    winner, loser = board.fight(limit=1)
 
     player = board.p2
 
@@ -260,3 +261,14 @@ def test_doombreath():
         assert player.characters[i] is None
 
     assert player.characters[7] is not None
+
+    doombreath = board.p1.characters[1]
+    riverwish = board.p1.characters[5]
+    assert doombreath.attack == 4
+    assert doombreath.health == 4
+
+    buffs = [r for r in doombreath._action_history if r.source is riverwish and r.event is None]
+
+    assert len(buffs) == 3
+    assert sum([b.attack for b in buffs]) == 3
+    assert sum([b.health for b in buffs]) == 3

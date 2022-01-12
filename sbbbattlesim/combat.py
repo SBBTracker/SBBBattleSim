@@ -113,8 +113,9 @@ def attack(attack_position, attacker, defender, **kwargs):
         attacker_damage.resolve()
 
     # SLAY TRIGGER
-    if defend_character.dead:
-        attack_character('OnAttackAndKill', killed_character=defend_character, **kwargs)
+    for _dc in defender_damage.targets:
+        if _dc.dead:
+            attack_character('OnAttackAndKill', killed_character=_dc, **kwargs)
 
     # for copycat to work properly
     attack_character('OnPostAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
