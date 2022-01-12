@@ -23,8 +23,7 @@ def test_grimsoul(golden_grimsoul, golden_woggle):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     lvl=3
     if golden_woggle:

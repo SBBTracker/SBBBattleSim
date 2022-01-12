@@ -1,11 +1,10 @@
-from sbbbattlesim.action import Buff
-from sbbbattlesim.spells import TargetedSpell
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.action import Buff, ActionReason
+from sbbbattlesim.spells import Spell
 
 
-class SpellType(TargetedSpell):
+class SpellType(Spell):
     display_name = 'Hugeify'
     _level = 6
 
-    def cast(self, target, *args, **kwargs):
-        Buff(targets=[target], attack=10, temp=False, reason=StatChangeCause.HUGEIFY, source=self, *args, **kwargs)
+    def cast(self, target: 'Character' = None, *args, **kwargs):
+        Buff(targets=[target], attack=10, temp=False, reason=ActionReason.HUGEIFY, source=self, *args, **kwargs)

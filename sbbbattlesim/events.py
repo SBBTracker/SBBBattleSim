@@ -1,56 +1,77 @@
 import collections
 import inspect
 import logging
+import queue
+import typing
 from dataclasses import dataclass, field
 from typing import List
+import copy
 
 logger = logging.getLogger(__name__)
 
 
 class SSBBSEvent:
-    def __init__(self, manager, priority=0, **kwargs):
+    def __init__(
+            self,
+            manager: ('EventManager', 'Character', 'Player', 'Board'),
+            source: ('Character', 'Hero', 'Spell', 'Treasure'),
+            priority: int = 0,
+            **kwargs
+    ):
         self.manager = manager
+        self.source = source
         self.priority = priority
+        self.kwargs = kwargs
 
-        for kw, arg in kwargs.items():
-            setattr(self, kw, arg)
+    def __ge__(self, other):
+        return self.priority >= other.priority
 
-    def __call__(self, *args, **kwargs):
-        # TODO Add more logging???
-        return self.handle(*args, **kwargs)
+    def __lt__(self, other):
+        return not self.__ge__(other)
+
+    def __le__(self, other):
+        return self.priority <= other.priority
+
+    def __gt__(self, other):
+        return not self.__le__(other)
 
     @classmethod
     def is_valid(cls):
         return True
 
+    def __call__(self, *args, **kwargs):
+        # TODO Add more logging???
+        return self.handle(*args, **kwargs)
+
     def handle(self, stack, *args, **kwargs):
         raise NotImplementedError
 
 
-class OnSummon(SSBBSEvent):
-    '''A unit is summoned'''
-
-    def handle(self, summoned_characters, stack, *args, **kwargs):
-        raise NotImplementedError
+class OnSetup(SSBBSEvent):
+    '''On Setup of Brawl'''
 
 
 class OnStart(SSBBSEvent):
     '''Start of Brawl'''
 
-    def handle(self, stack, *args, **kwargs):
-        raise NotImplementedError
+
+class OnSpawn(SSBBSEvent):
+    '''Triggered after a unit spawns'''
 
 
-class OnPreStart(SSBBSEvent):
-    '''Start of Brawl'''
+class OnDespawn(SSBBSEvent):
+    '''Triggered after a unit despawns'''
 
-    def handle(self, stack, *args, **kwargs):
+
+class OnSummon(SSBBSEvent):
+    '''A unit is summoned'''
+    def handle(self, summoned_characters, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnDeath(SSBBSEvent):
     '''A character dies'''
-    last_breath = None
+    last_breath: typing.ClassVar[bool] = False
 
     @classmethod
     def is_valid(cls):
@@ -64,41 +85,36 @@ class OnDeath(SSBBSEvent):
 
         return response
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnLastBreath(SSBBSEvent):
     '''A character last a last breath'''
-
     def handle(self, source, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPreAttack(SSBBSEvent):
     '''An attacking character attacks'''
-
     def handle(self, attack_position, defend_position, defend_player, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPostAttack(SSBBSEvent):
     '''An attacking character attacks'''
-
     def handle(self, attack_position, defend_position, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPreDefend(SSBBSEvent):
     '''A defending character is attacked'''
-
     def handle(self, attack_position, defend_position, defender, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPostDefend(SSBBSEvent):
     '''A defending character is attacked'''
-
     def handle(self, attack_position, defend_position, stack, *args, **kwargs):
         raise NotImplementedError
 
@@ -106,13 +122,14 @@ class OnPostDefend(SSBBSEvent):
 class OnDamagedAndSurvived(SSBBSEvent):
     '''A character gets damaged and doesn't die'''
 
-    def handle(self, stack, *args, **kwargs):
-        raise NotImplementedError
-
 
 class OnAttackAndKill(SSBBSEvent):
     '''A character attacks something and kills it'''
-    slay = None
+    slay: typing.ClassVar[bool] = False
+
+    @classmethod
+    def is_valid(cls):
+        return cls.slay is True or cls.slay is False
 
     def __call__(self, *args, **kwargs):
         response = self.handle(*args, **kwargs)
@@ -125,117 +142,104 @@ class OnAttackAndKill(SSBBSEvent):
     def handle(self, killed_character, stack, *args, **kwargs):
         raise NotImplementedError
 
-    @classmethod
-    def is_valid(cls):
-        return cls.slay is True or cls.slay is False
-
 
 class OnSlay(SSBBSEvent):
     '''A character has triggered a slay'''
-
     def handle(self, source, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnSpellCast(SSBBSEvent):
     '''A player cast a spell'''
-
     def handle(self, caster, spell, target, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnBuff(SSBBSEvent):
     '''Triggered when something has a stat change'''
-
-    def handle(self, stack, attack=0, health=0, damage=0, reason='', temp=True, *args, **kwargs):
+    def handle(self, stack, attack, health, reason=None, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnSupport(SSBBSEvent):
     '''Triggered when something '''
-
     def handle(self, buffed, support, stack, *args, **kwargs):
-        raise NotImplementedError
-
-
-class OnResolveBoard(SSBBSEvent):
-    '''Triggers when a player attempts to resolve the board'''
-
-    def handle(self, stack, *args, **kwargs):
         raise NotImplementedError
 
 
 class EventManager:
     def __init__(self):
-        self._temp = collections.defaultdict(list)
-        self._events = collections.defaultdict(list)
+        self._events = collections.defaultdict(set)
 
     def pretty_print(self):
         return self.__repr__()
 
-    def register(self, event, temp=False, **kwargs):
+    def register(self, event, priority=0, source=None, **kwargs):
         if not event.is_valid():
-            logger.debug(f'{self.pretty_print()} can not register invalid event {event.__name__}')
             raise ValueError
 
         event_base = inspect.getmro(event)[1].__name__
-        event = event(manager=self, **kwargs)
-        (self._temp if temp else self._events)[event_base].append(event)
+        event = event(manager=self, source=source or self, priority=priority, **kwargs)
         logger.debug(f'{self.pretty_print()} Registered {event_base} - {event.__class__.__name__}')
+        self._events[event_base].add(event)
         return event
 
     def unregister(self, event):
         event_base = inspect.getmro(event.__class__)[1].__name__
-        try:
-            self._temp.get(event_base, []).remove(event)
-        except ValueError:
-            try:
-                self._events.get(event_base, []).remove(event)
-            except ValueError:
-                pass
+        logger.debug(f'Unregistering {event} of type {event_base}')
+        self._events[event_base] = self._events[event_base] - {event}
 
     def get(self, event):
-        return sorted(self._temp.get(event, []) + self._events.get(event, []),
-                      key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True)
-
-    def get_itr(self, event):
-
-        _evt_lambda  = lambda : self._temp.get(event, []) + self._events.get(event, [])
-        evts = _evt_lambda()
-        evts_set = set(_evt_lambda())
-        last_evt = None
+        evts = self._events[event]
+        evts_set = set(evts)
         processed_events = set()
+
+        if not evts:
+            return
+
+        sorting_lambda = lambda x: (x.priority, getattr(x.manager, 'position', 0))
+        evts = sorted(evts, key=sorting_lambda, reverse=True)
+
+        priority = None
+
         while True:
-            for evt in sorted(evts, key=lambda x: (x.priority, getattr(x.manager, 'position', 0)), reverse=True):
-                yield evt
-                last_evt = evt
-                processed_events.add(evt)
-
-                new_evts_set = {s for s in set(_evt_lambda()) if s.priority < last_evt.priority} - processed_events
-
-                if evts_set != new_evts_set:
-                    evts = list(new_evts_set)
-                    evts_set = set(evts) - processed_events
-
-            if not evts_set:
+            if not evts:
                 break
 
+            evt = evts[0]
+            evts = evts[1:]
 
-    def clear_temp(self):
-        self._temp = collections.defaultdict(list)
+            processed_events.add(evt)
+
+            if priority is None:
+                priority = evt.priority
+            elif evt.priority < priority:
+                priority = evt.priority
+            elif evt.priority > priority:
+                continue
+
+            yield evt
+
+            new_evts_set = self._events.get(event, set())
+
+            if evts_set != new_evts_set:
+                evts_set = set(new_evts_set) - processed_events
+                evts = sorted(evts_set, key=sorting_lambda, reverse=True)
+
+            if not evts:
+                break
 
     def __call__(self, event, stack=None, *args, **kwargs):
         logger.debug(f'{self.pretty_print()} triggered event {event}')
 
-        handlers = self.get(event)
-        if not handlers:
-            return
-
         # If an event stack already exists use it otherwise make a new stack
-        stack = stack or EventStack(self)
+        stack = stack or EventStack()
+
+        if not self._events[event]:
+            return stack
 
         with stack.open(*args, **kwargs) as executor:
-            for evt in self.get_itr(event):
+            for evt in self.get(event):
                 logger.debug(f'Firing {evt} with {args} {kwargs}')
                 executor.execute(evt, *args, **kwargs)
 
@@ -243,25 +247,21 @@ class EventManager:
 
 
 class EventExecutor:
-    def __init__(self, stack: 'EventStack', manager: EventManager, *args, **kwargs):
+    def __init__(self, stack: 'EventStack', *args, **kwargs):
         self.stack = stack
-        self.manager = manager
         self.args = args
         self.kwargs = kwargs
 
         self._react_buffer = []
 
     def __enter__(self):
-        logger.debug(f'Opening Executor with ({self.args} {self.kwargs})')
+        # logger.info(f'Opening Executor with ({self.args} {self.kwargs})')
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        for (react, rargs, rkwargs, source) in self._react_buffer:
-            rkwargs.update({'source': source, 'stack': self.stack, **self.kwargs})
+        for (react, rargs, rkwargs, source) in reversed(self._react_buffer):
             logger.info(f'{source} reaction {react} ({rargs} {rkwargs})')
-            self.manager(react, *rargs, **rkwargs)
-
-        logger.debug(f'Closing Executor with ({self.args} {self.kwargs})')
+            source.manager(react, *rargs, **(rkwargs | {'source': source, 'stack': self.stack} | self.kwargs))
 
     def execute(self, event, *args, **kwargs):
         response = event(stack=self.stack, *args, **kwargs)
@@ -273,17 +273,16 @@ class EventExecutor:
 
 @dataclass
 class EventStack:
-    manager: EventManager
     stack: List[SSBBSEvent] = field(default_factory=list)
 
     def __repr__(self):
-        return f'{self.manager.pretty_print()} - {[evt.__class__.__name__ for evt in self.stack]}'
+        return f'{[evt.__class__.__name__ for evt in self.stack]}'
 
     def __iter__(self):
         return self.stack.__iter__()
 
     def open(self, *args, **kwargs):
-        return EventExecutor(self, self.manager, *args, **kwargs)
+        return EventExecutor(stack=self, *args, **kwargs)
 
     def find(self, _lambda=lambda event: True):
         return (event for event in self.stack if _lambda(event))

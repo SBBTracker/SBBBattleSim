@@ -1,18 +1,19 @@
-from sbbbattlesim.action import Buff
-from sbbbattlesim.spells import TargetedSpell
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.action import Buff, ActionReason
+from sbbbattlesim.spells import Spell
+from sbbbattlesim.utils import Tribe
 
 
-class SpellType(TargetedSpell):
+class SpellType(Spell):
     display_name = '''Beauty's Influence'''
     _level = 3
 
-    def cast(self, target, *args, **kwargs):
-        Buff(reason=StatChangeCause.BEAUTYS_INFLUENCE, source=self, targets=[target],
+    def cast(self, target: 'Character' = None, *args, **kwargs):
+        Buff(reason=ActionReason.BEAUTYS_INFLUENCE, source=self, targets=[target],
              health=4, attack=0, temp=False, *args, **kwargs).resolve()
 
         target.tribes.remove(Tribe.EVIL)
         target.tribes.add(Tribe.GOOD)
 
-    def filter(self, char):
+    @classmethod
+    def filter(cls, char):
         return Tribe.EVIL in char.tribes

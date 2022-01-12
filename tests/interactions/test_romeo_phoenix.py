@@ -28,8 +28,7 @@ def test_phoenix_makes_romeo_sad(golden):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     juliet = board.p1.characters[2]
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p1.characters[6] is None
     assert not juliet.dead

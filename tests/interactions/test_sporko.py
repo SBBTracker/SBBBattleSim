@@ -16,12 +16,30 @@ def test_sporko(golden):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
-    final_attack = (11 if golden else 6)
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (final_attack, 1)
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (final_attack, 1)
+
+    char = board.p1.characters[1]
+    buffs = [
+        r for r in char._action_history
+    ]
+
+    healthbuffs = sum([b.health for b in buffs])
+    attackbuffs = sum([b.attack for b in buffs])
+
+    assert attackbuffs == (10 if golden else 5)
+    assert healthbuffs == 0
+
+    char = board.p1.characters[2]
+    buffs = [
+        r for r in char._action_history
+    ]
+
+    healthbuffs = sum([b.health for b in buffs])
+    attackbuffs = sum([b.attack for b in buffs])
+
+    assert attackbuffs == (10 if golden else 5)
+    assert healthbuffs == 0
+
 
 
 def test_sporko_ranged():
@@ -38,7 +56,6 @@ def test_sporko_ranged():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (3, 6)

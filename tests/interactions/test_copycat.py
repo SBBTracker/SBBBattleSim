@@ -8,6 +8,7 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 def test_muerte_copycat_goodboy(golden):
     player = make_player(
+        raw=True,
         hero="SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5, golden=golden),
@@ -17,7 +18,14 @@ def test_muerte_copycat_goodboy(golden):
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
+
+    '''
+    Stat Stacking Quick Math
+    1 > 2 > 6 > 18 > 36 > 108
+    '''
+
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(),
             make_character()
@@ -37,15 +45,16 @@ def test_muerte_copycat_goodboy(golden):
 @pytest.mark.parametrize('golden', (True, False))
 def test_muerte_single_goodboy(golden):
     player = make_player(
+        raw=True,
         hero="SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5, golden=golden),
-            make_character(id="SBB_CHARACTER_GOODBOY", position=5, attack=1, health=1, tribes=[Tribe.GOOD],
-                           golden=True),
+            make_character(id="SBB_CHARACTER_GOODBOY", position=5, attack=1, health=1, tribes=[Tribe.GOOD], golden=True),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(),
             make_character()
@@ -53,8 +62,7 @@ def test_muerte_single_goodboy(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     if golden:
         final_stats = (27, 27)
@@ -67,6 +75,7 @@ def test_muerte_single_goodboy(golden):
 def test_copycat_queenofhearts():
     '''Copycat should not trigger queenofhearts ondeath buff'''
     player = make_player(
+        raw=True,
         hero="SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5),
@@ -76,14 +85,14 @@ def test_copycat_queenofhearts():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character()
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert len(
         [evt for evt in board.p1.characters[5].get('OnDeath') if evt.__class__.__name__ == 'EvilQueenOnDeath']) == 1

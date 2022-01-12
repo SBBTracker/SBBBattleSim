@@ -1,12 +1,11 @@
-from sbbbattlesim.action import AuraBuff
-from sbbbattlesim.events import OnPreStart
+from sbbbattlesim.action import Buff, Aura, ActionReason
+from sbbbattlesim.events import OnSetup
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
 
 
-class MonkeysPawOnStart(OnPreStart):
+class MonkeysPawOnSetup(OnSetup):
     def handle(self, *args, **kwargs):
-        self.monkey.active = len(self.monkey.player.valid_characters()) <= 6
+        self.source.active = len(self.source.player.valid_characters()) <= 6
 
 
 class TreasureType(Treasure):
@@ -18,10 +17,7 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.active = False
-        self.player.register(MonkeysPawOnStart, monkey=self)
-
-    def buff(self, target_character, *args, **kwargs):
-        if self.active:
-            for _ in range(self.mimic + 1):
-                AuraBuff(source=self, targets=[target_character],
-                         attack=6, health=6, *args, **kwargs).resolve()
+        self.player.board.register(MonkeysPawOnSetup, source=self, priority=100)
+        stats = 6 * (bool(self.mimic) + 1)
+        self.aura = Aura(reason=ActionReason.MONKEYS_PAW, source=self, health=stats, attack=stats,
+                         _lambda=lambda _: self.active)

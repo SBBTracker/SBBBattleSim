@@ -1,7 +1,7 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnAttackAndKill
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class VainPireSlay(OnAttackAndKill):
@@ -9,7 +9,7 @@ class VainPireSlay(OnAttackAndKill):
 
     def handle(self, killed_character, stack, *args, **kwargs):
         stat_buff = 2 if self.manager.golden else 1
-        Buff(reason=StatChangeCause.SLAY, source=self.manager, targets=[self.manager],
+        Buff(reason=ActionReason.SLAY, source=self.manager, targets=[self.manager],
              attack=stat_buff, health=stat_buff, temp=False, stack=stack).resolve()
 
 

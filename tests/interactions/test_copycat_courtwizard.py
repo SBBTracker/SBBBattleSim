@@ -7,6 +7,7 @@ from tests import make_character, make_player
 
 def test_copycat_goes_off_before_courtwizard():
     player = make_player(
+        raw=True,
         hero="SBB_HERO_MUERTE",
         characters=[
             make_character(id="SBB_CHARACTER_COPYCAT", position=1, attack=1, health=1),
@@ -17,6 +18,7 @@ def test_copycat_goes_off_before_courtwizard():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=1, tribes=[Tribe.PRINCE]),
             make_character(id='SBB_CHARACTER_COURTWIZARD', position=6, attack=1, health=1),

@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class PumpkinKingOnDeath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         summons = []
         dead_in_order = sorted(
             [char for char in self.manager.player.graveyard if Tribe.EVIL in char.tribes],
@@ -21,7 +21,8 @@ class PumpkinKingOnDeath(OnDeath):
         for dead in dead_in_order[:7]:
             if dead._level > 2:
                 summon_choices = list(character_registry.filter(
-                    _lambda=lambda char: (char._level > 1 and char._level == dead._level - 1 and Tribe.EVIL in char._tribes)))
+                    _lambda=lambda char: (
+                                char._level > 1 and char._level == dead._level - 1 and Tribe.EVIL in char._tribes)))
             else:
                 summon_choices = [character_registry['SBB_CHARACTER_CAT']]
 

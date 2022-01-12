@@ -1,99 +1,117 @@
+import collections
 import logging
 import random
 from collections import OrderedDict, defaultdict
+from sbbbattlesim.treasures.SBB_TREASURE_PHOENIXFEATHER import PhoenixFeatherOnDeath
+from turtle import position
 
 from sbbbattlesim import utils
-from sbbbattlesim.action import Damage
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.events import EventManager, OnStart
-from sbbbattlesim.heros import registry as hero_registry
-from sbbbattlesim.spells import registry as spell_registry, TargetedSpell
+from sbbbattlesim.events import EventManager, OnStart, OnSetup, OnDeath, OnLastBreath
+from sbbbattlesim.heroes import registry as hero_registry
+from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
-from collections import defaultdict
+from sbbbattlesim.action import ActionState
 
 logger = logging.getLogger(__name__)
 
 
 class CastSpellOnStart(OnStart):
     def handle(self, *args, **kwargs):
-        self.player.cast_spell(self.spell, trigger_onspell=False)
+        self.source.cast_spell(self.kwargs['spell'], trigger_onspell=False)
+
+
+class PlayerOnSetup(OnSetup):
+    def handle(self, stack, *args, **kwargs):
+        # TODO Change setup to True when raw gets removed
+        setup = self.kwargs.get('raw', False)
+
+        for char in self.source.valid_characters():
+            # Apply existing buffs
+            support_positions = (5, 6, 7) if self.source.banner_of_command else utils.get_behind_targets(char.position)
+            support_units = self.source.valid_characters(_lambda=lambda char: (char.position in support_positions and char.support))
+            support_buffs = set([char.support for char in support_units])
+            for buff in sorted(self.source.auras | support_buffs, key=lambda b: b.priority, reverse=True):
+                buff.execute(char, setup=setup)
 
 
 class Player(EventManager):
     def __init__(self, characters, id, board, treasures, hero, hand, spells, level=0, raw=False, *args, **kwargs):
+        raw=True
         super().__init__()
         # Board is board
         self.board = board
+        self.board.register(PlayerOnSetup, source=self, priority=0, raw=raw)
 
+        self.__characters = OrderedDict({i: None for i in range(1, 8)})
         self.stateful_effects = {}
-
+        self._attack_slot = None
+        self.graveyard = []
         self.id = id
         self.opponent = None
         self.level = level
         self._last_attacker = None
         self._attack_chain = 0
+        self._spells_cast = kwargs.get('spells_cast', None)
 
-        #TODO Make a better implementation of this later
-        if 'spells_cast' in kwargs:
-            self._spells_cast = kwargs['spells_cast']
-        else:
-            self._spells_cast = None
-
-        self.__characters = OrderedDict({i: None for i in range(1, 8)})
-
-        self._attack_slot = None
-        self.graveyard = []
-
-        self.treasures = defaultdict(list)
+        # Treasure Counting
+        self.banner_of_command = 'SBB_TREASURE_BANNEROFCOMMAND' in treasures
+        evileye = 'SBB_TREASURE_HELMOFCOMMAND' in treasures
         mimic = 'SBB_TREASURE_TREASURECHEST' in treasures
+
+        self.support_itr = 1
+        if evileye:
+            self.support_itr = 2
+            if mimic:
+                self.support_itr = 3
+        logger.debug(f'{self.id} support_itr = {self.support_itr}')
+
+        self.auras = set()
+
+        self.treasures = collections.defaultdict(list)
         for tres in treasures:
             treasure = treasure_registry[tres]
-            logger.debug(f'{self.id} Registering treasure {treasure}')
-            self.treasures[treasure.id].append(treasure(self, mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0)))
+            mimic_count = mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0)
+            treasure = treasure(player=self, mimic=mimic_count)
+            logger.debug(f'{self.id} Registering treasure {treasure.pretty_print()}')
+            self.treasures[treasure.id].append(treasure)
 
         self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand]
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
-        logger.debug(f'{self.id} registering hero {self.hero}')
+        logger.debug(f'{self.id} registering hero {self.hero.pretty_print()}')
 
-        import copy
         for spl in spells:
             if spl in utils.START_OF_FIGHT_SPELLS:
-                priority = spell_registry[spl]().priority
-                self.board.register(CastSpellOnStart, spell=spl, player=self, priority=priority)
+                self.board.register(CastSpellOnStart, spell=spl, source=self, priority=spell_registry[spl].priority)
 
         for char_data in characters:
             char = character_registry[char_data['id']](player=self, **char_data)
-            logger.debug(f'{self.id} registering character {char}')
+            logger.debug(f'{self.id} registering character {char.pretty_print()}')
             self.__characters[char.position] = char
 
-        # This is designed to remove temp buffs that were passed in
-        singingswords = 'SBB_TREASURE_WHIRLINGBLADES' in treasures
-        attack_multiplier = 1
-        if singingswords:
-            attack_multiplier = 2
-            if mimic:
-                attack_multiplier = 3
-
-        self.aura_buffs = set()
         for char in self.valid_characters():
-            if char.aura and char.aura_buff:
-                self.aura_buffs.add(char.aura_buff)
+            if char.aura:
+                try:
+                    self.auras.update(set(char.aura))
+                except TypeError:
+                    self.auras.add(char.aura)
 
-        self('OnPreStart')
+        for tid, tl in self.treasures.items():
+            for treasure in tl:
+                if treasure.aura and treasure.aura:
+                    try:
+                        self.auras.update(set(treasure.aura))
+                    except TypeError:
+                        self.auras.add(treasure.aura)
 
-        if raw:
-            logger.debug('Winding back stats')
-            for char in self.__characters.values():
-                if char:
-                    logger.debug(f'pre resolution, {char.pretty_print()} has {char._temp_health} temp health and {char._temp_attack} temp attack to unwind')
-            self.resolve_board()
-            for char in self.__characters.values():
-                if char:
-                    logger.debug(f'{char.pretty_print()} has {char._temp_health} temp health and {char._temp_attack} temp attack to unwind')
-                    char._base_health -= char._temp_health
-                    char._base_attack -= int(char._temp_attack/attack_multiplier)
-                    logger.debug(f'and is now {char.pretty_print()}')
+        if self.hero.aura:
+            try:
+                self.auras.update(set(self.hero.aura))
+            except TypeError:
+                self.auras.add(self.hero.aura)
 
+        for aura in self.auras:
+            logger.debug(f'{self.id} found aura {aura}')
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
@@ -104,9 +122,11 @@ class Player(EventManager):
 
         # Handle case where tokens are spawning in the same position
         # With the max chain of 5 as implemented to stop trophy hunter + croc + grim soul shenanigans
-        if (self.characters.get(self._attack_slot) is self._last_attacker) or (self._attack_chain >= 5) or (self._last_attacker is None):
+        attack_slot_char = self.characters.get(self._attack_slot)
+        if (self._attack_chain >= 5) or (self._last_attacker is None) or (attack_slot_char is not None and attack_slot_char.has_attacked):
             # Prevents the same character from attacking repeatedly
             if self._last_attacker is not None:
+                self._last_attacker.has_attacked = False
                 self._attack_slot += 1
             self._attack_chain = 0
         else:
@@ -128,147 +148,79 @@ class Player(EventManager):
         # If we have not found an attacker just return None
         if found_attacker:
             self._last_attacker = self.characters.get(self._attack_slot)
+            self._last_attacker.has_attacked = True
         else:
             return None
 
         return self._attack_slot
 
-    def resolve_board(self, *args, **kwargs):
-
-        old_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}
-
-        # Remove all bonuses
-        # these need to be prior so that there is not
-        # wonky ordering issues with clearing buffs
-        # and units that give secondary units buffs that buff
-        # arbitrary units
-        self.clear_temp()
-        for pos, char in self.__characters.items():
-            if char is None:
-                continue
-            char.clear_temp()
-
-        # If a stack was passed in through kwargs it will return
-        # If a stack wasn't passed it will be generated and returned
-        kwargs['stack'] = self('OnResolveBoard', *args, **kwargs)
-
-        # TREASURE BUFFS
-
-        # HERO BUFFS:
-        if self.hero.id != "SBB_HERO_PRINCESSBELLE":
-            if self.hero.aura:
-                for target in self.valid_characters():
-                    self.hero.buff(target, *args, **kwargs)
-
-        for t, treasure_ls in self.treasures.items():
-            for treasure in treasure_ls:
-                if t == "SBB_TREASURE_WHIRLINGBLADES":
-                    continue
-                if t == "SBB_TREASURE_CLOAKOFTHEASSASSIN":
-                    continue
-                if treasure.aura:
-                    for target in self.valid_characters():
-                        treasure.buff(target, *args, **kwargs)
-
-        if self.hero.id == "SBB_HERO_PRINCESSBELLE":
-            for target in self.valid_characters():
-                self.hero.buff(target, *args, **kwargs)
-
-        # CHARACTER BUFFS
-        # Iterate over buff targets and auras then apply them to all necessary targets
-        # Support & Aura Targeting
-        # This does talk about buffs, but it is for buffs that can only be changed by board state
-        support_itr = 1
-        if "SBB_TREASURE_HELMOFCOMMAND" in self.treasures:
-            if "SBB_TREASURE_TREASURECHEST" in self.treasures:
-                support_itr = 3  # mimic and evil eye
-            else:
-                support_itr = 2  # evil eye but not mimic
-
-        for char in self.valid_characters():
-            if char.aura:
-                if char.id == "SBB_CHARACTER_ECHOWOODSHAMBLER":
-                    for target in self.valid_characters():
-                        char.buff(target, *args, **kwargs)
-        for char in self.valid_characters():
-            if char.aura:
-                if char.id != "SBB_CHARACTER_ECHOWOODSHAMBLER":
-                    for target in self.valid_characters():
-                        char.buff(target, *args, **kwargs)
-
-        for char in self.valid_characters():
-            if char.support:
-                for _ in range(support_itr):  # my commit but blame regi
-                    for target_position in utils.get_support_targets(position=char.position, horn='SBB_TREASURE_BANNEROFCOMMAND' in self.treasures):
-                        target = self.__characters.get(target_position)
-                        if target:
-                            char.buff(target, *args, **kwargs)
-                            if getattr(char, 'support_buff', None):
-                                if char.support_buff._lambda(target):
-                                    char('OnSupport', buffed=target, support=char, *args, **kwargs)
-
-        cloak_ls = self.treasures.get("SBB_TREASURE_CLOAKOFTHEASSASSIN", False)
-        if cloak_ls:
-            for target in self.valid_characters():
-                cloak_ls[0].buff(target, *args, **kwargs)
-
-        # we need to apply singing swords last
-        # TODO Add priority to treasures and sort this loop by that priority
-        if "SBB_TREASURE_WHIRLINGBLADES" in self.treasures:
-            attack_dt = dict()
-            for target in self.valid_characters():
-                attack_dt[target] = target.attack
-            for target in self.valid_characters():
-                self.treasures["SBB_TREASURE_WHIRLINGBLADES"][0].buff(target, attack_override=attack_dt[target], *args, **kwargs)
-        new_temp_health_dt = {char: char._temp_health for char in self.valid_characters()}
-
-        # for char, new_temp_health in new_temp_health_dt.items():
-        #     if char not in old_temp_health_dt and self.__characters[char.position] is not char:
-        #         continue
-        #
-        #     old_temp_health = old_temp_health_dt[char]
-        #
-        #     if new_temp_health < old_temp_health:
-        #         char._damage -= min(char._damage, old_temp_health - new_temp_health)
-
-        dead_characters = []
-        for char in self.__characters.values():
-            if not char:
-                continue
-
-            if char.health <= 0:
-                char.dead = True
-                dead_characters.append(char)
-                self.despawn(char)
-
-        for char in sorted(dead_characters, key=lambda _char: _char.position, reverse=True):
-            char('OnDeath')
-
     def spawn(self, character, position):
         logger.info(f'Spawning {character.pretty_print()} in {position} position')
+
+        # all my spawning homies hate temporary events
+        for action in character._action_history:
+            if action.temp:
+                action.roll_back(character)
+
         self.__characters[position] = character
         character.position = position
 
-        support_positions = utils.get_behind_targets(position)
-        possible_supports = self.valid_characters(_lambda=lambda char: char.position in support_positions and char.support and char.support_buff)
-        support_buffs = {char.support_buff for char in possible_supports}
-        for buff in sorted(support_buffs | self.aura_buffs, key=lambda b: b.priority, reverse=True):
+        # Apply existing buffs
+        support_positions = (5, 6, 7) if self.banner_of_command else utils.get_behind_targets(position)
+        support_units = self.valid_characters(_lambda=lambda char: (char.position in support_positions and char.support))
+        support_buffs = set([char.support for char in support_units])
+        for buff in sorted(self.auras | support_buffs, key=lambda b: b.priority, reverse=True):
             buff.execute(character)
+
+        # Apply new support buffs
+        if character.support:
+            pos_ls = utils.get_support_targets(position, self.banner_of_command)
+            character.support.execute(*self.valid_characters(_lambda=lambda char: char.position in pos_ls))
+
+        # Apply new auras
+        if character.aura:
+            try:
+                self.auras.update(set(character.aura))
+            except TypeError:
+                self.auras.add(character.aura)
+            character.aura.execute(*self.valid_characters())
+
+        character('OnSpawn')
 
         return character
 
-    def despawn(self, character):
-        logger.info(f'Despawning {character.pretty_print()}')
-        position = character.position
-        self.graveyard.append(character)
-        self.__characters[position] = None
-        logger.info(f'{character.pretty_print()} died')
+    def despawn(self, *characters, **kwargs):
+        kill = kwargs.get('kill', True)
 
-        if character.support and character.support_buff:
-            character.support_buff.roll_back()
+        if kill:
+            for char in characters:
+                logger.info(f'Despawning {char.pretty_print()}')
+                position = char.position
+                self.graveyard.append(char)
+                self.__characters[position] = None
+                logger.info(f'{char.pretty_print()} died')
+                char('Despawn', **kwargs)
 
-        if character.aura and character.aura_buff:
-            character.aura_buff.roll_back()
+            for char in characters:
+                char('OnDeath', **kwargs)
+
+        for char in characters:
+
+            if char.support:
+                char.support.roll_back()
+
+            if char.aura:
+                logger.debug(f'{self.id} Auras for spawning is {self.auras}')
+
+                try:
+                    self.auras -= set(char.aura)
+                except TypeError:
+                    try:
+                        self.auras.remove(char.aura)
+                    except KeyError:
+                        pass
+
+                char.aura.roll_back()
 
     @property
     def characters(self):
@@ -278,14 +230,16 @@ class Player(EventManager):
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be
         able to summon from multiple points at once before running the onsummon stack. This may be useful
         for other things too'''
-        summoned_characters = [self.spawn(char, char.position) for char in characters]
 
-        # Now that we have summoned units, make sure they have the buffs they should
-        self.resolve_board(summoned_characters=summoned_characters, *args, **kwargs)
+        final_summoned_characters = []
+        pos2char = defaultdict(list)
+        for char in characters:
+            pos2char[char.position].append(char)
 
-        self('OnSummon', summoned_characters=summoned_characters)
+        for pos, char_ls in pos2char.items():
+            final_summoned_characters.extend(self.summon(pos, char_ls))
 
-        return summoned_characters
+        return final_summoned_characters
 
     def summon(self, pos, characters, *args, **kwargs):
         summoned_characters = []
@@ -297,26 +251,17 @@ class Player(EventManager):
 
             summoned_characters.append(self.spawn(char, pos))
 
-        # Now that we have summoned units, make sure they have the buffs they should
-        self.resolve_board(summoned_characters=summoned_characters, *args, **kwargs)
-
         # The player handles on-summon effects
         stack = self('OnSummon', summoned_characters=summoned_characters)
 
         return summoned_characters
 
     def transform(self, pos, character, *args, **kwargs):
-        if self.__characters[pos] is not None:
+        char_to_transform = self.__characters[pos]
+        if char_to_transform is not None:
+            character.has_attacked = char_to_transform.has_attacked
+            self.despawn(char_to_transform, kill=False)
             self.spawn(character, pos)
-            self.resolve_board(summoned_characters=[character], *args, **kwargs)
-
-            # TODO wrap this into a nice helper function to be used in the attack slot getter as well
-            if self._attack_slot == pos:
-                self._attack_slot += 1
-                if self._attack_slot > 7:
-                    self.attack_slot = 1
-
-        character.player.opponent.resolve_board()
 
     def valid_characters(self, _lambda=lambda char: True):
         """
@@ -329,7 +274,7 @@ class Player(EventManager):
         return [char for char in self.__characters.values() if base_lambda(char) and _lambda(char)]
 
     def cast_spell(self, spell_id, trigger_onspell=True):
-        spell = spell_registry[spell_id]()
+        spell = spell_registry[spell_id]
         if spell is None:
             return
 
@@ -339,7 +284,7 @@ class Player(EventManager):
             if valid_targets:
                 target = random.choice(valid_targets)
 
-        if isinstance(spell, TargetedSpell) and target is None:
+        if spell.targeted and target is None:
             return
 
         logger.debug(f'{self.id} casting {spell}')
@@ -352,5 +297,4 @@ class Player(EventManager):
 
             stack = self('OnSpellCast', caster=self, spell=spell, target=target)
 
-        spell.cast(player=self, target=target, stack=stack)
-
+        spell(self).cast(target=target)

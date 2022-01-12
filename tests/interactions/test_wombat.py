@@ -1,7 +1,8 @@
 import pytest
 
 from sbbbattlesim import Board
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
+from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 
 
@@ -20,8 +21,7 @@ def test_wombat_dying(golden, level, repeat):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     summoned_char = board.p1.characters[1]
 
@@ -30,7 +30,7 @@ def test_wombat_dying(golden, level, repeat):
     assert summoned_char.golden == golden
 
     wombat_buffs = [
-        r for r in board.p1.characters[1]._action_history if r.reason == StatChangeCause.WOMBATS_IN_DISGUISE_BUFF
+        r for r in board.p1.characters[1]._action_history if r.reason == ActionReason.WOMBATS_IN_DISGUISE_BUFF
     ]
 
     assert len(wombat_buffs) == 1
@@ -52,27 +52,33 @@ def test_charon_wombat():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     summoned_char = board.p1.characters[1]
 
     assert summoned_char is not None
 
-    stat_history = board.p1.characters[1]._action_history[0]
+    wombat_buff = None
+    for action in board.p1.characters[1]._action_history:
+        if action.reason == ActionReason.WOMBATS_IN_DISGUISE_BUFF:
+            wombat_buff = action
+            break
 
-    assert stat_history.attack, stat_history.health == (2, 3)
+    assert wombat_buff
+    assert wombat_buff.attack, wombat_buff.health == (2, 3)
 
 
-def test_bearstain_wombat_phoenix():
+@pytest.mark.parametrize('repeat', range(30))
+def test_bearstain_wombat_phoenix(repeat):
     '''This is an interesting one -- The 1st unit comes back from Phoenix Feather, the 2nd and 3rd are Reduplicators, and the 4th is a copy of the 1st and gets buffed again with the same buffs the 1st received'''
     player = make_player(
         level=2,
         raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_WOMBATSINDISGUISE', position=1, attack=30, health=26, golden=True, tribes=[Tribe.ANIMAL]),
-            make_character(id='SBB_CHARACTER_PROSPERO', position=6, golden=False),
-            make_character(id='SBB_CHARACTER_PROSPERO', position=7, golden=True),
+            make_character(id='SBB_CHARACTER_PROSPERO', position=5, golden=False),
+            make_character(id='SBB_CHARACTER_PROSPERO', position=6, golden=True),
+            make_character(position=7)
         ],
         treasures=[
             "SBB_TREASURE_PHOENIXFEATHER",
@@ -87,24 +93,22 @@ def test_bearstain_wombat_phoenix():
     original_wombat = board.p1.characters[1]
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert board.p1.characters[1] is original_wombat
-    assert original_wombat._base_attack == 114
-    assert original_wombat._base_health == 98
+    assert original_wombat._base_attack == 120, original_wombat.pretty_print()
+    assert original_wombat._base_health == 104, original_wombat.pretty_print()
 
     wombat2 = board.p1.characters[2]
-    assert wombat2._base_attack == 114
-    assert wombat2._base_health == 98
+    assert wombat2._base_attack == 120
+    assert wombat2._base_health == 104
 
     wombat3 = board.p1.characters[3]
-    assert wombat3._base_attack == 114
-    assert wombat3._base_health == 98
+    assert wombat3._base_attack == 120
+    assert wombat3._base_health == 104
 
     wombat4 = board.p1.characters[4]
-    assert wombat4._base_attack == 204
-    assert wombat4._base_health == 176
+    assert wombat4._base_attack == 210
+    assert wombat4._base_health == 182
 
     char5 = board.p1.characters[5]
     assert char5 is not None

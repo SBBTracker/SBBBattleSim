@@ -8,7 +8,7 @@ def test_temp_damage():
     player = make_player(
         characters=[
             make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=3, health=3),
-            make_character(position=1, attack=5, health=5),
+            make_character(position=1, attack=5, health=8),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
@@ -21,8 +21,6 @@ def test_temp_damage():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=3)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 3)
 
@@ -31,7 +29,7 @@ def test_temp_damage2():
     player = make_player(
         characters=[
             make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=1, health=1),
-            make_character(position=1, attack=5, health=5),
+            make_character(position=1, attack=5, health=8),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
@@ -43,8 +41,6 @@ def test_temp_damage2():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 5)
 
@@ -53,7 +49,7 @@ def test_temp_damage3():
     player = make_player(
         characters=[
             make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=1, health=1),
-            make_character(position=1, attack=5, health=5),
+            make_character(position=1, attack=5, health=8),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
@@ -65,8 +61,6 @@ def test_temp_damage3():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 5)
 
@@ -76,7 +70,7 @@ def test_temp_damage4():
     player = make_player(
         characters=[
             make_character(id="SBB_CHARACTER_BABYROOT", position=5, attack=3, health=3),
-            make_character(position=1, attack=1, health=1),
+            make_character(position=1, attack=1, health=7),
         ],
         treasures=[
             'SBB_TREASURE_HELMOFCOMMAND',
@@ -94,7 +88,5 @@ def test_temp_damage4():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=3)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (8, 7)

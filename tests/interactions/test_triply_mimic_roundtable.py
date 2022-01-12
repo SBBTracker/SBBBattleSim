@@ -15,7 +15,6 @@ def test_mimic_triply_roundtable():
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (431, 191)

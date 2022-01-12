@@ -1,7 +1,8 @@
 import pytest
 
 from sbbbattlesim import Board
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
+from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 
 
@@ -24,12 +25,11 @@ def test_monsterbook_wizard_familar(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     for pos in [2, 3, 4]:
         wizardbuffs = [
-            r for r in board.p1.characters[pos]._action_history if r.reason == StatChangeCause.WIZARDS_FAMILIAR
+            r for r in board.p1.characters[pos]._action_history if r.reason == ActionReason.WIZARDS_FAMILIAR
         ]
 
         assert len(wizardbuffs) == (2 if golden else 1)
@@ -54,12 +54,11 @@ def test_monsterbook_spellweaver(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     for pos in [2, 3, 4]:
         wizardbuffs = [
-            r for r in board.p1.characters[pos]._action_history if r.reason == StatChangeCause.SPELL_WEAVER
+            r for r in board.p1.characters[pos]._action_history if r.reason == ActionReason.SPELL_WEAVER
         ]
 
         assert len(wizardbuffs) == (2 if golden else 1)
@@ -85,12 +84,11 @@ def test_monsterbook_aon(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     for pos in [2, 3, 4]:
         wizardbuffs = [
-            r for r in board.p1.characters[pos]._action_history if r.reason == StatChangeCause.AON_BUFF
+            r for r in board.p1.characters[pos]._action_history if r.reason == ActionReason.AON_BUFF
         ]
 
         num_buffs = (6 if golden else 3)

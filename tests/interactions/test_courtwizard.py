@@ -1,7 +1,8 @@
 import pytest
 
 from sbbbattlesim import Board
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
+from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 from sbbbattlesim.events import OnDeath
 
@@ -9,6 +10,7 @@ from sbbbattlesim.events import OnDeath
 @pytest.mark.parametrize('tribe', (Tribe.PRINCE, Tribe.PRINCESS, Tribe.DWARF))
 def test_courtwizard(tribe):
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1),
             make_character(position=2)
@@ -16,15 +18,14 @@ def test_courtwizard(tribe):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
-            make_character(position=1, tribes=[tribe]),
+            make_character(attack=10, position=1, tribes=[tribe]),
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=5)
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     if tribe in [Tribe.PRINCE, Tribe.PRINCESS]:
         assert board.p1.characters[1] is None and board.p1.characters[2] is None
@@ -33,6 +34,7 @@ def test_courtwizard(tribe):
 def test_courtwizard_diesandproccs():
     '''If court wizard dies and procs, no error should thrown and it should not attack'''
     player = make_player(
+        raw=True,
         characters=[
             make_character(id="SBB_CHARACTER_WRETCHEDMUMMY", position=1),
             make_character(position=2)
@@ -40,6 +42,7 @@ def test_courtwizard_diesandproccs():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=1, tribes=[Tribe.PRINCE]),
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=5)
@@ -56,8 +59,7 @@ def test_courtwizard_diesandproccs():
     assert wizard
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert mummy.dead
     assert prince.dead
@@ -65,7 +67,7 @@ def test_courtwizard_diesandproccs():
     assert not unit.dead
 
     wizardmummy = [
-        r for r in wizard._action_history if r.reason == StatChangeCause.WRETCHED_MUMMY_EXPLOSION
+        r for r in wizard._action_history if r.reason == ActionReason.WRETCHED_MUMMY_EXPLOSION
     ]
 
     assert wizardmummy
@@ -74,6 +76,7 @@ def test_courtwizard_noattack_eveniftoken():
     '''This test makes sure that no nonsense occurs like a peep spawning sheep in the court wizar's location
     and then court wizard;'s buff making the sheep attack because the wizard is already dead'''
     player = make_player(
+        raw=True,
         characters=[
             make_character(position=1),
             make_character(position=2, health=2)
@@ -81,6 +84,7 @@ def test_courtwizard_noattack_eveniftoken():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=1, tribes=[Tribe.PRINCE]),
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=6),
@@ -107,21 +111,21 @@ def test_courtwizard_noattack_eveniftoken():
     unit.register(FakeOndeathFallingstars, priority=9999)
 
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
 
     assert unit.dead
     assert prince.dead
     assert wizard.dead
     assert peep.dead
-    assert not unit2.dead
+    assert not unit2.dead, unit2.pretty_print()
 
     for pos in [5, 6, 7]:
         assert board.p2.characters[pos].id == "SBB_CHARACTER_SHEEP"
 
 def test_courtwizard_ranged():
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_COURTWIZARD', position=6, attack=3, health=6),
         ],
@@ -130,11 +134,11 @@ def test_courtwizard_ranged():
         ]
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=1, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (3, 6)

@@ -1,27 +1,21 @@
-from sbbbattlesim.action import Buff
-from sbbbattlesim.events import OnResolveBoard, OnStart
+from sbbbattlesim.action import ActionReason, Aura
+from sbbbattlesim.events import OnSetup
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
 
 
-class EyeOfAresAura(OnResolveBoard):
+class EyeOfAresOnSetup(OnSetup):
     def handle(self, stack, *args, **kwargs):
-        for _ in range(self.eye_of_ares.mimic + 1):
-            Buff(reason=StatChangeCause.EYE_OF_ARES_BUFF, source=self.eye_of_ares, targets=self.manager.valid_characters(),
-                 attack=5,  temp=True, stack=stack).resolve()
-
-
-class EyeOnStart(OnStart):
-    def handle(self, *args, **kwargs):
-        self.eye_of_ares.player.register(EyeOfAresAura, eye_of_ares=self.eye_of_ares)
-        self.eye_of_ares.player.opponent.register(EyeOfAresAura, eye_of_ares=self.eye_of_ares)
+        self.source.player.opponent.auras.add(self.source.aura)
 
 
 class TreasureType(Treasure):
     display_name = 'Eye of Ares'
+    aura = True
 
     _level = 3
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(EyeOnStart, eye_of_ares=self)
+        attack = 5 * (self.mimic + 1)
+        self.aura = Aura(reason=ActionReason.EYE_OF_ARES_BUFF, source=self, attack=attack)
+        self.player.board.register(EyeOfAresOnSetup, priority=100, source=self)

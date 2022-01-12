@@ -1,7 +1,7 @@
 import logging
 import pkgutil
+import traceback
 from collections import OrderedDict
-from dataclasses import dataclass
 
 from sbbbattlesim.action import Damage
 from sbbbattlesim.events import EventManager
@@ -15,11 +15,10 @@ logic_path = __path__
 class Character(EventManager):
     display_name = ''
     id = ''
-    aura = False
-    support = False
     slay = False
-    quest = False
     last_breath = False
+    support = False
+    quest = False
     flying = False
     ranged = False
 
@@ -42,17 +41,18 @@ class Character(EventManager):
         self.tribes = {Tribe(tribe) for tribe in tribes}
         self.cost = cost
 
-        self._temp_attack = 0
-        self._temp_health = 0
         self._damage = 0
         self.slay_counter = 0
         self.dead = False
         self.invincible = False
+        self.attack_multiplier = 1
 
-        self.support_buff = None
-        self.aura_buff = None
+        self.support = None
+        self.aura = None
 
         self._action_history = []
+
+        self.has_attacked = False
 
     @classmethod
     def new(cls, player, position, golden):
@@ -66,15 +66,28 @@ class Character(EventManager):
             cost=cls._level
         )
 
+    def copy(self):
+        new = self.__class__(
+            player=self.player,
+            position=self.position,
+            golden=self.golden,
+            attack=self._base_attack,
+            health=self._base_health,
+            tribes=self._tribes,
+            cost=self._level,
+        )
+
+        for action in self._action_history:
+            action.execute(new, setup=True, from_copy=True)
+
+        return new
+
     def pretty_print(self):
-        return f'''{"*" if self.golden else ""}{self.display_name}{"*" if self.golden else ""} ({self.attack}/{self.health})'''
+        return f'''{"*" if self.golden else ""}{self.display_name}{"*" if self.golden else ""} P{self.position} ({self.attack}/{self.health})'''
 
     @classmethod
     def valid(cls):
         return cls._attack != 0 or cls._health != 0 or cls._level != 0
-
-    def buff(self, target_character, *args, **kwargs):
-        raise NotImplementedError
 
     @property
     def slay(self):
@@ -86,34 +99,23 @@ class Character(EventManager):
 
     @property
     def attack(self):
-        return max(self._base_attack + self._temp_attack, 0)
+        return max(self._base_attack, 0) * self.attack_multiplier
 
     @property
     def health(self):
-        return self._base_health + self._temp_health - self._damage
+        return self._base_health - self._damage
 
     @property
     def max_health(self):
-        return self._base_health + self._temp_health
+        return self._base_health
 
-    def generate_attack(self, target, reason, attacker=False):
+    def generate_attack(self, source, target, reason, attacking=False):
         return Damage(
             reason=reason,
-            source=self,
+            source=source,
             targets=[target],
             damage=self.attack,
         )
-
-    def clear_temp(self):
-        logger.debug(f'{self.pretty_print()} clearing temp')
-        super().clear_temp()
-
-        self._temp_attack = 0
-        self._temp_health = 0
-        self.invincible = False
-
-        logger.debug(f'{self.pretty_print()} cleared temp')
-
 
 
 CHARACTER_EXCLUSION = (
@@ -140,17 +142,17 @@ class Registry(object):
         logger.debug(f'Registered {name} - {character}')
 
     def filter(self, _lambda=lambda char_cls: True):
-        return (char_cls for id, char_cls in self.characters.items() if id not in CHARACTER_EXCLUSION and _lambda(char_cls) and char_cls._level > 1 and not char_cls.deactivated)
+        return (
+            char_cls for id, char_cls in self.characters.items()
+            if id not in CHARACTER_EXCLUSION and _lambda(char_cls)
+               and char_cls._level > 1
+               and not char_cls.deactivated
+        )
 
     def autoregister(self):
-        logger.debug(f'Looking for characters to register in {logic_path}')
         for _, name, _ in pkgutil.iter_modules(logic_path):
-            try:
-                character = __import__(name, globals(), locals(), ['CharacterType'], 1)
-                self.register(name, character.CharacterType)
-            except Exception as exc:
-                logger.exception('Error loading characters: {}'.format(name))
-                raise exc
+            character = __import__(name, globals(), locals(), ['CharacterType'], 1)
+            self.register(name, character.CharacterType)
 
 
 registry = Registry()

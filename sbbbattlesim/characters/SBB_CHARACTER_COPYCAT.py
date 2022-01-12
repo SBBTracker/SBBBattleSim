@@ -1,5 +1,6 @@
 import logging
 
+from sbbbattlesim.action import ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnPostAttack
 from sbbbattlesim.utils import get_behind_targets, Tribe
@@ -20,7 +21,7 @@ class CopycatOnPostAttack(OnPostAttack):
 
                     for lb in last_breaths:
                         logger.debug(f'Copycat Triggering LastBreath({args} {kwargs})')
-                        executor.execute(lb, *args, **kwargs)
+                        executor.execute(lb, reason=ActionReason.COPYCAT_PROC, *args, **kwargs)
 
 
 class CharacterType(Character):
@@ -33,4 +34,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(CopycatOnPostAttack)
+        self.register(CopycatOnPostAttack, priority=100)

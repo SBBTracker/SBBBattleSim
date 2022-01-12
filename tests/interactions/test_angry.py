@@ -8,6 +8,7 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 def test_angry(golden):
     player = make_player(
+        raw=True,
         characters=[
             make_character(
                 id="SBB_CHARACTER_DWARFMINER", position=1, attack=1, health=2,
@@ -17,6 +18,7 @@ def test_angry(golden):
         ],
     )
     enemy = make_player(
+        raw=True,
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''],
         characters=[
             make_character(position=1, attack=1, health=1),
@@ -26,8 +28,6 @@ def test_angry(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     if golden:
         angry_final_stats = (9, 6)

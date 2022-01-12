@@ -1,15 +1,15 @@
 import random
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnDeath
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class FriendlySpiritLastBreath(OnDeath):
     last_breath = True
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         chars = self.manager.player.valid_characters()
         if not chars:
             return
@@ -17,9 +17,9 @@ class FriendlySpiritLastBreath(OnDeath):
         golden_multiplyer = 2 if self.manager.golden else 1
 
         char = random.choice(chars)
-        Buff(reason=StatChangeCause.FRIENDLY_SPIRIT_BUFF, source=self.manager, targets=[char],
+        Buff(reason=ActionReason.FRIENDLY_SPIRIT_BUFF, source=self.manager, targets=[char],
              attack=self.manager.attack * golden_multiplyer, health=self.manager.max_health * golden_multiplyer,
-             temp=False, stack=stack).execute()
+             stack=stack).execute()
 
 
 class CharacterType(Character):

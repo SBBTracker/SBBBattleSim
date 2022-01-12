@@ -1,14 +1,15 @@
-from sbbbattlesim.action import Buff
-from sbbbattlesim.spells import TargetedSpell
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.action import Buff, ActionReason
+from sbbbattlesim.spells import Spell
+from sbbbattlesim.utils import Tribe
 
 
-class SpellType(TargetedSpell):
+class SpellType(Spell):
     display_name = 'Flourish'
     _level = 3
 
-    def cast(self, target, *args, **kwargs):
-        Buff(targets=[target], health=7, temp=False, reason=StatChangeCause.FLOURISH, source=self, *args, **kwargs)
+    def cast(self, target: 'Character' = None, *args, **kwargs):
+        Buff(targets=[target], health=7, temp=False, reason=ActionReason.FLOURISH, source=self, *args, **kwargs)
 
-    def filter(self, char):
+    @classmethod
+    def filter(cls, char):
         return Tribe.TREANT in char.tribes

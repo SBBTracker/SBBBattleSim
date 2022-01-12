@@ -8,6 +8,7 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 def test_ashwood_elm(golden):
     player = make_player(
+        raw=True,
         characters=[
             make_character(
                 id="SBB_CHARACTER_KINGTREE", position=5,
@@ -17,11 +18,9 @@ def test_ashwood_elm(golden):
             make_character(position=2, attack=1, health=1),
         ],
     )
-    enemy = make_player()
+    enemy = make_player(raw=True)
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     treant_attack = (201 if golden else 101)
 

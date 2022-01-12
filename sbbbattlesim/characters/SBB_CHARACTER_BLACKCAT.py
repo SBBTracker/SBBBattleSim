@@ -7,10 +7,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class BlackCatLastBreath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         stat = 2 if self.manager.golden else 1
         cat = character_registry['SBB_CHARACTER_CAT'](
             self.manager.player,
@@ -37,4 +38,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(BlackCatLastBreath, priority=sbbbattlesim.SUMMONING_PRIORITY)
+        self.register(BlackCatLastBreath)

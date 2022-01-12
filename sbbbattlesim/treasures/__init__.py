@@ -12,22 +12,19 @@ logic_path = __path__
 class Treasure(EventManager):
     display_name = ''
     id = ''
-    aura = False
 
     _level = 0
 
     def __init__(self, player, mimic):
         self.player = player
         self.mimic = mimic
+        self.aura = None
 
     def pretty_print(self):
         return self.display_name
 
     def valid(self):
         return self._level != 0
-
-    def buff(self, target_character, *args, **kwargs):
-        raise NotImplementedError(self.display_name)
 
 
 class Registry(object):
@@ -53,13 +50,8 @@ class Registry(object):
 
     def autoregister(self):
         for _, name, _ in pkgutil.iter_modules(logic_path):
-            try:
-                treasure = __import__(name, globals(), locals(), ['TreasureType'], 1)
-                self.register(name, treasure.TreasureType)
-            except ImportError:
-                pass
-            except Exception as exc:
-                logger.exception('Error loading treasure: {}'.format(name))
+            treasure = __import__(name, globals(), locals(), ['TreasureType'], 1)
+            self.register(name, treasure.TreasureType)
 
 
 registry = Registry()

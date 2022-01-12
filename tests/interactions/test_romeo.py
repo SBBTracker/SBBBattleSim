@@ -21,8 +21,7 @@ def test_romeo_summons_dead_juliet(golden):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     juliet = board.p1.characters[2]
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_stats = (21, 21) if golden else (14, 14)
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats
@@ -43,12 +42,39 @@ def test_romeo_summons_dead_juliet():
         ]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    juliet = board.p1.characters[2]
-    winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
-    assert board.p1.characters[1] is juliet
+    winner, loser = board.fight(limit=2)
+
+    juliet = board.p1.characters[5]
+    assert board.p1.characters[5] is juliet
+    assert board.p1.characters[1] is None
+
+
+def test_romeo_summons_dead_juliet_with_mihri():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_ROMEO', position=5, attack=2, health=3),
+            make_character(id='SBB_CHARACTER_JULIET', attack=2, health=3, position=1),
+        ],
+        hero='SBB_HERO_KINGLION',
+        mihri_buff=1,
+        raw=True
+    )
+    enemy = make_player(
+        raw=True,
+        characters=[make_character(id="SBB_CHARACTER_DOOMBREATH", attack=7, health=7)],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+
+    juliet = board.p1.characters[5]
+    assert juliet.attack == 9
+    assert juliet.health == 10
+    assert board.p1.characters[1] is None
+
 
 def test_romeo_doesnt_summon_anything():
     player = make_player(
@@ -65,8 +91,7 @@ def test_romeo_doesnt_summon_anything():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     juliet = board.p1.characters[2]
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p1.characters[6] is None
 
@@ -88,8 +113,7 @@ def test_two_romeo_summons_one_dead_juliet():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     juliet = board.p1.characters[2]
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (14, 14)
     assert board.p1.characters[3].id == juliet.id
@@ -112,8 +136,7 @@ def test_two_romeo_summons_dead_juliet_alot():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     juliet = board.p1.characters[2]
     winner, loser = board.fight(limit=4)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (21, 21)
     assert board.p1.characters[7].id == juliet.id
@@ -136,8 +159,7 @@ def test_romeo_muerte_summons_dead_juliet():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     juliet = board.p1.characters[1]
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (14, 14)
     assert board.p1.characters[2].id == juliet.id

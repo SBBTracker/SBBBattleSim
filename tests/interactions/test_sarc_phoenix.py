@@ -31,8 +31,7 @@ def test_sarc_phoenix(mimic, n_char):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     if mimic or n_char > 1:
         assert board.p2.characters[5] is None

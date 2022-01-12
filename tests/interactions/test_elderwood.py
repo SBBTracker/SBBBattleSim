@@ -8,17 +8,16 @@ from tests import make_character, make_player
 @pytest.mark.parametrize('golden', (True, False))
 def test_elderwood(golden):
     player = make_player(
+        raw=True,
         characters=[
             make_character(id="SBB_CHARACTER_ELDERTREANT", position=5, attack=1, health=1, golden=golden),
             make_character(position=1, attack=1, health=1, tribes=[Tribe.TREANT]),
             make_character(position=2, attack=1, health=1)
         ],
     )
-    enemy = make_player()
+    enemy = make_player(raw=True)
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     if golden:
         final_stats = (5, 5)

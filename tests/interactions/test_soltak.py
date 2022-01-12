@@ -15,8 +15,7 @@ def test_soltak():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p1.characters[5] is not None
     assert board.p2.characters[1] is None
@@ -46,3 +45,20 @@ def test_doombreath():
     for i in (5, 6):
         assert player.characters[i] is not None, f'{[i.pretty_print() for i in player.valid_characters()]}'
 
+
+def test_soltak_stops_defending():
+    player = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_SOLTAKANCIENT", position=2, attack=0, health=20),
+            make_character(id="SBB_CHARACTER_TIM", position=5, attack=1, health=1),
+        ],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    enemy = make_player(
+        characters=[make_character(attack=100, health=100)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+
+    assert winner.id == 'ENEMY'

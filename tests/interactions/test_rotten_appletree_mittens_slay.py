@@ -22,7 +22,6 @@ def test_rottenappletree_slay_mittens(mittens):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     jorm = board.p1.characters[7]
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert not jorm.dead, jorm.pretty_print()

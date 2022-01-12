@@ -8,7 +8,7 @@ from sbbbattlesim.utils import Tribe
 class ThreeBigPigsDeath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         stat = 10 if self.manager.golden else 5
 
         sheep = [
@@ -38,4 +38,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(ThreeBigPigsDeath, priority=sbbbattlesim.SUMMONING_PRIORITY)
+        self.register(ThreeBigPigsDeath)

@@ -1,6 +1,6 @@
 import logging
 
-from sbbbattlesim.action import SupportBuff, EventSupport
+from sbbbattlesim.action import Support
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnSlay
 from sbbbattlesim.utils import Tribe
@@ -13,24 +13,10 @@ class BabaYagaOnSlayBuff(OnSlay):
         if isinstance(source, OnSlay):
             return
 
-        for _ in range(2 if self.baba_yaga.golden else 1):
+        for _ in range(2 if self.source.golden else 1):
             with stack.open(source=self, *args, **kwargs) as executor:
                 logger.debug(f'Baba Yaga Triggering OnAttackAndKill {source} ({args} {kwargs})')
                 executor.execute(source, *args, **kwargs)
-
-
-class BabaYagaSupportBuff(SupportBuff):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.applied_buffs = {}
-
-    def execute(self, character, *args, **kwargs):
-        event = character.register(BabaYagaOnSlayBuff, baba_yaga=self.source, temp=True, *args, **kwargs)
-        self.applied_buffs[character] = event
-
-    def remove(self):
-        for char, buff in self.applied_buffs:
-            char.remove(buff)
 
 
 class CharacterType(Character):
@@ -45,7 +31,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.support_buff = EventSupport(source=self, event=BabaYagaOnSlayBuff, baba_yaga=self)
-
-    def buff(self, target_character, *args, **kwargs):
-        self.support_buff.execute(target_character, *args, **kwargs)
+        self.support = Support(source=self, attack=6 if self.golden else 3, event=BabaYagaOnSlayBuff)

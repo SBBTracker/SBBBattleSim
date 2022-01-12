@@ -20,8 +20,7 @@ def test_shadow_assassin(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_stats = (3, 1) if golden else (2, 1)
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == final_stats

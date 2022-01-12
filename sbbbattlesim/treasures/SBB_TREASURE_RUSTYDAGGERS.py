@@ -1,6 +1,5 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
 
 
 class TreasureType(Treasure):
@@ -9,7 +8,7 @@ class TreasureType(Treasure):
 
     _level = 2
 
-    def buff(self, target_character, *args, **kwargs):
-        for _ in range(self.mimic + 1):
-            Buff(reason=StatChangeCause.NEEDLE_NOSE_DAGGERS, source=self, targets=[target_character],
-                 attack=2, temp=True, *args, **kwargs).resolve()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        stats = 2 * (self.mimic + 1)
+        self.aura = Aura(reason=ActionReason.NEEDLE_NOSE_DAGGERS, source=self, attack=stats)

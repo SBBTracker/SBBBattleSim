@@ -1,11 +1,10 @@
-from sbbbattlesim.action import Buff
-from sbbbattlesim.spells import TargetedSpell
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.action import Buff, ActionReason
+from sbbbattlesim.spells import Spell
 
 
-class SpellType(TargetedSpell):
+class SpellType(Spell):
     display_name = 'Burning Palm'
     _level = 4
 
-    def cast(self, target, *args, **kwargs):
-        Buff(attack=4, temp=False, reason=StatChangeCause.STONE_SKIN, source=self, targets=[target], *args, **kwargs)
+    def cast(self, target: 'Character' = None, *args, **kwargs):
+        Buff(attack=4, temp=False, reason=ActionReason.STONE_SKIN, source=self, targets=[target], *args, **kwargs)

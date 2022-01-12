@@ -1,15 +1,14 @@
 import random
 
-from sbbbattlesim.action import Damage
-from sbbbattlesim.spells import NonTargetedSpell
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.action import Damage, ActionReason
+from sbbbattlesim.spells import Spell
 
 
-class SpellType(NonTargetedSpell):
+class SpellType(Spell):
     display_name = 'Smite'
     _level = 6
 
-    def cast(self, player, *args, **kwargs):
-        valid_targets = player.opponent.valid_characters()
+    def cast(self, target: 'Character' = None, *args, **kwargs):
+        valid_targets = self.player.opponent.valid_characters()
         if valid_targets:
-            Damage(damage=30, reason=StatChangeCause.SMITE, source=self, targets=[random.choice(valid_targets)]).resolve()
+            Damage(damage=30, reason=ActionReason.SMITE, source=self, targets=[random.choice(valid_targets)]).resolve()

@@ -28,8 +28,7 @@ def test_complex_trees():
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     for pos in range(1, 8):
         char = board.p1.characters[pos]
@@ -49,3 +48,5 @@ def test_complex_trees():
             assert (char.attack, char.health) == (104, 104)
         else:
             raise ValueError('How did you get something in this position')
+
+

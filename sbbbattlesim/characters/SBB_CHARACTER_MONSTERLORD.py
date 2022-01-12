@@ -1,18 +1,19 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnPreAttack
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
 
 class OniKingOnMonsterAttack(OnPreAttack):
     def handle(self, stack, *args, **kwargs):
-        stat_change = 20 if self.oni_king.golden else 10
-        Buff(source=self.oni_king, reason=StatChangeCause.ONIKING_BUFF, targets=[self.manager],
+        stat_change = 20 if self.source.golden else 10
+        Buff(source=self.source, reason=ActionReason.ONIKING_BUFF, targets=[self.manager],
              attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
+
 
 class CharacterType(Character):
     display_name = 'Oni King'
@@ -25,7 +26,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-    def buff(self, target_character, *args, **kwargs):
-        if Tribe.MONSTER in target_character.tribes:
-            target_character.register(OniKingOnMonsterAttack, oni_king=self)
+        self.aura = Aura(source=self, event=OniKingOnMonsterAttack, _lambda=lambda char: Tribe.MONSTER in char.tribes)

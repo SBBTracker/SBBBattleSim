@@ -1,6 +1,7 @@
-from sbbbattlesim.action import Buff
+from numpy import character
+
+from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause
 
 
 class TreasureType(Treasure):
@@ -9,12 +10,12 @@ class TreasureType(Treasure):
 
     _level = 5
 
-    def buff(self, target_character, *args, **kwargs):
-        if target_character.position <= 4:
-            for _ in range(bool(self.mimic) + 1):
-                Buff(reason=StatChangeCause.SWORD_OF_FIRE_AND_ICE, source=self, targets=[target_character],
-                     health=6, temp=True, *args, **kwargs).resolve()
-        else:
-            for _ in range(bool(self.mimic) + 1):
-                Buff(reason=StatChangeCause.SWORD_OF_FIRE_AND_ICE, source=self, targets=[target_character],
-                     attack=6, temp=True, *args, **kwargs).resolve()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        stats = 6 * (bool(self.mimic) + 1)
+        self.aura = {
+            Aura(reason=ActionReason.SWORD_OF_FIRE_AND_ICE, source=self, health=stats,
+                 _lambda=lambda char: char.position <= 4),
+            Aura(reason=ActionReason.SWORD_OF_FIRE_AND_ICE, source=self, attack=stats,
+                 _lambda=lambda char: char.position > 4),
+        }

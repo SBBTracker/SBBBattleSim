@@ -1,16 +1,16 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
-from sbbbattlesim.utils import Tribe, StatChangeCause
+from sbbbattlesim.utils import Tribe
 
 
 class PrinceArthurOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
-        stat_change = 4 if self.arthur.golden else 2
-        royals = self.arthur.player.valid_characters(
+        stat_change = 4 if self.source.golden else 2
+        royals = self.source.player.valid_characters(
             _lambda=lambda char: char.golden and (Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes)
         )
-        Buff(source=self.arthur, reason=StatChangeCause.PRINCEARTHUR_BUFF, targets=royals,
+        Buff(source=self.source, reason=ActionReason.PRINCEARTHUR_BUFF, targets=royals,
              attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
 
@@ -24,4 +24,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(PrinceArthurOnStart, priority=80, arthur=self)
+        self.player.board.register(PrinceArthurOnStart, priority=80, source=self)

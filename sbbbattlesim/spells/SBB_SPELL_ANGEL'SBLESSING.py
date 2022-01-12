@@ -1,12 +1,11 @@
-from sbbbattlesim.action import Buff
-from sbbbattlesim.spells import NonTargetedSpell
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.action import Buff, ActionReason
+from sbbbattlesim.spells import Spell
 
 
-class SpellType(NonTargetedSpell):
+class SpellType(Spell):
     display_name = 'Blessing of Athena'
     _level = 4
 
-    def cast(self, player, *args, **kwargs):
-        Buff(reason=StatChangeCause.BLESSING_OF_ATHENA, source=self, targets=player.valid_characters(),
-             attack=1, health=1, temp=False, *args, **kwargs).resolve()
+    def cast(self, target: 'Character' = None, *args, **kwargs):
+        Buff(reason=ActionReason.BLESSING_OF_ATHENA, source=self, attack=1, health=1, temp=False,
+             *args, **kwargs).execute(*self.player.valid_characters()).resolve()

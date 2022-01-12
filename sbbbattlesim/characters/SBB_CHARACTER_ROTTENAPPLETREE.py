@@ -1,14 +1,14 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnPreDefend
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class RottenAppletreeOnPreDefend(OnPreDefend):
     def handle(self, attack_position, defend_position, attack_player, stack, *args, **kwargs):
         appled_enemy = attack_player.characters[attack_position]
         if appled_enemy:
-            Buff(reason=StatChangeCause.ROTTEN_APPLE_TREE_HEALTH, source=self.manager, targets=[appled_enemy],
+            Buff(reason=ActionReason.ROTTEN_APPLE_TREE_HEALTH, source=self.manager, targets=[appled_enemy],
                  health=1 - appled_enemy.health, stack=stack, temp=False).resolve()
 
 

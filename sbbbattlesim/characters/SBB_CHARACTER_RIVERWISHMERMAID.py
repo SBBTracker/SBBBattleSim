@@ -1,30 +1,34 @@
-from sbbbattlesim.action import Buff, SupportBuff, EventSupport
+import logging
+
+from sbbbattlesim import utils
+from sbbbattlesim.action import Buff, Support, ActionReason
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnAttackAndKill
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.events import OnAttackAndKill, OnSpawn
+from sbbbattlesim.utils import Tribe
+
+logger = logging.getLogger(__name__)
 
 
 class RiverwishMermaidOnAttackAndKill(OnAttackAndKill):
     slay = True
 
     def handle(self, killed_character, stack, *args, **kwargs):
-        stats = 2 if self.riverwish_mermaid.golden else 1
-        Buff(reason=StatChangeCause.SUPPORT_BUFF, source=self.riverwish_mermaid, targets=[self.manager],
-             attack=stats, health=stats, temp=False, stack=stack).resolve()
+        stats = 2 if self.source.golden else 1
+        Buff(reason=ActionReason.SUPPORT_BUFF, source=self.source, targets=[self.manager], attack=stats, health=stats,
+             stack=stack).resolve()
 
 
-class RiverwishMermaidSupportBuff(SupportBuff):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.applied_buffs = {}
+class RiverWishOnSpawn(OnSpawn):
+    def handle(self, stack, *args, **kwargs):
+        player = self.source.player
+        if 'SBB_TREASURE_CLOAKOFTHEASSASSIN' in player.treasures:
+            target_positions = utils.get_support_targets(self.source.position, player.banner_of_command)
+            logger.debug(target_positions)
+            targets = player.valid_characters(_lambda=lambda char: char.position in target_positions)
+            logger.debug(targets)
 
-    def _apply(self, char, *args, **kwargs):
-        event = char.register(RiverwishMermaidOnAttackAndKill, riverwish_mermaid=self.source, temp=True, *args, **kwargs)
-        self.applied_buffs[char] = event
-
-    def remove(self):
-        for char, buff in self.applied_buffs:
-            char.remove(buff)
+            for cloak in player.treasures['SBB_TREASURE_CLOAKOFTHEASSASSIN']:
+                cloak.aura.execute(*targets)
 
 
 class CharacterType(Character):
@@ -38,7 +42,7 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.support_buff = EventSupport(source=self, event=RiverwishMermaidOnAttackAndKill, riverwish_mermaid=self)
+        self.register(RiverWishOnSpawn)
+        self.support = Support(source=self, event=RiverwishMermaidOnAttackAndKill, priority=100)
 
-    def buff(self, target_character, *args, **kwargs):
-        self.support_buff.execute(target_character, *args, **kwargs)
+

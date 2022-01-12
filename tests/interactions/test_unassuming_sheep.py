@@ -16,8 +16,7 @@ def test_unassumingsheep(golden):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_stats = (12, 12) if golden else (6, 6)
     assert board.p1.characters[6].id == 'SBB_CHARACTER_EVILWOLF', board.p1.characters[6].pretty_print()

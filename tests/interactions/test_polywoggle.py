@@ -28,8 +28,7 @@ def test_polywoggle(golden, level):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     woggle = board.p1.characters[5]
     winner, loser = board.fight(limit=3)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     golden_promotion = (2 if golden else 1)
 

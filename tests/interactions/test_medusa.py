@@ -22,8 +22,7 @@ def test_medusa(golden):
     winner, loser = board.fight(limit=3)
     statue = board.p2.characters[1]
 
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert creature is not statue
     assert statue.health == (1 if golden else 4)
@@ -52,8 +51,7 @@ def test_medusa_attackslot(defending_pos):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
 
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     dusa = board.p1.characters[6]
     assert dusa
@@ -85,8 +83,7 @@ def test_medusa_attackslot_2(attacking_pos):
 
     winner, loser = board.fight(limit=3)
 
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert dusa
     assert dusa.dead
@@ -110,8 +107,7 @@ def test_medusa_cupid():
     winner, loser = board.fight(limit=1)
     statue = board.p1.characters[4]
 
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert creature is not statue
     assert statue.health == 5

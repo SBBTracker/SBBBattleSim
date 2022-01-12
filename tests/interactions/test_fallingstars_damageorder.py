@@ -21,8 +21,7 @@ def test_angry_fallingstars():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (3, 2)
 
@@ -55,8 +54,7 @@ def test_donkey_fallingstars():
 
     board.p1.characters[3].register(FakeTrojanDonkeySummon)
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     for pos in range(1, 8):
         char = board.p1.characters[pos]
@@ -95,8 +93,7 @@ def test_donkey_fallingstars_fullboard(board_full):
     donkey = board.p1.characters[4]
 
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     for pos in range(1, 8):
         char = board.p1.characters[pos]
@@ -141,8 +138,7 @@ def test_donkey_fallingstars_summondragon():
 
     board.p1.characters[1].register(FakeTrojanDonkeySummon)
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p2.characters[1] is None
     assert board.p1.graveyard[0]._action_history[-1].source == board.p2.graveyard[0]

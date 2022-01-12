@@ -1,6 +1,6 @@
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.treasures import Treasure
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class TreasureType(Treasure):
@@ -9,8 +9,9 @@ class TreasureType(Treasure):
 
     _level = 4
 
-    def buff(self, target_character, *args, **kwargs):
-        if Tribe.PRINCE in target_character.tribes or Tribe.PRINCESS in target_character.tribes:
-            for _ in range(1 + bool(self.mimic)):
-                Buff(reason=StatChangeCause.SKYCASTLE, source=self, targets=[target_character],
-                     health=4, attack=4, temp=True, *args, **kwargs).resolve()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.feather_used = False
+        stats = 4 * (bool(self.mimic) + 1)
+        self.aura = Aura(reason=ActionReason.SKYCASTLE, source=self, attack=stats, health=stats,
+                         _lambda=lambda char: Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes)

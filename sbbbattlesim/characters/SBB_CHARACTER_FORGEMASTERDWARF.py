@@ -1,21 +1,21 @@
 import logging
 
-from sbbbattlesim.action import Buff
+from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
 
 class LordyBuffOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
-        dwarfes = self.lordy.player.valid_characters(
+        dwarfes = self.source.player.valid_characters(
             _lambda=lambda char: Tribe.DWARF in char.tribes
         )
-        stat_change = len(dwarfes) * (4 if self.lordy.golden else 2)
-        Buff(reason=StatChangeCause.LORDY_BUFF, source=self.lordy, targets=dwarfes,
-             attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
+        stat_change = len(dwarfes) * (4 if self.source.golden else 2)
+        Buff(reason=ActionReason.LORDY_BUFF, source=self.source, targets=dwarfes,
+             attack=stat_change, health=stat_change, stack=stack).resolve()
 
 
 class CharacterType(Character):
@@ -28,4 +28,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(LordyBuffOnStart, priority=90, lordy=self)
+        self.player.board.register(LordyBuffOnStart, priority=90, source=self)

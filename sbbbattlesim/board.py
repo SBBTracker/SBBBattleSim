@@ -37,8 +37,9 @@ class Board(EventManager):
 
     def fight(self, limit=-1):
         attacker, defender = who_goes_first(self.p1, self.p2)
-        attacker.resolve_board()
-        defender.resolve_board()
+        logger.debug('********************SETTING UP COMBAT')
+        self('OnSetup')
+        logger.debug('********************STARTING COMBAT')
         self('OnStart')
         self.winner, self.loser = fight(attacker, defender, limit=limit)
         return self.winner, self.loser

@@ -34,8 +34,7 @@ def test_oni(golden, limit):
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=limit)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     final_stats = (21, 21) if golden else (11, 11)
 

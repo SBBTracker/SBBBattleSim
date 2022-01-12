@@ -8,6 +8,7 @@ from tests import make_character, make_player
 
 def test_egg_feather():
     player = make_player(
+        raw=True,
         treasures=['''SBB_TREASURE_PHOENIXFEATHER'''],
         characters=[
             make_character(
@@ -17,6 +18,7 @@ def test_egg_feather():
         ],
     )
     enemy = make_player(
+        raw=True,
         characters=[
             make_character(position=1, attack=1, health=1),
          ],
@@ -24,7 +26,6 @@ def test_egg_feather():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p1.characters[1] is None

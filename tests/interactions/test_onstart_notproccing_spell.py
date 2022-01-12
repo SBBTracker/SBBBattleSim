@@ -18,8 +18,7 @@ def test_onstart_not_proc_merlin():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 
@@ -43,8 +42,7 @@ def test_onstart_not_proc_familar():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight()
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     player = board.p1
 

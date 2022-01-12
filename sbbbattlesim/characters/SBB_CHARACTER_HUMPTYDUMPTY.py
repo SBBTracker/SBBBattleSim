@@ -6,8 +6,8 @@ from sbbbattlesim.events import OnDeath
 class HumptyDumptyOnDeath(OnDeath):
     last_breath = False
 
-    def handle(self, *args, **kwargs):
-        self.manager.player.graveyard.remove(self.egg)
+    def handle(self, stack, reason, *args, **kwargs):
+        self.manager.player.graveyard.remove(self.source)
 
 
 class CharacterType(Character):
@@ -20,4 +20,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(HumptyDumptyOnDeath, egg=self, priority=1001)
+        self.register(HumptyDumptyOnDeath, priority=1001)

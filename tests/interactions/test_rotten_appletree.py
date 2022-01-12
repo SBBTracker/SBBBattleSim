@@ -1,4 +1,5 @@
 from sbbbattlesim import Board
+from sbbbattlesim.action import ActionReason, ActionState
 from tests import make_character, make_player
 
 
@@ -15,8 +16,7 @@ def test_rotten_appletree():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p2.characters[1].health == 1
 
@@ -38,8 +38,7 @@ def test_rotten_appletree_support():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     assert board.p2.characters[1].health == 1
 
@@ -63,14 +62,18 @@ def test_rotten_appletree_health_support_dies():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     frontchar = board.p2.characters[1]
     backchar = board.p2.characters[5]
-    board.p2.resolve_board()
-    assert board.p2.characters[1].health == 1003
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert backchar.dead
     assert frontchar.dead
+
+    baby_root_buff = None
+    for action in frontchar._action_history:
+        if action.reason == ActionReason.SUPPORT_BUFF and action.health == 3:
+            baby_root_buff = action
+
+    assert baby_root_buff
+    assert baby_root_buff.state == ActionState.ROLLED_BACK
 
 
 def test_rotten_appletree_attack_support_dies():
@@ -92,12 +95,7 @@ def test_rotten_appletree_attack_support_dies():
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     frontchar = board.p2.characters[1]
     backchar = board.p2.characters[5]
-    board.p2.resolve_board()
-    assert board.p2.characters[1].attack == 4
-
     winner, loser = board.fight(limit=2)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert frontchar.health == 1
     assert backchar.dead

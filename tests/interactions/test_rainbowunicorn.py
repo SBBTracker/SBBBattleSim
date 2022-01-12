@@ -21,14 +21,43 @@ def test_rainbow_unicorn(golden):
     enemy = make_player()
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=0)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
+
 
     if golden:
         final_stats = (1, 3)
     else:
         final_stats = (1, 2)
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 1)
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (1, 1)
+    char = board.p1.characters[5]
+    buffs = [
+        r for r in char._action_history
+    ]
+
+    healthbuffs = sum([b.health for b in buffs])
+    attackbuffs = sum([b.attack for b in buffs])
+
+    assert attackbuffs == 0
+    assert healthbuffs == 0
+
+    char = board.p1.characters[6]
+    buffs = [
+        r for r in char._action_history
+    ]
+
+    healthbuffs = sum([b.health for b in buffs])
+    attackbuffs = sum([b.attack for b in buffs])
+
+    assert attackbuffs == 0
+    assert healthbuffs == (2 if golden else 1)
+
+    char = board.p1.characters[7]
+    buffs = [
+        r for r in char._action_history
+    ]
+
+    healthbuffs = sum([b.health for b in buffs])
+    attackbuffs = sum([b.attack for b in buffs])
+
+    assert attackbuffs == 0
+    assert healthbuffs == 0
+

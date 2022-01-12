@@ -1,6 +1,6 @@
-from sbbbattlesim.action import Buff, SupportBuff
+from sbbbattlesim.action import Buff, Support, ActionReason
 from sbbbattlesim.characters import Character
-from sbbbattlesim.utils import StatChangeCause, Tribe
+from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):
@@ -15,8 +15,5 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         stat_change = 4 if self.golden else 2
-        self.support_buff = SupportBuff(source=self, _lambda=lambda char: Tribe.DWARF in char.tribes,
-                                        health=stat_change, attack=stat_change)
-
-    def buff(self, target_character, *args, **kwargs):
-        self.support_buff.execute(target_character, *args, **kwargs)
+        self.support = Support(source=self, _lambda=lambda char: Tribe.DWARF in char.tribes,
+                               health=stat_change, attack=stat_change)

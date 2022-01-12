@@ -8,7 +8,7 @@ from sbbbattlesim.utils import Tribe
 class SheepWolfLastBreath(OnDeath):
     last_breath = True
 
-    def handle(self, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         stat = 12 if self.manager.golden else 6
         sheep = [
             character_registry['SBB_CHARACTER_EVILWOLF'](
@@ -30,4 +30,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(SheepWolfLastBreath, priority=sbbbattlesim.SUMMONING_PRIORITY)
+        self.register(SheepWolfLastBreath)

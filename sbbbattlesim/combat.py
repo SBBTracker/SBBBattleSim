@@ -3,7 +3,7 @@ import random
 import sys
 from functools import lru_cache
 
-from sbbbattlesim.utils import StatChangeCause
+from sbbbattlesim.action import ActionReason
 
 sys.setrecursionlimit(500)
 
@@ -16,9 +16,6 @@ def fight(attacker, defender, turn=0, limit=-1, **kwargs):
         return None, None
 
     logger.debug(f'********************NEW ROUND OF COMBAT: turn={turn}')
-
-    attacker.resolve_board()
-    defender.resolve_board()
 
     logger.info(f'Attacker {attacker.pretty_print()}')
     logger.info(f'Defender {defender.pretty_print()}')
@@ -63,8 +60,10 @@ def attack(attack_position, attacker, defender, **kwargs):
         # the character may have died elsewhere in the stack
         return
 
-    front_characters = defender.valid_characters(_lambda=lambda char: char.position in front and char is not attack_character)
-    back_characters = defender.valid_characters(_lambda=lambda char: char.position in back and char is not attack_character)
+    front_characters = defender.valid_characters(
+        _lambda=lambda char: char.position in front and char is not attack_character)
+    back_characters = defender.valid_characters(
+        _lambda=lambda char: char.position in back and char is not attack_character)
     if attacker.characters.get(attack_position).flying:
         if any(back_characters):
             valid_defenders = back_characters
@@ -91,15 +90,20 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     # Pre Damage Event
     # These functions can change the characters in given positions like Medusa
-    attacker.characters.get(attack_position)('OnPreAttack', attack_position=attack_position, defend_position=defend_position, defend_player=defender, **kwargs)
-    defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position, defend_position=defend_position, attack_player=attacker, **kwargs)
+    attacker.characters.get(attack_position)('OnPreAttack', attack_position=attack_position,
+                                             defend_position=defend_position, defend_player=defender, **kwargs)
+    defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position,
+                                             defend_position=defend_position, attack_player=attacker, **kwargs)
 
     # We are pulling the latest attack_character and defend character incase they changed
     attack_character = attacker.characters.get(attack_position)
     defend_character = defender.characters.get(defend_position)
 
-    attacker_damage = defend_character.generate_attack(attack_character, StatChangeCause.DAMAGE_WHILE_ATTACKING)
-    defender_damage = attack_character.generate_attack(defend_character, StatChangeCause.DAMAGE_WHILE_DEFENDING)
+    if attack_character is None or defend_character is None:
+        return
+
+    attacker_damage = defend_character.generate_attack(target=attack_character, source=defend_character, reason=ActionReason.DAMAGE_WHILE_DEFENDING, attacking=False)
+    defender_damage = attack_character.generate_attack(target=defend_character, source=attack_character, reason=ActionReason.DAMAGE_WHILE_ATTACKING, attacking=True)
 
     if not attack_character.ranged:
         attacker_damage.execute()
@@ -119,4 +123,3 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     # for cupid to work properly
     defend_character('OnPostDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
-

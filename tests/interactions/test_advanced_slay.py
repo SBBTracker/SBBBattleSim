@@ -3,12 +3,13 @@ import pytest
 from sbbbattlesim import Board
 from tests import make_character, make_player
 
-
+@pytest.mark.skipif
 @pytest.mark.parametrize('golden', (True, False))
 @pytest.mark.parametrize('mimic', (True, False))
 @pytest.mark.parametrize('evil_eye', (True, False))
 def test_riverwish_yaga(golden, mimic, evil_eye):
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=5, attack=5, health=5, golden=False),
             make_character(id='SBB_CHARACTER_BABAYAGA', position=6, attack=3, health=6, golden=golden),
@@ -22,12 +23,11 @@ def test_riverwish_yaga(golden, mimic, evil_eye):
         ]
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=0, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     yaga_multiplier = 2 if golden else 1
     evil_eye_additor = yaga_multiplier if evil_eye else 0
@@ -51,6 +51,7 @@ def test_riverwish_yaga(golden, mimic, evil_eye):
 @pytest.mark.parametrize('evil_eye', (True, False))
 def test_double_yaga(mimic, evil_eye):
     player = make_player(
+        raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=5, health=5, golden=False),
             make_character(id='SBB_CHARACTER_BABAYAGA', position=6, attack=3, health=6, golden=False),
@@ -64,12 +65,11 @@ def test_double_yaga(mimic, evil_eye):
         ]
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=0, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     evil_eye_additor = 1 if evil_eye else 0
     mimic_multiplier = 2 if mimic else 1
@@ -85,6 +85,7 @@ def test_double_yaga(mimic, evil_eye):
 
 def test_complicated_grimsoul():
     player = make_player(
+        raw=True,
         hero="SBB_HERO_MILITARYLEADER",
         characters=[
             make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=5, health=5, golden=False),
@@ -96,18 +97,18 @@ def test_complicated_grimsoul():
         ]
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=0, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (12, 12)
 
 
 def test_complicated_grimsoul_two():
     player = make_player(
+        raw=True,
         hero="SBB_HERO_MILITARYLEADER",
         characters=[
             make_character(id='SBB_CHARACTER_CERBERUS', position=3, attack=10, health=10, golden=False),
@@ -119,13 +120,11 @@ def test_complicated_grimsoul_two():
         ]
     )
     enemy = make_player(
+        raw=True,
         characters=[make_character(attack=0, health=1)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
-
 
     leftgrim = board.p1.characters[2]
     rightgrim = board.p1.characters[3]
@@ -135,6 +134,7 @@ def test_complicated_grimsoul_two():
 
 def test_trophy_grimsoul_blackcat():
     player = make_player(
+        raw=True,
         hero="SBB_HERO_MILITARYLEADER",
         characters=[
             make_character(id='SBB_CHARACTER_BABAYAGA', position=5, attack=5, health=5, golden=False),
@@ -150,10 +150,12 @@ def test_trophy_grimsoul_blackcat():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
-    board.p1.resolve_board()
-    board.p2.resolve_board()
 
     assert board.p1.characters[3].id == "SBB_CHARACTER_CAT"
     assert board.p1.characters[4].id == "SBB_CHARACTER_CAT"
     assert board.p1.characters[6].id == "SBB_CHARACTER_CAT"
     assert board.p1.characters[7].id == "SBB_CHARACTER_CAT"
+
+
+
+
