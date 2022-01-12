@@ -435,3 +435,29 @@ def test_toil_and_trouble():
         char = board.p1.characters[i]
         assert char
         assert char._action_history[0].reason == ActionReason.TOIL_AND_TROUBLE
+
+
+@pytest.mark.parametrize('ranged', (True, False))
+@pytest.mark.parametrize('one_att', (True, False))
+def test_fog(ranged, one_att):
+    player = make_player(
+        characters=[ make_character(id="SBB_CHARACTER_FOXTAILARCHER" if ranged else '', attack=1 if one_att else 10)]
+    )
+
+    enemy = make_player(
+        spells=['SBB_SPELL_FOG']
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight()
+
+    character = board.p1.characters[1]
+
+    expected_attack = 10 if (not ranged and not one_att) else 1
+    assert character.attack == expected_attack
+
+    fogbuffs = [
+        r for r in character._action_history if r.reason == ActionReason.FOG
+    ]
+
+    assert len(fogbuffs) == (1 if ranged and not one_att else 0)
+    # TODO: test with singing swords

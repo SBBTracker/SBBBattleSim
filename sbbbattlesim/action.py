@@ -147,6 +147,7 @@ class ActionReason(enum.Enum):
     FIREBALL = 454
     LIGHTNING_BOLT = 455
     POISON_APPLE = 456
+    FOG = 457
 
     COPYCAT_PROC = 501
     MEURTE_PROC = 502
