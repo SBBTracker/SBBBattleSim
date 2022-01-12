@@ -13,6 +13,8 @@ class PhoenixFeatherOnDeath(OnDeath):
             all_characters = self.manager.player.valid_characters() + [self.manager]
             max_attack = max(all_characters, key=lambda x: x.attack).attack
             if self.manager.attack >= max_attack:
+                self.source.feather_used = True
+                
                 self.manager._damage = 0
                 self.manager.dead = False
                 self.manager.has_attacked = False
@@ -23,7 +25,7 @@ class PhoenixFeatherOnDeath(OnDeath):
                     new_char = self.manager.copy()
                     self.manager.player.summon(self.manager.position, [new_char], *args, **kwargs)
 
-                self.source.feather_used = True
+
 
 
 class TreasureType(Treasure):

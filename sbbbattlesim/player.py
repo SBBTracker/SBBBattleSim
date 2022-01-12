@@ -54,6 +54,7 @@ class Player(EventManager):
         self._attack_chain = 0
         self._spells_cast = kwargs.get('spells_cast', None)
 
+
         # Treasure Counting
         self.banner_of_command = 'SBB_TREASURE_BANNEROFCOMMAND' in treasures
         evileye = 'SBB_TREASURE_HELMOFCOMMAND' in treasures
