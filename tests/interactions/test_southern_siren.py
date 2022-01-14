@@ -2,6 +2,7 @@ import pytest
 
 from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
+from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 
 
@@ -34,7 +35,7 @@ def test_southern_siren(attacker_golden, defender_golden):
         assert utc.tribes == type(utc.tribes)([Tribe.DWARF])
 
 
-def test_southern_siren():
+def test_southern_siren_positioncheck():
     player = make_player(
         characters=[
             make_character(id='SBB_CHARACTER_LOBO', position=1, attack=1, health=1, golden=True),
@@ -51,3 +52,30 @@ def test_southern_siren():
 
     assert board.p1.characters[2].position == 2
     assert board.p1.characters[3].position == 3
+
+
+
+def test_southern_siren_steal_shadowassassin_buff():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_LOBO', position=1, attack=1, health=1),
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[make_character(id="SBB_CHARACTER_SHADOWASSASSIN", attack=0, health=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+
+    assert board.p1.characters[2].position == 2
+
+    assert board.p1.characters[2].attack == 1
+    buffs = [r for r in board.p1.characters[2]._action_history if r.reason == ActionReason.SHADOW_ASSASSIN_ON_SLAY_BUFF]
+
+    assert len(buffs) == 1
+    assert sum([b.attack for b in buffs]) == 1
+    assert sum([b.health for b in buffs]) == 0
+    
