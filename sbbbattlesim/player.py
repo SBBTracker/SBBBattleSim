@@ -2,16 +2,13 @@ import collections
 import logging
 import random
 from collections import OrderedDict, defaultdict
-from sbbbattlesim.treasures.SBB_TREASURE_PHOENIXFEATHER import PhoenixFeatherOnDeath
-from turtle import position
 
 from sbbbattlesim import utils
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.events import EventManager, OnStart, OnSetup, OnDeath, OnLastBreath
+from sbbbattlesim.events import EventManager, OnStart, OnSetup
 from sbbbattlesim.heroes import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
-from sbbbattlesim.action import ActionState
 
 logger = logging.getLogger(__name__)
 
