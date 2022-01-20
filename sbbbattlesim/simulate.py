@@ -46,7 +46,7 @@ def from_state(state: dict):
             elif data.zone == 'Hero':
                 hero = data.content_id
                 counter = data.counter
-                level = int(data.level)
+                level = int(data.level) if hasattr(data, "level") else 0
             elif data.zone == 'Spell':
                 spells.append(data.content_id)
 
