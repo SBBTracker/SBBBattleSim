@@ -56,8 +56,7 @@ def from_state(state: dict):
             'hero': hero,
             'spells': spells,
             'level': level,
-            'hand': hand,
-            'raw': True
+            'hand': hand
         }
         if hero == "SBB_HERO_KINGLION":
             sim_data[player]['mihri_buff'] = int(counter)
