@@ -46,7 +46,7 @@ def from_state(state: dict):
             elif data.zone == 'Hero':
                 hero = data.content_id
                 counter = data.counter
-                level = int(data.level)
+                level = int(data.level) if hasattr(data, "level") else 0
             elif data.zone == 'Spell':
                 spells.append(data.content_id)
 
@@ -56,8 +56,7 @@ def from_state(state: dict):
             'hero': hero,
             'spells': spells,
             'level': level,
-            'hand': hand,
-            'raw': True
+            'hand': hand
         }
         if hero == "SBB_HERO_KINGLION":
             sim_data[player]['mihri_buff'] = int(counter)
