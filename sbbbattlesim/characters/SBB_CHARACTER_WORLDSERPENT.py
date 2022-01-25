@@ -15,10 +15,10 @@ class JormungandrOnAttackAndKill(OnAttackAndKill):
 
 class JormungandrOnSlay(OnSlay):
     def handle(self, source, stack, *args, **kwargs):
-        # if reason != ActionReason.JORM_ON_SLAY_BUFF
-        modifier = 40 if self.source.golden else 20
-        Buff(reason=ActionReason.JORM_ON_SLAY_BUFF, source=self.source, targets=[self.source],
-             attack=modifier, health=modifier, stack=stack, *args, **kwargs).resolve()
+        if source.source is not self.source:
+            modifier = 40 if self.source.golden else 20
+            Buff(reason=ActionReason.JORM_ON_SLAY_BUFF, source=self.source, targets=[self.source],
+                 attack=modifier, health=modifier, stack=stack, *args, **kwargs).resolve()
 
 
 class CharacterType(Character):

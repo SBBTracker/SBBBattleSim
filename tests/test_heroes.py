@@ -450,7 +450,7 @@ def test_trophy_hunter_yaga():
         assert player.characters[pos].id == "SBB_CHARACTER_CAT"
 
 
-@pytest.mark.parametrize('limit', (1, 3, 5))
+@pytest.mark.parametrize('limit', (1, 5, 9))
 def test_trophy_hunter_friendlyspirit(limit):
     player = make_player(
         raw=True,
@@ -468,11 +468,14 @@ def test_trophy_hunter_friendlyspirit(limit):
             make_character(attack=0, health=1, position=1),
             make_character(attack=0, health=1, position=2),
             make_character(attack=0, health=1, position=3),
+            make_character(attack=0, health=1, position=4),
+            make_character(attack=0, health=1, position=5),
+            make_character(attack=0, health=1, position=6),
+            make_character(attack=0, health=1, position=7),
         ]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=limit)
-
 
     player = board.p1
 
@@ -480,10 +483,10 @@ def test_trophy_hunter_friendlyspirit(limit):
     ally = board.p1.characters[6]
     if limit == 1:
         final_stats = (10, 20)
-    elif limit == 3:
-        final_stats = (15, 35)
     elif limit == 5:
-        final_stats = (40, 80)
+        final_stats = (15, 30)
+    elif limit == 9:
+        final_stats = (20, 40)
     else:
         raise ValueError(f'Limit of {limit} is not configured in the test')
 
