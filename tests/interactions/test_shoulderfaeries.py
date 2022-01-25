@@ -5,27 +5,29 @@ from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
 
-@pytest.mark.parametrize('golden', (True, False))
-def test_shoulderfaeries(golden):
+def test_shoulderfaeries():
     player = make_player(
         characters=[
             make_character(
-                id="SBB_CHARACTER_GOODANDEVILSISTERS", position=1, attack=1, health=1, golden=golden
+                id="SBB_CHARACTER_GOODANDEVILSISTERS", position=1, attack=1, health=1
             ),
             make_character(position=6, attack=1000, health=100, tribes=[Tribe.GOOD]),
             make_character(position=5, attack=100, health=1000, tribes=[Tribe.EVIL]),
         ],
+        treasures=[
+            'SBB_TREASURE_MIRRORUNIVERSE'
+        ],
     )
-    enemy = make_player()
+    enemy = make_player(
+        characters=[
+            make_character(position=1, attack=200, health=200),
+        ],
+    )
 
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    winner, loser = board.fight(limit=1)
 
-
-    if golden:
-        final_stats = (201, 201)
-    else:
-        final_stats = (101, 101)
+    final_stats = (100, 100)
 
     assert (board.p1.characters[1].attack, board.p1.characters[1].health) == final_stats
 

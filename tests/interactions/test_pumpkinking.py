@@ -22,7 +22,7 @@ def test_lonely_pumpkin_dying(golden):
 
     summoned_unit = board.p1.characters[1]
     assert summoned_unit is not pk
-    assert summoned_unit._level == 5
+    assert summoned_unit._level == 4
     if golden:
         assert summoned_unit.attack == summoned_unit._attack * 2
         assert summoned_unit.health == summoned_unit._health * 2

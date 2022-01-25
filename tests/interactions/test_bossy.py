@@ -21,9 +21,9 @@ def test_bossy(golden):
     winner, loser = board.fight(limit=2)
 
     if golden:
-        final_stats = (5, 5)
+        final_stats = (7, 7)
     else:
-        final_stats = (3, 3)
+        final_stats = (4, 4)
 
 
     char = board.p1.characters[6]
@@ -34,8 +34,8 @@ def test_bossy(golden):
     healthbuffs = sum([b.health for b in buffs])
     attackbuffs = sum([b.attack for b in buffs])
 
-    assert attackbuffs == (4 if golden else 2)
-    assert healthbuffs == (4 if golden else 2)
+    assert attackbuffs == (6 if golden else 3)
+    assert healthbuffs == (6 if golden else 3)
 
     char = board.p1.characters[7]
     buffs = [

@@ -7,7 +7,7 @@ def test_complex_trees():
     player = make_player(
         raw=True,
         characters=[
-            make_character(id="SBB_CHARACTER_GOODANDEVILSISTERS", position=1, attack=4, health=4, golden=True),
+            make_character(id="SBB_CHARACTER_FORGEMASTERDWARF", position=1, attack=4, health=4, golden=True),
             make_character(position=2, attack=30, health=52, golden=True,
                            tribes=[Tribe.GOOD, Tribe.PRINCE, Tribe.TREANT]),
             make_character(position=3, attack=28, health=75, golden=True,
@@ -33,7 +33,7 @@ def test_complex_trees():
     for pos in range(1, 8):
         char = board.p1.characters[pos]
         if pos == 1:
-            assert (char.attack, char.health) == (200, 200)
+            assert (char.attack, char.health) == (8, 8)
         elif pos == 2:
             assert (char.attack, char.health) == (122, 122)
         elif pos == 3:

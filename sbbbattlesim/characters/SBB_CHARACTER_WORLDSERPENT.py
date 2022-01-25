@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Buff, ActionReason
+from sbbbattlesim.action import Aura, Buff, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnAttackAndKill, OnSlay
 from sbbbattlesim.utils import Tribe
@@ -15,6 +15,7 @@ class JormungandrOnAttackAndKill(OnAttackAndKill):
 
 class JormungandrOnSlay(OnSlay):
     def handle(self, source, stack, *args, **kwargs):
+        # if reason != ActionReason.JORM_ON_SLAY_BUFF
         modifier = 40 if self.source.golden else 20
         Buff(reason=ActionReason.JORM_ON_SLAY_BUFF, source=self.source, targets=[self.source],
              attack=modifier, health=modifier, stack=stack, *args, **kwargs).resolve()
@@ -31,3 +32,4 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.register(JormungandrOnAttackAndKill)
+        self.aura = Aura(source=self, event=JormungandrOnSlay)

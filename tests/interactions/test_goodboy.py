@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import Board, configure_logging
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -49,3 +49,31 @@ def test_goodboy_mirroruniverse():
     assert doggo
     assert doggo.health == 11
     assert doggo.attack == 11
+
+
+def test_copycat():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_COPYCAT', position=1, attack=5, health=5),
+            make_character(id='SBB_CHARACTER_GOODBOY', position=5, attack=5, health=5, tribes=[Tribe.GOOD]),
+            make_character(id='SBB_CHARACTER_GOODBOY', position=6, attack=5, health=5, tribes=[Tribe.GOOD]),
+        ],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    enemy = make_player(
+        characters=[
+            make_character(attack=5, health=5),
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+
+    doggo1 = board.p1.characters[5]
+    assert doggo1
+    assert doggo1.health == 5
+    assert doggo1.attack == 5
+
+    doggo2 = board.p1.characters[6]
+    assert doggo2
+    assert doggo2.health == 10
+    assert doggo2.attack == 10
