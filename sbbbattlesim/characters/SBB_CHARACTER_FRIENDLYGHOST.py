@@ -10,7 +10,7 @@ class FriendlySpiritLastBreath(OnDeath):
     last_breath = True
 
     def handle(self, stack, reason, *args, **kwargs):
-        chars = self.manager.player.valid_characters(lambda char: char != self.manager)
+        chars = self.manager.player.valid_characters(lambda char: char is not self.manager)
         if not chars:
             return
 
