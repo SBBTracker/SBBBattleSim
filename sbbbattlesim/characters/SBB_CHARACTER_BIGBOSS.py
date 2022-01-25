@@ -12,8 +12,6 @@ class CharacterType(Character):
     _level = 5
     _tribes = {Tribe.DWARF}
 
-    deactivated = True
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         modifier = 6 if self.golden else 3
