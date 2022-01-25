@@ -7,9 +7,9 @@ class CharacterType(Character):
     display_name = 'Bossy'
     aura = True
 
-    _attack = 4
-    _health = 4
-    _level = 4
+    _attack = 6
+    _health = 6
+    _level = 5
     _tribes = {Tribe.DWARF}
 
     deactivated = True
