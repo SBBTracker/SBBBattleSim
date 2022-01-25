@@ -22,7 +22,7 @@ class TreasureType(Treasure):
     display_name = 'The Ninth Book of Merlin'
     aura = True
 
-    _level = 5
+    _level = 6
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

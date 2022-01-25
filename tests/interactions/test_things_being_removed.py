@@ -137,7 +137,7 @@ def test_aura_dies():
         raw=True,
         characters=[
             make_character(id='SBB_CHARACTER_BIGBOSS', position=6, attack=3, health=6),
-            make_character(attack=4, health=4, position=2, tribes=['dwarf']),
+            make_character(attack=5, health=5, position=2, tribes=['dwarf']),
         ],
         treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''

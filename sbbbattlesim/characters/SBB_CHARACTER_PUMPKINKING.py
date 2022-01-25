@@ -39,9 +39,9 @@ class PumpkinKingOnDeath(OnDeath):
 class CharacterType(Character):
     display_name = 'Great Pumpkin King'
 
-    _attack = 10
-    _health = 10
-    _level = 6
+    _attack = 2
+    _health = 2
+    _level = 5
     _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
     def __init__(self, *args, **kwargs):

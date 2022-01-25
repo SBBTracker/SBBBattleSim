@@ -5,7 +5,7 @@ from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
 
-@pytest.mark.parametrize('golden', (True, False))
+@pytest.mark.parametrize('golden', (False, True))
 def test_muerte_copycat_goodboy(golden):
     player = make_player(
         raw=True,
@@ -19,10 +19,6 @@ def test_muerte_copycat_goodboy(golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
 
-    '''
-    Stat Stacking Quick Math
-    1 > 2 > 6 > 18 > 36 > 108
-    '''
 
     enemy = make_player(
         raw=True,
@@ -32,14 +28,14 @@ def test_muerte_copycat_goodboy(golden):
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    winner, loser = board.fight(limit=1)
 
     if golden:
-        final_stats = (108, 108)
+        final_stats = (31, 31)
     else:
-        final_stats = (18, 18)
+        final_stats = (9, 9)
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats
+    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == final_stats
 
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -48,26 +44,25 @@ def test_muerte_single_goodboy(golden):
         raw=True,
         hero="SBB_HERO_MUERTE",
         characters=[
-            make_character(id="SBB_CHARACTER_COPYCAT", position=2, attack=1, health=5, golden=golden),
-            make_character(id="SBB_CHARACTER_GOODBOY", position=5, attack=1, health=1, tribes=[Tribe.GOOD], golden=True),
+            make_character(position=5, attack=1, health=1, tribes=[Tribe.GOOD]),
+            make_character(id="SBB_CHARACTER_GOODBOY", position=1, attack=1, health=1, tribes=[Tribe.GOOD], golden=golden),
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
         raw=True,
         characters=[
-            make_character(),
             make_character()
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    winner, loser = board.fight(limit=1)
 
 
     if golden:
-        final_stats = (27, 27)
+        final_stats = (5, 5)
     else:
-        final_stats = (9, 9)
+        final_stats = (3, 3)
 
     assert (board.p1.characters[5].attack, board.p1.characters[5].health) == final_stats
 
