@@ -17,7 +17,7 @@ class GoodBoyDeath(OnDeath):
         health_buff = (self.manager._base_health) * golden_multiplyer
 
         Buff(reason=ActionReason.GOODBOY_BUFF, source=self.manager, attack=attack_buff, health=health_buff, stack=stack,
-             targets=self.manager.player.valid_characters(_lambda=lambda char: Tribe.GOOD in char.tribes)).execute()
+             targets=self.manager.player.valid_characters(_lambda=lambda char: Tribe.GOOD in char.tribes and char != self.manager)).execute()
 
 
 class CharacterType(Character):

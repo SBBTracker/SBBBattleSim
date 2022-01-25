@@ -23,9 +23,9 @@ class CharacterType(Character):
     display_name = 'Tweedle Dee'
     last_breath = True
 
-    _attack = 3
-    _health = 2
-    _level = 3
+    _attack = 6
+    _health = 1
+    _level = 4
     _tribes = {Tribe.DWARF}
 
     def __init__(self, *args, **kwargs):

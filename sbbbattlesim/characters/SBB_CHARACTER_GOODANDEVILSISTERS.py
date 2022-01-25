@@ -2,13 +2,13 @@ import logging
 
 from sbbbattlesim.action import Buff, ActionReason
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnStart
+from sbbbattlesim.events import OnSummon
 from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
 
 
-class FairyBuffOnStart(OnStart):
+class FairyBuffOnSummon(OnSummon):
 
     def handle(self, stack, *args, **kwargs):
         highest_attack_evil = max([char.attack for char in self.source.player.valid_characters(
@@ -31,4 +31,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(FairyBuffOnStart, priority=60, source=self)
+        self.player.board.register(FairyBuffOnSummon, priority=60, source=self)
