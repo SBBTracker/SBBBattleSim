@@ -19,6 +19,7 @@ class FairyBuffOnSummon(OnSummon):
         highest_health_good = max(
             [char.health for char in self.source.player.valid_characters() if Tribe.GOOD in char.tribes] + [0])
         multiplier = 2 if self.source.golden else 1
+        # TODO: test coming out of wombats and croc
         Buff(reason=ActionReason.SHOULDER_FAIRY_BUFF, source=self.source, targets=[self.source],
              attack=highest_attack_evil * multiplier - (multiplier if highest_attack_evil > 0 else 0),
              health=highest_health_good * multiplier - (multiplier if highest_health_good > 0 else 0),
