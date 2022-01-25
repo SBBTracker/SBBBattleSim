@@ -125,6 +125,7 @@ CHARACTER_EXCLUSION = (
 
 class Registry(object):
     characters = OrderedDict()
+    auto_registered = False
 
     def __getitem__(self, item):
         return self.characters.get(item, Character)
@@ -150,6 +151,10 @@ class Registry(object):
         )
 
     def autoregister(self):
+        if self.auto_registered:
+            return
+        self.auto_registered = True
+
         for _, name, _ in pkgutil.iter_modules(logic_path):
             character = __import__(name, globals(), locals(), ['CharacterType'], 1)
             self.register(name, character.CharacterType)

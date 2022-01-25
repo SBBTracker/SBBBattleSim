@@ -29,6 +29,7 @@ class Treasure(EventManager):
 
 class Registry(object):
     treasures = OrderedDict()
+    auto_registered = False
 
     def __getitem__(self, item):
         return self.treasures.get(item, Treasure)
@@ -49,6 +50,10 @@ class Registry(object):
         return (treasure_cls for treasure_cls in self.values() if _lambda(treasure_cls))
 
     def autoregister(self):
+        if self.auto_registered:
+            return
+        self.auto_registered = True
+
         for _, name, _ in pkgutil.iter_modules(logic_path):
             treasure = __import__(name, globals(), locals(), ['TreasureType'], 1)
             self.register(name, treasure.TreasureType)

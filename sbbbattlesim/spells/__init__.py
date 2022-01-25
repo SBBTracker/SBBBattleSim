@@ -34,6 +34,7 @@ class Spell:
 
 class Registry(object):
     spells = OrderedDict()
+    auto_registered = False
 
     def __getitem__(self, item):
         return self.spells.get(item, Spell)
@@ -55,6 +56,10 @@ class Registry(object):
         return (spell_cls for spell_cls in self.spells.values() if _lambda(spell_cls))
 
     def autoregister(self):
+        if self.auto_registered:
+            return
+        self.auto_registered = True
+
         for _, name, _ in pkgutil.iter_modules(logic_path):
             spell = __import__(name, globals(), locals(), ['SpellType'], 1)
             self.register(name, spell.SpellType)

@@ -22,6 +22,7 @@ class Hero:
 
 class Registry(object):
     heroes = OrderedDict()
+    auto_registered = False
 
     def __getitem__(self, item):
         return self.heroes.get(item, Hero)
@@ -42,6 +43,10 @@ class Registry(object):
         return (hero_cls for id, hero_cls in self.heroes.items() if _lambda(hero_cls))
 
     def autoregister(self):
+        if self.auto_registered:
+            return
+        self.auto_registered = True
+
         for _, name, _ in pkgutil.iter_modules(logic_path):
             hero = __import__(name, globals(), locals(), ['HeroType'], 1)
             self.register(name, hero.HeroType)
