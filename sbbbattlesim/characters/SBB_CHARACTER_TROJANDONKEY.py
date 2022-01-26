@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class TrojanDonkeySummon(OnDamagedAndSurvived):
     def handle(self, *args, **kwargs):
         if self.manager.golden:
-            _lambda = lambda char: char._level == self.manager.player.level
+            _lambda = lambda char: char._level == self.manager.player.level and char.id != "SBB_CHARACTER_TROJANDONKEY"
         else:
             _lambda = lambda char: char._level <= self.manager.player.level
 

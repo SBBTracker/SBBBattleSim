@@ -11,7 +11,7 @@ class WombatsInDisguiseOnDeath(OnDeath):
     last_breath = True
 
     def handle(self, stack, reason, *args, **kwargs):
-        _lambda = lambda char: char._level <= self.manager.player.level
+        _lambda = lambda char: char._level <= self.manager.player.level and char.id != "SBB_CHARACTER_WOMBATSINDISGUISE"
         valid_summons = [*character_registry.filter(_lambda=_lambda)]
 
         if valid_summons:
