@@ -22,7 +22,7 @@ class PumpkinKingOnDeath(OnDeath):
             if dead._level > 2:
                 summon_choices = list(character_registry.filter(
                     _lambda=lambda char: (
-                                char._level > 1 and char._level == dead._level - 1 and Tribe.EVIL in char._tribes)))
+                                char._level > 1 and char._level == dead._level - 1 and Tribe.EVIL in char._tribes and char.id != "SBB_CHARACTER_PUMPKINKING")))
             else:
                 summon_choices = [character_registry['SBB_CHARACTER_CAT']]
 
