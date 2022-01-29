@@ -206,6 +206,7 @@ class Player(EventManager):
 
             if char.support:
                 char.support.roll_back()
+                char.support.handle_deaths()
 
             if char.aura:
                 logger.debug(f'{self.id} Auras for spawning is {self.auras}')
@@ -219,6 +220,8 @@ class Player(EventManager):
                         pass
 
                 char.aura.roll_back()
+                char.aura.handle_deaths()
+
 
     @property
     def characters(self):

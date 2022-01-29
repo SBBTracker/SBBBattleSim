@@ -250,6 +250,7 @@ class Action:
             if char.health <= 0:
                 char.dead = True
                 logger.debug(f'{char.pretty_print()} marked for death B')
+                self._char_buffer_post_rollback.add(char)
 
         if self.attack != 0:
             char._base_attack -= self.attack
@@ -344,7 +345,10 @@ class Action:
             return
 
         logger.debug(f'RESOLVING DAMAGE FOR {self}')
+        self.handle_deaths()
+        self.state = ActionState.RESOLVED
 
+    def handle_deaths(self):
         dead_character_dict = collections.defaultdict(list)
         for char in self._char_buffer | self._char_buffer_post_rollback:
             if char.dead and char not in char.player.graveyard:
@@ -357,9 +361,6 @@ class Action:
                 if player in dead_character_dict:
                     dead_characters = dead_character_dict[player]
                     player.despawn(*sorted(dead_characters, key=lambda _char: _char.position, reverse=True), reason=self.reason)
-
-
-        self.state = ActionState.RESOLVED
 
 
 class Damage(Action):
