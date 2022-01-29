@@ -195,7 +195,7 @@ class Action:
 
         self.state = ActionState.CREATED
         self._char_buffer = set()
-        self._char_buffer_post_rollback = set()
+        self._killed_char_buffer = set()
         self._event_buffer = collections.defaultdict(list)
 
         logger.debug(f'New {self} atk={self.attack} hp={self.health} dmg={self.damage} heal={self.heal} temp={self.temp} from_event_aura={self.event is not None}')
@@ -250,6 +250,7 @@ class Action:
             if char.health <= 0:
                 char.dead = True
                 logger.debug(f'{char.pretty_print()} marked for death B')
+                self._killed_char_buffer.add(char)
 
         if self.attack != 0:
             char._base_attack -= self.attack
@@ -324,7 +325,7 @@ class Action:
             if char not in self._char_buffer:
                 continue
             self._char_buffer.remove(char)
-            self._char_buffer_post_rollback.add(char)
+            self._killed_char_buffer.add(char)
 
             args = self.args
             kwargs = self.kwargs | kwargs
@@ -334,6 +335,7 @@ class Action:
             if any(v != 0 for v in (self.attack, self.health, self.damage, self.heal)):
                 self._clear(char, *args, **kwargs)
 
+        self.handle_deaths()
         self.state = ActionState.ROLLED_BACK
 
     def resolve(self):
@@ -344,9 +346,12 @@ class Action:
             return
 
         logger.debug(f'RESOLVING DAMAGE FOR {self}')
+        self.handle_deaths()
+        self.state = ActionState.RESOLVED
 
+    def handle_deaths(self):
         dead_character_dict = collections.defaultdict(list)
-        for char in self._char_buffer | self._char_buffer_post_rollback:
+        for char in self._char_buffer | self._killed_char_buffer:
             if char.dead and char not in char.player.graveyard:
                 dead_character_dict[char.player].append(char)
         self._char_buffer = set()
@@ -357,9 +362,6 @@ class Action:
                 if player in dead_character_dict:
                     dead_characters = dead_character_dict[player]
                     player.despawn(*sorted(dead_characters, key=lambda _char: _char.position, reverse=True), reason=self.reason)
-
-
-        self.state = ActionState.RESOLVED
 
 
 class Damage(Action):
