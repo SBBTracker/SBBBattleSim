@@ -190,6 +190,7 @@ class Player(EventManager):
     def despawn(self, *characters, **kwargs):
         kill = kwargs.get('kill', True)
 
+        # This is only false for transform effects
         if kill:
             for char in characters:
                 logger.info(f'Despawning {char.pretty_print()}')
@@ -206,7 +207,6 @@ class Player(EventManager):
 
             if char.support:
                 char.support.roll_back()
-                char.support.handle_deaths()
 
             if char.aura:
                 logger.debug(f'{self.id} Auras for spawning is {self.auras}')
@@ -220,7 +220,6 @@ class Player(EventManager):
                         pass
 
                 char.aura.roll_back()
-                char.aura.handle_deaths()
 
 
     @property
