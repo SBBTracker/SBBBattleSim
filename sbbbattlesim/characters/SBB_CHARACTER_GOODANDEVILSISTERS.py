@@ -21,8 +21,8 @@ class FairyBuffOnSummon(OnSummon):
         multiplier = 2 if self.source.golden else 1
         # TODO: test coming out of wombats and croc
         Buff(reason=ActionReason.SHOULDER_FAIRY_BUFF, source=self.source, targets=[self.source],
-             attack=highest_attack_evil * multiplier - (multiplier if highest_attack_evil > 0 else 0),
-             health=highest_health_good * multiplier - (multiplier if highest_health_good > 0 else 0),
+             attack=highest_attack_evil * multiplier - (self.source.attack if highest_attack_evil > 0 else 0),
+             health=highest_health_good * multiplier - (self.source.health if highest_health_good > 0 else 0),
              temp=False).resolve()
 
 
