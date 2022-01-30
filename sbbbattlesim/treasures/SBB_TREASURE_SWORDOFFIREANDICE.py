@@ -1,5 +1,3 @@
-from numpy import character
-
 from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.treasures import Treasure
 
