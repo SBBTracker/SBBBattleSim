@@ -13,6 +13,7 @@ class ShadowAssassinOnSlay(OnSlay):
 
 class CharacterType(Character):
     display_name = 'Shadow Assassin'
+    ranged = True
     aura = True
 
     _attack = 2
