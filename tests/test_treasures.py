@@ -711,7 +711,7 @@ def test_eye_of_ares(mimic, tiger):
             make_character(id='SBB_CHARACTER_BLACKCAT'),
         ],
         treasures=[
-            'SBB_TREASURE_EYEOFARES',
+            'SBB_TREASURE_EYESOFARES',
         ]
     )
 
