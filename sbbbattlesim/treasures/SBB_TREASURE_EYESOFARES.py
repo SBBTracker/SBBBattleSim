@@ -19,3 +19,4 @@ class TreasureType(Treasure):
         attack = 5 * (self.mimic + 1)
         self.aura = Aura(reason=ActionReason.EYE_OF_ARES_BUFF, source=self, attack=attack)
         self.player.board.register(EyeOfAresOnSetup, priority=100, source=self)
+
