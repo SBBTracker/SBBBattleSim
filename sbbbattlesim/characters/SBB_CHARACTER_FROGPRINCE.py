@@ -3,7 +3,7 @@ from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):
-    display_name = 'Awoken Princess'
+    display_name = 'Frog Prince'
 
     _attack = 5
     _health = 5
