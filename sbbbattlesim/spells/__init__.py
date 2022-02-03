@@ -10,7 +10,7 @@ logic_path = __path__
 class Spell:
     display_name = ''
     id = ''
-    level = 0
+    _level = 0
     targeted = False
     priority = 0
 
