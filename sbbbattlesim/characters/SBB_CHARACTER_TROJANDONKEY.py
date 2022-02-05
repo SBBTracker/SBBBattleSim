@@ -30,8 +30,8 @@ class TrojanDonkeySummon(OnDamagedAndSurvived):
 class CharacterType(Character):
     display_name = 'Trojan Donkey'
 
-    _attack = 1
-    _health = 5
+    _attack = 2
+    _health = 6
     _level = 3
     _tribes = {Tribe.ANIMAL}
 
