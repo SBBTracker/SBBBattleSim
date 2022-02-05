@@ -20,6 +20,7 @@ class RobinWoodOnFightStart(OnStart):
 
 class CharacterType(Character):
     display_name = 'Robin Wood'
+    ranged = True
 
     _attack = 7
     _health = 10

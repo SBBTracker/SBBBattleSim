@@ -23,6 +23,7 @@ class JormungandrOnSlay(OnSlay):
 
 class CharacterType(Character):
     display_name = 'Jormungandr'
+    aura = True
 
     _attack = 20
     _health = 20

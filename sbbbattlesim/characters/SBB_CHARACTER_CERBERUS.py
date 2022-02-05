@@ -28,7 +28,7 @@ class GrimSoulOnDeath(OnDeath):
 class CharacterType(Character):
     display_name = 'Grim Soul'
 
-    _attack = 4
+    _attack = 5
     _health = 1
     _level = 4
     _tribes = {Tribe.MONSTER}
