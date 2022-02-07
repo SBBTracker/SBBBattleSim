@@ -16,7 +16,7 @@ class MerlinOnSpellCast(OnSpellCast):
         if valid_targets:
             target_character = random.choice(valid_targets)
             Buff(reason=ActionReason.MERLIN_BUFF, source=self.source, targets=[target_character],
-                 attack=2, health=1, temp=False, stack=stack).resolve()
+                 attack=1, health=1, temp=False, stack=stack).resolve()
 
 
 class HeroType(Hero):
