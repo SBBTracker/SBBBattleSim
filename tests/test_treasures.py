@@ -1427,9 +1427,9 @@ def test_monkeys_paw(trigger, mimic):
         assert char.attack == 1 and char.health == 1
     else:
         if mimic:
-            assert char.attack == 13 and char.health == 13, len(player.valid_characters())
+            assert char.attack == 11 and char.health == 11, len(player.valid_characters())
         else:
-            assert char.attack == 7 and char.health == 7, len(player.valid_characters())
+            assert char.attack == 6 and char.health == 6, len(player.valid_characters())
 
 
 @pytest.mark.parametrize('mimic', (True, False))
