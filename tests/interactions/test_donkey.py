@@ -26,3 +26,26 @@ def test_donkey_surviving(golden, level, repeat):
         assert board.p1.characters[2]._level == level
     else:
         assert board.p1.characters[2]._level <= level and board.p1.characters[2]._level > 1
+
+
+def test_donkey_fullboard():
+    player = make_player(
+        raw=True,
+        level=6,
+        characters=[
+            make_character(id='SBB_CHARACTER_TROJANDONKEY', attack=1, health=3, position=7),
+            make_character(id='', attack=1, health=3, position=2),
+            make_character(id='', attack=1, health=3, position=3),
+            make_character(id='', attack=1, health=3, position=4),
+            make_character(id='', attack=1, health=3, position=5),
+            make_character(id='', attack=1, health=3, position=6),
+            make_character(id='', attack=1, health=1, position=1),
+        ],
+        treasures=['SBB_TREASURE_REDUPLICATOR', 'SBB_TREASURE_TREASURECHEST']
+    )
+    enemy = make_player(
+        spells=['SBB_SPELL_FALLINGSTARS']
+    )
+
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)

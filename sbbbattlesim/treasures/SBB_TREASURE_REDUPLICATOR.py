@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class ReduplicatorOnSummon(OnSummon):
     def handle(self, summoned_characters, *args, **kwargs):
-        if not self.source.triggered:
+        if summoned_characters and not self.source.triggered:
             if len(self.manager.valid_characters()) != 7:
                 self.source.triggered = True
                 for _ in range(self.source.mimic + 1):
