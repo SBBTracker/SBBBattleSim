@@ -62,3 +62,27 @@ def test_grimsoul_southsea():
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
+
+
+@pytest.mark.parametrize('golden', (True, False))
+def test_grimsoul_listeners(golden):
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_CERBERUS', position=1, attack=1, health=1, golden=golden),
+            make_character(id='SBB_CHARACTER_NIGHTSTALKER', position=2, attack=1, health=1, golden=False),
+            make_character(id='SBB_CHARACTER_RIVERWISHMERMAID', position=6, attack=1, health=1, golden=False),
+            make_character(id='SBB_CHARACTER_SHADOWASSASSIN', position=7, attack=1, health=1, holden=False)
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(
+        characters=[make_character(attack=1, health=1)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    winner, loser = board.fight(limit=1)
+
+
+    result = 3 if golden else 2
+    assert board.p1.characters[7].attack == result
