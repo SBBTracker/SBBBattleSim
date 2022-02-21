@@ -27,6 +27,8 @@ class Board(EventManager):
         self.winner = None
         self.loser = None
 
+        self.first_attacker = None
+
         self.history = []
 
     def get_player(self, id):
@@ -37,6 +39,7 @@ class Board(EventManager):
 
     def fight(self, limit=-1):
         attacker, defender = who_goes_first(self.p1, self.p2)
+        self.first_attacker = attacker
         logger.debug('********************SETTING UP COMBAT')
         self('OnSetup')
         logger.debug('********************STARTING COMBAT')

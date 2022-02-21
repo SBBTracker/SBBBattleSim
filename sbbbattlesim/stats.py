@@ -10,6 +10,7 @@ from sbbbattlesim.player import Player
 class BoardStats:
     win_id: (str, None)
     damage: int
+    first_attacker: str
 
 
 def calculate_damage(player: Player) -> int:
@@ -28,10 +29,12 @@ def calculate_stats(board: Board) -> BoardStats:
     if player:
         return BoardStats(
             win_id=player.id,
-            damage=calculate_damage(player)
+            damage=calculate_damage(player),
+            first_attacker=board.first_attacker
         )
     else:
         return BoardStats(
             win_id=None,
-            damage=0
+            damage=0,
+            first_attacker=board.first_attacker
         )
