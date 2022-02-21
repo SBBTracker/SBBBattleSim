@@ -10,7 +10,7 @@ from sbbbattlesim.player import Player
 class BoardStats:
     win_id: (str, None)
     damage: int
-    first_attacker: str
+    first_attacker: (str, None)
 
 
 def calculate_damage(player: Player) -> int:
