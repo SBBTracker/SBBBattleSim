@@ -15,18 +15,6 @@ def fight(attacker, defender, turn=0, limit=-1, **kwargs):
     if limit > -1 and turn >= limit:
         return None, None
 
-    logger.debug(f'********************NEW ROUND OF COMBAT: turn={turn}')
-
-    logger.info(f'Attacker {attacker.pretty_print()}')
-    logger.info(f'Defender {defender.pretty_print()}')
-
-    # Get Attacker
-    attack_position = attacker.get_attack_slot()
-    if attack_position is not None:
-        attack(attacker=attacker, defender=defender, attack_position=attack_position, **kwargs)
-    else:
-        logger.debug(f'NO ATTACKER')
-
     # Try to figure out if there is a winner
     attacker_no_characters_left = not bool(attacker.valid_characters())
     defender_no_characters_left = not bool(defender.valid_characters())
@@ -40,6 +28,18 @@ def fight(attacker, defender, turn=0, limit=-1, **kwargs):
     elif not (attacker.valid_characters(_lambda=lambda char: char.attack > 0) + defender.valid_characters(
             _lambda=lambda char: char.attack > 0)):
         return None, None
+
+    logger.debug(f'********************NEW ROUND OF COMBAT: turn={turn}')
+
+    logger.info(f'Attacker {attacker.pretty_print()}')
+    logger.info(f'Defender {defender.pretty_print()}')
+
+    # Get Attacker
+    attack_position = attacker.get_attack_slot()
+    if attack_position is not None:
+        attack(attacker=attacker, defender=defender, attack_position=attack_position, **kwargs)
+    else:
+        logger.debug(f'NO ATTACKER')
 
     return fight(
         attacker=defender,

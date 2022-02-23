@@ -228,11 +228,12 @@ class Action:
         if self.heal > 0 or self.heal == -1:
             char._damage = 0 if self.heal == -1 else max(char._damage - self.heal, 0)
 
-        if char.health <= 0:
-            char.dead = True
-            logger.debug(f'{char.pretty_print()} marked for death in execution')
-        elif self.damage > 0:
-            char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
+        if self.damage or self.health:
+            if char.health <= 0:
+                char.dead = True
+                logger.debug(f'{char.pretty_print()} marked for death in execution')
+            elif self.damage > 0:
+                char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
 
 
     def _clear(self, char, *args, **kwargs):
