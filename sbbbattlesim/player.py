@@ -121,6 +121,7 @@ class Player(EventManager):
         # Handle case where tokens are spawning in the same position
         # With the max chain of 5 as implemented to stop trophy hunter + croc + grim soul shenanigans
         attack_slot_char = self.characters.get(self._attack_slot)
+
         if (self._attack_chain >= 5) or (self._last_attacker is None) or (attack_slot_char is not None and attack_slot_char.has_attacked):
             # Prevents the same character from attacking repeatedly
             if self._last_attacker is not None:
@@ -269,7 +270,7 @@ class Player(EventManager):
         onto the base lambda that guarantees that the character exists and is not dead
         """
         # NOTE: this assumes that a dead thing can NEVER be targeted
-        base_lambda = lambda char: char is not None and not char.dead
+        base_lambda = lambda char: char is not None and not char.dead and char.health > 0
 
         return [char for char in self.__characters.values() if base_lambda(char) and _lambda(char)]
 
