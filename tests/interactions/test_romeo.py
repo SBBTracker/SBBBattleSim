@@ -45,8 +45,7 @@ def test_romeo_summons_dead_juliet():
 
     winner, loser = board.fight(limit=2)
 
-    juliet = board.p1.characters[5]
-    assert board.p1.characters[5] is juliet
+    assert board.p1.characters[5].id == 'SBB_CHARACTER_JULIET'
     assert board.p1.characters[1] is None
 
 
@@ -165,3 +164,28 @@ def test_romeo_muerte_summons_dead_juliet():
     assert board.p1.characters[2].id == juliet.id
     assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (14, 14)
     assert board.p1.characters[3].id == juliet.id
+
+
+@pytest.mark.parametrize('attackfirst', (True, False))
+def test_romeo_always_summons_juliet(attackfirst):
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_ROMEO', position=5, attack=1, health=1),
+            make_character(id='SBB_CHARACTER_JULIET', attack=7, health=7, position=1),
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS''' if not attackfirst else ''
+        ]
+    )
+    enemy = make_player(
+        characters=[make_character(id="SBB_CHARACTER_WRETCHEDMUMMY", attack=7, health=7)],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS''' if attackfirst else ''
+        ]
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+
+    winner, loser = board.fight(limit=2)
+
+    assert board.p1.characters[5].id == 'SBB_CHARACTER_JULIET'
+    assert board.p1.characters[1] is None
