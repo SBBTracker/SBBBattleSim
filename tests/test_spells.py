@@ -185,10 +185,7 @@ def test_shrivel_speed(survives):
     winner, loser = board.fight(limit=-1)
 
     char = board.p2.characters[1]
-    if survives:
-        assert char is not None
-    else:
-        assert char is None
+    assert char is not None
 
 
 @pytest.mark.parametrize('survives', (True, False))
@@ -208,10 +205,7 @@ def test_shrivel_speed2(survives):
     winner, loser = board.fight(limit=-1)
 
     char = board.p2.characters[1]
-    if survives:
-        assert char is not None
-    else:
-        assert char is None
+    assert char is not None
 
 
 def test_spells_damaging_darkwood():
