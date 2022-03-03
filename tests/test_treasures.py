@@ -248,7 +248,7 @@ def test_fountain_of_youth(mimic, tiger):
     player = make_player(
         raw=True,
         characters=[
-            make_character(id="SBB_CHARACTER_BLACKCAT")
+            make_character(id="SBB_CHARACTER_BABYBEAR", tribes=["good"])
         ],
         treasures=[
             'SBB_TREASURE_FOUNTAINOFYOUTH',
@@ -272,7 +272,8 @@ def test_fountain_of_youth(mimic, tiger):
     char = player.characters[1]
 
     assert char
-    assert char.health == 1 + 1 + mimic_multiplyer
+    assert char.health == 2 + 1 + mimic_multiplyer
+    assert char.attack == 2 + 1 + mimic_multiplyer
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -1154,45 +1155,6 @@ def test_six_of_shields(mimic):
         final = 7
 
     assert char.health == final
-
-
-@pytest.mark.parametrize('mimic', (True, False))
-@pytest.mark.parametrize('on', (True, False))
-def test_sky_castle(mimic, on):
-    player = make_player(
-        raw=True,
-        characters=[
-            make_character(tribes=[Tribe.PRINCE] if on else []),
-            make_character(tribes=[Tribe.PRINCESS] if on else [], position=2),
-        ],
-        treasures=[
-            'SBB_TREASURE_SKYCASTLE',
-            'SBB_TREASURE_TREASURECHEST' if mimic else ''
-        ]
-    )
-
-    enemy = make_player(
-        raw=True,
-        characters=[make_character(id='Enemy', attack=0)]
-    )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
-
-    player = board.p1
-
-    for char in [player.characters[1], player.characters[2]]:
-        assert char
-
-        final = 4
-        if mimic:
-            final = 8
-
-        buffs = [
-            r for r in char._action_history if r.reason == ActionReason.SKYCASTLE
-        ]
-
-        assert sum([d.attack for d in buffs]) == (final if on else 0)
-        assert sum([d.health for d in buffs]) == (final if on else 0)
 
 
 @pytest.mark.parametrize('mimic', (True, False))
