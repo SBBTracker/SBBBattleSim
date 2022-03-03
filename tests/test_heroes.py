@@ -74,7 +74,7 @@ def test_evella(on, evil_back):
     assert buffed_animal
     assert buffed_animal.attack == (2 if on and evil_back else 1) and buffed_animal.health == 1
     assert buffed_cat
-    assert buffed_cat.attack == (2 if on else 1) and buffed_cat.health == 1
+    assert buffed_cat.attack == (3 if on else 2) and buffed_cat.health == 1
 
 
 def test_evella_lots():
@@ -99,7 +99,7 @@ def test_evella_lots():
     buffed_cat = player.characters.get(5)
 
     assert buffed_cat
-    assert buffed_cat.attack == 4
+    assert buffed_cat.attack == 5
 
 
 @pytest.mark.parametrize('on', (True, False))
@@ -161,8 +161,8 @@ def test_fate(on):
     generic = player.characters.get(2)
 
     assert generic
-    assert generic.attack == (7 if on else 1)
-    assert generic.health == (7 if on else 1)
+    assert generic.attack == (5 if on else 1)
+    assert generic.health == (5 if on else 1)
 
 
 def test_gepetto():

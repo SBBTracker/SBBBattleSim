@@ -19,5 +19,8 @@ class HeroType(Hero):
         super().__init__(*args, **kwargs)
         self.aura = (
             Aura(event=EvellaAura, source=self, _lambda=lambda char: Tribe.ANIMAL in char.tribes),
-            Aura(reason=ActionReason.EVELLA_BUFF, temp=False, source=self, _lambda=lambda char: Tribe.EVIL in char.tribes)
+            Aura(reason=ActionReason.EVELLA_ANIMAL_BUFF, temp=False, source=self,
+                 _lambda=lambda char: Tribe.EVIL in char.tribes),
+            Aura(reason=ActionReason.EVELLA_BASE_BUFF, source=self,
+                 _lambda=lambda char: Tribe.EVIL in char.tribes, attack=1, )
         )
