@@ -44,6 +44,12 @@ class Board(EventManager):
         self.winner, self.loser = fight(attacker, defender, limit=limit)
         return self.winner, self.loser
 
+    def to_state(self):
+        return {
+            self.p1.id: self.p1.to_state(),
+            self.p2.id: self.p2.to_state()
+        }
+
 
 def who_goes_first(p1, p2):
     p1cnt = _who_goes_first(p1)

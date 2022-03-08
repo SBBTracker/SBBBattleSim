@@ -117,6 +117,20 @@ class Character(EventManager):
             damage=self.attack,
         )
 
+    def to_state(self, slot):
+        return dict(
+            player=self.player,
+            position=self.position,
+            golden=self.golden,
+            attack=self._base_attack,
+            health=self._base_health,
+            tribes=self._tribes,
+            cost=self._level,
+            slot=slot,
+            zone="Character",
+            content_id=self.id,
+        )
+
 
 CHARACTER_EXCLUSION = (
     'SBB_CHARACTER_CAPTAINCROC',

@@ -50,6 +50,7 @@ class Player(EventManager):
         self._last_attacker = None
         self._attack_chain = 0
         self._spells_cast = kwargs.get('spells_cast', None)
+        self.spells = spells
 
 
         # Treasure Counting
@@ -76,6 +77,8 @@ class Player(EventManager):
 
         self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand]
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
+        if not self.hero.id:
+            self.hero.id = hero
         logger.debug(f'{self.id} registering hero {self.hero.pretty_print()}')
 
         for spl in spells:
@@ -205,6 +208,8 @@ class Player(EventManager):
                 char('OnDeath', **kwargs)
 
         for char in characters:
+            position = char.position
+            self.__characters[position] = None
 
             if char.support:
                 char.support.roll_back()
@@ -221,7 +226,6 @@ class Player(EventManager):
                         pass
 
                 char.aura.roll_back()
-
 
     @property
     def characters(self):
@@ -299,3 +303,51 @@ class Player(EventManager):
             stack = self('OnSpellCast', caster=self, spell=spell, target=target)
 
         spell(self).cast(target=target)
+
+    def to_state(self):
+        # Need to case the tribes from enum to their strings
+        treasures = [
+            {
+                "content_id": key,
+                "playerid": self.id,
+            }
+            for key, value in self.treasures.items()
+            for treasure in value
+        ]
+        characters = [
+            {
+                # In the UI slot is 0-6
+                # in the sim its 1-7
+                'slot': str(slot-1),
+                'content_id': character.id,
+                'cardattack': character.attack,
+                'cardhealth': character.health,
+                'is_golden': character.golden,
+                'cost': character.cost,
+                'subtypes': [tribe.name for tribe in character.tribes],
+                'playerid': self.id,
+            }
+            for slot, character in self.__characters.items()
+            if character is not None
+        ]
+        hero = {
+            "hero": self.hero.id,
+            "playerid": self.id,
+            "content_id": self.hero.id,
+        }
+        spells = [
+            {
+                "playerid": self.id,
+                "content_id": spell
+            }
+            for spell in self.spells
+        ]
+        return {
+            'characters': characters,
+            'treasures': treasures,
+            'hero': hero,
+            'spells': spells,
+        }
+
+
+
