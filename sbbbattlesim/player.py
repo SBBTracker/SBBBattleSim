@@ -306,47 +306,30 @@ class Player(EventManager):
 
     def to_state(self):
         # Need to case the tribes from enum to their strings
-        treasures = [
-            {
-                "content_id": key,
-                "playerid": self.id,
-            }
-            for key, value in self.treasures.items()
-            for treasure in value
-        ]
+        treasures = [key for key, value in self.treasures.items() for treasure in value ]
+
         characters = [
             {
-                # In the UI slot is 0-6
-                # in the sim its 1-7
-                'slot': str(slot-1),
-                'content_id': character.id,
-                'cardattack': character.attack,
-                'cardhealth': character.health,
-                'is_golden': character.golden,
+                'position': slot,
+                'id': character.id,
+                'attack': character.attack,
+                'health': character.health,
+                'golden': character.golden,
                 'cost': character.cost,
-                'subtypes': [tribe.name for tribe in character.tribes],
-                'playerid': self.id,
+                'tribes': [tribe.name.lower() for tribe in character.tribes],
             }
             for slot, character in self.__characters.items()
             if character is not None
         ]
-        hero = {
-            "hero": self.hero.id,
-            "playerid": self.id,
-            "content_id": self.hero.id,
-        }
-        spells = [
-            {
-                "playerid": self.id,
-                "content_id": spell
-            }
-            for spell in self.spells
-        ]
+        hero = self.hero.id
+        spells = list(self.spells)
         return {
             'characters': characters,
             'treasures': treasures,
             'hero': hero,
             'spells': spells,
+            'hand': self.hand,
+            'level': self.level,
         }
 
 
