@@ -110,7 +110,7 @@ def get_spawn_positions(position):
 
 
 def random_combat_spell(level):
-    valid_spells = list(spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in COMBAT_SPELLS))
+    valid_spells = list(spell_registry.filter(_lambda=lambda spell_cls: (spell_cls._level <= level or spell_cls._level == 3) and spell_cls.id in COMBAT_SPELLS))
     if valid_spells:
         return random.choice(valid_spells)
 
