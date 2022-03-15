@@ -101,7 +101,8 @@ def test_echowood_evil_queen():
     assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (5, 5)
 
 
-def test_echowood_pumpkin():
+@pytest.mark.parametrize('r', range(30))
+def test_echowood_pumpkin(r):
     player = make_player(
         raw=True,
         characters=[
@@ -123,7 +124,7 @@ def test_echowood_pumpkin():
     winner, loser = board.fight(limit=1)
 
 
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (2, 2)
+    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (2, 2) if board.p1.characters[2].id != 'SBB_CHARACTER_BURNINGTREE' else (2, 3)
 
 
 def test_echowood_pumpkin_support():

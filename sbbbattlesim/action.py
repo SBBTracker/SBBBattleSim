@@ -338,7 +338,7 @@ class Action:
             if any(v != 0 for v in (self.attack, self.health, self.damage, self.heal)):
                 self._clear(char, *args, **kwargs)
 
-        self.handle_deaths()
+        self.handle_deaths(*characters)
         self.state = ActionState.ROLLED_BACK
 
     def resolve(self):
@@ -352,12 +352,13 @@ class Action:
         self.handle_deaths()
         self.state = ActionState.RESOLVED
 
-    def handle_deaths(self):
+    def handle_deaths(self, *characters):
+        char_iter = set(characters) or self._char_buffer.copy()
         dead_character_dict = collections.defaultdict(list)
-        for char in self._char_buffer | self._killed_char_buffer:
+        for char in char_iter | self._killed_char_buffer:
             if char.dead and char not in char.player.graveyard:
                 dead_character_dict[char.player].append(char)
-        self._char_buffer = set()
+        self._char_buffer = self._char_buffer - char_iter
 
         if dead_character_dict:
             char_ls = [self.source.player, self.source.player.opponent]

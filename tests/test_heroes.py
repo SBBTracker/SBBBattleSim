@@ -370,6 +370,35 @@ def test_mihri(on):
             assert mihri_buff is None
 
 
+@pytest.mark.parametrize('on', (True, False))
+def test_mihri_rollback_safety(on):
+    player = make_player(
+        raw=False,
+        characters=[
+            make_character(id='ROYAL', position=1, health=30, tribes=['prince'] if on else []),
+            make_character(id='ROYAL', position=2, health=30, tribes=['princess'] if on else [])
+        ],
+        hero='SBB_HERO_KINGLION',
+        mihri_buff=5,
+    )
+
+    enemy = make_player(raw=True)
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+    board("OnSetup")
+
+    c1 = board.p1.characters[1]
+    c2 = board.p1.characters[2]
+    board.p1.despawn(c1, kill=False)
+    board.p1.despawn(c2, kill=False)
+    board.p1.spawn(c1, 1)
+    board.p1.spawn(c2, 2)
+
+    assert c1.attack == 1
+    assert c1.health == 30
+    assert c2.attack == 1
+    assert c2.health == 30
+
+
 def test_trophy_hunter():
     player = make_player(
         raw=True,

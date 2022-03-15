@@ -20,3 +20,5 @@ def test_mittens_phoenixfeather():
 
     assert board.p1.characters[1] is None
     assert board.p1.characters[5] is not None and board.p1.characters[5].attack == 1
+
+
