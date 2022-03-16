@@ -10,43 +10,41 @@ sys.setrecursionlimit(500)
 logger = logging.getLogger(__name__)
 
 
-@lru_cache(maxsize=512)
-def fight(attacker, defender, turn=0, limit=-1, **kwargs):
-    if limit > -1 and turn >= limit:
-        return None, None
+def fight(attacker, defender, limit=-1, **kwargs):
+    turn = 0
 
-    # Try to figure out if there is a winner
-    attacker_no_characters_left = not bool(attacker.valid_characters())
-    defender_no_characters_left = not bool(defender.valid_characters())
+    while True:
+        if (limit > -1 and turn >= limit) or turn >= 100:
+            return None, None
 
-    if attacker_no_characters_left and defender_no_characters_left:
-        return None, None
-    elif attacker_no_characters_left:
-        return defender, attacker
-    elif defender_no_characters_left:
-        return attacker, defender
-    elif not (attacker.valid_characters(_lambda=lambda char: char.attack > 0) + defender.valid_characters(
-            _lambda=lambda char: char.attack > 0)):
-        return None, None
+        # Try to figure out if there is a winner
+        attacker_no_characters_left = not bool(attacker.valid_characters())
+        defender_no_characters_left = not bool(defender.valid_characters())
 
-    logger.debug(f'********************NEW ROUND OF COMBAT: turn={turn}')
+        if attacker_no_characters_left and defender_no_characters_left:
+            return None, None
+        elif attacker_no_characters_left:
+            return defender, attacker
+        elif defender_no_characters_left:
+            return attacker, defender
+        elif not (attacker.valid_characters(_lambda=lambda char: char.attack > 0) + defender.valid_characters(
+                _lambda=lambda char: char.attack > 0)):
+            return None, None
 
-    logger.info(f'Attacker {attacker.pretty_print()}')
-    logger.info(f'Defender {defender.pretty_print()}')
+        logger.debug(f'********************NEW ROUND OF COMBAT: turn={turn}')
 
-    # Get Attacker
-    attack_position = attacker.get_attack_slot()
-    if attack_position is not None:
-        attack(attacker=attacker, defender=defender, attack_position=attack_position, **kwargs)
-    else:
-        logger.debug(f'NO ATTACKER')
+        logger.info(f'Attacker {attacker.pretty_print()}')
+        logger.info(f'Defender {defender.pretty_print()}')
 
-    return fight(
-        attacker=defender,
-        defender=attacker,
-        turn=turn + 1,
-        limit=limit
-    )
+        # Get Attacker
+        attack_position = attacker.get_attack_slot()
+        if attack_position is not None:
+            attack(attacker=attacker, defender=defender, attack_position=attack_position, **kwargs)
+        else:
+            logger.debug(f'NO ATTACKER')
+
+        turn += 1
+        attacker, defender = defender, attacker
 
 
 def attack(attack_position, attacker, defender, **kwargs):
