@@ -16,6 +16,7 @@ class Spell:
 
     def __init__(self, player: 'Player'):
         self.player = player
+        self.board = player.board
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         raise NotImplementedError

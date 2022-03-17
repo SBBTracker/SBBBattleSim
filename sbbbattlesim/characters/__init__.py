@@ -33,6 +33,7 @@ class Character(EventManager):
     def __init__(self, player, position, attack, health, golden, tribes, cost, *args, **kwargs):
         super().__init__()
         self.player = player
+        self.board = player.board
 
         self.position = position
         self._base_attack = attack

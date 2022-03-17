@@ -7,7 +7,8 @@ from enum import Enum
 from typing import List
 import inspect
 
-from sbbbattlesim.events import SSBBSEvent
+from sbbbattlesim.events import Event
+from sbbbattlesim.record import Record
 
 logger = logging.getLogger(__name__)
 
@@ -170,7 +171,7 @@ class Action:
             health: int = 0,
             damage: int = 0,
             heal: int = 0,
-            event: (SSBBSEvent, None) = None,
+            event: (Event, None) = None,
             _action=None,
             temp: bool = False,
             *args,
@@ -194,6 +195,8 @@ class Action:
 
         self.args = args
         self.kwargs = kwargs
+
+        self.board = self.source.player.board
 
         self.state = ActionState.CREATED
         self._char_buffer = set()
@@ -237,6 +240,15 @@ class Action:
             elif self.damage > 0:
                 char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
 
+        self.board.history.append(Record(
+            reason=self.reason,
+            source=self.source,
+            target=char,
+            attack=self.attack,
+            health=self.health,
+            damage=self.damage,
+            heal=self.heal,
+        ))
 
     def _clear(self, char, *args, **kwargs):
         '''

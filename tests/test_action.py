@@ -4,7 +4,7 @@ import pytest
 
 from sbbbattlesim.action import Action, ActionReason, ActionState
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import SSBBSEvent
+from sbbbattlesim.events import Event
 from sbbbattlesim.player import Player
 from tests import PLAYER, TestEvent, create_test_setup, make_player, make_character
 
@@ -232,13 +232,13 @@ def test_event():
     action = TestAction(source=char, event=TestEvent)
     action._register(char)
 
-    assert char._events['SSBBSEvent']
-    registered = list(char._events['SSBBSEvent'])[0]
+    assert char._events['Event']
+    registered = list(char._events['Event'])[0]
     assert isinstance(registered, TestEvent)
 
-    char('SSBBSEvent')
+    char('Event')
     assert registered.triggered
 
     action._unregister(char)
 
-    assert not char._events['SSBBSEvent']
+    assert not char._events['Event']
