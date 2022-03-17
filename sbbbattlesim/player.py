@@ -195,22 +195,22 @@ class Player(EventManager):
         kill = kwargs.get('kill', True)
 
         # This is only false for transform effects
-        if kill:
-            for char in characters:
-                logger.info(f'Despawning {char.pretty_print()}')
-                position = char.position
-                self.graveyard.append(char)
-                self.__characters[position] = None
-                logger.info(f'{char.pretty_print()} died')
-                char('Despawn', **kwargs)
+        for char in characters:
+            logger.info(f'Despawning {char.pretty_print()}')
+            position = char.position
+            self.__characters[position] = None
 
+            if kill:
+                self.graveyard.append(char)
+                logger.info(f'{char.pretty_print()} died')
+
+            char('Despawn', **kwargs)
+
+        if kill:
             for char in characters:
                 char('OnDeath', **kwargs)
 
         for char in characters:
-            position = char.position
-            self.__characters[position] = None
-
             if char.support:
                 char.support.roll_back()
 
