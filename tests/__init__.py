@@ -69,7 +69,7 @@ def create_test_character(attack=1, health=1):
     )
 
 
-class TestEvent(Event):
+class EventForTest(Event):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triggered = False
