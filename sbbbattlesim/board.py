@@ -1,7 +1,7 @@
 import logging
 import random
 
-from sbbbattlesim.combat import fight
+from sbbbattlesim.combat import attack
 from sbbbattlesim.events import EventManager
 from sbbbattlesim.player import Player
 
@@ -44,7 +44,44 @@ class Board(EventManager):
         self('OnSetup')
         logger.debug('********************STARTING COMBAT')
         self('OnStart')
-        self.winner, self.loser = fight(attacker, defender, limit=limit)
+
+        turn = 0
+
+        while True:
+            if (limit > -1 and turn >= limit) or turn >= 100:
+                break
+
+            # Try to figure out if there is a winner
+            attacker_no_characters_left = not bool(attacker.valid_characters())
+            defender_no_characters_left = not bool(defender.valid_characters())
+
+            if attacker_no_characters_left and defender_no_characters_left:
+                break
+            elif attacker_no_characters_left:
+                self.winner, self.loser = defender, attacker
+                break
+            elif defender_no_characters_left:
+                self.winner, self.loser = attacker, defender
+                break
+            elif not (attacker.valid_characters(_lambda=lambda char: char.attack > 0) + defender.valid_characters(
+                    _lambda=lambda char: char.attack > 0)):
+                break
+
+            logger.debug(f'********************NEW ROUND OF COMBAT: turn={turn}')
+
+            logger.info(f'Attacker {attacker.pretty_print()}')
+            logger.info(f'Defender {defender.pretty_print()}')
+
+            # Get Attacker
+            attack_position = attacker.get_attack_slot()
+            if attack_position is not None:
+                attack(attacker=attacker, defender=defender, attack_position=attack_position)
+            else:
+                logger.debug(f'NO ATTACKER')
+
+            turn += 1
+            attacker, defender = defender, attacker
+
         return self.winner, self.loser
 
     def to_state(self):
