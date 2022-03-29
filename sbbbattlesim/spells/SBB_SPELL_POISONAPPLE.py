@@ -8,6 +8,8 @@ class SpellType(Spell):
     display_name = 'Poison Apple'
     _level = 5
 
+    priority = 20
+
     def cast(self, target: 'Character' = None, *args, **kwargs):
         valid_targets = self.player.opponent.valid_characters()
         if valid_targets:
