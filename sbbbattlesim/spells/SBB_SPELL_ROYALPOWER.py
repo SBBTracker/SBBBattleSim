@@ -6,6 +6,7 @@ from sbbbattlesim.utils import Tribe
 class SpellType(Spell):
     display_name = '''Queen's Grace'''
     _level = 4
+    targeted = True
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         Buff(targets=[target], health=7, attack=7, temp=False, reason=ActionReason.QUEENS_GRACE, source=self, *args,
