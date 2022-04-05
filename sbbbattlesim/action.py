@@ -240,15 +240,15 @@ class Action:
             elif self.damage > 0:
                 char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
 
-        self.board.history.append(Record(
-            reason=self.reason,
-            source=self.source,
-            target=char,
-            attack=self.attack,
-            health=self.health,
-            damage=self.damage,
-            heal=self.heal,
-        ))
+        # self.board.history.append(Record(
+        #     reason=self.reason,
+        #     source=self.source,
+        #     target=char,
+        #     attack=self.attack,
+        #     health=self.health,
+        #     damage=self.damage,
+        #     heal=self.heal,
+        # ))
 
     def _clear(self, char, *args, **kwargs):
         '''
