@@ -19,7 +19,7 @@ class BurningTreeOnBuff(OnBuff):
 class CharacterType(Character):
     display_name = 'Burning Tree'
 
-    _attack = 5
+    _attack = 0
     _health = 20
     _level = 5
     _tribes = {Tribe.EVIL, Tribe.TREANT}

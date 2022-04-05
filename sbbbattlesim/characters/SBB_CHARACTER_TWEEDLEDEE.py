@@ -21,8 +21,8 @@ class CharacterType(Character):
     display_name = 'Tweedle Dee'
     last_breath = True
 
-    _attack = 8
-    _health = 2
+    _attack = 10
+    _health = 3
     _level = 5
     _tribes = {Tribe.DWARF}
 

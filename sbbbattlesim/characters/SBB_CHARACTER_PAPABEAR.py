@@ -25,8 +25,8 @@ class CharacterType(Character):
     display_name = 'Papa Bear'
     last_breath = True
 
-    _attack = 2
-    _health = 2
+    _attack = 4
+    _health = 4
     _level = 1
     _tribes = {Tribe.ANIMAL, Tribe.GOOD}
 

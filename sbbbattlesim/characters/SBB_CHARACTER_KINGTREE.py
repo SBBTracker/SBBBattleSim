@@ -19,7 +19,7 @@ class CharacterType(Character):
     display_name = 'Ashwood Elm'
 
     _attack = 0
-    _health = 20
+    _health = 15
     _level = 6
     _tribes = {Tribe.EVIL, Tribe.TREANT}
 

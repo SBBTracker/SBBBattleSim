@@ -25,8 +25,8 @@ class CharacterType(Character):
     display_name = 'Baby Bear'
     last_breath = True
 
-    _attack = 1
-    _health = 1
+    _attack = 2
+    _health = 2
     _level = 5
     _tribes = {Tribe.GOOD, Tribe.ANIMAL}
 
