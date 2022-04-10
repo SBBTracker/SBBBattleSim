@@ -5,6 +5,7 @@ from sbbbattlesim.spells import Spell
 class SpellType(Spell):
     display_name = 'Burning Palm'
     _level = 4
+    cost = 2
     targeted = True
 
     def cast(self, target: 'Character' = None, *args, **kwargs):

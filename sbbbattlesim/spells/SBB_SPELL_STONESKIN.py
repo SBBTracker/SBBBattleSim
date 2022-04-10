@@ -5,6 +5,7 @@ from sbbbattlesim.action import ActionReason
 class SpellType(Spell):
     display_name = 'Stoneskin'
     _level = 4
+    cost = 2
     targeted = True
 
     def cast(self, target: 'Character' = None, *args, **kwargs):

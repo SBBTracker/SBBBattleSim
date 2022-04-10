@@ -8,6 +8,7 @@ from sbbbattlesim.spells import Spell
 class SpellType(Spell):
     display_name = 'Fireball'
     _level = 4
+    cost = 0
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         valid_targets = self.player.opponent.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4))

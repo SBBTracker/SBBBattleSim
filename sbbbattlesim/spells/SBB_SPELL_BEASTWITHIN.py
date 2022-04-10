@@ -23,6 +23,7 @@ class CatsCallOnDeath(OnDeath):
 class SpellType(Spell):
     display_name = '''Cat's Call'''
     _level = 4
+    cost = 2
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         for char in self.player.valid_characters(_lambda=front_row_lambda):
