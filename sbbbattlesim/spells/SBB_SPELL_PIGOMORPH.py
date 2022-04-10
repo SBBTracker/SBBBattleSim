@@ -10,6 +10,7 @@ PIGOMORPH_ID = 'SBB_CHARACTER_PIG'
 class SpellType(Spell):
     display_name = 'Pigomorph'
     _level = 6
+    cost = 5
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         valid_targets = self.player.opponent.valid_characters(lambda char: char.id not in [PIGOMORPH_ID])

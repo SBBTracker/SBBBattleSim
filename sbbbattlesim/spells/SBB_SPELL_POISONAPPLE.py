@@ -7,6 +7,7 @@ from sbbbattlesim.spells import Spell
 class SpellType(Spell):
     display_name = 'Poison Apple'
     _level = 5
+    cost = 2
 
     priority = 20
 
