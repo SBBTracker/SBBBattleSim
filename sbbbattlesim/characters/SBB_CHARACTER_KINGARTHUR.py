@@ -8,19 +8,19 @@ class PrinceArthurOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
         stat_change = 4 if self.source.golden else 2
         royals = self.source.player.valid_characters(
-            _lambda=lambda char: char.golden and (Tribe.PRINCE in char.tribes or Tribe.PRINCESS in char.tribes)
+            _lambda=lambda char: char.golden and (Tribe.ROYAL in char.tribes or Tribe.ROYAL in char.tribes)
         )
         Buff(source=self.source, reason=ActionReason.PRINCEARTHUR_BUFF, targets=royals,
              attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
 
 class CharacterType(Character):
-    display_name = 'Prince Arthur'
+    display_name = 'King Arthur'
 
     _attack = 5
     _health = 5
     _level = 4
-    _tribes = {Tribe.GOOD, Tribe.PRINCE}
+    _tribes = {Tribe.GOOD, Tribe.ROYAL}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

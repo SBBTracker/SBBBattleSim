@@ -7,7 +7,7 @@ from tests import make_character, make_player
 from sbbbattlesim.events import OnDeath
 
 
-@pytest.mark.parametrize('tribe', (Tribe.PRINCE, Tribe.PRINCESS, Tribe.DWARF))
+@pytest.mark.parametrize('tribe', (Tribe.ROYAL, Tribe.ROYAL, Tribe.DWARF))
 def test_courtwizard(tribe):
     player = make_player(
         raw=True,
@@ -27,7 +27,7 @@ def test_courtwizard(tribe):
     board = Board({'PLAYER': player, 'ENEMY': enemy})
     winner, loser = board.fight(limit=1)
 
-    if tribe in [Tribe.PRINCE, Tribe.PRINCESS]:
+    if tribe in [Tribe.ROYAL, Tribe.ROYAL]:
         assert board.p1.characters[1] is None and board.p1.characters[2] is None
 
 
@@ -44,7 +44,7 @@ def test_courtwizard_diesandproccs():
     enemy = make_player(
         raw=True,
         characters=[
-            make_character(position=1, tribes=[Tribe.PRINCE]),
+            make_character(position=1, tribes=[Tribe.ROYAL]),
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=5)
         ],
     )
@@ -86,7 +86,7 @@ def test_courtwizard_noattack_eveniftoken():
     enemy = make_player(
         raw=True,
         characters=[
-            make_character(position=1, tribes=[Tribe.PRINCE]),
+            make_character(position=1, tribes=[Tribe.ROYAL]),
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=6),
             make_character(id="SBB_CHARACTER_PRINCESSPEEP", position=5)
         ],

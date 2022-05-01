@@ -198,7 +198,7 @@ def test_shrivel_speed2(survives):
         raw=True,
         characters=[
             make_character(id="SBB_CHARACTER_KINGARTHUR", attack=0, health=(13 if survives else 11), golden=True,
-                           tribes=[Tribe.PRINCE]),
+                           tribes=[Tribe.ROYAL]),
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})

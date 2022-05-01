@@ -9,7 +9,7 @@ def test_complex_trees():
         characters=[
             make_character(),
             make_character(position=2, attack=30, health=52, golden=True,
-                           tribes=[Tribe.GOOD, Tribe.PRINCE, Tribe.TREANT]),
+                           tribes=[Tribe.GOOD, Tribe.ROYAL, Tribe.TREANT]),
             make_character(position=3, attack=28, health=75, golden=True,
                            tribes=[Tribe.GOOD, Tribe.TREANT]),
             make_character(id="SBB_CHARACTER_KINGTREE", position=4, attack=2, health=42,

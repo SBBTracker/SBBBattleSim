@@ -37,7 +37,7 @@ class CharacterType(Character):
     _attack = 1
     _health = 10
     _level = 5
-    _tribes = {Tribe.GOOD, Tribe.FAIRY}
+    _tribes = {Tribe.EVIL, Tribe.FAIRY}
 
     flying = True
     ranged = True

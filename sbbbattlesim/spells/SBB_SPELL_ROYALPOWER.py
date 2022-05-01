@@ -15,4 +15,4 @@ class SpellType(Spell):
 
     @classmethod
     def filter(cls, char):
-        return Tribe.PRINCESS in char.tribes or Tribe.PRINCE in char.tribes
+        return Tribe.ROYAL in char.tribes or Tribe.ROYAL in char.tribes

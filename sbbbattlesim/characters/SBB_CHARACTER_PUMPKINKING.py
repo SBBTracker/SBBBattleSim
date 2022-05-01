@@ -37,7 +37,7 @@ class PumpkinKingOnDeath(OnDeath):
 
 
 class CharacterType(Character):
-    display_name = 'Great Pumpkin King'
+    display_name = 'The Great Pumpkin'
 
     _attack = 10
     _health = 10
