@@ -49,6 +49,8 @@ def from_state(state: dict):
                 level = int(data.level) if hasattr(data, "level") else 0
             elif data.zone == 'Spell':
                 spells.append(data.content_id)
+            elif data.zone == 'None' and 'SBB_SPELL' in data.content_id:
+                spells.append(data.content_id)
 
         sim_data[player] = {
             'characters': characters,
