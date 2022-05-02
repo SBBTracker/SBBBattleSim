@@ -8,7 +8,7 @@ class PrinceArthurOnStart(OnStart):
     def handle(self, stack, *args, **kwargs):
         stat_change = 4 if self.source.golden else 2
         royals = self.source.player.valid_characters(
-            _lambda=lambda char: char.golden and (Tribe.ROYAL in char.tribes or Tribe.ROYAL in char.tribes)
+            _lambda=lambda char: char.golden and (Tribe.ROYAL in char.tribes)
         )
         Buff(source=self.source, reason=ActionReason.PRINCEARTHUR_BUFF, targets=royals,
              attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()

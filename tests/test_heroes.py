@@ -341,8 +341,8 @@ def test_mihri(on):
     player = make_player(
         raw=True,
         characters=[
-            make_character(id='ROYAL', position=1, tribes=['prince'] if on else []),
-            make_character(id='ROYAL', position=2, tribes=['princess'] if on else [])
+            make_character(id='ROYAL', position=1, tribes=['royal'] if on else []),
+            make_character(id='ROYAL', position=2, tribes=['royal'] if on else [])
         ],
         hero='SBB_HERO_KINGLION',
         mihri_buff=5
@@ -375,8 +375,8 @@ def test_mihri_rollback_safety(on):
     player = make_player(
         raw=False,
         characters=[
-            make_character(id='ROYAL', position=1, health=30, tribes=['prince'] if on else []),
-            make_character(id='ROYAL', position=2, health=30, tribes=['princess'] if on else [])
+            make_character(id='ROYAL', position=1, health=30, tribes=['royal'] if on else []),
+            make_character(id='ROYAL', position=2, health=30, tribes=['royal'] if on else [])
         ],
         hero='SBB_HERO_KINGLION',
         mihri_buff=5,
