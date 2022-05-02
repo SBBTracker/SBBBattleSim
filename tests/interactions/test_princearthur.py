@@ -11,12 +11,12 @@ def test_prince_arthur(arthur_is_golden):
         characters=[
             make_character(
                 id="SBB_CHARACTER_KINGARTHUR", position=5,
-                attack=1, health=1, golden=arthur_is_golden, tribes=[Tribe.PRINCE]
+                attack=1, health=1, golden=arthur_is_golden, tribes=[Tribe.ROYAL]
             ),
-            make_character(position=1, attack=1, health=1, tribes=[Tribe.PRINCE]),
-            make_character(position=2, attack=1, health=1, tribes=[Tribe.PRINCE], golden=True),
-            make_character(position=3, attack=1, health=1, tribes=[Tribe.PRINCESS]),
-            make_character(position=4, attack=1, health=1, tribes=[Tribe.PRINCESS], golden=True),
+            make_character(position=1, attack=1, health=1, tribes=[Tribe.ROYAL]),
+            make_character(position=2, attack=1, health=1, tribes=[Tribe.ROYAL], golden=True),
+            make_character(position=3, attack=1, health=1, tribes=[Tribe.ROYAL]),
+            make_character(position=4, attack=1, health=1, tribes=[Tribe.ROYAL], golden=True),
             make_character(position=6, attack=1, health=1, golden=True),
         ],
     )

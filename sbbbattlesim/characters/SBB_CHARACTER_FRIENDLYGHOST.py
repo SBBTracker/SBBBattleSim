@@ -27,7 +27,7 @@ class CharacterType(Character):
     last_breath = True
 
     _attack = 3
-    _health = 3
+    _health = 4
     _level = 4
     _tribes = {Tribe.GOOD, Tribe.MONSTER}
 

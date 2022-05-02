@@ -16,7 +16,7 @@ class OniKingOnMonsterAttack(OnPreAttack):
 
 
 class CharacterType(Character):
-    display_name = 'Oni King'
+    display_name = 'Oni Tyrant'
     aura = True
 
     _attack = 7

@@ -9,7 +9,7 @@ class ThreeBigPigsDeath(OnDeath):
     last_breath = True
 
     def handle(self, stack, reason, *args, **kwargs):
-        stat = 10 if self.manager.golden else 5
+        stat = 6 if self.manager.golden else 3
 
         sheep = [
             character_registry['SBB_CHARACTER_PIGGY'](
@@ -31,9 +31,9 @@ class CharacterType(Character):
     display_name = 'Three Big Pigs'
     last_breath = True
 
-    _attack = 15
-    _health = 15
-    _level = 6
+    _attack = 9
+    _health = 9
+    _level = 5
     _tribes = {Tribe.EVIL, Tribe.ANIMAL}
 
     def __init__(self, *args, **kwargs):

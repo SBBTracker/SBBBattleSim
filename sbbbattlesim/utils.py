@@ -63,14 +63,25 @@ class Tribe(enum.Enum):
     FAIRY = 'fairy'
     MAGE = 'mage'
     MONSTER = 'monster'
-    PRINCE = 'prince'
-    PRINCESS = 'princess'
+    ROYAL = 'royal'
     PUFF_PUFF = 'puff'
     QUEEN = 'queen'
     TREANT = 'treant'
 
     GOOD = 'good'
     EVIL = 'evil'
+
+@cache
+def get_adjacent_targets(position):
+    return {
+        1: (2,),
+        2: (1, 3),
+        3: (2, 4),
+        4: (3,),
+        5: (6,),
+        6: (5, 7),
+        7: (7,)
+    }.get(position, ())
 
 
 @cache

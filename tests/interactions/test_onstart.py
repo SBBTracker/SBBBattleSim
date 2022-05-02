@@ -47,11 +47,11 @@ def test_onstart_arthur_and_lordy():
         characters=[
             make_character(
                 id="SBB_CHARACTER_KINGARTHUR", position=2, golden=True,
-                attack=5, health=5, tribes=[Tribe.PRINCE]
+                attack=5, health=5, tribes=[Tribe.ROYAL]
             ),
             make_character(
                 id="SBB_CHARACTER_FORGEMASTERDWARF", position=3, golden=True,
-                attack=5, health=5, tribes=[Tribe.PRINCE]
+                attack=5, health=5, tribes=[Tribe.ROYAL]
             ),
             make_character(
                 position=5, attack=6, health=6

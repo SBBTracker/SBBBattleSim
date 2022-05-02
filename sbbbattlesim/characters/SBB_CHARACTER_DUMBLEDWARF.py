@@ -21,8 +21,8 @@ class DoublyOnBuff(OnBuff):
 class CharacterType(Character):
     display_name = 'Dubly'
 
-    _attack = 1
-    _health = 1
+    _attack = 2
+    _health = 2
     _level = 3
     _tribes = {Tribe.DWARF}
 
