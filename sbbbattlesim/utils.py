@@ -71,6 +71,18 @@ class Tribe(enum.Enum):
     GOOD = 'good'
     EVIL = 'evil'
 
+@cache
+def get_adjacent_targets(position):
+    return {
+        1: (2,),
+        2: (1, 3),
+        3: (2, 4),
+        4: (3,),
+        5: (6,),
+        6: (5, 7),
+        7: (7,)
+    }.get(position, ())
+
 
 @cache
 def get_support_targets(position, horn=False):

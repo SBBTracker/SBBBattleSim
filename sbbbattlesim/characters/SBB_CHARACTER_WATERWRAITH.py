@@ -1,22 +1,21 @@
 import logging
 
-from sbbbattlesim.action import Buff, Action, ActionReason
+from sbbbattlesim.action import Buff, Aura, ActionReason
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnSummon
-from sbbbattlesim.utils import Tribe
+from sbbbattlesim.events import OnDeath
+from sbbbattlesim.utils import Tribe, get_adjacent_targets
 
 logger = logging.getLogger(__name__)
 
 
-class WaterWraithOnSummon(OnSummon):
-    def handle(self, summoned_characters, stack, *args, **kwargs):
-        _lambda = lambda char: char.slot and char is not self.source # how do I check adjacency
-        num_chars = len(list(filter(_lambda, summoned_characters)))
+class WaterWraithOnDeath(OnDeath):
+    last_breath = False
+
+    def handle(self, stack, *args, **kwargs):
         modifier = 2 if self.source.golden else 1
 
-        if self.source in self.manager.characters.values():
-            Buff(source=self.source, reason=ActionReason.WATER_WRAITH_BUFF, targets=[self.source],
-                 health=num_chars * modifier, temp=False, stack=stack).resolve()
+        Buff(source=self.source, reason=ActionReason.WATER_WRAITH_BUFF, targets=[self.source],
+             health=modifier, attack=modifier, temp=False, stack=stack).resolve()
 
 
 class CharacterType(Character):
@@ -29,4 +28,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.register(WaterWraithOnSummon, source=self)
+        self.aura = Aura(source=self, event=WaterWraithOnDeath, _lambda=lambda char: char.position in get_adjacent_targets(self.position))
