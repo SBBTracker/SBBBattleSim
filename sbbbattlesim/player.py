@@ -75,7 +75,6 @@ class Player(EventManager):
             logger.debug(f'{self.id} Registering treasure {treasure.pretty_print()}')
             self.treasures[treasure.id].append(treasure)
 
-        self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand]
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
         if not self.hero.id:
             self.hero.id = hero
@@ -110,6 +109,8 @@ class Player(EventManager):
                 self.auras.update(set(self.hero.aura))
             except TypeError:
                 self.auras.add(self.hero.aura)
+
+        self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand]
 
         for aura in self.auras:
             logger.debug(f'{self.id} found aura {aura}')
