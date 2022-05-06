@@ -211,7 +211,6 @@ def test_echowood_phoenix_singingswords(last_treasure):
         treasures=[
             '''SBB_TREASURE_HERMES'BOOTS''',
             "SBB_TREASURE_PHOENIXFEATHER",
-            "SBB_TREASURE_WHIRLINGBLADES",
             last_treasure
         ]
     )
@@ -226,11 +225,11 @@ def test_echowood_phoenix_singingswords(last_treasure):
     assert echowood
     assert echowood.health == 1
     if last_treasure == 'SBB_TREASURE_REDUPLICATOR':
-        assert echowood.attack == 8, [i.pretty_print() for i in board.p1.valid_characters()]
+        assert echowood.attack == 2, [i.pretty_print() for i in board.p1.valid_characters()]
     elif last_treasure == "SBB_TREASURE_TREASURECHEST":
-        assert echowood.attack == 10
+        assert echowood.attack == 2
     else:
-        assert echowood.attack == 5
+        assert echowood.attack == 2
 
 
 
@@ -289,7 +288,6 @@ def test_multiple_echowoods_with_summon():
             make_character(position=1, attack=2, health=2),
         ],
         treasures=[
-            "SBB_TREASURE_WHIRLINGBLADES",
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
@@ -327,16 +325,15 @@ def test_multiple_echowoods_with_summon():
             make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=3, attack=2, health=1),
             make_character(id="SBB_CHARACTER_ECHOWOODSHAMBLER", position=4, attack=2, health=1),
         ],
-        treasures=[ "SBB_TREASURE_WHIRLINGBLADES"]
     )
     enemy = make_player(raw=True)
     board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     winner, loser = board.fight(limit=1)
 
-    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 1)
-    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 1)
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (2, 1)
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (2, 1)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (2, 1)
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (1, 1)
 
 
 def test_multiple_echowoods_with_summon_and_health_support():
@@ -349,7 +346,6 @@ def test_multiple_echowoods_with_summon_and_health_support():
             make_character(position=1, attack=2, health=4),
         ],
         treasures=[
-            "SBB_TREASURE_WHIRLINGBLADES",
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
@@ -390,7 +386,6 @@ def test_multiple_echowoods_with_summon_and_health_support():
             make_character(position=1, attack=2, health=4),
         ],
         treasures=[
-            "SBB_TREASURE_WHIRLINGBLADES",
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
@@ -415,9 +410,9 @@ def test_multiple_echowoods_with_summon_and_health_support():
 
     winner, loser = board.fight(limit=1)
 
-    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 4)
-    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 4)
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (2, 4)
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (2, 4)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (2, 4)
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (1, 4)
 
 
 def test_multiple_echowoods_with_summon_and_health_support_not_raw():
@@ -430,7 +425,6 @@ def test_multiple_echowoods_with_summon_and_health_support_not_raw():
             make_character(position=1, attack=2, health=4),
         ],
         treasures=[
-            "SBB_TREASURE_WHIRLINGBLADES",
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
@@ -456,9 +450,9 @@ def test_multiple_echowoods_with_summon_and_health_support_not_raw():
     winner, loser = board.fight(limit=1)
 
 
-    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (4, 4)
-    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (4, 4)
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (2, 4)
+    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == (2, 4)
+    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == (2, 4)
+    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (1, 4)
 
 
 def test_multiple_echowoods_with_summoningportal():

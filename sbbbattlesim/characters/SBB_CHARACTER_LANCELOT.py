@@ -19,7 +19,7 @@ class CharacterType(Character):
     _attack = 9
     _health = 9
     _level = 5
-    _tribes = {Tribe.GOOD, Tribe.PRINCE}
+    _tribes = {Tribe.GOOD, Tribe.ROYAL}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

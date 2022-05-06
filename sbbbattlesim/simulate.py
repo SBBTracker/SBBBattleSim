@@ -60,6 +60,8 @@ def from_state(state: dict):
                     'position': int(data.slot) + 1,  # This is done to match slot to normal board positions
                     'tribes': [subtype.lower() for subtype in data.subtypes],
                 })
+            elif data.zone == 'None' and 'SBB_SPELL' in data.content_id:
+                spells.append(data.content_id)
 
         sim_data[player] = {
             'characters': characters,

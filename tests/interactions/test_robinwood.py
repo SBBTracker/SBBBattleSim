@@ -26,12 +26,12 @@ def test_robinwood(golden):
     winner, loser = board.fight(limit=0)
 
 
-    buffed_attack = (32 if golden else 17)
+    buffed_attack = (6 if golden else 9)
 
     assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (buffed_attack, 1)
     assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (5, 1)
 
-    assert board.p2.characters[1].attack == (0 if golden else 5)
+    assert board.p2.characters[1].attack == (6 if golden else 13)
     assert board.p2.characters[2].attack == 5
 
 
@@ -51,4 +51,4 @@ def test_robinwood_ranged():
     winner, loser = board.fight(limit=2)
 
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (18, 6)
+    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (10, 6)

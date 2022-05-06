@@ -110,10 +110,15 @@ def _who_goes_first(player):
     TIGER = '''SBB_HERO_THECOLLECTOR'''
     MIMIC = '''SBB_TREASURE_TREASURECHEST'''
     DRAC = '''SBB_HERO_DRACULA'''
+    MAGIC_BEANS = '''SBB_SPELL_HERMESMAGICBEANS'''
 
     cnt = 0
     if player.hero.id == DRAC:
         cnt += 1
+
+    for spell in player.spells:
+        if spell == MAGIC_BEANS:
+            cnt += 1
 
     if player.treasures.get(HERMES_BOOTS):
         cnt += 1

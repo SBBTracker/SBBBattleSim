@@ -15,10 +15,10 @@ class OgrePrincessSlay(OnAttackAndKill):
 class CharacterType(Character):
     display_name = 'Orge Princess'
 
-    _attack = 3
+    _attack = 4
     _health = 2
     _level = 3
-    _tribes = {Tribe.GOOD, Tribe.PRINCESS, Tribe.MONSTER}
+    _tribes = {Tribe.GOOD, Tribe.ROYAL, Tribe.MONSTER}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -47,7 +47,7 @@ class StormKingOnSpellCast(OnSpellCast):
 
 class CharacterType(Character):
     # TODO this needs to be changed after the resolve_board removal
-    display_name = 'Storm King'
+    display_name = 'Scion of the Storm'
 
     _attack = 2
     _health = 2
