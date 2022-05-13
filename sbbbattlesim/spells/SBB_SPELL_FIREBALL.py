@@ -24,4 +24,4 @@ class SpellType(Spell):
                     targets.append(char)
 
             # TODO figure out if it goes left/right or right/left
-            Damage(damage=4, reason=ActionReason.FIREBALL, source=self, targets=targets).resolve()
+            Damage(damage=3, reason=ActionReason.FIREBALL, source=self, targets=targets).resolve()
