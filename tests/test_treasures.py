@@ -926,7 +926,7 @@ def test_deck_of_many_things(mimic, _):
     player = make_player(
         raw=True,
         hero='SBB_HERO_MERLIN',
-        level=6,
+        level=0,
         characters=[
             make_character(attack=100, health=100),
         ],
