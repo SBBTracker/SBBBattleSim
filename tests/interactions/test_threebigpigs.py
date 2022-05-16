@@ -10,6 +10,7 @@ def test_threebigpigs(golden):
         characters=[
             make_character(id='SBB_CHARACTER_THREEBIGPIGS', position=1, golden=golden),
         ],
+        hand=['SBB_SPELL_FOO', 'SBB_CHARACTER_THREEBIGPIGS']
     )
     enemy = make_player(
         characters=[make_character(attack=500, health=500)],

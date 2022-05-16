@@ -110,7 +110,7 @@ class Player(EventManager):
             except TypeError:
                 self.auras.add(self.hero.aura)
 
-        self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand]
+        self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand if isinstance(char_data, dict) and 'id' in char_data and char_data['id'].startswith('SBB_CHARACTER')]
 
         for aura in self.auras:
             logger.debug(f'{self.id} found aura {aura}')
@@ -243,11 +243,13 @@ class Player(EventManager):
             pos2char[char.position].append(char)
 
         for pos, char_ls in pos2char.items():
-            final_summoned_characters.extend(self.summon(pos, char_ls))
+            final_summoned_characters.extend(self.summon(pos, char_ls, onsummon=False))
+
+        stack = self('OnSummon', summoned_characters=final_summoned_characters)
 
         return final_summoned_characters
 
-    def summon(self, pos, characters, *args, **kwargs):
+    def summon(self, pos, characters, onsummon=True, *args, **kwargs):
         summoned_characters = []
         spawn_order = utils.get_spawn_positions(pos)
         for char in characters:
@@ -258,7 +260,8 @@ class Player(EventManager):
             summoned_characters.append(self.spawn(char, pos))
 
         # The player handles on-summon effects
-        stack = self('OnSummon', summoned_characters=summoned_characters)
+        if onsummon:
+            stack = self('OnSummon', summoned_characters=summoned_characters)
 
         return summoned_characters
 

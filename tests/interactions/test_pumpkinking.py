@@ -106,3 +106,27 @@ def test_pumpkin_summoning_two_cats(golden, r):
         assert summoned_unit.health == (8 if golden else 6)
         assert summoned_unit.attack == (8 if golden else 6)
 
+
+
+def test_pumpkin_redup():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_PUMPKINKING', position=7, tribes=[Tribe.EVIL]),
+            make_character(position=1, _level=3, tribes=[Tribe.EVIL]),
+        ],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''', 'SBB_TREASURE_REDUPLICATOR']
+    )
+    enemy = make_player(
+        characters=[make_character(attack=500, health=500)],
+    )
+    board = Board({'PLAYER': player, 'ENEMY': enemy})
+
+    pk = board.p1.characters[1]
+    winner, loser = board.fight(limit=2)
+
+    assert board.p1.characters[1] is not None
+    assert board.p1.characters[2] is not None
+    assert board.p1.characters[1].id == board.p1.characters[2].id
+    assert board.p1.characters[6] is None
+    assert board.p1.characters[7] is not None
+
