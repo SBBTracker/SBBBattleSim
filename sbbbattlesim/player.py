@@ -327,12 +327,25 @@ class Player(EventManager):
         ]
         hero = self.hero.id
         spells = list(self.spells)
+        hand = [
+            {
+                'slot': 0,
+                'id': character.id,
+                'attack': character.attack,
+                'health': character.health,
+                'golden': character.golden,
+                'cost': character.cost,
+                'tribes': [tribe.name.lower() for tribe in character.tribes],
+            }
+            for character in self.hand
+        ]
+
         return {
             'characters': characters,
             'treasures': treasures,
             'hero': hero,
             'spells': spells,
-            'hand': self.hand,
+            'hand': hand,
             'level': self.level,
         }
 

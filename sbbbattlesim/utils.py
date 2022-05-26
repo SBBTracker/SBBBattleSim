@@ -142,7 +142,7 @@ def find_stat_extreme_character(player, strongest=True):
         return None
 
     func = max if strongest else min
-    sub_char = func(valid_characters, key=lambda char: (char.attack, char.cost))
+    sub_char = func(valid_characters, key=lambda char: (char.attack, char.cost, char.position))
     sub_chars = list(
         filter(lambda char: char.attack == sub_char.attack and char.cost == sub_char.cost, valid_characters))
     return random.choice(sub_chars)
