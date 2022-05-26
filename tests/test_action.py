@@ -92,7 +92,7 @@ def test_apply_debuff():
 
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
     action._apply(char)
-    assert (char._base_attack, char.health) == (attack_final, health_final)
+    assert (char._base_attack, char._base_health) == (attack_final, health_final)
     action._clear(char)
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
 

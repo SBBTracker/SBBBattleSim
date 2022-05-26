@@ -108,7 +108,7 @@ class Character(EventManager):
 
     @property
     def max_health(self):
-        return self._base_health
+        return max(self._base_health, 0)
 
     def generate_attack(self, source, target, reason, attacking=False):
         return Damage(

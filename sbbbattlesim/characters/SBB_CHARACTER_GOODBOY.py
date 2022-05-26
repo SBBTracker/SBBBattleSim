@@ -14,7 +14,7 @@ class GoodBoyDeath(OnDeath):
     def handle(self, stack, reason, *args, **kwargs):
         golden_multiplyer = 2 if self.manager.golden else 1
         attack_buff = self.manager.attack * golden_multiplyer
-        health_buff = (self.manager._base_health) * golden_multiplyer
+        health_buff = (self.manager.max_health) * golden_multiplyer
 
         Buff(reason=ActionReason.GOODBOY_BUFF, source=self.manager, attack=attack_buff, health=health_buff, stack=stack,
              targets=self.manager.player.valid_characters(_lambda=lambda char: Tribe.GOOD in char.tribes and char is not self.manager)).execute()
