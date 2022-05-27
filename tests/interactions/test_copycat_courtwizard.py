@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -25,12 +25,12 @@ def test_copycat_goes_off_before_courtwizard():
 
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    p1chars = board.p1.characters
+    p1chars = player.characters
     backline = [p1chars[5], p1chars[6], p1chars[7]]
-    winner, loser = board.fight(limit=1)
 
-    assert len(board.p1.graveyard) == 2
+    fight(player, enemy, limit=1)
+
+    assert len(player.graveyard) == 2
 
     for bl in backline:
         assert not bl.dead

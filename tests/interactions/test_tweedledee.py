@@ -1,4 +1,3 @@
-from sbbbattlesim import Board
 from tests import make_character, make_player
 import pytest
 
@@ -17,10 +16,9 @@ def test_tweedledee(golden):
         raw=True,
         characters=[make_character(id='Enemy', attack=100, health=100)]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    player = board.p1
+
     tweedle_dum = player.characters[1]
     echowood = player.characters[7]
 
@@ -48,10 +46,9 @@ def test_tweedledee_sting(golden):
         raw=True,
         characters=[make_character(id='Enemy', attack=100, health=100)]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    player = board.p1
+
     tweedle_dum = player.characters[1]
     echowood = player.characters[7]
 
@@ -80,10 +77,9 @@ def test_tweedledee_helm(golden):
         raw=True,
         characters=[make_character(id='Enemy', attack=100, health=100)]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    player = board.p1
+
     tweedle_dum = player.characters[1]
     echowood = player.characters[7]
 
@@ -110,11 +106,10 @@ def test_tweedledee_shrivel():
         characters=[make_character()],
         spells=['SBB_SPELL_ENFEEBLEMENT']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    player = board.p1
 
-    assert not board.p1.characters[1].dead
-    assert board.p1.characters[1].attack == 0
-    assert board.p1.characters[1].health == 0
+
+    assert not player.characters[1].dead
+    assert player.characters[1].attack == 0
+    assert player.characters[1].health == 0

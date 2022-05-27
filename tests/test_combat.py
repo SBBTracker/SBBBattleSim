@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_player, make_character
 
 
@@ -21,8 +21,7 @@ def test_combat(attack_postition, defend_postition, attack):
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if not attack else []
     )
 
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=5)
+    fight(player, enemy, limit=5)
 
 
 @pytest.mark.parametrize('attack', (True, False))
@@ -39,5 +38,4 @@ def test_combat_lockout(attack):
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if not attack else []
     )
 
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=5)
+    fight(player, enemy, limit=5)

@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from tests import make_character, make_player, SpawnOnStart
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnStart
@@ -19,11 +18,10 @@ def test_riverwish(golden):
     enemy = make_player(
         characters=[make_character(attack=0, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     final_stats = (3, 3) if golden else (2, 2)
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == final_stats
+    assert (player.characters[1].attack, player.characters[1].health) == final_stats
 
 
 def test_riverwish_cloakoftheassassin():
@@ -38,10 +36,9 @@ def test_riverwish_cloakoftheassassin():
         ]
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (4, 4)
+    assert (player.characters[1].attack, player.characters[1].health) == (4, 4)
 
 
 def test_riverwish_cloakoftheassassin_doubledip():
@@ -60,7 +57,7 @@ def test_riverwish_cloakoftheassassin_doubledip():
 
     winner, loser = board.fight(limit=0)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (1, 1)
+    assert (player.characters[1].attack, player.characters[1].health) == (1, 1)
 
 
 def test_riverwish_cloakoftheassassin_doubledip2():
@@ -90,7 +87,7 @@ def test_riverwish_cloakoftheassassin_doubledip2():
 
     winner, loser = board.fight(limit=0)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (4, 4)
+    assert (player.characters[1].attack, player.characters[1].health) == (4, 4)
 
 
 def test_riverwish_cloakoftheassassin_dies():
@@ -108,7 +105,6 @@ def test_riverwish_cloakoftheassassin_dies():
         characters=[make_character(id='SBB_CHARACTER_BABYDRAGON', attack=30, health=30)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (1, 1), [i.pretty_print() for i in board.p1.valid_characters()]
+    assert (player.characters[1].attack, player.characters[1].health) == (1, 1), [i.pretty_print() for i in player.valid_characters()]

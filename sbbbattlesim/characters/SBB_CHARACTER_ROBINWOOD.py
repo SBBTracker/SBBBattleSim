@@ -29,4 +29,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(RobinWoodOnFightStart, priority=50, source=self)
+        self.player.register(RobinWoodOnFightStart, priority=50, source=self)

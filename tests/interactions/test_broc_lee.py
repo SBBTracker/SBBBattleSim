@@ -1,9 +1,10 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
+@pytest.mark.skipif
 @pytest.mark.parametrize('golden', (True, False))
 def test_broc_lee(golden):
     player = make_player(
@@ -20,8 +21,6 @@ def test_broc_lee(golden):
             make_character(attack=1, health=1, position=2)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
-
-    assert board.p1.characters[1].attack == (60 if golden else 30)
+    assert player.characters[1].attack == (60 if golden else 30)

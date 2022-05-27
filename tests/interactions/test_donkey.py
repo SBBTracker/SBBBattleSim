@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from tests import make_character, make_player
 
 
@@ -18,14 +17,13 @@ def test_donkey_surviving(golden, level, repeat):
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert board.p1.characters[2] is not None
+    assert player.characters[2] is not None
     if golden:
-        assert board.p1.characters[2]._level == level
+        assert player.characters[2]._level == level
     else:
-        assert board.p1.characters[2]._level <= level and board.p1.characters[2]._level > 1
+        assert player.characters[2]._level <= level and player.characters[2]._level > 1
 
 
 def test_donkey_fullboard():
@@ -47,5 +45,4 @@ def test_donkey_fullboard():
         spells=['SBB_SPELL_FALLINGSTARS']
     )
 
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)

@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -16,11 +15,11 @@ def test_lonely_pumpkin_dying(golden):
         characters=[make_character(attack=500, health=500)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    pk = board.p1.characters[1]
+    pk = player.characters[1]
     winner, loser = board.fight(limit=1)
 
 
-    summoned_unit = board.p1.characters[1]
+    summoned_unit = player.characters[1]
     assert summoned_unit is not pk
     assert summoned_unit._level == 5
     if golden:
@@ -42,20 +41,20 @@ def test_pumpkin_with_friends_dying():
         characters=[make_character(attack=500, health=500)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    pk = board.p1.characters[1]
+    pk = player.characters[1]
 
-    board.p1.characters[1]._level = 2
-    board.p1.characters[2]._level = 3
-    board.p1.characters[3]._level = 4
-    board.p1.characters[4]._level = 5
+    player.characters[1]._level = 2
+    player.characters[2]._level = 3
+    player.characters[3]._level = 4
+    player.characters[4]._level = 5
 
     winner, loser = board.fight(limit=5)
 
 
-    assert board.p1.characters[1]._level == 1
-    assert board.p1.characters[2]._level == 2
-    assert board.p1.characters[3]._level == 3
-    assert board.p1.characters[4]._level == 4
+    assert player.characters[1]._level == 1
+    assert player.characters[2]._level == 2
+    assert player.characters[3]._level == 3
+    assert player.characters[4]._level == 4
 
 @pytest.mark.parametrize('golden', (True, False))
 def test_pumpkin_summoning_cats(golden):
@@ -69,12 +68,12 @@ def test_pumpkin_summoning_cats(golden):
         characters=[make_character(attack=500, health=500)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    pk = board.p1.characters[1]
+    pk = player.characters[1]
     winner, loser = board.fight(limit=2)
 
 
-    summoned_unit = board.p1.characters[1]
-    assert summoned_unit, [i.pretty_print() for i in board.p1.valid_characters()]
+    summoned_unit = player.characters[1]
+    assert summoned_unit, [i.pretty_print() for i in player.valid_characters()]
     assert summoned_unit.id == "SBB_CHARACTER_CAT"
     assert summoned_unit.golden == golden
 
@@ -94,13 +93,13 @@ def test_pumpkin_summoning_two_cats(golden, r):
         characters=[make_character(attack=500, health=500)],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    board.p1.characters[5]._level = 0  # hacky fix
-    pk = board.p1.characters[1]
+    player.characters[5]._level = 0  # hacky fix
+    pk = player.characters[1]
     winner, loser = board.fight(limit=3)
 
     for pos in [1, 2]:
-        summoned_unit = board.p1.characters[pos]
-        assert summoned_unit, [i.pretty_print() for i in board.p1.valid_characters()]
+        summoned_unit = player.characters[pos]
+        assert summoned_unit, [i.pretty_print() for i in player.valid_characters()]
         assert summoned_unit.id == "SBB_CHARACTER_CAT"
         assert summoned_unit.golden == golden
         assert summoned_unit.health == (8 if golden else 6)

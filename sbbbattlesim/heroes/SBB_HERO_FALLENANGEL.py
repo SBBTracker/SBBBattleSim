@@ -23,5 +23,5 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(FallenAngelOnSetup, source=self, priority=100)
+        self.player.register(FallenAngelOnSetup, source=self, priority=100)
         self.aura = Aura(reason=ActionReason.FALLEN_ANGEL_BUFF, source=self, priority=1e99)

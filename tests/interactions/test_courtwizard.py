@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
@@ -24,11 +24,10 @@ def test_courtwizard(tribe):
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=5)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     if tribe in [Tribe.PRINCE, Tribe.PRINCESS]:
-        assert board.p1.characters[1] is None and board.p1.characters[2] is None
+        assert player.characters[1] is None and player.characters[2] is None
 
 
 def test_courtwizard_diesandproccs():
@@ -48,18 +47,17 @@ def test_courtwizard_diesandproccs():
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=5)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    mummy = board.p1.characters[1]
+
+    mummy = player.characters[1]
     assert mummy
-    unit = board.p1.characters[2]
+    unit = player.characters[2]
     assert unit
-    prince = board.p2.characters[1]
+    prince = enemy.characters[1]
     assert prince
-    wizard = board.p2.characters[5]
+    wizard = enemy.characters[5]
     assert wizard
 
-    winner, loser = board.fight(limit=1)
-
+    fight(player, enemy, limit=1)
 
     assert mummy.dead
     assert prince.dead
@@ -91,16 +89,16 @@ def test_courtwizard_noattack_eveniftoken():
             make_character(id="SBB_CHARACTER_PRINCESSPEEP", position=5)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    unit = board.p1.characters[1]
+
+    unit = player.characters[1]
     assert unit
-    unit2 = board.p1.characters[2]
+    unit2 = player.characters[2]
     assert unit2
-    prince = board.p2.characters[1]
+    prince = enemy.characters[1]
     assert prince
-    wizard = board.p2.characters[6]
+    wizard = enemy.characters[6]
     assert wizard
-    peep = board.p2.characters[5]
+    peep = enemy.characters[5]
     assert peep
 
     class FakeOndeathFallingstars(OnDeath):
@@ -110,9 +108,7 @@ def test_courtwizard_noattack_eveniftoken():
 
     unit.register(FakeOndeathFallingstars, priority=9999)
 
-    winner, loser = board.fight(limit=1)
-
-
+    fight(player, enemy, limit=1)
 
     assert unit.dead
     assert prince.dead
@@ -121,7 +117,8 @@ def test_courtwizard_noattack_eveniftoken():
     assert not unit2.dead, unit2.pretty_print()
 
     for pos in [5, 6, 7]:
-        assert board.p2.characters[pos].id == "SBB_CHARACTER_SHEEP"
+        assert enemy.characters[pos].id == "SBB_CHARACTER_SHEEP"
+
 
 def test_courtwizard_ranged():
     player = make_player(
@@ -137,8 +134,6 @@ def test_courtwizard_ranged():
         raw=True,
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
-
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (3, 6)
+    assert (player.characters[6].attack, player.characters[6].health) == (3, 6)

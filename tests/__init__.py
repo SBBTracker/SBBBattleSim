@@ -1,8 +1,6 @@
 import collections
-from typing import Iterable
+import uuid
 
-from sbbbattlesim import configure_logging, Board
-from sbbbattlesim.action import Action, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart, SSBBSEvent
 from sbbbattlesim.player import Player
@@ -29,7 +27,7 @@ CHARACTER = {
 
 
 def make_player(**kwargs):
-    return PLAYER.copy() | kwargs
+    return Player(id=uuid.uuid1(), **(PLAYER.copy() | kwargs))
 
 
 def make_character(**kwargs):
@@ -50,7 +48,7 @@ def create_test_setup(**kwargs):
 
     board = Board(kwargs)
 
-    return board, board.p1
+    return board, player
 
 
 def create_test_player(**kwargs):
@@ -89,7 +87,8 @@ class TestSpawnCharacter(Character):
         super().__init__(*args, **kwargs)
         self.spawn_char = spawn_char
         self.spawn_pos = spawn_pos
-        self.player.board.register(SpawnOnStart, source=self)
+        self.player.register(SpawnOnStart, source=self)
+
 
 from sbbbattlesim import character_registry
 character_registry.register('SPAWN_TEST', TestSpawnCharacter)

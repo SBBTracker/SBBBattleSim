@@ -1,7 +1,8 @@
 import pytest
+
+from sbbbattlesim import fight
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived
-from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 from sbbbattlesim.action import ActionReason
@@ -20,13 +21,11 @@ def test_bearstain_black_cat_dying(golden):
         raw=True,
         characters=[make_character(attack=500, health=500)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
+    fight(player, enemy, limit=1)
 
     final_stats = (15, 15) if golden else (6, 6)
-    assert board.p1.characters[1].display_name == 'Cat'
-    assert board.p1.characters[1].attack, board.p1.characters[1].health == final_stats
+    assert player.characters[1].display_name == 'Cat'
+    assert player.characters[1].attack, player.characters[1].health == final_stats
 
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -39,10 +38,9 @@ def test_bearstain_black_cat_living(golden):
         ],
     )
     enemy = make_player(raw=True)
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
-    char = board.p1.characters[1]
+    char = player.characters[1]
     buffs = [
         r for r in char._action_history
     ]
@@ -68,13 +66,11 @@ def test_two_bearstain_black_cat_dying(golden):
         raw=True,
         characters=[make_character(attack=500, health=500)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
+    fight(player, enemy, limit=1)
 
     final_stats = (45, 45) if golden else (15, 15)
-    assert board.p1.characters[1].display_name == 'Cat'
-    assert board.p1.characters[1].attack, board.p1.characters[1].health == final_stats
+    assert player.characters[1].display_name == 'Cat'
+    assert player.characters[1].attack, player.characters[1].health == final_stats
 
 
 @pytest.mark.parametrize('dies', (True, False))
@@ -101,8 +97,7 @@ def test_summon_bearstain(dies):
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    donkey = board.p1.characters[1]
+    donkey = player.characters[1]
 
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
@@ -116,10 +111,9 @@ def test_summon_bearstain(dies):
 
     donkey.register(FakeTrojanDonkeySummon)
 
-    winner, loser = board.fight(limit=(1 if dies else 0))
+    fight(player, enemy, limit=(1 if dies else 0))
 
-
-    bearstain = board.p1.characters[5]
+    bearstain = player.characters[5]
     if dies:
         assert bearstain is None, bearstain.pretty_print()
         assert (donkey.attack, donkey.health) == (1, 2)

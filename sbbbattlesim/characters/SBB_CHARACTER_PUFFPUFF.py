@@ -73,7 +73,7 @@ class CharacterType(Character):
 
         self.player.register(PuffPuffOnSummon, source=self, priority=-15)
         self.register(PuffPuffDeath)
-        self.player.board.register(PuffPuffOnStart, source=self, priority=9000)
+        self.player.register(PuffPuffOnStart, source=self, priority=9000)
 
     @classmethod
     def new(cls, *args, **kwargs):

@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from tests import make_character, make_player
 from sbbbattlesim.events import OnDamagedAndSurvived
 from sbbbattlesim.utils import Tribe
@@ -20,8 +19,7 @@ def test_hippocampus(golden, summoner_id):
     enemy = make_player(
         characters=[make_character(attack=500, health=500)]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     if summoner_id == 'SBB_CHARACTER_PRINCESSPEEP':
@@ -31,9 +29,9 @@ def test_hippocampus(golden, summoner_id):
             final_stats = (1, 7)
     else:
         final_stats = (1, 1)
-        assert board.p1.characters[1] is not None  # there should be a tweedle dum there
+        assert player.characters[1] is not None  # there should be a tweedle dum there
 
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == final_stats
+    assert (player.characters[5].attack, player.characters[5].health) == final_stats
 
 
 def test_summon_hippocampus():
@@ -49,7 +47,7 @@ def test_summon_hippocampus():
         spells=["SBB_SPELL_FALLINGSTARS"]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    donkey = board.p1.characters[1]
+    donkey = player.characters[1]
 
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
@@ -67,8 +65,8 @@ def test_summon_hippocampus():
     winner, loser = board.fight(limit=0)
 
 
-    hippocampus1 = board.p1.characters[2]
+    hippocampus1 = player.characters[2]
     assert (hippocampus1.attack, hippocampus1.health) == (hippocampus1._attack, hippocampus1._health+2)
 
-    hippocampus2 = board.p1.characters[3]
+    hippocampus2 = player.characters[3]
     assert (hippocampus2.attack, hippocampus2.health) == (hippocampus2._attack, hippocampus2._health)

@@ -59,7 +59,7 @@ class CharacterType(Character):
 
         self.player.register(StormKingOnSpellCast, source=self)
         self.player.register(StormKingOnSummon, source=self, priority=-15)
-        self.player.board.register(StormKingOnStart, source=self, priority=9000)
+        self.player.register(StormKingOnStart, source=self, priority=9000)
 
     @classmethod
     def new(cls, *args, **kwargs):

@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -26,8 +26,7 @@ def test_angry(golden):
         ],
 
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
     if golden:
         angry_final_stats = (9, 6)
@@ -35,8 +34,8 @@ def test_angry(golden):
     else:
         dorf_final_stats = (3, 3)
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == dorf_final_stats
+    assert (player.characters[6].attack, player.characters[6].health) == dorf_final_stats
     if golden:
-        assert (board.p1.characters[1].attack, board.p1.characters[1].health) == angry_final_stats
+        assert (player.characters[1].attack, player.characters[1].health) == angry_final_stats
     else:
-        assert board.p1.characters[1] is None
+        assert player.characters[1] is None

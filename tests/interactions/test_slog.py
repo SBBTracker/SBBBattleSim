@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -22,7 +21,6 @@ def test_slog():
         ],
 
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    fight(player, enemy)
 
-    assert board.p1.characters[1].health == 1
+    assert player.characters[1].health == 1

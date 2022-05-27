@@ -17,7 +17,7 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.active = False
-        self.player.board.register(MonkeysPawOnSetup, source=self, priority=100)
+        self.player.register(MonkeysPawOnSetup, source=self, priority=100)
         stats = 5 * (bool(self.mimic) + 1)
         self.aura = Aura(reason=ActionReason.MONKEYS_PAW, source=self, health=stats, attack=stats,
                          _lambda=lambda _: self.active)

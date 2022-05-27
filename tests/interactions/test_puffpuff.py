@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived
 from tests import make_character, make_player
@@ -28,7 +27,7 @@ def test_puffpuff_spawn(r, raw):
     winner, loser = board.fight(limit=1)
 
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (2, 2)
+    assert (player.characters[1].attack, player.characters[1].health) == (2, 2)
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -53,7 +52,7 @@ def test_puffpuff_spawn_high_health(r, raw):
     winner, loser = board.fight(limit=1)
 
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (2, 2)
+    assert (player.characters[1].attack, player.characters[1].health) == (2, 2)
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -78,7 +77,7 @@ def test_puffpuff_spawn_high_attack(r, raw):
     winner, loser = board.fight(limit=1)
 
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (2, 2)
+    assert (player.characters[1].attack, player.characters[1].health) == (2, 2)
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -105,8 +104,8 @@ def test_puffpuff_spawn_with_large(r, raw):
     winner, loser = board.fight(limit=1)
 
 
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (51, 51)
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (45, 45)
+    assert (player.characters[5].attack, player.characters[5].health) == (51, 51)
+    assert (player.characters[1].attack, player.characters[1].health) == (45, 45)
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -132,7 +131,7 @@ def test_puffpuff_spawn_with_large_golden(r, raw):
     winner, loser = board.fight(limit=1)
 
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (20, 20)
+    assert (player.characters[1].attack, player.characters[1].health) == (20, 20)
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -160,9 +159,9 @@ def test_puffpuff_spawn_with_large_and_echowood(r, raw):
     winner, loser = board.fight(limit=1)
 
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (45, 45)
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (51, 51)
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (47, 47)
+    assert (player.characters[1].attack, player.characters[1].health) == (45, 45)
+    assert (player.characters[5].attack, player.characters[5].health) == (51, 51)
+    assert (player.characters[7].attack, player.characters[7].health) == (47, 47)
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -191,10 +190,10 @@ def test_puff_spawn(golden, r, raw):
             )
             self.manager.player.summon(self.manager.position, [summon])
 
-    board.p1.characters[7].register(FakeTrojanDonkeySummon)
+    player.characters[7].register(FakeTrojanDonkeySummon)
 
     winner, loser = board.fight(limit=2)
 
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (34, 34) if golden else (17, 17), (board.p1.characters[6].attack, board.p1.characters[6].health)
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (21, 21) if golden else (11, 11), (board.p1.characters[1].attack, board.p1.characters[1].health)
+    assert (player.characters[6].attack, player.characters[6].health) == (34, 34) if golden else (17, 17), (player.characters[6].attack, player.characters[6].health)
+    assert (player.characters[1].attack, player.characters[1].health) == (21, 21) if golden else (11, 11), (player.characters[1].attack, player.characters[1].health)

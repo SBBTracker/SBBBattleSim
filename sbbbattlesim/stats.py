@@ -2,12 +2,11 @@ import collections
 from dataclasses import dataclass
 from typing import Dict, List
 
-from sbbbattlesim import Board
 from sbbbattlesim.player import Player
 
 
 @dataclass
-class BoardStats:
+class CombatStats:
     win_id: (str, None)
     damage: int
     first_attacker: (str, None)
@@ -24,16 +23,16 @@ def calculate_damage(player: Player) -> int:
     return damage
 
 
-def calculate_stats(board: Board) -> BoardStats:
+def calculate_stats(winner) -> CombatStats:
     player = board.winner
     if player:
-        return BoardStats(
+        return CombatStats(
             win_id=player.id,
             damage=calculate_damage(player),
             first_attacker=board.first_attacker
         )
     else:
-        return BoardStats(
+        return CombatStats(
             win_id=None,
             damage=0,
             first_attacker=board.first_attacker

@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from tests import make_character, make_player
 
 
@@ -30,10 +29,9 @@ def test_madmim_singingswords(mimic):
             '''SBB_TREASURE_HERMES'BOOTS''',
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (final_stats, 1)
+    assert (player.characters[1].attack, player.characters[1].health) == (final_stats, 1)
 
 
 def test_singingswords_bearstain():
@@ -55,10 +53,9 @@ def test_singingswords_bearstain():
             '''SBB_TREASURE_HERMES'BOOTS''',
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (18, 6)
+    assert (player.characters[1].attack, player.characters[1].health) == (18, 6)
 
 
 def test_singingswords_bearstain_unassumingsheep():
@@ -80,11 +77,10 @@ def test_singingswords_bearstain_unassumingsheep():
             '''SBB_TREASURE_HERMES'BOOTS''',
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (96, 16)
+    assert (player.characters[1].attack, player.characters[1].health) == (96, 16)
 
 def test_singingswords_dos_bearstain():
     player = make_player(
@@ -106,10 +102,9 @@ def test_singingswords_dos_bearstain():
             '''SBB_TREASURE_HERMES'BOOTS''',
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (50, 15)
+    assert (player.characters[1].attack, player.characters[1].health) == (50, 15)
 
 
 def test_singingswords_mimic_roundtable():
@@ -126,12 +121,11 @@ def test_singingswords_mimic_roundtable():
         ]
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
 
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (48, 48)
+    assert (player.characters[1].attack, player.characters[1].health) == (48, 48)
 
     player = make_player(
         characters=[
@@ -144,12 +138,11 @@ def test_singingswords_mimic_roundtable():
         ]
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
 
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (9, 9)
+    assert (player.characters[1].attack, player.characters[1].health) == (9, 9)
 
 
 
@@ -170,11 +163,10 @@ def test_backline_blackcat():
             '''SBB_TREASURE_HERMES'BOOTS''',
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (1, 1)
+    assert (player.characters[5].attack, player.characters[5].health) == (1, 1)
 
 def test_multiple_echowoods():
     player = make_player(
@@ -194,7 +186,6 @@ def test_multiple_echowoods():
             make_character(position=5, attack=1, health=1),
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (4, 1)
+    assert (player.characters[2].attack, player.characters[2].health) == (4, 1)

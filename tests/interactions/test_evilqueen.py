@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -31,4 +30,4 @@ def test_queenofhearts(golden):
     else:
         final_stats = (5, 5)
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats
+    assert (player.characters[6].attack, player.characters[6].health) == final_stats

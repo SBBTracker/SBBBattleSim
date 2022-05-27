@@ -58,13 +58,12 @@ def test_apply_buff(damage, heal, health_final):
     attack_start, health_start = 1, 1
     attack_final = attack_start
 
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = TestAction(source=char, damage=damage, heal=heal)
 
@@ -80,13 +79,12 @@ def test_apply_debuff():
     attack_start, health_start = -10, -10
     attack_final, health_final = attack_start + attack_buff, health_start + health_buff
 
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = TestAction(source=char, attack=attack_buff, health=health_buff)
 
@@ -103,13 +101,12 @@ def test_execute(_lambda):
     attack_start, health_start = 1, 1
     attack_final, health_final = attack_start + attack_buff, health_start + health_buff
 
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = TestAction(source=char, attack=attack_buff, health=health_buff, _lambda=lambda _: _lambda)
 
@@ -136,13 +133,12 @@ def test_setup(setup):
     attack_buff, health_buff = 1, 1
     attack_start, health_start = 2, 2
 
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = TestAction(source=char, attack=attack_buff, health=health_buff)
 
@@ -164,13 +160,13 @@ def test_rollback():
     attack_final, health_final = attack_start + attack_buff, health_start + health_buff
 
     attack_start, health_start = 1, 1
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = TestAction(source=char, attack=attack_buff, health=health_buff)
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
@@ -184,16 +180,15 @@ def test_rollback():
 
 def test_resolve_damage():
     attack_start, health_start = 1, 1
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
-
 
     action = TestAction(source=char, damage=1, targets=[char])
     action.resolve()
@@ -202,13 +197,13 @@ def test_resolve_damage():
 
 def test_resolve_minus_health():
     attack_start, health_start = 1, 1
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
 
@@ -223,11 +218,10 @@ def test_resolve_minus_health():
 
 
 def test_event():
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[make_character()]
-        )
+    player = make_player(
+        characters=[make_character()]
     )
+
     char = player.characters[1]
     action = TestAction(source=char, event=TestEvent)
     action._register(char)

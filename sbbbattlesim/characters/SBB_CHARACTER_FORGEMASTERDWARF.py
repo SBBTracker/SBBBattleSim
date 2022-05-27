@@ -28,4 +28,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(LordyBuffOnStart, priority=90, source=self)
+        self.player.register(LordyBuffOnStart, priority=90, source=self)

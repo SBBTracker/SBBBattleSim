@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -24,17 +23,16 @@ def test_fairy_godmother(golden, limit, r):
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''],
         characters=[make_character(attack=500, health=500)]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=limit)
+    fight(player, enemy, limit=limit)
 
 
-    fairy_stats = (board.p1.characters[5].attack, board.p1.characters[5].health)
+    fairy_stats = (player.characters[5].attack, player.characters[5].health)
 
     if limit == 1:
         assert fairy_stats == (1, 5) if golden else (1, 3)
     if limit == 2:
         health = 9 if golden else 5
         assert fairy_stats == (1, 9) if golden else (1, 5)
-        assert board.p1.characters[2].health == health, board.p1.characters[2].health
+        assert player.characters[2].health == health, player.characters[2].health
     if limit == 4:
         assert fairy_stats == (1, 17) if golden else (1, 9)

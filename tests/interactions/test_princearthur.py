@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -21,8 +20,7 @@ def test_prince_arthur(arthur_is_golden):
         ],
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
 
     if arthur_is_golden:
@@ -31,10 +29,10 @@ def test_prince_arthur(arthur_is_golden):
         golden_final_stats = (3, 3)
     normal_stats = (1, 1)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == normal_stats
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == golden_final_stats
-    assert (board.p1.characters[3].attack, board.p1.characters[3].health) == normal_stats
-    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == golden_final_stats
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (
+    assert (player.characters[1].attack, player.characters[1].health) == normal_stats
+    assert (player.characters[2].attack, player.characters[2].health) == golden_final_stats
+    assert (player.characters[3].attack, player.characters[3].health) == normal_stats
+    assert (player.characters[4].attack, player.characters[4].health) == golden_final_stats
+    assert (player.characters[5].attack, player.characters[5].health) == (
         golden_final_stats if arthur_is_golden else normal_stats)
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == normal_stats
+    assert (player.characters[6].attack, player.characters[6].health) == normal_stats

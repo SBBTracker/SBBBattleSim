@@ -24,4 +24,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(PrinceArthurOnStart, priority=80, source=self)
+        self.player.register(PrinceArthurOnStart, priority=80, source=self)

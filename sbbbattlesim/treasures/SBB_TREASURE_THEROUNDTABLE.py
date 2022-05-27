@@ -24,4 +24,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(RoundTableBuff, priority=30, source=self)
+        self.player.register(RoundTableBuff, priority=30, source=self)

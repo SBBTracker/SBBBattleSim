@@ -1,4 +1,3 @@
-from sbbbattlesim import Board
 from tests import make_character, make_player
 
 
@@ -14,8 +13,7 @@ def test_sureshot_ranged():
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (3, 6)
+    assert (player.characters[6].attack, player.characters[6].health) == (3, 6)

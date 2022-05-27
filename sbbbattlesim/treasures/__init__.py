@@ -17,6 +17,7 @@ class Treasure(EventManager):
 
     def __init__(self, player, mimic):
         self.player = player
+
         self.mimic = mimic
         self.aura = None
 

@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.utils import Tribe
 from sbbbattlesim.action import ActionReason
@@ -36,9 +36,9 @@ def test_character(char, attack, golden):
         characters=[make_character()],
         treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if not attack else []
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
+
     try:
-        winner, loser = board.fight(limit=5)
+        fight(player, enemy, limit=5)
     except:
         logger.error(f"{char['id']}")
         raise
@@ -74,20 +74,14 @@ def test_support(char, golden, horn):
         ]
     )
     enemy = make_player(raw=True)
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
-    assert board.p1.characters[1]._action_history[0].reason == ActionReason.SUPPORT_BUFF
+    assert player.characters[1]._action_history[0].reason == ActionReason.SUPPORT_BUFF
 
 
 class FakePlayer:
     stateful_effects = dict()
     id = "Fake"
-    class FakeBoard:
-        def register(self, *args, **kwargs):
-            pass
-
-    board = FakeBoard()
 
     def register(self, *args, **kwargs):
         pass
@@ -111,13 +105,12 @@ def test_slay(char, golden):
         raw=True,
         characters=[make_character(position=1, attack=0, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
     if char.id == '''SBB_CHARACTER_QUESTINGPRINCESS''' and golden:
         return
 
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (3, 1)
+    assert (player.characters[7].attack, player.characters[7].health) == (3, 1)
 
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -135,10 +128,9 @@ def test_last_breath(char, golden):
         characters=[make_character(attack=50, health=50)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    fight(player, enemy)
 
-    assert board.p1.hero.triggered
+    assert player.hero.triggered
 
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -154,10 +146,7 @@ def test_baba_yaga(golden):
         raw=True,
         characters=[make_character(attack=0, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
-
-    player = board.p1
+    fight(player, enemy)
 
     if golden:
         assert player.characters[1].attack == 13
@@ -180,10 +169,7 @@ def test_soltak():
         characters=[make_character(id='SBB_CHARACTER_BABYDRAGON', health=2)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
-
-    player = board.p1
+    fight(player, enemy)
 
     assert player.characters[5] is None
     assert player.characters[1] is not None
@@ -202,10 +188,7 @@ def test_trojan_donkey():
         characters=[make_character()],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
-
-    player = board.p1
+    fight(player, enemy)
 
     assert player.characters[2] is not None
 
@@ -223,10 +206,7 @@ def test_wombats_in_disguise():
         characters=[make_character()],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
-
-    player = board.p1
+    fight(player, enemy)
 
     wombat_spawn = player.characters.get(1)
 
@@ -252,18 +232,15 @@ def test_doombreath():
             make_character(position=7),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
-    player = board.p2
+    fight(player, enemy, limit=1)
 
     for i in (2, 5, 6):
-        assert player.characters[i] is None
+        assert enemy.characters[i] is None
 
-    assert player.characters[7] is not None
+    assert enemy.characters[7] is not None
 
-    doombreath = board.p1.characters[1]
-    riverwish = board.p1.characters[5]
+    doombreath = player.characters[1]
+    riverwish = player.characters[5]
     assert doombreath.attack == 4
     assert doombreath.health == 4
 

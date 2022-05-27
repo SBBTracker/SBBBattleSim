@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 from sbbbattlesim.events import OnDamagedAndSurvived
@@ -18,11 +17,10 @@ def test_goodwitch(golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
 
-    char = board.p1.characters[1]
+    char = player.characters[1]
     buffs = [
         r for r in char._action_history
     ]
@@ -33,7 +31,7 @@ def test_goodwitch(golden):
     assert attackbuffs == (4 if golden else 2)
     assert healthbuffs == (6 if golden else 3)
 
-    char = board.p1.characters[2]
+    char = player.characters[2]
     buffs = [
         r for r in char._action_history
     ]
@@ -54,10 +52,9 @@ def test_goodwitch_onsummon():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(characters=[make_character(position=5, attack=5, health=5)])
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    sheep = board.p1.characters[1]
+    sheep = player.characters[1]
     assert sheep.id == "SBB_CHARACTER_SHEEP"
 
     char = sheep
@@ -99,7 +96,7 @@ def test_summon_goodwitch(dies):
         ]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    donkey = board.p1.characters[1]
+    donkey = player.characters[1]
 
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
@@ -116,9 +113,9 @@ def test_summon_goodwitch(dies):
     winner, loser = board.fight(limit=1 if dies else 0)
 
     if dies:
-        assert board.p1.characters[5] is None
+        assert player.characters[5] is None
     else:
-        assert board.p1.characters[5] is not None
+        assert player.characters[5] is not None
 
-    assert board.p1.characters[1].health == (2 if dies else 4)
-    assert board.p1.characters[1].attack == (1 if dies else 3)
+    assert player.characters[1].health == (2 if dies else 4)
+    assert player.characters[1].attack == (1 if dies else 3)

@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -22,17 +21,16 @@ def test_robinwood(golden):
             make_character(position=2, attack=5)
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
 
     buffed_attack = (32 if golden else 17)
 
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (buffed_attack, 1)
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (5, 1)
+    assert (player.characters[2].attack, player.characters[2].health) == (buffed_attack, 1)
+    assert (player.characters[5].attack, player.characters[5].health) == (5, 1)
 
-    assert board.p2.characters[1].attack == (0 if golden else 5)
-    assert board.p2.characters[2].attack == 5
+    assert enemy.characters[1].attack == (0 if golden else 5)
+    assert enemy.characters[2].attack == 5
 
 
 def test_robinwood_ranged():
@@ -47,8 +45,7 @@ def test_robinwood_ranged():
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (18, 6)
+    assert (player.characters[6].attack, player.characters[6].health) == (18, 6)

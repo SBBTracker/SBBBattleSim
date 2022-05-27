@@ -1,4 +1,3 @@
-from sbbbattlesim import Board
 from tests import make_character, make_player
 
 
@@ -18,9 +17,9 @@ def test_lightning_dragon():
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    dragon = board.p1.characters[6]
-    frontline = board.p2.characters[1]
-    backline = board.p2.characters[5]
+    dragon = player.characters[6]
+    frontline = enemy.characters[1]
+    backline = enemy.characters[5]
 
     winner, loser = board.fight(limit=0)
 

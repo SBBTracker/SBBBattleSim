@@ -1,4 +1,4 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -26,12 +26,10 @@ def test_complex_trees():
         ]
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
-
+    fight(player, enemy, limit=2)
 
     for pos in range(1, 8):
-        char = board.p1.characters[pos]
+        char = player.characters[pos]
         if pos == 1:
             assert (char.attack, char.health) == (1, 1)
         elif pos == 2:

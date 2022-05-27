@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -17,16 +17,14 @@ def test_bossy(golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(raw=True)
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
     if golden:
         final_stats = (7, 7)
     else:
         final_stats = (4, 4)
 
-
-    char = board.p1.characters[6]
+    char = player.characters[6]
     buffs = [
         r for r in char._action_history
     ]
@@ -37,7 +35,7 @@ def test_bossy(golden):
     assert attackbuffs == (6 if golden else 3)
     assert healthbuffs == (6 if golden else 3)
 
-    char = board.p1.characters[7]
+    char = player.characters[7]
     buffs = [
         r for r in char._action_history
     ]

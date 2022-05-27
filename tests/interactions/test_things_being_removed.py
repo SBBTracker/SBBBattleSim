@@ -1,6 +1,5 @@
 import pytest
 
-from sbbbattlesim import Board
 from tests import make_character, make_player
 from sbbbattlesim.action import ActionReason
 
@@ -23,14 +22,13 @@ def test_yaga_dies():
             make_character(id='SBB_CHARACTER_LIGHTNINGDRAGON', attack=100, health=1, position=7)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     final_stats = (2, 1)
-    assert board.p1.characters[6] is None
-    assert (board.p1.characters[4].attack, board.p1.characters[4].health) == final_stats
+    assert player.characters[6] is None
+    assert (player.characters[4].attack, player.characters[4].health) == final_stats
 
-    assert board.p1.characters[2].attack == 1
+    assert player.characters[2].attack == 1
 
 
 def test_riverwish_dies():
@@ -50,12 +48,11 @@ def test_riverwish_dies():
             make_character(id='SBB_CHARACTER_LIGHTNINGDRAGON', attack=100, health=1, position=7)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     final_stats = (1, 1)
-    assert board.p1.characters[6] is None
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == final_stats
+    assert player.characters[6] is None
+    assert (player.characters[2].attack, player.characters[2].health) == final_stats
 
 
 def test_darkwood_dies():
@@ -75,12 +72,11 @@ def test_darkwood_dies():
             make_character(id='SBB_CHARACTER_LIGHTNINGDRAGON', attack=100, health=1, position=7)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     final_stats = (2, 1)
-    assert board.p1.characters[6] is None
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == final_stats
+    assert player.characters[6] is None
+    assert (player.characters[2].attack, player.characters[2].health) == final_stats
 
 def test_queenofhearts_dies():
     player = make_player(
@@ -100,7 +96,7 @@ def test_queenofhearts_dies():
         ],
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    qoh = board.p1.characters[6]
+    qoh = player.characters[6]
     winner, loser = board.fight(limit=1)
 
     assert qoh.attack == 3
@@ -124,12 +120,11 @@ def test_support_dies():
             make_character(id='SBB_CHARACTER_LIGHTNINGDRAGON', attack=100, health=1, position=7)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     final_stats = (1, 1)
-    assert board.p1.characters[6] is None
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == final_stats
+    assert player.characters[6] is None
+    assert (player.characters[2].attack, player.characters[2].health) == final_stats
 
 
 def test_aura_dies():
@@ -149,12 +144,11 @@ def test_aura_dies():
             make_character(id='SBB_CHARACTER_LIGHTNINGDRAGON', attack=100, health=1, position=7)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     final_stats = (2, 2)
-    assert board.p1.characters[6] is None
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == final_stats
+    assert player.characters[6] is None
+    assert (player.characters[2].attack, player.characters[2].health) == final_stats
 
 
 def test_supported_unit_dies_and_comes_back():
@@ -175,10 +169,9 @@ def test_supported_unit_dies_and_comes_back():
             make_character(attack=100, health=1),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert board.p1.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
-    assert board.p1.characters[2] is not None
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (100, 4)
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 4)
+    assert player.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
+    assert player.characters[2] is not None
+    assert (player.characters[2].attack, player.characters[2].health) == (100, 4)
+    assert (player.characters[7].attack, player.characters[7].health) == (1, 4)

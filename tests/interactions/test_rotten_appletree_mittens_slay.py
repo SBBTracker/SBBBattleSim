@@ -1,4 +1,3 @@
-from sbbbattlesim import Board
 from tests import make_character, make_player
 import pytest
 
@@ -20,7 +19,7 @@ def test_rottenappletree_slay_mittens(mittens):
         ]
     )
     board = Board({'PLAYER': player, 'ENEMY': enemy})
-    jorm = board.p1.characters[7]
+    jorm = player.characters[7]
     winner, loser = board.fight(limit=1)
 
 

@@ -1,4 +1,3 @@
-from sbbbattlesim import Board
 from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 from sbbbattlesim.utils import Tribe
@@ -13,10 +12,9 @@ def test_raw_doubly():
         ],
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
-    dubly = board.p1.characters[1]
+    dubly = player.characters[1]
     angry_buff = None
     for action in dubly._action_history:
         if action.reason == ActionReason.SUPPORT_BUFF:

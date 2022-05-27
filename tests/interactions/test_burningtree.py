@@ -1,4 +1,4 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 from sbbbattlesim.utils import Tribe
@@ -14,10 +14,9 @@ def test_burning_tree():
         ],
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
-    burning_tree = board.p1.characters[1]
+    burning_tree = player.characters[1]
 
     assert burning_tree.attack == 25
     assert burning_tree.health == 40
@@ -34,11 +33,10 @@ def test_burning_tree_echowoood():
         ],
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
-    burning_tree = board.p1.characters[1]
-    echowood = board.p1.characters[7]
+    burning_tree = player.characters[1]
+    echowood = player.characters[7]
 
     assert burning_tree.attack == 25
     assert burning_tree.health == 40

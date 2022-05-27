@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -19,11 +19,10 @@ def test_ashwood_elm(golden):
         ],
     )
     enemy = make_player(raw=True)
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
     treant_attack = (201 if golden else 101)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (treant_attack, 1)
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (1, 1)
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (treant_attack, 100)
+    assert (player.characters[1].attack, player.characters[1].health) == (treant_attack, 1)
+    assert (player.characters[2].attack, player.characters[2].health) == (1, 1)
+    assert (player.characters[5].attack, player.characters[5].health) == (treant_attack, 100)
