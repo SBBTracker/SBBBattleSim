@@ -74,3 +74,19 @@ def test_copycat():
     assert doggo2
     assert doggo2.health == 10
     assert doggo2.attack == 10
+
+
+def test_goodboy_negativehealth():
+    player = make_player(
+        characters=[
+            make_character(id='SBB_CHARACTER_GOODBOY', position=1, attack=1, health=1),
+            make_character(id='SBB_CHARACTER_GOODBOY', position=7, attack=1, health=1),
+        ],
+    )
+    enemy = make_player(
+        spells=['SBB_SPELL_ENFEEBLEMENT']
+    )
+    fight(player, enemy, limit=1)
+
+    valid = (player.characters[7] is not None) or (player.characters[1] is not None)
+    assert valid
