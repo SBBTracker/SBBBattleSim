@@ -134,6 +134,6 @@ def test_donkey_fallingstars_summondragon():
     player.characters[1].register(FakeTrojanDonkeySummon)
     fight(player, enemy, limit=0)
 
-    assert player.characters[1] is None
+    assert enemy.characters[1] is None
     assert player.graveyard[0]._action_history[-1].source == enemy.graveyard[0]
 

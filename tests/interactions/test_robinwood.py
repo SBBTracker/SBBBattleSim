@@ -24,8 +24,7 @@ def test_robinwood(golden):
     )
     fight(player, enemy, limit=0)
 
-
-    buffed_attack = (6 if golden else 9)
+    buffed_attack = (16 if golden else 9)
 
     assert (player.characters[2].attack, player.characters[2].health) == (buffed_attack, 1)
     assert (player.characters[5].attack, player.characters[5].health) == (5, 1)

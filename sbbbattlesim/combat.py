@@ -4,7 +4,7 @@ import sys
 from functools import lru_cache
 
 from sbbbattlesim.action import ActionReason
-from sbbbattlesim.events import EventManager
+from sbbbattlesim.events import EventManager, EventStack
 from sbbbattlesim.player import Player
 from sbbbattlesim.stats import CombatStats, calculate_damage
 
@@ -22,13 +22,61 @@ def fight(p1: Player, p2: Player, limit=-1):
     attacker, defender = who_goes_first(p1, p2)
     first_attacker = attacker.id
 
-    fight_event_manager = EventManager()
+    class FightEventManager(EventManager):
+        def get(self, event):
+            evts = p1._events.get(event, set()) | p2._events.get(event, set())
+            evts_set = set(evts)
+            processed_events = set()
 
-    fight_event_manager._events['OnSetup'].update(p1._events['OnSetup'])
-    fight_event_manager._events['OnSetup'].update(p2._events['OnSetup'])
+            if not evts:
+                return
 
-    fight_event_manager._events['OnStart'].update(p1._events['OnStart'])
-    fight_event_manager._events['OnStart'].update(p2._events['OnStart'])
+            sorting_lambda = lambda x: (x.priority, getattr(x.manager, 'position', 0))
+            evts = sorted(evts, key=sorting_lambda, reverse=True)
+
+            priority = None
+
+            while True:
+                if not evts:
+                    break
+
+                evt = evts[0]
+                evts = evts[1:]
+
+                processed_events.add(evt)
+
+                if priority is None:
+                    priority = evt.priority
+                elif evt.priority < priority:
+                    priority = evt.priority
+                elif evt.priority > priority:
+                    continue
+
+                yield evt
+
+                new_evts_set = p1._events.get(event, set()) | p2._events.get(event, set())
+
+                if evts_set != new_evts_set:
+                    evts_set = set(new_evts_set) - processed_events
+                    evts = sorted(evts_set, key=sorting_lambda, reverse=True)
+
+                if not evts:
+                    break
+
+        def __call__(self, event, stack=None, *args, **kwargs):
+            logger.debug(f'{self.pretty_print()} triggered event {event}')
+
+            # If an event stack already exists use it otherwise make a new stack
+            stack = stack or EventStack()
+
+            with stack.open(*args, **kwargs) as executor:
+                for evt in self.get(event):
+                    logger.debug(f'Firing {evt} with {args} {kwargs}')
+                    executor.execute(evt, *args, **kwargs)
+
+            return stack
+
+    fight_event_manager = FightEventManager()
 
     logger.debug('********************SETTING UP COMBAT')
     fight_event_manager('OnSetup')

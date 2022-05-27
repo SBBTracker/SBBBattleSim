@@ -15,7 +15,7 @@ class RobinWoodOnFightStart(OnStart):
 
         if weakest_allied_char:
             Buff(reason=ActionReason.ROBIN_WOOD_BUFF, source=self.source, targets=[weakest_allied_char],
-                 attack=4 if self.source.golden else 7, temp=False, stack=stack).resolve()
+                 attack=14 if self.source.golden else 7, temp=False, stack=stack).resolve()
 
 
 class CharacterType(Character):

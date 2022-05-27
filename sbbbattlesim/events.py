@@ -192,7 +192,7 @@ class EventManager:
         self._events[event_base] = self._events[event_base] - {event}
 
     def get(self, event):
-        evts = self._events[event]
+        evts = self._events.get(event, set())
         evts_set = set(evts)
         processed_events = set()
 

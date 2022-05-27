@@ -7,7 +7,7 @@ def test_robinwood_doubly():
     player = make_player(
         raw=True,
         characters=[
-            make_character(id='SBB_CHARACTER_DUMBLEDWARF', position=5, attack=31, health=1),
+            make_character(id='SBB_CHARACTER_DUMBLEDWARF', position=5, attack=15, health=1),
         ],
     )
     enemy = make_player(
