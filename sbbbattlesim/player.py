@@ -348,6 +348,3 @@ class Player(EventManager):
             'hand': hand,
             'level': self.level,
         }
-
-
-

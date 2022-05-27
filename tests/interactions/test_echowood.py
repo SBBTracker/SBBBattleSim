@@ -214,12 +214,11 @@ def test_echowood_phoenix_singingswords(last_treasure):
     assert echowood
     assert echowood.health == 1
     if last_treasure == 'SBB_TREASURE_REDUPLICATOR':
-        assert echowood.attack == 8, [i.pretty_print() for i in player.valid_characters()]
+        assert echowood.attack == 2, [i.pretty_print() for i in player.valid_characters()]
     elif last_treasure == "SBB_TREASURE_TREASURECHEST":
         assert echowood.attack == 2
     else:
         assert echowood.attack == 2
-
 
 
 @pytest.mark.parametrize('survives', (True, False))
@@ -316,9 +315,9 @@ def test_multiple_echowoods_with_summon():
 
     fight(player, enemy, limit=1)
 
-    assert (player.characters[3].attack, player.characters[3].health) == (4, 1)
-    assert (player.characters[4].attack, player.characters[4].health) == (4, 1)
-    assert (player.characters[2].attack, player.characters[2].health) == (2, 1)
+    assert (player.characters[3].attack, player.characters[3].health) == (2, 1)
+    assert (player.characters[4].attack, player.characters[4].health) == (2, 1)
+    assert (player.characters[2].attack, player.characters[2].health) == (1, 1)
 
 
 def test_multiple_echowoods_with_summon_and_health_support():
@@ -392,9 +391,9 @@ def test_multiple_echowoods_with_summon_and_health_support():
 
     fight(player, enemy, limit=1)
 
-    assert (player.characters[3].attack, player.characters[3].health) == (4, 4)
-    assert (player.characters[4].attack, player.characters[4].health) == (4, 4)
-    assert (player.characters[2].attack, player.characters[2].health) == (2, 4)
+    assert (player.characters[3].attack, player.characters[3].health) == (2, 4)
+    assert (player.characters[4].attack, player.characters[4].health) == (2, 4)
+    assert (player.characters[2].attack, player.characters[2].health) == (1, 4)
 
 
 def test_multiple_echowoods_with_summon_and_health_support_not_raw():
@@ -430,9 +429,9 @@ def test_multiple_echowoods_with_summon_and_health_support_not_raw():
 
     fight(player, enemy, limit=1)
 
-    assert (player.characters[3].attack, player.characters[3].health) == (4, 4)
-    assert (player.characters[4].attack, player.characters[4].health) == (4, 4)
-    assert (player.characters[2].attack, player.characters[2].health) == (2, 4)
+    assert (player.characters[3].attack, player.characters[3].health) == (2, 4)
+    assert (player.characters[4].attack, player.characters[4].health) == (2, 4)
+    assert (player.characters[2].attack, player.characters[2].health) == (1, 4)
 
 
 def test_multiple_echowoods_with_summoningportal():
