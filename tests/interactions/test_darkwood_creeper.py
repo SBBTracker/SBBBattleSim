@@ -1,5 +1,7 @@
 import pytest
 
+from sbbbattlesim import fight
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -16,7 +18,6 @@ def test_darkwood_ranged():
         characters=[make_character(attack=1, health=1)],
     )
     fight(player, enemy, limit=-1)
-
 
     assert player.characters[1].attack == 1
 
@@ -37,7 +38,6 @@ def test_darkwood_melee(golden):
     )
     fight(player, enemy, limit=1)
 
-
     final_attack = 3 if golden else 2
     assert player.characters[1].attack == final_attack
 
@@ -57,6 +57,5 @@ def test_darkwood_soltak_defending():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     fight(player, enemy, limit=1)
-
 
     assert player.characters[5].attack == 2

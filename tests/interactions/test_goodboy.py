@@ -2,6 +2,7 @@ import pytest
 
 from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -74,20 +75,3 @@ def test_copycat():
     assert doggo2
     assert doggo2.health == 10
     assert doggo2.attack == 10
-
-def test_goodboy_negativehealth():
-    player = make_player(
-        characters=[
-            make_character(id='SBB_CHARACTER_GOODBOY', position=1, attack=1, health=1),
-            make_character(id='SBB_CHARACTER_GOODBOY', position=7, attack=1, health=1),
-        ],
-    )
-    enemy = make_player(
-        spells=['SBB_SPELL_ENFEEBLEMENT']
-    )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
-
-    valid =  (board.p1.characters[7] is not None) or (board.p1.characters[1] is not None)
-    assert valid

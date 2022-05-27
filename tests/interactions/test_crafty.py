@@ -3,6 +3,7 @@ import pytest
 from sbbbattlesim import fight
 from sbbbattlesim.characters import registry as character_registry, Character
 from sbbbattlesim.events import OnDamagedAndSurvived
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -44,7 +45,6 @@ def test_crafty_spawn(num_treasures, golden):
     enemy = make_player(
         spells=["SBB_SPELL_FALLINGSTARS"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
@@ -58,8 +58,7 @@ def test_crafty_spawn(num_treasures, golden):
 
     player.characters[1].register(FakeTrojanDonkeySummon)
 
-    winner, loser = board.fight(limit=2)
-
+    fight(player, enemy, limit=2)
 
     fs = 1 + len(treasures) * (4 if golden else 2)
     fs2 = fs + (3 if golden else 1)

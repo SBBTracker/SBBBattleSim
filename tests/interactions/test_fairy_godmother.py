@@ -1,6 +1,8 @@
 import pytest
 
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 @pytest.mark.parametrize('r', range(30))

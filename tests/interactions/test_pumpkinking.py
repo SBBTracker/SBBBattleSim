@@ -1,6 +1,8 @@
 import pytest
 
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -14,9 +16,8 @@ def test_lonely_pumpkin_dying(golden):
     enemy = make_player(
         characters=[make_character(attack=500, health=500)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     pk = player.characters[1]
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     summoned_unit = player.characters[1]
@@ -40,7 +41,6 @@ def test_pumpkin_with_friends_dying():
     enemy = make_player(
         characters=[make_character(attack=500, health=500)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     pk = player.characters[1]
 
     player.characters[1]._level = 2
@@ -48,7 +48,7 @@ def test_pumpkin_with_friends_dying():
     player.characters[3]._level = 4
     player.characters[4]._level = 5
 
-    winner, loser = board.fight(limit=5)
+    fight(player, enemy, limit=5)
 
 
     assert player.characters[1]._level == 1
@@ -67,9 +67,8 @@ def test_pumpkin_summoning_cats(golden):
     enemy = make_player(
         characters=[make_character(attack=500, health=500)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     pk = player.characters[1]
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
     summoned_unit = player.characters[1]
@@ -92,10 +91,9 @@ def test_pumpkin_summoning_two_cats(golden, r):
     enemy = make_player(
         characters=[make_character(attack=500, health=500)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     player.characters[5]._level = 0  # hacky fix
     pk = player.characters[1]
-    winner, loser = board.fight(limit=3)
+    fight(player, enemy, limit=3)
 
     for pos in [1, 2]:
         summoned_unit = player.characters[pos]
@@ -104,28 +102,4 @@ def test_pumpkin_summoning_two_cats(golden, r):
         assert summoned_unit.golden == golden
         assert summoned_unit.health == (8 if golden else 6)
         assert summoned_unit.attack == (8 if golden else 6)
-
-
-
-def test_pumpkin_redup():
-    player = make_player(
-        characters=[
-            make_character(id='SBB_CHARACTER_PUMPKINKING', position=7, tribes=[Tribe.EVIL]),
-            make_character(position=1, _level=3, tribes=[Tribe.EVIL]),
-        ],
-        treasures=['''SBB_TREASURE_HERMES'BOOTS''', 'SBB_TREASURE_REDUPLICATOR']
-    )
-    enemy = make_player(
-        characters=[make_character(attack=500, health=500)],
-    )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-
-    pk = board.p1.characters[1]
-    winner, loser = board.fight(limit=2)
-
-    assert board.p1.characters[1] is not None
-    assert board.p1.characters[2] is not None
-    assert board.p1.characters[1].id == board.p1.characters[2].id
-    assert board.p1.characters[6] is None
-    assert board.p1.characters[7] is not None
 

@@ -1,5 +1,7 @@
 import pytest
 
+from sbbbattlesim import fight
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -14,7 +16,6 @@ def test_green_knight(golden):
     )
     enemy = make_player()
     fight(player, enemy, limit=2)
-
 
     char = player.characters[1]
     buffs = [

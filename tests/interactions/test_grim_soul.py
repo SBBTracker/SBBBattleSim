@@ -1,5 +1,7 @@
 import pytest
 
+from sbbbattlesim import fight
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -19,7 +21,6 @@ def test_grimsoul(golden):
         characters=[make_character(attack=1, health=1)],
     )
     fight(player, enemy, limit=1)
-
 
     final_stats = (5, 5) if golden else (3, 3)
     assert (player.characters[2].attack, player.characters[2].health) == final_stats
@@ -78,7 +79,6 @@ def test_grimsoul_listeners(golden):
     )
     fight(player, enemy, limit=1)
 
-
     result = 3 if golden else 2
     assert player.characters[7].attack == result
 
@@ -101,7 +101,6 @@ def test_grimsoul_listeners_with_yaga(golden):
         characters=[make_character(attack=1, health=1)],
     )
     fight(player, enemy, limit=1)
-
 
     result = 5 if golden else 3
     assert player.characters[5].attack == result

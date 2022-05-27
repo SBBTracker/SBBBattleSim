@@ -7,6 +7,7 @@ from sbbbattlesim.events import OnStart, EventManager
 from sbbbattlesim.utils import Tribe
 from sbbbattlesim.action import ActionReason
 from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -272,10 +273,10 @@ def test_merlin_not_activate():
         raw=True,
         characters=[make_character(id='GENERIC', position=1)],
     )
+    enemy_char = enemy.characters[1]
 
     fight(player, enemy)
 
-    enemy_char = enemy.characters[1]
     char = player.characters.get(7)
 
     assert char
@@ -351,7 +352,6 @@ def test_mihri_rollback_safety(on):
         raw=False,
         characters=[
             make_character(id='ROYAL', position=1, health=30, tribes=['royal'] if on else []),
-            make_character(id='ROYAL', position=2, health=30, tribes=['royal'] if on else [])
         ],
         hero='SBB_HERO_KINGLION',
         mihri_buff=5,
@@ -366,16 +366,11 @@ def test_mihri_rollback_safety(on):
     fight_event_manager("OnSetup")
 
     c1 = player.characters[1]
-    c2 = enemy.characters[2]
     player.despawn(c1, kill=False)
-    player.despawn(c2, kill=False)
     player.spawn(c1, 1)
-    player.spawn(c2, 2)
 
     assert c1.attack == 1
     assert c1.health == 30
-    assert c2.attack == 1
-    assert c2.health == 30
 
 
 def test_trophy_hunter():

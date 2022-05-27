@@ -1,6 +1,8 @@
 import pytest
 
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -24,6 +26,5 @@ def test_egg_feather():
 
     )
     fight(player, enemy, limit=2)
-
 
     assert player.characters[1] is None

@@ -1,4 +1,5 @@
 from sbbbattlesim.action import ActionReason, ActionState
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -56,10 +57,9 @@ def test_rotten_appletree_health_support_dies():
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     frontchar = enemy.characters[1]
     backchar = enemy.characters[5]
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
     assert backchar.dead
     assert frontchar.dead
@@ -89,10 +89,9 @@ def test_rotten_appletree_attack_support_dies():
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     frontchar = enemy.characters[1]
     backchar = enemy.characters[5]
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
     assert frontchar.health == 1
     assert backchar.dead

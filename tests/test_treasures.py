@@ -7,6 +7,7 @@ from sbbbattlesim.utils import Tribe
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.heroes import registry as hero_registry
 from sbbbattlesim.events import OnStart
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -59,11 +60,11 @@ def test_easter_egg(mimic, tiger, on, num):
 
         def handle(self, *args, **kwargs):
             summon = character_registry["SBB_CHARACTER_BLACKCAT"].new(
-                player=self.manager.p1,
+                player=self.source,
                 position=2,
                 golden=on,
             )
-            self.manager.p1.summon(2, [summon])
+            self.source.summon(2, [summon])
 
     player.register(FakeTrojanDonkeySummon)
 
@@ -786,7 +787,7 @@ def test_deck_of_many_things(mimic, _):
     player = make_player(
         raw=True,
         hero='SBB_HERO_MERLIN',
-        level=0,
+        level=6,
         characters=[
             make_character(attack=100, health=100),
         ],
@@ -1670,97 +1671,3 @@ def test_spear_of_achilles2(mimic):
     fight(player, enemy)
 
     assert (player.characters[1].attack, player.characters[1].health) == (15, 15) if mimic else (8, 8)
-
-@pytest.mark.parametrize('mimic', (True, False))
-def test_singing_swords(mimic):
-    player = make_player(
-        characters=[
-            make_character(position=1),
-            make_character(position=7)
-
-        ],
-        treasures=[
-            'SBB_TREASURE_WHIRLINGBLADES',
-            'SBB_TREASURE_TREASURECHEST' if mimic else ''
-        ]
-    )
-
-    enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    player = board.p1
-    p1char = player.characters[1]
-
-    winner, loser = board.fight()
-
-    swordbuffsfront = [
-        r for r in player.characters[1]._action_history if r.reason == ActionReason.SINGINGSWORD_BUFF
-    ]
-
-    swordbuffsback = [
-        r for r in player.characters[7]._action_history if r.reason == ActionReason.SINGINGSWORD_BUFF
-    ]
-
-    assert sum([d.attack for d in swordbuffsback]) == 0
-    assert sum([d.attack for d in swordbuffsfront]) == 30 if mimic else 15
-
-
-@pytest.mark.parametrize('mimic', (True, False))
-@pytest.mark.parametrize('cloak', (True, False))
-@pytest.mark.parametrize('on', (True, False))
-def test_spear_of_cursed_throne(mimic, cloak, on):
-    player = make_player(
-        raw=True,
-        characters=[
-            make_character(tribes=['royal'] if on else [])
-        ],
-        treasures=[
-            'SBB_TREASURE_CURSEDTHRONE',
-            'SBB_TREASURE_TREASURECHEST' if mimic else '',
-            'SBB_TREASURE_CLOAKOFTHEASSASSIN' if cloak else ''
-        ]
-    )
-
-    enemy = make_player(
-        characters=[make_character(attack=0)]
-    )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    player = board.p1
-    p1char = player.characters[1]
-
-    winner, loser = board.fight()
-
-    attack, health = (player.characters[1].attack, player.characters[1].health)
-    if on:
-        assert Tribe.MONSTER in player.characters[1].tribes
-
-
-    cloakbuffs = [
-        r for r in player.characters[1]._action_history if r.reason == ActionReason.CLOAK_OF_THE_ASSASSIN
-    ]
-
-    cb = sum([d.attack for d in cloakbuffs])
-
-    if on and cloak and mimic:
-        assert attack == 3
-        assert health == 3
-        assert cb == 6
-    elif on and not cloak and mimic:
-        assert attack == 3
-        assert health == 3
-        assert cb == 0
-    elif on and not cloak and not mimic:
-        assert attack == 2
-        assert health == 2
-        assert cb == 0
-    elif on and cloak and not mimic:
-        assert attack == 2
-        assert health == 2
-        assert cb == 3
-    elif not on:
-        assert attack == 1
-        assert health == 1
-        assert cb == 0
-    else:
-        raise ValueError('this should be unreachable')
-
-

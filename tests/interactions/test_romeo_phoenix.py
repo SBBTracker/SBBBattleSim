@@ -1,5 +1,6 @@
 import pytest
 
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -24,9 +25,8 @@ def test_phoenix_makes_romeo_sad(golden):
             )
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     juliet = player.characters[2]
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
     assert player.characters[6] is None

@@ -1,5 +1,6 @@
 import pytest
 
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -16,9 +17,8 @@ def test_medusa(golden):
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     creature = enemy.characters[1]
-    winner, loser = board.fight(limit=3)
+    fight(player, enemy, limit=3)
     statue = enemy.characters[1]
 
 
@@ -76,10 +76,9 @@ def test_medusa_attackslot_2(attacking_pos):
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     dusa = player.characters[6]
 
-    winner, loser = board.fight(limit=3)
+    fight(player, enemy, limit=3)
 
 
 
@@ -100,9 +99,8 @@ def test_medusa_cupid():
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     creature = player.characters[4]
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
     statue = player.characters[4]
 
 

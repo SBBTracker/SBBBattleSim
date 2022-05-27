@@ -1,5 +1,7 @@
 import pytest
 
+from sbbbattlesim import fight
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -14,7 +16,6 @@ def test_lady(golden):
     )
     enemy = make_player()
     fight(player, enemy)
-
 
     char = player.characters[1]
     buffs = [
@@ -39,8 +40,6 @@ def test_lady(golden):
     assert healthbuffs == (10 if golden else 5)
 
 
-
-
 def test_lady_ranged():
     player = make_player(
         characters=[
@@ -54,6 +53,5 @@ def test_lady_ranged():
         characters=[make_character(attack=1, health=1)],
     )
     fight(player, enemy, limit=2)
-
 
     assert (player.characters[6].attack, player.characters[6].health) == (3, 6)

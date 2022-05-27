@@ -198,8 +198,6 @@ class Action:
         self.args = args
         self.kwargs = kwargs
 
-        self.board = self.source.player.board
-
         self.state = ActionState.CREATED
         self._char_buffer = set()
         self._killed_char_buffer = set()
@@ -241,16 +239,6 @@ class Action:
                 logger.debug(f'{char.pretty_print()} marked for death in execution')
             elif self.damage > 0:
                 char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
-
-        # self.board.history.append(Record(
-        #     reason=self.reason,
-        #     source=self.source,
-        #     target=char,
-        #     attack=self.attack,
-        #     health=self.health,
-        #     damage=self.damage,
-        #     heal=self.heal,
-        # ))
 
     def _clear(self, char, *args, **kwargs):
         '''

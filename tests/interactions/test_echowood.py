@@ -1,3 +1,4 @@
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from sbbbattlesim.events import OnDamagedAndSurvived, OnSummon
 from tests import make_character, make_player
@@ -283,7 +284,7 @@ def test_multiple_echowoods_with_summon():
             make_character(position=5, attack=1, health=1),
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
+
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
         def handle(self, *args, **kwargs):
@@ -296,7 +297,7 @@ def test_multiple_echowoods_with_summon():
 
     player.characters[1].register(FakeTrojanDonkeySummon)
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     assert (player.characters[3].attack, player.characters[3].health) == (4, 1)
     assert (player.characters[4].attack, player.characters[4].health) == (4, 1)
@@ -313,9 +314,8 @@ def test_multiple_echowoods_with_summon():
         ],
     )
     enemy = make_player(raw=True)
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     assert (player.characters[3].attack, player.characters[3].health) == (4, 1)
     assert (player.characters[4].attack, player.characters[4].health) == (4, 1)
@@ -341,6 +341,7 @@ def test_multiple_echowoods_with_summon_and_health_support():
             make_character(position=5, attack=1, health=1),
         ]
     )
+
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
         def handle(self, *args, **kwargs):
@@ -353,7 +354,7 @@ def test_multiple_echowoods_with_summon_and_health_support():
 
     player.characters[1].register(FakeTrojanDonkeySummon)
 
-    fight(player, enemey, limit=1)
+    fight(player, enemy, limit=1)
 
     assert (player.characters[3].attack, player.characters[3].health) == (4, 4)
     assert (player.characters[4].attack, player.characters[4].health) == (4, 4)
@@ -379,6 +380,7 @@ def test_multiple_echowoods_with_summon_and_health_support():
             make_character(position=5, attack=1, health=1),
         ]
     )
+
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
         def handle(self, *args, **kwargs):
@@ -417,6 +419,7 @@ def test_multiple_echowoods_with_summon_and_health_support_not_raw():
             make_character(position=5, attack=1, health=1),
         ]
     )
+
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
         def handle(self, *args, **kwargs):
@@ -455,6 +458,7 @@ def test_multiple_echowoods_with_summoningportal():
             make_character(position=5, attack=1, health=1),
         ]
     )
+
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
         def handle(self, *args, **kwargs):
@@ -499,6 +503,7 @@ def test_multiple_echowoods_with_summoningportal_summontwo(r):
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
+
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
         def handle(self, *args, **kwargs):
@@ -545,6 +550,7 @@ def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood(r):
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
+
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
         def handle(self, *args, **kwargs):

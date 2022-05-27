@@ -1,6 +1,8 @@
 import pytest
 
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -22,8 +24,7 @@ def test_queenofhearts(golden):
             make_character(health=3)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=3)
+    fight(player, enemy, limit=3)
 
     if golden:
         final_stats = (9, 9)

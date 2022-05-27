@@ -1,5 +1,6 @@
 import pytest
 
+from sbbbattlesim import fight
 from tests import make_character, make_player, SpawnOnStart
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnStart
@@ -53,9 +54,8 @@ def test_riverwish_cloakoftheassassin_doubledip():
         ]
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
     assert (player.characters[1].attack, player.characters[1].health) == (1, 1)
 
@@ -71,21 +71,20 @@ def test_riverwish_cloakoftheassassin_doubledip2():
         ]
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     class FakeTrojanDonkeySummon(OnStart):
 
         def handle(self, *args, **kwargs):
             summon = character_registry['SBB_CHARACTER_RIVERWISHMERMAID'].new(
-                player=self.manager.p1,
+                player=self.source,
                 position=5,
                 golden=False,
             )
-            self.manager.p1.summon(5, [summon])
+            self.source.summon(5, [summon])
 
-    board.register(FakeTrojanDonkeySummon, priority=-999)
+    player.register(FakeTrojanDonkeySummon, priority=-999)
 
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
     assert (player.characters[1].attack, player.characters[1].health) == (4, 4)
 

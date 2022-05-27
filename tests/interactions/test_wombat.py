@@ -1,7 +1,9 @@
 import pytest
 
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from sbbbattlesim.action import ActionReason
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -86,10 +88,9 @@ def test_bearstain_wombat_phoenix(repeat):
     enemy = make_player(
         characters=[make_character(attack=500, health=500)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     original_wombat = player.characters[1]
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     assert player.characters[1] is original_wombat
     assert original_wombat._base_attack == 120, original_wombat.pretty_print()

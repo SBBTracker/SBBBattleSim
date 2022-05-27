@@ -3,6 +3,7 @@ import sys
 import pytest
 
 from sbbbattlesim.simulate import _process
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 from sbbbattlesim.characters import registry as character_registry

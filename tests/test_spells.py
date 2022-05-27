@@ -4,6 +4,7 @@ from sbbbattlesim import fight
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.utils import Tribe
 from sbbbattlesim.action import ActionReason
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -63,8 +64,8 @@ def test_lightning_bolt(repeat):
     )
     fight(player, enemy, limit=-1)
 
-    assert player.characters[5] is None
-    assert player.characters[1] is not None
+    assert enemy.characters[5] is None
+    assert enemy.characters[1] is not None
 
     char = enemy.graveyard[0]
     assert char._action_history[0].reason == ActionReason.LIGHTNING_BOLT, char._action_history[0]

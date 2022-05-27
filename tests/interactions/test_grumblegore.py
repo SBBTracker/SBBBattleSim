@@ -1,5 +1,7 @@
 import pytest
 
+from sbbbattlesim import fight
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -27,8 +29,6 @@ def test_grumblegore(golden):
     assert healthbuffs == 0
 
 
-
-
 def test_grumblegore_ranged():
     player = make_player(
         characters=[
@@ -42,6 +42,5 @@ def test_grumblegore_ranged():
         characters=[make_character(attack=1, health=1)],
     )
     fight(player, enemy, limit=2)
-
 
     assert (player.characters[6].attack, player.characters[6].health) == (3, 6)

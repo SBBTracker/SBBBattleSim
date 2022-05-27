@@ -1,5 +1,7 @@
 import pytest
 
+from sbbbattlesim import fight
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -24,8 +26,7 @@ def test_simple_drac_sabre(mimic):
             make_character(position=2),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=3)
+    fight(player, enemy, limit=3)
 
     final_stats = (9, 5) if mimic else (5, 3)
 

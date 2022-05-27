@@ -2,6 +2,7 @@ import pytest
 
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -22,9 +23,8 @@ def test_puffpuff_spawn(r, raw):
             make_character(position=1, attack=7, health=7),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     assert (player.characters[1].attack, player.characters[1].health) == (2, 2)
@@ -47,9 +47,8 @@ def test_puffpuff_spawn_high_health(r, raw):
             make_character(position=1, attack=7000000, health=7),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     assert (player.characters[1].attack, player.characters[1].health) == (2, 2)
@@ -72,9 +71,8 @@ def test_puffpuff_spawn_high_attack(r, raw):
             make_character(position=1, attack=7, health=7),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     assert (player.characters[1].attack, player.characters[1].health) == (2, 2)
@@ -99,9 +97,8 @@ def test_puffpuff_spawn_with_large(r, raw):
             make_character(position=1, attack=50, health=50),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     assert (player.characters[5].attack, player.characters[5].health) == (51, 51)
@@ -126,9 +123,8 @@ def test_puffpuff_spawn_with_large_golden(r, raw):
             make_character(position=1, attack=1000, health=1000),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     assert (player.characters[1].attack, player.characters[1].health) == (20, 20)
@@ -154,9 +150,8 @@ def test_puffpuff_spawn_with_large_and_echowood(r, raw):
             make_character(position=1, attack=50, health=50),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     assert (player.characters[1].attack, player.characters[1].health) == (45, 45)
@@ -178,7 +173,6 @@ def test_puff_spawn(golden, r, raw):
     enemy = make_player(
         spells=["SBB_SPELL_LIGHTNINGBOLT"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
@@ -192,7 +186,7 @@ def test_puff_spawn(golden, r, raw):
 
     player.characters[7].register(FakeTrojanDonkeySummon)
 
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
     assert (player.characters[6].attack, player.characters[6].health) == (34, 34) if golden else (17, 17), (player.characters[6].attack, player.characters[6].health)

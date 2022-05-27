@@ -240,11 +240,6 @@ class EventManager:
         if not self._events[event]:
             return stack
 
-        # try:
-        #     self.board.history.append(Record(event=event))
-        # except AttributeError:
-        #     pass
-
         with stack.open(*args, **kwargs) as executor:
             for evt in self.get(event):
                 logger.debug(f'Firing {evt} with {args} {kwargs}')

@@ -26,7 +26,7 @@ def test_courtwizard(tribe):
     )
     fight(player, enemy, limit=1)
 
-    if tribe in [Tribe.PRINCE, Tribe.PRINCESS]:
+    if tribe in [Tribe.ROYAL, Tribe.ROYAL]:
         assert player.characters[1] is None and player.characters[2] is None
 
 

@@ -1,6 +1,8 @@
 import pytest
 
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
+from sbbbattlesim import fight
 from tests import make_character, make_player
 from sbbbattlesim.events import OnDamagedAndSurvived
 from sbbbattlesim.characters import registry as character_registry
@@ -95,7 +97,6 @@ def test_summon_goodwitch(dies):
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     donkey = player.characters[1]
 
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
@@ -110,7 +111,7 @@ def test_summon_goodwitch(dies):
 
     donkey.register(FakeTrojanDonkeySummon)
 
-    winner, loser = board.fight(limit=1 if dies else 0)
+    fight(player, enemy, limit=1 if dies else 0)
 
     if dies:
         assert player.characters[5] is None

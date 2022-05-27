@@ -1,5 +1,7 @@
 import pytest
 
+from sbbbattlesim import fight
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -21,7 +23,6 @@ def test_grimsoul(golden_grimsoul, golden_woggle):
         characters=[make_character(attack=1, health=1)],
     )
     fight(player, enemy, limit=1)
-
 
     lvl=3
     if golden_woggle:

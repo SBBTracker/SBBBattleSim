@@ -2,7 +2,6 @@ from sbbbattlesim import fight
 from tests import make_player, make_character
 import pytest
 
-
 def test_support_none():
     make_player(
         raw=True,

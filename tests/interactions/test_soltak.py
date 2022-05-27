@@ -1,3 +1,4 @@
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -52,9 +53,9 @@ def test_soltak_stops_defending():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        id='ENEMY',
         characters=[make_character(attack=100, health=100)],
     )
-    fight(player, enemy)
+    stats = fight(player, enemy)
 
-
-    assert winner.id == 'ENEMY'
+    assert stats.win_id == 'ENEMY'

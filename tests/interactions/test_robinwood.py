@@ -1,5 +1,6 @@
 import pytest
 
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -46,6 +47,5 @@ def test_robinwood_ranged():
         characters=[make_character(attack=1, health=1)],
     )
     fight(player, enemy, limit=2)
-
 
     assert (player.characters[6].attack, player.characters[6].health) == (10, 6)

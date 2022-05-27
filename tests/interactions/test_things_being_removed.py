@@ -1,5 +1,6 @@
 import pytest
 
+from sbbbattlesim import fight
 from tests import make_character, make_player
 from sbbbattlesim.action import ActionReason
 
@@ -95,9 +96,8 @@ def test_queenofhearts_dies():
             make_character(id='SBB_CHARACTER_LIGHTNINGDRAGON', attack=100, health=1, position=7)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     qoh = player.characters[6]
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     assert qoh.attack == 3
     assert qoh._base_health == 6

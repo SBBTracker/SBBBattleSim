@@ -1,8 +1,10 @@
 import pytest
 
+from sbbbattlesim import fight
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived
 from sbbbattlesim.utils import Tribe
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -38,7 +40,6 @@ def test_donkey_fallingstars():
     enemy = make_player(
         spells=["SBB_SPELL_FALLINGSTARS"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
@@ -51,8 +52,7 @@ def test_donkey_fallingstars():
             self.manager.player.summon(self.manager.position, [summon])
 
     player.characters[3].register(FakeTrojanDonkeySummon)
-    winner, loser = board.fight(limit=2)
-
+    fight(player, enemy, limit=2)
 
     for pos in range(1, 8):
         char = player.characters[pos]
@@ -87,11 +87,9 @@ def test_donkey_fallingstars_fullboard(board_full):
     enemy = make_player(
         spells=["SBB_SPELL_FALLINGSTARS"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
     donkey = player.characters[4]
 
-    winner, loser = board.fight(limit=0)
-
+    fight(player, enemy, limit=0)
 
     for pos in range(1, 8):
         char = player.characters[pos]
@@ -122,7 +120,6 @@ def test_donkey_fallingstars_summondragon():
         ],
         spells=["SBB_SPELL_FALLINGSTARS"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
@@ -135,9 +132,8 @@ def test_donkey_fallingstars_summondragon():
             self.manager.player.summon(self.manager.position, [summon])
 
     player.characters[1].register(FakeTrojanDonkeySummon)
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
-
-    assert enemy.characters[1] is None
+    assert player.characters[1] is None
     assert player.graveyard[0]._action_history[-1].source == enemy.graveyard[0]
 

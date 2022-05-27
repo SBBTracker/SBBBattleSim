@@ -2,12 +2,8 @@ import logging
 
 import pytest
 
-from sbbbattlesim.action import Action, ActionReason, ActionState
-from sbbbattlesim.characters import Character
-from sbbbattlesim.events import Event
-from sbbbattlesim.player import Player
-from tests import PLAYER, EventForTest, create_test_setup, make_player, make_character
-
+from sbbbattlesim.action import Action, ActionReason
+from tests import make_player, make_character, TestEvent
 
 logger = logging.getLogger(__name__)
 
@@ -27,13 +23,12 @@ BUFF_PARAMS = (
 
 @pytest.mark.parametrize('attack_start, health_start, attack_buff, health_buff, attack_final, health_final', BUFF_PARAMS)
 def test_apply_buff(attack_start, health_start, attack_buff, health_buff, attack_final, health_final):
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = ActionForTest(source=char, attack=attack_buff, health=health_buff)
 
@@ -79,12 +74,10 @@ def test_apply_debuff():
     attack_start, health_start = -10, -10
     attack_final, health_final = attack_start + attack_buff, health_start + health_buff
 
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
 
     char = player.characters[1]
@@ -225,12 +218,12 @@ def test_event():
     )
 
     char = player.characters[1]
-    action = ActionForTest(source=char, event=EventForTest)
+    action = ActionForTest(source=char, event=TestEvent)
     action._register(char)
 
     assert char._events['Event']
     registered = list(char._events['Event'])[0]
-    assert isinstance(registered, EventForTest)
+    assert isinstance(registered, TestEvent)
 
     char('Event')
     assert registered.triggered
