@@ -33,6 +33,7 @@ class Character(EventManager):
     def __init__(self, player, position, attack, health, golden, tribes, cost, *args, **kwargs):
         super().__init__()
         self.player = player
+        self.board = player.board
 
         self.position = position
         self._base_attack = attack
@@ -107,7 +108,7 @@ class Character(EventManager):
 
     @property
     def max_health(self):
-        return self._base_health
+        return max(self._base_health, 0)
 
     def generate_attack(self, source, target, reason, attacking=False):
         return Damage(
@@ -123,6 +124,8 @@ CHARACTER_EXCLUSION = (
     'SBB_CHARACTER_FROGPRINCE',
     'SBB_CHARACTER_AWOKENPRINCESS',
     'SBB_CHARACTER_BIGBOSS',
+    'SBB_CHARACTER_EVILWOLF',
+    'SBB_CHARACTER_CERBERUS'
 )
 
 

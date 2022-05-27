@@ -6,6 +6,8 @@ from sbbbattlesim.utils import Tribe
 class SpellType(Spell):
     display_name = '''Evil Twin'''
     _level = 6
+    cost = 8
+    targeted = True
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         pass

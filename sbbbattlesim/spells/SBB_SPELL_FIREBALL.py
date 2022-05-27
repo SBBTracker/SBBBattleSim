@@ -8,6 +8,7 @@ from sbbbattlesim.spells import Spell
 class SpellType(Spell):
     display_name = 'Fireball'
     _level = 4
+    cost = 0
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         valid_targets = self.player.opponent.valid_characters(_lambda=lambda char: char.position in (1, 2, 3, 4))
@@ -23,4 +24,4 @@ class SpellType(Spell):
                     targets.append(char)
 
             # TODO figure out if it goes left/right or right/left
-            Damage(damage=4, reason=ActionReason.FIREBALL, source=self, targets=targets).resolve()
+            Damage(damage=3, reason=ActionReason.FIREBALL, source=self, targets=targets).resolve()

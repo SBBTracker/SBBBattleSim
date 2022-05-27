@@ -19,9 +19,9 @@ class BurningTreeOnBuff(OnBuff):
 class CharacterType(Character):
     display_name = 'Burning Tree'
 
-    _attack = 5
+    _attack = 4
     _health = 20
-    _level = 5
+    _level = 6
     _tribes = {Tribe.EVIL, Tribe.TREANT}
 
     def __init__(self, *args, **kwargs):

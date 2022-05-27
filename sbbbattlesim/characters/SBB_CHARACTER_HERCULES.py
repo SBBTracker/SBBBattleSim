@@ -9,4 +9,4 @@ class CharacterType(Character):
     _attack = 20
     _health = 20
     _level = 6
-    _tribes = {Tribe.GOOD, Tribe.PRINCE}
+    _tribes = {Tribe.GOOD, Tribe.ROYAL}

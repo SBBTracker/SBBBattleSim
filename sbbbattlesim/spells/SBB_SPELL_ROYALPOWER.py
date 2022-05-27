@@ -6,6 +6,8 @@ from sbbbattlesim.utils import Tribe
 class SpellType(Spell):
     display_name = '''Queen's Grace'''
     _level = 4
+    cost = 2
+    targeted = True
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         Buff(targets=[target], health=7, attack=7, temp=False, reason=ActionReason.QUEENS_GRACE, source=self, *args,
@@ -13,4 +15,4 @@ class SpellType(Spell):
 
     @classmethod
     def filter(cls, char):
-        return Tribe.PRINCESS in char.tribes or Tribe.PRINCE in char.tribes
+        return Tribe.ROYAL in char.tribes or Tribe.ROYAL in char.tribes

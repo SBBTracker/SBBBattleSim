@@ -5,6 +5,8 @@ from sbbbattlesim.spells import Spell
 class SpellType(Spell):
     display_name = '''Luna's Grace'''
     _level = 3
+    targeted = True
+    cost = 1
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         Buff(reason=ActionReason.LUNAS_GRAVE, source=self, targets=[target],

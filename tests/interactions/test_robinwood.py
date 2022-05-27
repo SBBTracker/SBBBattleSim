@@ -24,12 +24,12 @@ def test_robinwood(golden):
     fight(player, enemy, limit=0)
 
 
-    buffed_attack = (32 if golden else 17)
+    buffed_attack = (6 if golden else 9)
 
     assert (player.characters[2].attack, player.characters[2].health) == (buffed_attack, 1)
     assert (player.characters[5].attack, player.characters[5].health) == (5, 1)
 
-    assert enemy.characters[1].attack == (0 if golden else 5)
+    assert enemy.characters[1].attack == (6 if golden else 13)
     assert enemy.characters[2].attack == 5
 
 
@@ -48,4 +48,4 @@ def test_robinwood_ranged():
     fight(player, enemy, limit=2)
 
 
-    assert (player.characters[6].attack, player.characters[6].health) == (18, 6)
+    assert (player.characters[6].attack, player.characters[6].health) == (10, 6)

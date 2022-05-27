@@ -7,7 +7,8 @@ from enum import Enum
 from typing import List
 import inspect
 
-from sbbbattlesim.events import SSBBSEvent
+from sbbbattlesim.events import Event
+from sbbbattlesim.record import Record
 
 logger = logging.getLogger(__name__)
 
@@ -66,6 +67,7 @@ class ActionReason(enum.Enum):
     TWEEDLEDEE_BUFF = 147
     JORM_ON_SLAY_BUFF = 148
     BURNING_TREE_BUFF = 149
+    WATER_WRAITH_BUFF = 150
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202
@@ -111,6 +113,7 @@ class ActionReason(enum.Enum):
     IVORY_OWL_BUFF = 242
     ROUND_TABLE_BUFF = 243
     SINGINGSWORD_BUFF = 244
+    CURSED_THRONE = 245
 
     EVELLA_BASE_BUFF = 301
     EVELLA_ANIMAL_BUFF = 301
@@ -170,7 +173,7 @@ class Action:
             health: int = 0,
             damage: int = 0,
             heal: int = 0,
-            event: (SSBBSEvent, None) = None,
+            event: (Event, None) = None,
             _action=None,
             temp: bool = False,
             *args,
@@ -194,6 +197,8 @@ class Action:
 
         self.args = args
         self.kwargs = kwargs
+
+        self.board = self.source.player.board
 
         self.state = ActionState.CREATED
         self._char_buffer = set()
@@ -237,6 +242,15 @@ class Action:
             elif self.damage > 0:
                 char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
 
+        # self.board.history.append(Record(
+        #     reason=self.reason,
+        #     source=self.source,
+        #     target=char,
+        #     attack=self.attack,
+        #     health=self.health,
+        #     damage=self.damage,
+        #     heal=self.heal,
+        # ))
 
     def _clear(self, char, *args, **kwargs):
         '''

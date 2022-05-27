@@ -4,15 +4,15 @@ import pytest
 
 from sbbbattlesim.action import Action, ActionReason, ActionState
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import SSBBSEvent
+from sbbbattlesim.events import Event
 from sbbbattlesim.player import Player
-from tests import PLAYER, TestEvent, create_test_setup, make_player, make_character
+from tests import PLAYER, EventForTest, create_test_setup, make_player, make_character
 
 
 logger = logging.getLogger(__name__)
 
 
-class TestAction(Action):
+class ActionForTest(Action):
     def __init__(self, **kwargs):
         super().__init__(reason=ActionReason.TEST, **kwargs)
 
@@ -35,7 +35,7 @@ def test_apply_buff(attack_start, health_start, attack_buff, health_buff, attack
         )
     )
     char = player.characters[1]
-    action = TestAction(source=char, attack=attack_buff, health=health_buff)
+    action = ActionForTest(source=char, attack=attack_buff, health=health_buff)
 
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
     action._apply(char)
@@ -65,7 +65,7 @@ def test_apply_buff(damage, heal, health_final):
     )
 
     char = player.characters[1]
-    action = TestAction(source=char, damage=damage, heal=heal)
+    action = ActionForTest(source=char, damage=damage, heal=heal)
 
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
     action._apply(char)
@@ -79,18 +79,20 @@ def test_apply_debuff():
     attack_start, health_start = -10, -10
     attack_final, health_final = attack_start + attack_buff, health_start + health_buff
 
-    player = make_player(
-        characters=[
-            make_character(attack=attack_start, health=health_start)
-        ]
+    board, player = create_test_setup(
+        PLAYER=make_player(
+            characters=[
+                make_character(attack=attack_start, health=health_start)
+            ]
+        )
     )
 
     char = player.characters[1]
-    action = TestAction(source=char, attack=attack_buff, health=health_buff)
+    action = ActionForTest(source=char, attack=attack_buff, health=health_buff)
 
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
     action._apply(char)
-    assert (char._base_attack, char.health) == (attack_final, health_final)
+    assert (char._base_attack, char._base_health) == (attack_final, health_final)
     action._clear(char)
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
 
@@ -108,7 +110,7 @@ def test_execute(_lambda):
     )
 
     char = player.characters[1]
-    action = TestAction(source=char, attack=attack_buff, health=health_buff, _lambda=lambda _: _lambda)
+    action = ActionForTest(source=char, attack=attack_buff, health=health_buff, _lambda=lambda _: _lambda)
 
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
 
@@ -140,7 +142,7 @@ def test_setup(setup):
     )
 
     char = player.characters[1]
-    action = TestAction(source=char, attack=attack_buff, health=health_buff)
+    action = ActionForTest(source=char, attack=attack_buff, health=health_buff)
 
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
 
@@ -168,7 +170,7 @@ def test_rollback():
     )
 
     char = player.characters[1]
-    action = TestAction(source=char, attack=attack_buff, health=health_buff)
+    action = ActionForTest(source=char, attack=attack_buff, health=health_buff)
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
 
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
@@ -190,7 +192,7 @@ def test_resolve_damage():
     char = player.characters[1]
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
 
-    action = TestAction(source=char, damage=1, targets=[char])
+    action = ActionForTest(source=char, damage=1, targets=[char])
     action.resolve()
     assert char.dead
 
@@ -207,7 +209,7 @@ def test_resolve_minus_health():
     char = player.characters[1]
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
 
-    action = TestAction(source=char, health=-2)
+    action = ActionForTest(source=char, health=-2)
 
     action.execute(char)
     assert (char._base_attack, char._base_health) == (1, -1)
@@ -223,16 +225,16 @@ def test_event():
     )
 
     char = player.characters[1]
-    action = TestAction(source=char, event=TestEvent)
+    action = ActionForTest(source=char, event=EventForTest)
     action._register(char)
 
-    assert char._events['SSBBSEvent']
-    registered = list(char._events['SSBBSEvent'])[0]
-    assert isinstance(registered, TestEvent)
+    assert char._events['Event']
+    registered = list(char._events['Event'])[0]
+    assert isinstance(registered, EventForTest)
 
-    char('SSBBSEvent')
+    char('Event')
     assert registered.triggered
 
     action._unregister(char)
 
-    assert not char._events['SSBBSEvent']
+    assert not char._events['Event']

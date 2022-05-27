@@ -14,10 +14,6 @@ class BearstineOnSummon(OnSummon):
             previous_bearstine_buffs = [stat_change for stat_change in char._action_history if stat_change.reason == ActionReason.BEARSTINE_BUFF]
             previous_bearstine_health_buffs = sum(stat_change.health for stat_change in previous_bearstine_buffs)
             previous_bearstine_attack_buffs = sum(stat_change.attack for stat_change in previous_bearstine_buffs)
-            if char.position in (1, 2, 3, 4):
-                singing_sword = self.source.player.treasures.get('SBB_TREASURE_WHIRLINGBLADES', [None])[0]
-                if singing_sword:
-                    previous_bearstine_attack_buffs *= singing_sword.aura.multiplier
 
             stat_multplier = 2 if self.source.golden else 1
             attack_buff = (char.attack - previous_bearstine_attack_buffs) * stat_multplier
@@ -39,7 +35,7 @@ class CharacterType(Character):
     _attack = 7
     _health = 10
     _level = 6
-    _tribes = {Tribe.ANIMAL, Tribe.GOOD}
+    _tribes = {Tribe.ANIMAL, Tribe.GOOD, Tribe.MAGE}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

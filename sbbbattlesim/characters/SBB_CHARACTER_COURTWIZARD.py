@@ -37,4 +37,4 @@ class CharacterType(Character):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.aura = Aura(event=CourtWizardOnDeathBuff, reason=ActionReason.AURA_BUFF, source=self, priority=90,
-                         _lambda=lambda char: Tribe.PRINCESS in char.tribes or Tribe.PRINCE in char.tribes)
+                         _lambda=lambda char: Tribe.ROYAL in char.tribes)

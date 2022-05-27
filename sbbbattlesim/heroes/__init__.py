@@ -14,6 +14,7 @@ class Hero:
 
     def __init__(self, player):
         self.player = player
+        self.board = player.board
         self.aura = None
 
     def pretty_print(self):

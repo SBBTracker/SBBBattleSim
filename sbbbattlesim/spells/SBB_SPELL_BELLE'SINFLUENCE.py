@@ -6,6 +6,9 @@ from sbbbattlesim.utils import Tribe
 class SpellType(Spell):
     display_name = '''Beauty's Influence'''
     _level = 3
+    cost = 1
+    targeted = True
+
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         Buff(reason=ActionReason.BEAUTYS_INFLUENCE, source=self, targets=[target],

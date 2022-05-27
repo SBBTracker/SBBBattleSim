@@ -12,7 +12,7 @@ def test_courtwizard_spearofachilles():
     )
     enemy = make_player(
         characters=[
-            make_character(position=1, tribes=[Tribe.PRINCE]),
+            make_character(position=1, tribes=[Tribe.ROYAL]),
             make_character(id="SBB_CHARACTER_COURTWIZARD", position=5)
         ],
         treasures=['''SBB_TREASURE_SPEAROFACHILLES''']

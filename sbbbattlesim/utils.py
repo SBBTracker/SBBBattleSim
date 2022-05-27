@@ -63,14 +63,25 @@ class Tribe(enum.Enum):
     FAIRY = 'fairy'
     MAGE = 'mage'
     MONSTER = 'monster'
-    PRINCE = 'prince'
-    PRINCESS = 'princess'
+    ROYAL = 'royal'
     PUFF_PUFF = 'puff'
     QUEEN = 'queen'
     TREANT = 'treant'
 
     GOOD = 'good'
     EVIL = 'evil'
+
+@cache
+def get_adjacent_targets(position):
+    return {
+        1: (2,),
+        2: (1, 3),
+        3: (2, 4),
+        4: (3,),
+        5: (6,),
+        6: (5, 7),
+        7: (7,)
+    }.get(position, ())
 
 
 @cache
@@ -116,7 +127,7 @@ def random_combat_spell(level):
 
 
 def random_start_combat_spell(level):
-    valid_spells = list(spell_registry.filter(_lambda=lambda spell_cls: spell_cls._level <= level and spell_cls.id in START_OF_FIGHT_SPELLS))
+    valid_spells = list(spell_registry.filter(_lambda=lambda spell_cls: (spell_cls._level <= level or spell_cls._level == 3) and spell_cls.id in START_OF_FIGHT_SPELLS))
     if valid_spells:
         return random.choice(valid_spells)
 
@@ -131,7 +142,7 @@ def find_stat_extreme_character(player, strongest=True):
         return None
 
     func = max if strongest else min
-    sub_char = func(valid_characters, key=lambda char: (char.attack, char.cost))
+    sub_char = func(valid_characters, key=lambda char: (char.attack, char.cost, char.position))
     sub_chars = list(
         filter(lambda char: char.attack == sub_char.attack and char.cost == sub_char.cost, valid_characters))
     return random.choice(sub_chars)

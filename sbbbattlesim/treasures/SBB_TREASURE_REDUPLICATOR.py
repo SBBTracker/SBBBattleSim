@@ -11,9 +11,10 @@ class ReduplicatorOnSummon(OnSummon):
     def handle(self, summoned_characters, *args, **kwargs):
         if summoned_characters and not self.source.triggered:
             if len(self.manager.valid_characters()) != 7:
+                logger.debug(f'YO IM SO TRIGGERED')
                 self.source.triggered = True
                 for _ in range(self.source.mimic + 1):
-                    new_char = summoned_characters[0].copy()
+                    new_char = summoned_characters[-1].copy()
                     self.manager.summon(new_char.position, [new_char], *args, **kwargs)
 
 

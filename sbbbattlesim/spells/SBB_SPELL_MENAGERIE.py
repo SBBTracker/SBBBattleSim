@@ -7,6 +7,7 @@ from sbbbattlesim.spells import Spell
 class SpellType(Spell):
     display_name = '''Toil and Trouble'''
     _level = 4
+    cost = 2
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         valid_targets = self.player.valid_characters()

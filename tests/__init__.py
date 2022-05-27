@@ -2,7 +2,7 @@ import collections
 import uuid
 
 from sbbbattlesim.characters import Character
-from sbbbattlesim.events import OnStart, SSBBSEvent
+from sbbbattlesim.events import OnStart, Event
 from sbbbattlesim.player import Player
 
 PLAYER = {
@@ -67,7 +67,7 @@ def create_test_character(attack=1, health=1):
     )
 
 
-class TestEvent(SSBBSEvent):
+class EventForTest(Event):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triggered = False

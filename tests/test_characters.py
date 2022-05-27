@@ -29,7 +29,7 @@ def test_character(char, attack, golden):
         raw=True,
         level=2,
         characters=[char, generic_char],
-        treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if attack else []
+        treasures=['''SBB_TREASURE_HERMES'BOOTS'''] if attack else [],
     )
     enemy = make_player(
         raw=True,

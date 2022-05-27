@@ -15,9 +15,9 @@ class FeastingDragonSlay(OnAttackAndKill):
 class CharacterType(Character):
     display_name = 'Feasting Dragon'
 
-    _attack = 12
+    _attack = 5
     _health = 8
-    _level = 5
+    _level = 4
     _tribes = {Tribe.DRAGON}
 
     def __init__(self, *args, **kwargs):

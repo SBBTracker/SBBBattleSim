@@ -75,7 +75,6 @@ class Player(EventManager):
             logger.debug(f'{self.id} Registering treasure {treasure.pretty_print()}')
             self.treasures[treasure.id].append(treasure)
 
-        self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand]
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
         if not self.hero.id:
             self.hero.id = hero
@@ -110,6 +109,8 @@ class Player(EventManager):
                 self.auras.update(set(self.hero.aura))
             except TypeError:
                 self.auras.add(self.hero.aura)
+
+        self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand if isinstance(char_data, dict) and 'id' in char_data and char_data['id'].startswith('SBB_CHARACTER')]
 
         for aura in self.auras:
             logger.debug(f'{self.id} found aura {aura}')
@@ -242,11 +243,13 @@ class Player(EventManager):
             pos2char[char.position].append(char)
 
         for pos, char_ls in pos2char.items():
-            final_summoned_characters.extend(self.summon(pos, char_ls))
+            final_summoned_characters.extend(self.summon(pos, char_ls, onsummon=False))
+
+        stack = self('OnSummon', summoned_characters=final_summoned_characters)
 
         return final_summoned_characters
 
-    def summon(self, pos, characters, *args, **kwargs):
+    def summon(self, pos, characters, onsummon=True, *args, **kwargs):
         summoned_characters = []
         spawn_order = utils.get_spawn_positions(pos)
         for char in characters:
@@ -257,7 +260,8 @@ class Player(EventManager):
             summoned_characters.append(self.spawn(char, pos))
 
         # The player handles on-summon effects
-        stack = self('OnSummon', summoned_characters=summoned_characters)
+        if onsummon:
+            stack = self('OnSummon', summoned_characters=summoned_characters)
 
         return summoned_characters
 
@@ -323,12 +327,25 @@ class Player(EventManager):
         ]
         hero = self.hero.id
         spells = list(self.spells)
+        hand = [
+            {
+                'slot': 0,
+                'id': character.id,
+                'attack': character.attack,
+                'health': character.health,
+                'golden': character.golden,
+                'cost': character.cost,
+                'tribes': [tribe.name.lower() for tribe in character.tribes],
+            }
+            for character in self.hand
+        ]
+
         return {
             'characters': characters,
             'treasures': treasures,
             'hero': hero,
             'spells': spells,
-            'hand': self.hand,
+            'hand': hand,
             'level': self.level,
         }
 
