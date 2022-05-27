@@ -2,12 +2,10 @@ import pytest
 
 from sbbbattlesim import fight
 from sbbbattlesim.action import ActionReason
+from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.events import OnStart
 from sbbbattlesim.treasures import registry as treasure_registry
 from sbbbattlesim.utils import Tribe
-from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim.heroes import registry as hero_registry
-from sbbbattlesim.events import OnStart
-from sbbbattlesim import fight
 from tests import make_character, make_player
 
 

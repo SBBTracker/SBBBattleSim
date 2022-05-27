@@ -1,9 +1,5 @@
-import pytest
-
-from sbbbattlesim import fight
 from sbbbattlesim import fight
 from tests import make_character, make_player
-from sbbbattlesim.utils import Tribe
 
 
 def test_temp_damage():

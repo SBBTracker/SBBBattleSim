@@ -69,6 +69,9 @@ def fight(p1: Player, p2: Player, limit=-1):
             # If an event stack already exists use it otherwise make a new stack
             stack = stack or EventStack()
 
+            if not p1._events.get(event, set()) | p2._events.get(event, set()):
+                return stack
+
             with stack.open(*args, **kwargs) as executor:
                 for evt in self.get(event):
                     logger.debug(f'Firing {evt} with {args} {kwargs}')

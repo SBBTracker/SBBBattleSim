@@ -3,10 +3,9 @@ import logging
 import pytest
 
 from sbbbattlesim import fight
+from sbbbattlesim.action import ActionReason
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.utils import Tribe
-from sbbbattlesim.action import ActionReason
-from sbbbattlesim import fight
 from tests import make_character, make_player
 
 

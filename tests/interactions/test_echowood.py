@@ -1,10 +1,10 @@
-from sbbbattlesim import fight
-from sbbbattlesim.utils import Tribe
-from sbbbattlesim.events import OnDamagedAndSurvived, OnSummon
-from tests import make_character, make_player
-from sbbbattlesim.characters import registry as character_registry
-
 import pytest
+
+from sbbbattlesim import fight
+from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.events import OnDamagedAndSurvived, OnSummon
+from sbbbattlesim.utils import Tribe
+from tests import make_character, make_player
 
 
 def test_echowood_queenofhearts():

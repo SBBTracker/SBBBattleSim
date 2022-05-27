@@ -1,11 +1,10 @@
 import pytest
 
 from sbbbattlesim import fight
-from sbbbattlesim.utils import Tribe
-from sbbbattlesim import fight
-from tests import make_character, make_player
-from sbbbattlesim.events import OnDamagedAndSurvived
 from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.events import OnDamagedAndSurvived
+from sbbbattlesim.utils import Tribe
+from tests import make_character, make_player
 
 
 @pytest.mark.parametrize('golden', (True, False))

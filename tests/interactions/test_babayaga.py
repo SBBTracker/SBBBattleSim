@@ -1,9 +1,8 @@
 import pytest
 
 from sbbbattlesim import fight
-from sbbbattlesim import fight
-from tests import make_character, make_player
 from sbbbattlesim.action import ActionReason
+from tests import make_character, make_player
 
 
 @pytest.mark.parametrize('golden', (True, False))

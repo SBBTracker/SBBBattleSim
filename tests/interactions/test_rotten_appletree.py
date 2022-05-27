@@ -1,5 +1,5 @@
-from sbbbattlesim.action import ActionReason, ActionState
 from sbbbattlesim import fight
+from sbbbattlesim.action import ActionReason, ActionState
 from tests import make_character, make_player
 
 

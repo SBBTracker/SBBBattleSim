@@ -1,10 +1,10 @@
 import pytest
 
 from sbbbattlesim import fight
-from sbbbattlesim.utils import Tribe
 from sbbbattlesim.action import ActionReason
-from tests import make_character, make_player
 from sbbbattlesim.events import OnDeath
+from sbbbattlesim.utils import Tribe
+from tests import make_character, make_player
 
 
 @pytest.mark.parametrize('tribe', (Tribe.ROYAL, Tribe.DWARF))

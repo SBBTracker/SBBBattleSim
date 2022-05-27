@@ -1,4 +1,3 @@
-import collections
 import uuid
 
 from sbbbattlesim.characters import Character

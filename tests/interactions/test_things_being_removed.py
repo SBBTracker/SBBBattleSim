@@ -1,8 +1,5 @@
-import pytest
-
 from sbbbattlesim import fight
 from tests import make_character, make_player
-from sbbbattlesim.action import ActionReason
 
 
 def test_yaga_dies():

@@ -2,7 +2,6 @@ import pytest
 
 from sbbbattlesim import fight
 from sbbbattlesim.action import ActionReason
-from sbbbattlesim import fight
 from tests import make_character, make_player
 
 

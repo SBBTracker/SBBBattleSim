@@ -3,13 +3,11 @@ import logging
 import pytest
 
 from sbbbattlesim import fight
-from sbbbattlesim.events import OnStart, EventManager
-from sbbbattlesim.utils import Tribe
 from sbbbattlesim.action import ActionReason
 from sbbbattlesim.characters import registry as character_registry
-from sbbbattlesim import fight
+from sbbbattlesim.events import OnStart, EventManager
+from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
-
 
 logger = logging.getLogger(__name__)
 

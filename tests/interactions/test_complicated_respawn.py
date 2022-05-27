@@ -1,11 +1,6 @@
 from sbbbattlesim import fight
-from sbbbattlesim.utils import Tribe
-from sbbbattlesim.events import OnDamagedAndSurvived, OnSummon
-from sbbbattlesim import fight
 from tests import make_character, make_player
-from sbbbattlesim.characters import registry as character_registry
 
-import pytest
 
 def test_advanced_dubly_respawn():
     player = make_player(

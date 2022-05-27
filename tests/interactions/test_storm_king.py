@@ -1,8 +1,8 @@
 import pytest
 
+from sbbbattlesim import fight
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived, OnStart
-from sbbbattlesim import fight
 from tests import make_character, make_player
 
 

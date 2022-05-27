@@ -4,9 +4,7 @@ from sbbbattlesim import fight
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived
 from sbbbattlesim.utils import Tribe
-from sbbbattlesim import fight
 from tests import make_character, make_player
-from sbbbattlesim.action import ActionReason
 
 
 @pytest.mark.parametrize('golden', (True, False))
