@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -16,11 +16,9 @@ def test_darkwood_ranged():
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
-
-    assert board.p1.characters[1].attack == 1
+    assert player.characters[1].attack == 1
 
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -37,12 +35,10 @@ def test_darkwood_melee(golden):
         raw=True,
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
+    fight(player, enemy, limit=1)
 
     final_attack = 3 if golden else 2
-    assert board.p1.characters[1].attack == final_attack
+    assert player.characters[1].attack == final_attack
 
 
 def test_darkwood_soltak_defending():
@@ -59,8 +55,6 @@ def test_darkwood_soltak_defending():
         characters=[make_character(id="SBB_CHARACTER_BABYDRAGON", attack=1, health=1)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-
-    assert board.p1.characters[5].attack == 2
+    assert player.characters[5].attack == 2

@@ -2,12 +2,8 @@ import logging
 
 import pytest
 
-from sbbbattlesim.action import Action, ActionReason, ActionState
-from sbbbattlesim.characters import Character
-from sbbbattlesim.events import Event
-from sbbbattlesim.player import Player
-from tests import PLAYER, EventForTest, create_test_setup, make_player, make_character
-
+from sbbbattlesim.action import Action, ActionReason
+from tests import make_player, make_character, TestEvent
 
 logger = logging.getLogger(__name__)
 
@@ -27,13 +23,12 @@ BUFF_PARAMS = (
 
 @pytest.mark.parametrize('attack_start, health_start, attack_buff, health_buff, attack_final, health_final', BUFF_PARAMS)
 def test_apply_buff(attack_start, health_start, attack_buff, health_buff, attack_final, health_final):
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = ActionForTest(source=char, attack=attack_buff, health=health_buff)
 
@@ -58,13 +53,12 @@ def test_apply_buff(damage, heal, health_final):
     attack_start, health_start = 1, 1
     attack_final = attack_start
 
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = ActionForTest(source=char, damage=damage, heal=heal)
 
@@ -80,13 +74,12 @@ def test_apply_debuff():
     attack_start, health_start = -10, -10
     attack_final, health_final = attack_start + attack_buff, health_start + health_buff
 
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = ActionForTest(source=char, attack=attack_buff, health=health_buff)
 
@@ -103,13 +96,12 @@ def test_execute(_lambda):
     attack_start, health_start = 1, 1
     attack_final, health_final = attack_start + attack_buff, health_start + health_buff
 
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = ActionForTest(source=char, attack=attack_buff, health=health_buff, _lambda=lambda _: _lambda)
 
@@ -136,13 +128,12 @@ def test_setup(setup):
     attack_buff, health_buff = 1, 1
     attack_start, health_start = 2, 2
 
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = ActionForTest(source=char, attack=attack_buff, health=health_buff)
 
@@ -164,13 +155,13 @@ def test_rollback():
     attack_final, health_final = attack_start + attack_buff, health_start + health_buff
 
     attack_start, health_start = 1, 1
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     action = ActionForTest(source=char, attack=attack_buff, health=health_buff)
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
@@ -184,16 +175,15 @@ def test_rollback():
 
 def test_resolve_damage():
     attack_start, health_start = 1, 1
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
-
 
     action = ActionForTest(source=char, damage=1, targets=[char])
     action.resolve()
@@ -202,13 +192,13 @@ def test_resolve_damage():
 
 def test_resolve_minus_health():
     attack_start, health_start = 1, 1
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[
-                make_character(attack=attack_start, health=health_start)
-            ]
-        )
+
+    player = make_player(
+        characters=[
+            make_character(attack=attack_start, health=health_start)
+        ]
     )
+
     char = player.characters[1]
     assert (char._base_attack, char._base_health) == (attack_start, health_start)
 
@@ -223,18 +213,17 @@ def test_resolve_minus_health():
 
 
 def test_event():
-    board, player = create_test_setup(
-        PLAYER=make_player(
-            characters=[make_character()]
-        )
+    player = make_player(
+        characters=[make_character()]
     )
+
     char = player.characters[1]
-    action = ActionForTest(source=char, event=EventForTest)
+    action = ActionForTest(source=char, event=TestEvent)
     action._register(char)
 
     assert char._events['Event']
     registered = list(char._events['Event'])[0]
-    assert isinstance(registered, EventForTest)
+    assert isinstance(registered, TestEvent)
 
     char('Event')
     assert registered.triggered

@@ -1,4 +1,4 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -14,12 +14,11 @@ def test_phoenix_cupid():
         characters=[make_character(id="SBB_CHARACTER_CUPID", attack=1, health=1)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    assert board.p1.characters[1] is None
-    assert board.p1.characters[5] is None
+    assert player.characters[1] is None
+    assert player.characters[5] is None
 
 
 def test_phoenix_bouncy_cupid():
@@ -34,9 +33,8 @@ def test_phoenix_bouncy_cupid():
         characters=[make_character(id="SBB_CHARACTER_CUPID", attack=1, health=1)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    assert board.p1.characters[1] is None
-    assert board.p1.characters[5] is None
+    assert player.characters[1] is None
+    assert player.characters[5] is None

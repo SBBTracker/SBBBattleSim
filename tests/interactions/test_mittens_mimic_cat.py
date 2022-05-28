@@ -1,4 +1,4 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -12,11 +12,10 @@ def test_mittens_smallblackcat():
         characters=[make_character(attack=1, health=1)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''', "SBB_TREASURE_EXPLODINGMITTENS"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
 
-    assert board.p1.characters[1].id == 'SBB_CHARACTER_CAT'
+    assert player.characters[1].id == 'SBB_CHARACTER_CAT'
 
 
 def test_mimic_mittens_smallblackcat():
@@ -29,11 +28,10 @@ def test_mimic_mittens_smallblackcat():
         characters=[make_character(attack=1, health=1)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''', "SBB_TREASURE_EXPLODINGMITTENS", "SBB_TREASURE_TREASURECHEST"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
 
-    assert board.p1.characters[1].id == 'SBB_CHARACTER_CAT'
+    assert player.characters[1].id == 'SBB_CHARACTER_CAT'
 
 
 def test_mimic_mittens_bigblackcat():
@@ -46,8 +44,7 @@ def test_mimic_mittens_bigblackcat():
         characters=[make_character(attack=1, health=1)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''', "SBB_TREASURE_EXPLODINGMITTENS", "SBB_TREASURE_TREASURECHEST"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
 
-    assert board.p1.characters[1] is None
+    assert player.characters[1] is None

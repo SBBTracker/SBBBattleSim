@@ -1,7 +1,4 @@
-import pytest
-
-from sbbbattlesim import Board
-from sbbbattlesim.utils import Tribe
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -24,8 +21,6 @@ def test_egg_feather():
          ],
 
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
-
-    assert board.p1.characters[1] is None
+    assert player.characters[1] is None

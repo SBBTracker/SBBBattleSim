@@ -33,14 +33,15 @@ class PlayerOnSetup(OnSetup):
 
 
 class Player(EventManager):
-    def __init__(self, characters, id, board, treasures, hero, hand, spells, level=0, raw=False, *args, **kwargs):
+    def __init__(self, id, characters, treasures, hero, hand, spells, level=0, raw=False, *args, **kwargs):
         raw=True
         super().__init__()
-        # Board is board
-        self.board = board
-        self.board.register(PlayerOnSetup, source=self, priority=0, raw=raw)
 
+        self.id = id
         self.__characters = OrderedDict({i: None for i in range(1, 8)})
+
+        self.register(PlayerOnSetup, source=self, priority=0, raw=raw)
+
         self.stateful_effects = {}
         self._attack_slot = None
         self.graveyard = []
@@ -51,7 +52,6 @@ class Player(EventManager):
         self._attack_chain = 0
         self._spells_cast = kwargs.get('spells_cast', None)
         self.spells = spells
-
 
         # Treasure Counting
         self.banner_of_command = 'SBB_TREASURE_BANNEROFCOMMAND' in treasures
@@ -82,7 +82,7 @@ class Player(EventManager):
 
         for spl in spells:
             if spl in utils.START_OF_FIGHT_SPELLS:
-                self.board.register(CastSpellOnStart, spell=spl, source=self, priority=spell_registry[spl].priority)
+                self.register(CastSpellOnStart, spell=spl, source=self, priority=spell_registry[spl].priority)
 
         for char_data in characters:
             char = character_registry[char_data['id']](player=self, **char_data)
@@ -348,6 +348,3 @@ class Player(EventManager):
             'hand': hand,
             'level': self.level,
         }
-
-
-

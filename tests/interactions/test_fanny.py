@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -19,10 +19,9 @@ def test_fanny(golden):
             '''SBB_TREASURE_HERMES'BOOTS''',
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
-    char = board.p1.characters[1]
+    char = player.characters[1]
     buffs = [
         r for r in char._action_history
     ]
@@ -33,7 +32,7 @@ def test_fanny(golden):
     assert attackbuffs == (4 if golden else 2)
     assert healthbuffs == (4 if golden else 2)
 
-    char = board.p1.characters[2]
+    char = player.characters[2]
     buffs = [
         r for r in char._action_history
     ]

@@ -1,4 +1,4 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -17,11 +17,10 @@ def test_cupid_effect():
             make_character(position=5, health=2)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert board.p2.characters[5] is None
-    assert board.p2.characters[1] is None
+    assert enemy.characters[5] is None
+    assert enemy.characters[1] is None
 
 
 def test_cupid_ranged():
@@ -37,8 +36,7 @@ def test_cupid_ranged():
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (3, 6)
+    assert (player.characters[6].attack, player.characters[6].health) == (3, 6)

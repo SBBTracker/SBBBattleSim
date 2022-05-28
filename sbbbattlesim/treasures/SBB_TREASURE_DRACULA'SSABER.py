@@ -22,4 +22,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(DraculasSaberOnSetup, source=self, priority=1000)
+        self.player.register(DraculasSaberOnSetup, source=self, priority=1000)

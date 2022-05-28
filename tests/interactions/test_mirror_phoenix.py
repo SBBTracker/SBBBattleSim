@@ -1,4 +1,4 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -15,8 +15,7 @@ def test_mirror_phoenixfeather():
     enemy = make_player(
         characters=[make_character(attack=100, health=100)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
 
-    assert board.p2.characters[1].health == 78
+    assert enemy.characters[1].health == 78

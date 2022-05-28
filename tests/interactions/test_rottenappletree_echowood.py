@@ -1,4 +1,4 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -16,8 +16,7 @@ def test_echowood_rottenappletree():
             make_character(id="SBB_CHARACTER_ROTTENAPPLETREE", health=2)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 1)
+    assert (player.characters[7].attack, player.characters[7].health) == (1, 1)

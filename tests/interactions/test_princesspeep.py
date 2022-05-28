@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -14,11 +14,10 @@ def test_peep_dying(golden):
     enemy = make_player(
         characters=[make_character(attack=500, health=500)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     final_stats = (2, 2) if golden else (1, 1)
     for i in [1, 2, 3]:
-        assert board.p1.characters[i].display_name == 'Sheep'
-        assert board.p1.characters[i].attack, board.p2.characters[i].health == final_stats
+        assert player.characters[i].display_name == 'Sheep'
+        assert player.characters[i].attack, enemy.characters[i].health == final_stats

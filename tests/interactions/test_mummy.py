@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -20,8 +20,7 @@ def test_mummy(golden):
             make_character(attack=0, health=100, position=5)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    assert board.p2.characters[5].health == 90 if golden else 95
+    assert enemy.characters[5].health == 90 if golden else 95

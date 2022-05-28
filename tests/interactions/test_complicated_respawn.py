@@ -1,10 +1,5 @@
-from sbbbattlesim import Board
-from sbbbattlesim.utils import Tribe
-from sbbbattlesim.events import OnDamagedAndSurvived, OnSummon
+from sbbbattlesim import fight
 from tests import make_character, make_player
-from sbbbattlesim.characters import registry as character_registry
-
-import pytest
 
 
 def test_advanced_dubly_respawn():
@@ -23,13 +18,12 @@ def test_advanced_dubly_respawn():
         raw=True,
         characters=[make_character()],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    board.fight()
+    fight(player, enemy)
 
-    assert board.p1.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
+    assert player.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (3, 1)
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (3, 1)
+    assert (player.characters[1].attack, player.characters[1].health) == (3, 1)
+    assert (player.characters[2].attack, player.characters[2].health) == (3, 1)
 
 
 def test_advanced_respawn():
@@ -48,10 +42,9 @@ def test_advanced_respawn():
         raw=True,
         characters=[make_character()],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    board.fight()
+    fight(player, enemy)
 
-    assert board.p1.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
+    assert player.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (3, 1)
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (3, 1)
+    assert (player.characters[1].attack, player.characters[1].health) == (3, 1)
+    assert (player.characters[2].attack, player.characters[2].health) == (3, 1)

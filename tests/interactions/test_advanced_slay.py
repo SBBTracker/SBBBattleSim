@@ -1,7 +1,8 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
+
 
 @pytest.mark.skipif
 @pytest.mark.parametrize('golden', (True, False))
@@ -26,8 +27,7 @@ def test_riverwish_yaga(golden, mimic, evil_eye):
         raw=True,
         characters=[make_character(attack=0, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     yaga_multiplier = 2 if golden else 1
     evil_eye_additor = yaga_multiplier if evil_eye else 0
@@ -43,8 +43,8 @@ def test_riverwish_yaga(golden, mimic, evil_eye):
     final_stat = 1 + slay_count * slay_multiplyer
     final_stats = (final_stat, final_stat)
 
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == final_stats
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (final_stat, 1)
+    assert (player.characters[2].attack, player.characters[2].health) == final_stats
+    assert (player.characters[7].attack, player.characters[7].health) == (final_stat, 1)
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -68,8 +68,7 @@ def test_double_yaga(mimic, evil_eye):
         raw=True,
         characters=[make_character(attack=0, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     evil_eye_additor = 1 if evil_eye else 0
     mimic_multiplier = 2 if mimic else 1
@@ -80,7 +79,7 @@ def test_double_yaga(mimic, evil_eye):
     final_stat = 1 + 1 + slay_count * slay_multiplyer * 2
     final_stats = (final_stat, final_stat)
 
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (final_stat, 1)
+    assert (player.characters[7].attack, player.characters[7].health) == (final_stat, 1)
 
 
 def test_complicated_grimsoul():
@@ -100,10 +99,9 @@ def test_complicated_grimsoul():
         raw=True,
         characters=[make_character(attack=0, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (12, 12)
+    assert (player.characters[2].attack, player.characters[2].health) == (12, 12)
 
 
 def test_complicated_grimsoul_two():
@@ -123,11 +121,10 @@ def test_complicated_grimsoul_two():
         raw=True,
         characters=[make_character(attack=0, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    leftgrim = board.p1.characters[2]
-    rightgrim = board.p1.characters[3]
+    leftgrim = player.characters[2]
+    rightgrim = player.characters[3]
     assert rightgrim.attack + leftgrim.attack == 21
     assert rightgrim.health + leftgrim.health == 21
 
@@ -148,13 +145,12 @@ def test_trophy_grimsoul_blackcat():
     enemy = make_player(
         characters=[make_character(attack=0, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert board.p1.characters[3].id == "SBB_CHARACTER_CAT"
-    assert board.p1.characters[4].id == "SBB_CHARACTER_CAT"
-    assert board.p1.characters[6].id == "SBB_CHARACTER_CAT"
-    assert board.p1.characters[7].id == "SBB_CHARACTER_CAT"
+    assert player.characters[3].id == "SBB_CHARACTER_CAT"
+    assert player.characters[4].id == "SBB_CHARACTER_CAT"
+    assert player.characters[6].id == "SBB_CHARACTER_CAT"
+    assert player.characters[7].id == "SBB_CHARACTER_CAT"
 
 
 

@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -19,12 +19,10 @@ def test_grimsoul(golden):
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
+    fight(player, enemy, limit=1)
 
     final_stats = (5, 5) if golden else (3, 3)
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == final_stats
+    assert (player.characters[2].attack, player.characters[2].health) == final_stats
 
 
 def test_grimsoul_shouldnt_proc_lobo():
@@ -41,10 +39,9 @@ def test_grimsoul_shouldnt_proc_lobo():
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (1, 1)
+    assert (player.characters[2].attack, player.characters[2].health) == (1, 1)
 
 
 def test_grimsoul_southsea():
@@ -60,8 +57,7 @@ def test_grimsoul_southsea():
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -80,12 +76,10 @@ def test_grimsoul_listeners(golden):
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
+    fight(player, enemy, limit=1)
 
     result = 3 if golden else 2
-    assert board.p1.characters[7].attack == result
+    assert player.characters[7].attack == result
 
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -105,9 +99,7 @@ def test_grimsoul_listeners_with_yaga(golden):
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
+    fight(player, enemy, limit=1)
 
     result = 5 if golden else 3
-    assert board.p1.characters[5].attack == result
+    assert player.characters[5].attack == result

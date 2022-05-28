@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -16,10 +16,8 @@ def test_black_cat_dying(golden):
         raw=True,
         characters=[make_character(attack=500, health=500)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
+    fight(player, enemy, limit=1)
 
     final_stats = (2, 2) if golden else (1, 1)
-    assert board.p1.characters[6].display_name == 'Cat'
-    assert board.p1.characters[6].attack, board.p1.characters[6].health == final_stats
+    assert player.characters[6].display_name == 'Cat'
+    assert player.characters[6].attack, player.characters[6].health == final_stats

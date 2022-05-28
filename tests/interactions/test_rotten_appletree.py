@@ -1,4 +1,4 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.action import ActionReason, ActionState
 from tests import make_character, make_player
 
@@ -14,11 +14,10 @@ def test_rotten_appletree():
             make_character(attack=1, health=1000, position=1),
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
-    assert board.p2.characters[1].health == 1
+    assert enemy.characters[1].health == 1
 
 
 def test_rotten_appletree_support():
@@ -36,11 +35,10 @@ def test_rotten_appletree_support():
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    assert board.p2.characters[1].health == 1
+    assert enemy.characters[1].health == 1
 
 
 def test_rotten_appletree_health_support_dies():
@@ -59,10 +57,9 @@ def test_rotten_appletree_health_support_dies():
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    frontchar = board.p2.characters[1]
-    backchar = board.p2.characters[5]
-    winner, loser = board.fight(limit=2)
+    frontchar = enemy.characters[1]
+    backchar = enemy.characters[5]
+    fight(player, enemy, limit=2)
 
     assert backchar.dead
     assert frontchar.dead
@@ -92,10 +89,9 @@ def test_rotten_appletree_attack_support_dies():
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    frontchar = board.p2.characters[1]
-    backchar = board.p2.characters[5]
-    winner, loser = board.fight(limit=2)
+    frontchar = enemy.characters[1]
+    backchar = enemy.characters[5]
+    fight(player, enemy, limit=2)
 
     assert frontchar.health == 1
     assert backchar.dead

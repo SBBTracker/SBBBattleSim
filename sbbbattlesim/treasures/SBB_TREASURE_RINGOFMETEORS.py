@@ -17,4 +17,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(event=RingOfMeteorsActivation, source=self, priority=-10)
+        self.player.register(event=RingOfMeteorsActivation, source=self, priority=-10)

@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -18,8 +18,7 @@ def test_lordy(golden):
     )
     enemy = make_player()
 
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
 
 
@@ -28,9 +27,9 @@ def test_lordy(golden):
     else:
         final_stats = (5, 5)
 
-    d1stats = (board.p1.characters[1].attack, board.p1.characters[1].health)
-    d6stats = (board.p1.characters[6].attack, board.p1.characters[6].health)
-    not_d5stats = (board.p1.characters[5].attack, board.p1.characters[5].health)
+    d1stats = (player.characters[1].attack, player.characters[1].health)
+    d6stats = (player.characters[6].attack, player.characters[6].health)
+    not_d5stats = (player.characters[5].attack, player.characters[5].health)
 
     assert d1stats == final_stats
     assert d6stats == final_stats

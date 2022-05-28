@@ -2,13 +2,12 @@ import sys
 
 import pytest
 
-from sbbbattlesim.simulate import _process
-from tests import make_character, make_player
-
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.heroes import registry as hero_registry
+from sbbbattlesim.simulate import _process
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
+from tests import make_character, make_player
 
 sim_data = [
     {'717fdd43-e7d8-426e-8eb1-ef9edb9930a4': {'characters': [{'id': 'SBB_CHARACTER_CATBURGLAR', 'attack': 1, 'health': 1, 'golden': True, 'cost': 2, 'position': 1, 'tribes': ['evil', 'animal'], 'raw': True}, {'id': 'SBB_CHARACTER_ANGRYDWARF', 'attack': 2, 'health': 2, 'golden': True, 'cost': 2, 'position': 7, 'tribes': ['dwarf'], 'raw': True}, {'id': 'SBB_CHARACTER_WEEWILLIEWINKIE', 'attack': 8, 'health': 3, 'golden': True, 'cost': 2, 'position': 3, 'tribes': ['dwarf'], 'raw': True}], 'treasures': [], 'hero': None, 'spells': ['SBB_SPELL_FORBIDDENFRUIT'], 'level': 0, 'hand': []}, 'D2AEBB2B532D4F5B': {'characters': [{'id': 'SBB_CHARACTER_BLINDMOUSE', 'attack': 2, 'health': 2, 'golden': True, 'cost': 2, 'position': 1, 'tribes': ['animal'], 'raw': True}, {'id': 'SBB_CHARACTER_FRIENDLYTREE', 'attack': 2, 'health': 2, 'golden': True, 'cost': 2, 'position': 2, 'tribes': ['good', 'treant'], 'raw': True}], 'treasures': [], 'hero': None, 'spells': ['SBB_SPELL_SUGARANDSPICE'], 'level': 0, 'hand': []}},

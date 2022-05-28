@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -19,8 +19,7 @@ def test_rainbow_unicorn(golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
 
     if golden:
@@ -28,7 +27,7 @@ def test_rainbow_unicorn(golden):
     else:
         final_stats = (1, 2)
 
-    char = board.p1.characters[5]
+    char = player.characters[5]
     buffs = [
         r for r in char._action_history
     ]
@@ -39,7 +38,7 @@ def test_rainbow_unicorn(golden):
     assert attackbuffs == 0
     assert healthbuffs == 0
 
-    char = board.p1.characters[6]
+    char = player.characters[6]
     buffs = [
         r for r in char._action_history
     ]
@@ -50,7 +49,7 @@ def test_rainbow_unicorn(golden):
     assert attackbuffs == 0
     assert healthbuffs == (2 if golden else 1)
 
-    char = board.p1.characters[7]
+    char = player.characters[7]
     buffs = [
         r for r in char._action_history
     ]

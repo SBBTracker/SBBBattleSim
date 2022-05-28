@@ -2,7 +2,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from sbbbattlesim.board import Board
+
+from sbbbattlesim.combat import fight
 from sbbbattlesim.config import configure_logging
 from sbbbattlesim.simulate import simulate, from_state
 from sbbbattlesim.exceptions import SBBBSCrocException

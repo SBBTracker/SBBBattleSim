@@ -20,4 +20,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(HelmOfTheUglyGoslingOnStartBuff, source=self, priority=50)
+        self.player.register(HelmOfTheUglyGoslingOnStartBuff, source=self, priority=50)

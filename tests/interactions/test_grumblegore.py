@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -14,10 +14,9 @@ def test_grumblegore(golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
-    char = board.p1.characters[1]
+    char = player.characters[1]
     buffs = [
         r for r in char._action_history
     ]
@@ -27,8 +26,6 @@ def test_grumblegore(golden):
 
     assert attackbuffs == (20 if golden else 10)
     assert healthbuffs == 0
-
-
 
 
 def test_grumblegore_ranged():
@@ -43,8 +40,6 @@ def test_grumblegore_ranged():
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
-
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (3, 6)
+    assert (player.characters[6].attack, player.characters[6].health) == (3, 6)

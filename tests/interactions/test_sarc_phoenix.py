@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -29,11 +29,10 @@ def test_sarc_phoenix(mimic, n_char):
         ]
 
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
     if mimic or n_char > 1:
-        assert board.p2.characters[5] is None
+        assert enemy.characters[5] is None
     else:
-        assert board.p2.characters[5] is not None
+        assert enemy.characters[5] is not None

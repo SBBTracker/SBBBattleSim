@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -21,8 +21,7 @@ def test_friendlyspirit_coinofcharon_dubly(golden):
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
 
     if golden:
@@ -30,7 +29,7 @@ def test_friendlyspirit_coinofcharon_dubly(golden):
     else:
         final_stats = (19, 19)
 
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == final_stats
+    assert (player.characters[5].attack, player.characters[5].health) == final_stats
 
 
 def test_friendlyspirit_monstermanual():
@@ -49,8 +48,7 @@ def test_friendlyspirit_monstermanual():
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
 
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (8, 6)
+    assert (player.characters[5].attack, player.characters[5].health) == (8, 6)

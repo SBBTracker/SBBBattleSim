@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -14,11 +14,9 @@ def test_lady(golden):
         ]
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    fight(player, enemy)
 
-
-    char = board.p1.characters[1]
+    char = player.characters[1]
     buffs = [
         r for r in char._action_history
     ]
@@ -29,7 +27,7 @@ def test_lady(golden):
     assert attackbuffs == 0
     assert healthbuffs == (10 if golden else 5)
 
-    char = board.p1.characters[2]
+    char = player.characters[2]
     buffs = [
         r for r in char._action_history
     ]
@@ -39,8 +37,6 @@ def test_lady(golden):
 
     assert attackbuffs == 0
     assert healthbuffs == (10 if golden else 5)
-
-
 
 
 def test_lady_ranged():
@@ -55,8 +51,6 @@ def test_lady_ranged():
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
-
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (3, 6)
+    assert (player.characters[6].attack, player.characters[6].health) == (3, 6)

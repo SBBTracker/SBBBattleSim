@@ -1,8 +1,8 @@
 import pytest
 
-from sbbbattlesim import Board
-from sbbbattlesim.utils import Tribe
+from sbbbattlesim import fight
 from sbbbattlesim.action import ActionReason
+from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
 
@@ -19,18 +19,17 @@ def test_wombat_dying(golden, level, repeat):
     enemy = make_player(
         characters=[make_character(attack=5, health=5)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    summoned_char = board.p1.characters[1]
+    summoned_char = player.characters[1]
 
     assert summoned_char is not None
     assert 1 < summoned_char._level <= level
     assert summoned_char.golden == golden
 
     wombat_buffs = [
-        r for r in board.p1.characters[1]._action_history if r.reason == ActionReason.WOMBATS_IN_DISGUISE_BUFF
+        r for r in player.characters[1]._action_history if r.reason == ActionReason.WOMBATS_IN_DISGUISE_BUFF
     ]
 
     assert len(wombat_buffs) == 1
@@ -50,16 +49,15 @@ def test_charon_wombat():
     enemy = make_player(
         characters=[make_character(attack=5, health=5)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    summoned_char = board.p1.characters[1]
+    summoned_char = player.characters[1]
 
     assert summoned_char is not None
 
     wombat_buff = None
-    for action in board.p1.characters[1]._action_history:
+    for action in player.characters[1]._action_history:
         if action.reason == ActionReason.WOMBATS_IN_DISGUISE_BUFF:
             wombat_buff = action
             break
@@ -89,28 +87,27 @@ def test_bearstain_wombat_phoenix(repeat):
     enemy = make_player(
         characters=[make_character(attack=500, health=500)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    original_wombat = board.p1.characters[1]
+    original_wombat = player.characters[1]
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert board.p1.characters[1] is original_wombat
+    assert player.characters[1] is original_wombat
     assert original_wombat._base_attack == 120, original_wombat.pretty_print()
     assert original_wombat._base_health == 104, original_wombat.pretty_print()
 
-    wombat2 = board.p1.characters[2]
+    wombat2 = player.characters[2]
     assert wombat2._base_attack == 120
     assert wombat2._base_health == 104
 
-    wombat3 = board.p1.characters[3]
+    wombat3 = player.characters[3]
     assert wombat3._base_attack == 120
     assert wombat3._base_health == 104
 
-    wombat4 = board.p1.characters[4]
+    wombat4 = player.characters[4]
     assert wombat4._base_attack == 210
     assert wombat4._base_health == 182
 
-    char5 = board.p1.characters[5]
+    char5 = player.characters[5]
     assert char5 is not None
 
 

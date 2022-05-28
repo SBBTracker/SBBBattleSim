@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -23,8 +23,7 @@ def test_vulture(golden):
             make_character(health=2)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
     if golden:
@@ -32,4 +31,4 @@ def test_vulture(golden):
     else:
         final_stats = (4, 4)
 
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == final_stats
+    assert (player.characters[5].attack, player.characters[5].health) == final_stats

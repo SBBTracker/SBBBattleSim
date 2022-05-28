@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -32,15 +32,14 @@ def test_oni(golden, limit):
             make_character(attack=0, health=1, position=3),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=limit)
+    fight(player, enemy, limit=limit)
 
 
     final_stats = (21, 21) if golden else (11, 11)
 
-    assert board.p1.characters[1].attack, board.p1.characters[1].health == final_stats
-    assert board.p1.characters[2].attack, board.p1.characters[2].health == (1, 1)
+    assert player.characters[1].attack, player.characters[1].health == final_stats
+    assert player.characters[2].attack, player.characters[2].health == (1, 1)
     if limit >= 2:
-        assert board.p1.characters[6].attack, board.p1.characters[6].health == final_stats
+        assert player.characters[6].attack, player.characters[6].health == final_stats
     else:
-        assert board.p1.characters[6].attack, board.p1.characters[6].health == (1, 1)
+        assert player.characters[6].attack, player.characters[6].health == (1, 1)

@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived
 from sbbbattlesim.utils import Tribe
@@ -19,11 +19,10 @@ def test_angry_fallingstars():
     enemy = make_player(
         spells=["SBB_SPELL_FALLINGSTARS"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (3, 2)
+    assert (player.characters[6].attack, player.characters[6].health) == (3, 2)
 
 
 def test_donkey_fallingstars():
@@ -40,7 +39,6 @@ def test_donkey_fallingstars():
     enemy = make_player(
         spells=["SBB_SPELL_FALLINGSTARS"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
@@ -52,12 +50,11 @@ def test_donkey_fallingstars():
             )
             self.manager.player.summon(self.manager.position, [summon])
 
-    board.p1.characters[3].register(FakeTrojanDonkeySummon)
-    winner, loser = board.fight(limit=2)
-
+    player.characters[3].register(FakeTrojanDonkeySummon)
+    fight(player, enemy, limit=2)
 
     for pos in range(1, 8):
-        char = board.p1.characters[pos]
+        char = player.characters[pos]
         if pos <= 3:
             assert char.attack == 1, pos
             assert char.health == 1, pos
@@ -89,14 +86,12 @@ def test_donkey_fallingstars_fullboard(board_full):
     enemy = make_player(
         spells=["SBB_SPELL_FALLINGSTARS"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    donkey = board.p1.characters[4]
+    donkey = player.characters[4]
 
-    winner, loser = board.fight(limit=0)
-
+    fight(player, enemy, limit=0)
 
     for pos in range(1, 8):
-        char = board.p1.characters[pos]
+        char = player.characters[pos]
         if not board_full:
             if pos == 1:
                 assert char is not None
@@ -124,7 +119,6 @@ def test_donkey_fallingstars_summondragon():
         ],
         spells=["SBB_SPELL_FALLINGSTARS"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
@@ -136,10 +130,9 @@ def test_donkey_fallingstars_summondragon():
             )
             self.manager.player.summon(self.manager.position, [summon])
 
-    board.p1.characters[1].register(FakeTrojanDonkeySummon)
-    winner, loser = board.fight(limit=0)
+    player.characters[1].register(FakeTrojanDonkeySummon)
+    fight(player, enemy, limit=0)
 
-
-    assert board.p2.characters[1] is None
-    assert board.p1.graveyard[0]._action_history[-1].source == board.p2.graveyard[0]
+    assert enemy.characters[1] is None
+    assert player.graveyard[0]._action_history[-1].source == enemy.graveyard[0]
 

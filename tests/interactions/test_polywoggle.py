@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -25,15 +25,14 @@ def test_polywoggle(golden, level):
             make_character(attack=0, health=1, position=2),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    woggle = board.p1.characters[5]
-    winner, loser = board.fight(limit=3)
+    woggle = player.characters[5]
+    fight(player, enemy, limit=3)
 
 
     golden_promotion = (2 if golden else 1)
 
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (2, 2), 'Vainpire probably didnt attack'
-    assert board.p1.characters[2] is not None
-    assert board.p1.characters[2] is not woggle, 'Its still the polywoggle unfortunately'
-    assert board.p1.characters[2].golden == golden
-    assert board.p1.characters[2].cost == min(6, level + golden_promotion)
+    assert (player.characters[5].attack, player.characters[5].health) == (2, 2), 'Vainpire probably didnt attack'
+    assert player.characters[2] is not None
+    assert player.characters[2] is not woggle, 'Its still the polywoggle unfortunately'
+    assert player.characters[2].golden == golden
+    assert player.characters[2].cost == min(6, level + golden_promotion)

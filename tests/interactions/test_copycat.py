@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -19,7 +19,6 @@ def test_muerte_copycat_goodboy(golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
 
-
     enemy = make_player(
         raw=True,
         characters=[
@@ -27,15 +26,14 @@ def test_muerte_copycat_goodboy(golden):
             make_character()
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
     if golden:
         final_stats = (31, 31)
     else:
         final_stats = (9, 9)
 
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == final_stats
+    assert (player.characters[5].attack, player.characters[5].health) == final_stats
 
 
 @pytest.mark.parametrize('golden', (True, False))
@@ -55,16 +53,14 @@ def test_muerte_single_goodboy(golden):
             make_character()
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
+    fight(player, enemy, limit=1)
 
     if golden:
         final_stats = (5, 5)
     else:
         final_stats = (3, 3)
 
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == final_stats
+    assert (player.characters[5].attack, player.characters[5].health) == final_stats
 
 
 def test_copycat_queenofhearts():
@@ -85,10 +81,8 @@ def test_copycat_queenofhearts():
             make_character()
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
+    fight(player, enemy, limit=1)
 
     assert len(
-        [evt for evt in board.p1.characters[5].get('OnDeath') if evt.__class__.__name__ == 'EvilQueenOnDeath']) == 1
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (1, 1)
+        [evt for evt in player.characters[5].get('OnDeath') if evt.__class__.__name__ == 'EvilQueenOnDeath']) == 1
+    assert (player.characters[7].attack, player.characters[7].health) == (1, 1)

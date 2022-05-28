@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 
@@ -16,14 +16,13 @@ def test_baby_root(golden):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
     baby_roof_buff = None
-    for action in board.p1.characters[1]._action_history:
+    for action in player.characters[1]._action_history:
         if action.reason == ActionReason.SUPPORT_BUFF:
             baby_roof_buff = action
 
     assert baby_roof_buff.health == 6 if golden else 3
     baby_roof_buff.roll_back()
-    assert board.p1.characters[1].health == (1 if golden else 4)
+    assert player.characters[1].health == (1 if golden else 4)

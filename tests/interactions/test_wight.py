@@ -1,8 +1,5 @@
 
 import pytest
-from sbbbattlesim import Board
-from sbbbattlesim.utils import Tribe
-from tests import make_character, make_player
 
 
 @pytest.mark.parametrize('golden', (True, False))

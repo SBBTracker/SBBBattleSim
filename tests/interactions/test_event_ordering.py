@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -24,12 +24,11 @@ def test_falling_stars_guides_eventorder(r):
             make_character(position=1, id='P2TESTCHAR', tribes={Tribe.GOOD}, health=2),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
-    livingchar = board.p1.characters[1]
-    assert livingchar, ([i.pretty_print() for i in board.p1.valid_characters()], [i.pretty_print() for i in board.p2.valid_characters()])
+    livingchar = player.characters[1]
+    assert livingchar, ([i.pretty_print() for i in player.valid_characters()], [i.pretty_print() for i in enemy.valid_characters()])
     assert livingchar.attack == 2
     assert livingchar.health == 1
 
-    assert len(board.p2.graveyard) == 3
+    assert len(enemy.graveyard) == 3

@@ -1,6 +1,4 @@
-import pytest
-
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 def test_onstart_not_proc_merlin():
@@ -16,11 +14,10 @@ def test_onstart_not_proc_merlin():
     enemy = make_player(
         characters=[make_character(id='GENERIC', position=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    fight(player, enemy)
 
 
-    player = board.p1
+
 
     generic = player.characters.get(1)
 
@@ -40,11 +37,10 @@ def test_onstart_not_proc_familar():
     enemy = make_player(
         characters=[make_character(id='GENERIC', position=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    fight(player, enemy)
 
 
-    player = board.p1
+
 
     cat = player.characters.get(1)
 

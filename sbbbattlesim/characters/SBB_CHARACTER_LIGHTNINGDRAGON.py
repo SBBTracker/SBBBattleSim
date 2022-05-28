@@ -30,4 +30,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(LightningDragonOnStart, source=self, priority=0)
+        self.player.register(LightningDragonOnStart, source=self, priority=0)

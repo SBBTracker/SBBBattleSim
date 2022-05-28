@@ -22,4 +22,4 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.player.board.register(IvoryOwlOnStartOnStartBuff, priority=120, source=self)
+        self.player.register(IvoryOwlOnStartOnStartBuff, priority=120, source=self)

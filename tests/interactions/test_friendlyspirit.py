@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -18,8 +18,6 @@ def test_friendlyspirit(golden):
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (11, 11) if golden else (6, 6)
+    assert (player.characters[7].attack, player.characters[7].health) == (11, 11) if golden else (6, 6)

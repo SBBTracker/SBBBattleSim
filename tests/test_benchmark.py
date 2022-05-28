@@ -2,7 +2,7 @@ import sys
 
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_player, make_character
 
 
@@ -40,7 +40,6 @@ def test_tedious():
             ],
         )
 
-        board = Board({'PLAYER': player, 'ENEMY': enemy})
-        board.fight()
+        fight(player, enemy)
 
     raise ValueError(time.perf_counter() - t)

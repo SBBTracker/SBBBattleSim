@@ -1,9 +1,9 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
+from sbbbattlesim.action import ActionReason
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.utils import Tribe
-from sbbbattlesim.action import ActionReason
 from tests import make_character, make_player
 
 
@@ -18,8 +18,7 @@ def test_spell(spell):
         raw=True,
         characters=[make_character(id='SBB_CHARACTER_MONSTAR', position=1, attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
 
 def test_falling_stars():
@@ -38,16 +37,15 @@ def test_falling_stars():
         spells=['''SBB_SPELL_FALLINGSTARS''', ]
     )
     enemy = make_player(raw=True)
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
     for pos in range(1, 8):
-        assert board.p1.characters[pos] is None
+        assert player.characters[pos] is None
 
-    for char in board.p1.graveyard:
+    for char in player.graveyard:
         assert char._action_history[0].reason == ActionReason.FALLING_STARS, char._action_history[0]
 
-    assert len(board.p1.graveyard) == 7
+    assert len(player.graveyard) == 7
 
 
 @pytest.mark.parametrize('repeat', range(30))
@@ -63,13 +61,12 @@ def test_lightning_bolt(repeat):
             make_character(position=1, attack=1, health=10)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
-    board.p1.characters[5] is None
-    board.p1.characters[1] is not None
+    assert enemy.characters[5] is None
+    assert enemy.characters[1] is not None
 
-    char = board.p2.graveyard[0]
+    char = enemy.graveyard[0]
     assert char._action_history[0].reason == ActionReason.LIGHTNING_BOLT, char._action_history[0]
 
 
@@ -87,26 +84,25 @@ def test_fire_ball():
             make_character(position=7),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
-    for char in board.p2.graveyard:
+    for char in enemy.graveyard:
         char._action_history[0].reason = ActionReason.FIREBALL
     
     # TODO make sure we do correct death ordering
-    # char = board.p2.graveyard[0]
+    # char = enemy.graveyard[0]
     # assert char.position == 2
     # assert char._action_history[0].reason == StatChangeCause.FIREBALL
     #
-    # char = board.p2.graveyard[1]
+    # char = enemy.graveyard[1]
     # assert char.position == 5
     # assert char._action_history[0].reason == StatChangeCause.FIREBALL
     #
-    # char = board.p2.characters[6]
+    # char = enemy.characters[6]
     # assert char._action_history[0].reason == StatChangeCause.FIREBALL
 
     for pos in [7]:
-        char = board.p2.characters[pos]
+        char = enemy.characters[pos]
         assert char is not None
         assert char._damage == 0
 
@@ -122,10 +118,9 @@ def test_fire_ball_backline():
             make_character(position=6, health=5),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
-    char = board.p2.characters[6]
+    char = enemy.characters[6]
     assert char._action_history[0].reason == ActionReason.FIREBALL
 
 
@@ -140,11 +135,9 @@ def test_shrivel():
             make_character(attack=4, health=13),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
-
-    char = board.p2.characters[1]
+    char = enemy.characters[1]
     assert char
     assert char._action_history[0].reason == ActionReason.SHRIVEL
     assert char.attack == 0 and char.health == 1
@@ -159,11 +152,11 @@ def test_shrivel_phoenixfeather():
         raw=True,
         spells=['''SBB_SPELL_ENFEEBLEMENT''', ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    unit = board.p1.characters[1]
-    winner, loser = board.fight(limit=-1)
 
-    assert board.p1.characters[1] is unit
+    unit = player.characters[1]
+    fight(player, enemy, limit=-1)
+
+    assert player.characters[1] is unit
 
 
 @pytest.mark.parametrize('survives', (True, False))
@@ -181,10 +174,10 @@ def test_shrivel_speed(survives):
             "SBB_TREASURE_IVORYOWL"
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
 
-    char = board.p2.characters[1]
+    fight(player, enemy, limit=-1)
+
+    char = enemy.characters[1]
     assert char is not None
 
 
@@ -201,10 +194,10 @@ def test_shrivel_speed2(survives):
                            tribes=[Tribe.ROYAL]),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
 
-    char = board.p2.characters[1]
+    fight(player, enemy, limit=-1)
+
+    char = enemy.characters[1]
     assert char is not None
 
 
@@ -222,10 +215,10 @@ def test_spells_damaging_darkwood():
             make_character(id="SBB_CHARACTER_DARKWOODCREEPER", attack=12, health=15),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
 
-    char = board.p2.characters[1]
+    fight(player, enemy, limit=-1)
+
+    char = enemy.characters[1]
     assert (char.attack, char.health) == (1, 2)
 
 
@@ -244,10 +237,9 @@ def test_multiple_spells():
             make_character(attack=0, health=14, position=5),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    frontchar = board.p2.characters[1]
-    backchar = board.p2.characters[5]
-    winner, loser = board.fight(limit=-1)
+    frontchar = enemy.characters[1]
+    backchar = enemy.characters[5]
+    fight(player, enemy, limit=-1)
 
     assert frontchar._action_history[0].reason == ActionReason.FIREBALL
     assert set([statchange.reason for statchange in backchar._action_history]) == {ActionReason.FIREBALL,
@@ -265,14 +257,13 @@ def test_earthquake():
             make_character(position=2, health=3),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
-    char = board.p2.graveyard[0]
+    char = enemy.graveyard[0]
     assert char
     assert char._action_history[0].reason == ActionReason.EARTHQUAKE
 
-    char = board.p2.characters[2]
+    char = enemy.characters[2]
     assert char
     assert char._action_history[0].reason == ActionReason.EARTHQUAKE
     assert char.health == 1
@@ -296,11 +287,10 @@ def test_earthquake_peeps():
 
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
     for pos in [1, 2]:
-        char = board.p2.characters[pos]
+        char = enemy.characters[pos]
         assert char.id == "SBB_CHARACTER_SHEEP"
 
 
@@ -315,10 +305,9 @@ def test_poison_apple():
             make_character(health=99),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
-    char = board.p2.characters[1]
+    char = enemy.characters[1]
     assert char
     assert char._action_history[0].reason == ActionReason.POISON_APPLE
     assert char.health == 1
@@ -335,10 +324,9 @@ def test_disintegrate():
             make_character(health=30),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
-    char = board.p2.graveyard[0]
+    char = enemy.graveyard[0]
     assert char
     assert char._action_history[0].reason == ActionReason.SMITE
 
@@ -354,10 +342,9 @@ def test_pigomorph():
             make_character(),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
-    char = board.p2.characters[1]
+    char = enemy.characters[1]
     assert char
     assert char.id == 'SBB_CHARACTER_PIG'
 
@@ -375,16 +362,16 @@ def test_pigomorph_repeated(r):
             make_character(position=2),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
-    char = board.p2.characters[1]
+    char = enemy.characters[1]
     assert char
     assert char.id == 'SBB_CHARACTER_PIG'
 
-    char = board.p2.characters[2]
+    char = enemy.characters[2]
     assert char
     assert char.id == 'SBB_CHARACTER_PIG'
+
 
 def test_cats_call():
     player = make_player(
@@ -398,11 +385,10 @@ def test_cats_call():
             make_character(position=2),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
     for i in range(1, 5):
-        char = board.p1.characters[i]
+        char = player.characters[i]
         assert char
         assert char.id == 'SBB_CHARACTER_CAT'
 
@@ -422,11 +408,10 @@ def test_toil_and_trouble():
             make_character(),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=-1)
+    fight(player, enemy, limit=-1)
 
     for i in range(1, 3):
-        char = board.p1.characters[i]
+        char = player.characters[i]
         assert char
         assert char._action_history[0].reason == ActionReason.TOIL_AND_TROUBLE
 
@@ -441,10 +426,9 @@ def test_fog(ranged, one_att):
     enemy = make_player(
         spells=['SBB_SPELL_FOG']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    fight(player, enemy)
 
-    character = board.p1.characters[1]
+    character = player.characters[1]
 
     expected_attack = 10 if (not ranged and not one_att) else 1
     assert character.attack == expected_attack

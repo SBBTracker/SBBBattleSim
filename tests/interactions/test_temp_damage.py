@@ -1,7 +1,5 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
-from sbbbattlesim.utils import Tribe
-import pytest
 
 
 def test_temp_damage():
@@ -19,10 +17,9 @@ def test_temp_damage():
             make_character(position=7, attack=0, health=1),
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=3)
+    fight(player, enemy, limit=3)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 3)
+    assert (player.characters[1].attack, player.characters[1].health) == (5, 3)
 
 
 def test_temp_damage2():
@@ -39,10 +36,9 @@ def test_temp_damage2():
             make_character(id='SBB_CHARACTER_BABYDRAGON', position=6, attack=3, health=3),
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 5)
+    assert (player.characters[1].attack, player.characters[1].health) == (5, 5)
 
 
 def test_temp_damage3():
@@ -59,10 +55,9 @@ def test_temp_damage3():
             make_character(id='SBB_CHARACTER_BABYDRAGON', position=6, attack=3, health=3),
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (5, 5)
+    assert (player.characters[1].attack, player.characters[1].health) == (5, 5)
 
 
 
@@ -86,7 +81,6 @@ def test_temp_damage4():
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=3)
+    fight(player, enemy, limit=3)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (8, 7)
+    assert (player.characters[1].attack, player.characters[1].health) == (8, 7)

@@ -1,4 +1,4 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -14,8 +14,7 @@ def test_negative_attack():
             make_character(attack=-100)
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (1, 1)
+    assert (player.characters[1].attack, player.characters[1].health) == (1, 1)

@@ -192,7 +192,7 @@ class EventManager:
         self._events[event_base] = self._events[event_base] - {event}
 
     def get(self, event):
-        evts = self._events[event]
+        evts = self._events.get(event, set())
         evts_set = set(evts)
         processed_events = set()
 
@@ -239,11 +239,6 @@ class EventManager:
 
         if not self._events[event]:
             return stack
-
-        # try:
-        #     self.board.history.append(Record(event=event))
-        # except AttributeError:
-        #     pass
 
         with stack.open(*args, **kwargs) as executor:
             for evt in self.get(event):

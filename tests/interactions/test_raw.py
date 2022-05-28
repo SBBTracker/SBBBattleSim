@@ -1,8 +1,6 @@
-import sys
-
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.action import ActionReason
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
@@ -26,8 +24,7 @@ def test_raw_fanny(golden):
             '''SBB_TREASURE_HERMES'BOOTS''',
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
     if golden:
@@ -35,8 +32,8 @@ def test_raw_fanny(golden):
     else:
         final_stats = (3, 3)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == final_stats
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (1, 1)
+    assert (player.characters[1].attack, player.characters[1].health) == final_stats
+    assert (player.characters[2].attack, player.characters[2].health) == (1, 1)
 
 
 @pytest.mark.skip(reason='This test does not work after resolve board was removed')
@@ -52,10 +49,9 @@ def test_singingswords_bossy():
         ]
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    char = board.p1.characters[1]
+    char = player.characters[1]
     assert (char.attack, char.health) == (6, 3)
 
     singing_sword_aura = False

@@ -1,8 +1,5 @@
-import collections
-from typing import Iterable
+import uuid
 
-from sbbbattlesim import configure_logging, Board
-from sbbbattlesim.action import Action, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.events import OnStart, Event
 from sbbbattlesim.player import Player
@@ -29,47 +26,14 @@ CHARACTER = {
 
 
 def make_player(**kwargs):
-    return PLAYER.copy() | kwargs
+    return Player(**(PLAYER.copy() | {'id': uuid.uuid1()} | kwargs))
 
 
 def make_character(**kwargs):
     return CHARACTER.copy() | kwargs
 
 
-def create_test_setup(**kwargs):
-    kwargs = collections.defaultdict(dict, **kwargs)
-    player_ids = list(kwargs.keys())
-
-    if len(player_ids) < 1:
-        player_ids.append('Player')
-    if len(kwargs.keys()) < 2:
-        player_ids.append('ENEMY')
-
-    for pid in player_ids:
-        kwargs[pid] = PLAYER | kwargs[pid]
-
-    board = Board(kwargs)
-
-    return board, board.p1
-
-
-def create_test_player(**kwargs):
-    return Player(**(PLAYER | kwargs))
-
-
-def create_test_character(attack=1, health=1):
-    return Character(
-        player=create_test_player(),
-        position=1,
-        attack=attack,
-        health=health,
-        golden=False,
-        tribes=[],
-        cost=1,
-    )
-
-
-class EventForTest(Event):
+class TestEvent(Event):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.triggered = False
@@ -89,7 +53,8 @@ class TestSpawnCharacter(Character):
         super().__init__(*args, **kwargs)
         self.spawn_char = spawn_char
         self.spawn_pos = spawn_pos
-        self.player.board.register(SpawnOnStart, source=self)
+        self.player.register(SpawnOnStart, source=self)
+
 
 from sbbbattlesim import character_registry
 character_registry.register('SPAWN_TEST', TestSpawnCharacter)

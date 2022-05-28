@@ -28,4 +28,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(HeartWoodOnStart, priority=100, source=self)
+        self.player.register(HeartWoodOnStart, priority=100, source=self)

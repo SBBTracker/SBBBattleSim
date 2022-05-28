@@ -20,4 +20,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(JacksJumpingBeansOnStartBuff, source=self)
+        self.player.register(JacksJumpingBeansOnStartBuff, source=self)

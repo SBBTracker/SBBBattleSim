@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -21,12 +21,10 @@ def test_grimsoul(golden_grimsoul, golden_woggle):
     enemy = make_player(
         characters=[make_character(attack=1, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
-
+    fight(player, enemy, limit=1)
 
     lvl=3
     if golden_woggle:
         lvl=4
 
-    assert board.p1.characters[2]._level == lvl
+    assert player.characters[2]._level == lvl

@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.characters import registry as character_registry
 from sbbbattlesim.events import OnDamagedAndSurvived, OnStart
 from tests import make_character, make_player
@@ -23,12 +23,10 @@ def test_stormking_spawn(r, raw):
             make_character(position=1, attack=7, health=7),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (1, 1)
+    assert (player.characters[1].attack, player.characters[1].health) == (1, 1)
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -53,19 +51,15 @@ def test_stormking_spawn_with_spell(r, golden, raw):
             make_character(position=1, attack=100, health=700),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     class CastFireballOnStart(OnStart):
-        player = board.p1
-
         def handle(self, stack, *args, **kwargs):
-            self.player.cast_spell('SBB_SPELL_FIREBALL')
+            self.source.cast_spell('SBB_SPELL_FIREBALL')
 
-    board.register(CastFireballOnStart)
-    winner, loser = board.fight(limit=1)
+    player.register(CastFireballOnStart)
+    fight(player, enemy, limit=1)
 
-
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (3, 3)
+    assert (player.characters[1].attack, player.characters[1].health) == (3, 3)
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -80,20 +74,16 @@ def test_stormking_cast_spell(r, golden, raw):
         ],
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     class CastFireballOnStart(OnStart):
-        player = board.p1
-
         def handle(self, stack, *args, **kwargs):
-            self.player.cast_spell('SBB_SPELL_FIREBALL')
+            self.source.cast_spell('SBB_SPELL_FIREBALL')
 
-    board.register(CastFireballOnStart)
+    player.register(CastFireballOnStart)
 
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
-
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == ((8, 8) if golden else (4, 4))
+    assert (player.characters[1].attack, player.characters[1].health) == ((8, 8) if golden else (4, 4))
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -112,22 +102,17 @@ def test_many_stormking_cast_spell(r, golden, raw):
         ],
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-
 
     class CastFireballOnStart(OnStart):
-        player = board.p1
-
         def handle(self, stack, *args, **kwargs):
-            self.player.cast_spell('SBB_SPELL_FIREBALL')
+            self.source.cast_spell('SBB_SPELL_FIREBALL')
 
-    board.register(CastFireballOnStart)
+    player.register(CastFireballOnStart)
 
-    winner, loser = board.fight(limit=0)
-
+    fight(player, enemy, limit=0)
 
     for pos in [1, 2, 3, 4]:
-        assert (board.p1.characters[pos].attack, board.p1.characters[pos].health) == ((8, 8) if golden else (4, 4))
+        assert (player.characters[pos].attack, player.characters[pos].health) == ((8, 8) if golden else (4, 4))
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -147,12 +132,10 @@ def test_storm_king_spawn_high_health(r, raw):
             make_character(position=1, attack=7000000, health=7),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (7, 7)
+    assert (player.characters[1].attack, player.characters[1].health) == (7, 7)
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -172,12 +155,10 @@ def test_stormking_spawn_high_attack(r, raw):
             make_character(position=1, attack=8, health=7),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (7, 7)
+    assert (player.characters[1].attack, player.characters[1].health) == (7, 7)
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -199,13 +180,11 @@ def test_stormking_spawn_with_large(r, raw):
             make_character(position=1, attack=52, health=52),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (52, 52)
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (51, 51)
+    assert (player.characters[5].attack, player.characters[5].health) == (52, 52)
+    assert (player.characters[1].attack, player.characters[1].health) == (51, 51)
 
 
 @pytest.mark.parametrize('r', range(5))
@@ -226,12 +205,10 @@ def test_stormking_spawn_with_large_golden(r, raw):
             make_character(position=1, attack=1000, health=1000),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (25, 25)
+    assert (player.characters[1].attack, player.characters[1].health) == (25, 25)
 
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('raw', (True, False))
@@ -253,14 +230,12 @@ def test_stormking_spawn_with_large_and_echowood(r, raw):
             make_character(position=1, attack=50, health=50),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (49, 49)
-    assert (board.p1.characters[5].attack, board.p1.characters[5].health) == (50, 50)
-    assert (board.p1.characters[7].attack, board.p1.characters[7].health) == (49, 49)
+    assert (player.characters[1].attack, player.characters[1].health) == (49, 49)
+    assert (player.characters[5].attack, player.characters[5].health) == (50, 50)
+    assert (player.characters[7].attack, player.characters[7].health) == (49, 49)
 
 @pytest.mark.parametrize('r', range(5))
 @pytest.mark.parametrize('golden', (True, False))
@@ -277,7 +252,6 @@ def test_stormking_spawn(golden, r, raw):
     enemy = make_player(
         spells=["SBB_SPELL_LIGHTNINGBOLT"]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
 
     class FakeTrojanDonkeySummon(OnDamagedAndSurvived):
 
@@ -289,10 +263,9 @@ def test_stormking_spawn(golden, r, raw):
             )
             self.manager.player.summon(self.manager.position, [summon])
 
-    board.p1.characters[7].register(FakeTrojanDonkeySummon)
+    player.characters[7].register(FakeTrojanDonkeySummon)
 
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
-
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == (36, 36) if golden else (18, 18), board.p1.characters[6].pretty_print()
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (33, 33) if golden else (17, 17), board.p1.characters[1].pretty_print()
+    assert (player.characters[6].attack, player.characters[6].health) == (36, 36) if golden else (18, 18), player.characters[6].pretty_print()
+    assert (player.characters[1].attack, player.characters[1].health) == (33, 33) if golden else (17, 17), player.characters[1].pretty_print()

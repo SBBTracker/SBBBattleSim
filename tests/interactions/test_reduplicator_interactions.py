@@ -1,8 +1,7 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
-import pytest
 
 
 def test_reduplicator_bearstain():
@@ -22,11 +21,10 @@ def test_reduplicator_bearstain():
             "SBB_SPELL_EARTHQUAKE"
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    fight(player, enemy)
 
 
-    player = board.p1
+
     char1 = player.characters[1]
     char2 = player.characters[2]
 
@@ -53,11 +51,10 @@ def test_reduplicator_craft():
     enemy = make_player(
         characters=[make_character(attack=50, health=50)]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    player = board.p1
+
     char1 = player.characters[1]
     char2 = player.characters[2]
 
@@ -85,11 +82,10 @@ def test_reduplicator_juliet():
     enemy = make_player(
         characters=[make_character(attack=50, health=50)]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=2)
+    fight(player, enemy, limit=2)
 
 
-    player = board.p1
+
     char1 = player.characters[2]
     char2 = player.characters[3]
 
@@ -119,11 +115,10 @@ def test_reduplicator_wombat(r):
     enemy = make_player(
         characters=[make_character(attack=50, health=50)]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    player = board.p1
+
     char1 = player.characters[1]
     char2 = player.characters[2]
 
@@ -150,11 +145,10 @@ def test_reduplicator_puffpuff():
     enemy = make_player(
         characters=[make_character(attack=50, health=50)]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    player = board.p1
+
     char1 = player.characters[1]
     char2 = player.characters[2]
 
@@ -181,11 +175,10 @@ def test_reduplicator_stormking():
     enemy = make_player(
         characters=[make_character(attack=50, health=50)]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    player = board.p1
+
     char1 = player.characters[1]
     char2 = player.characters[2]
 
@@ -219,11 +212,10 @@ def test_reduplicator_does_it_waste(expend):
     enemy = make_player(
         characters=[make_character(attack=50, health=50)]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    triggered = board.p1.treasures['SBB_TREASURE_REDUPLICATOR'][0].triggered
+    triggered = player.treasures['SBB_TREASURE_REDUPLICATOR'][0].triggered
     if expend:
         assert triggered
     else:

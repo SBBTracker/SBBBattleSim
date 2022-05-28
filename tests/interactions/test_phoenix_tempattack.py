@@ -1,4 +1,4 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -14,14 +14,13 @@ def test_phoenix_tempattack():
     enemy = make_player(
         characters=[make_character(attack=1, health=1, position=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    temp_attack_char = board.p1.characters[1]
-    winner, loser = board.fight(limit=1)
+    temp_attack_char = player.characters[1]
+    fight(player, enemy, limit=1)
 
-    assert board.p1.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
-    assert board.p1.characters[1] is temp_attack_char
-    assert board.p1.characters[1].attack == 7
-    assert board.p1.characters[1]._action_history[-1].attack == 6
+    assert player.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
+    assert player.characters[1] is temp_attack_char
+    assert player.characters[1].attack == 7
+    assert player.characters[1]._action_history[-1].attack == 6
 
 
 

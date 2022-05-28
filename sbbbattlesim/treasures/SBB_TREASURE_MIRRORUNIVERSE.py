@@ -36,4 +36,4 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.player.board.register(MirrorMirrorOnStart, source=self)
+        self.player.register(MirrorMirrorOnStart, source=self)

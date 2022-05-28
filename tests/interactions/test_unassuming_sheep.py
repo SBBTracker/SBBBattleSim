@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -14,10 +14,9 @@ def test_unassumingsheep(golden):
     enemy = make_player(
         characters=[make_character(attack=500, health=500)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     final_stats = (12, 12) if golden else (6, 6)
-    assert board.p1.characters[6].id == 'SBB_CHARACTER_EVILWOLF', board.p1.characters[6].pretty_print()
-    assert board.p1.characters[6].attack, board.p1.characters.health == final_stats
+    assert player.characters[6].id == 'SBB_CHARACTER_EVILWOLF', player.characters[6].pretty_print()
+    assert player.characters[6].attack, player.characters.health == final_stats

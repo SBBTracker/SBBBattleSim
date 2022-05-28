@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -25,12 +25,11 @@ def test_simple_drac_sabre(mimic):
             make_character(position=2),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=3)
+    fight(player, enemy, limit=3)
 
     final_stats = (9, 5) if mimic else (5, 3)
 
-    assert (board.p1.characters[6].attack, board.p1.characters[6].health) == final_stats
+    assert (player.characters[6].attack, player.characters[6].health) == final_stats
 
 
 @pytest.mark.parametrize('direction', (True, False))
@@ -54,7 +53,6 @@ def test_proc_order_drac_sabre(direction):
             '''SBB_TREASURE_HERMES'BOOTS''' if not direction else '',
         ]
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert (board.p1.characters[1].attack, board.p1.characters[1].health) == (4, 1)
+    assert (player.characters[1].attack, player.characters[1].health) == (4, 1)

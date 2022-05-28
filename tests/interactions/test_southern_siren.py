@@ -1,8 +1,8 @@
 import pytest
 
-from sbbbattlesim import Board
-from sbbbattlesim.utils import Tribe
+from sbbbattlesim import fight
 from sbbbattlesim.action import ActionReason
+from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
 
@@ -20,14 +20,13 @@ def test_southern_siren(attacker_golden, defender_golden):
     enemy = make_player(
         characters=[make_character(attack=0, health=1, golden=defender_golden, tribes=[Tribe.DWARF])],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     units_to_check = []
-    units_to_check.append(board.p1.characters[2])
+    units_to_check.append(player.characters[2])
     if attacker_golden:
-        units_to_check.append(board.p1.characters[3])
+        units_to_check.append(player.characters[3])
 
     for utc in units_to_check:
         assert utc is not None
@@ -47,11 +46,10 @@ def test_southern_siren_positioncheck():
     enemy = make_player(
         characters=[make_character(attack=0, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert board.p1.characters[2].position == 2
-    assert board.p1.characters[3].position == 3
+    assert player.characters[2].position == 2
+    assert player.characters[3].position == 3
 
 
 
@@ -67,13 +65,12 @@ def test_southern_siren_steal_shadowassassin_buff():
     enemy = make_player(
         characters=[make_character(id="SBB_CHARACTER_SHADOWASSASSIN", attack=0, health=1)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    assert board.p1.characters[2].position == 2
+    assert player.characters[2].position == 2
 
-    assert board.p1.characters[2].attack == 1
-    buffs = [r for r in board.p1.characters[2]._action_history if r.reason == ActionReason.SHADOW_ASSASSIN_ON_SLAY_BUFF]
+    assert player.characters[2].attack == 1
+    buffs = [r for r in player.characters[2]._action_history if r.reason == ActionReason.SHADOW_ASSASSIN_ON_SLAY_BUFF]
 
     assert len(buffs) == 1
     assert sum([b.attack for b in buffs]) == 1

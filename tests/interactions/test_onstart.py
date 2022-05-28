@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from sbbbattlesim.utils import Tribe
 from tests import make_character, make_player
 
@@ -26,13 +26,12 @@ def test_onstart_trees(roundtable):
         ]
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
 
-    ashwood = board.p1.characters[2]
-    elderwood = board.p1.characters[5]
-    shoulders = board.p1.characters[7]
+    ashwood = player.characters[2]
+    elderwood = player.characters[5]
+    shoulders = player.characters[7]
 
     if roundtable:
         assert (ashwood.attack, ashwood.health) == (109, 109)
@@ -62,13 +61,12 @@ def test_onstart_arthur_and_lordy():
         ]
     )
     enemy = make_player()
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=0)
+    fight(player, enemy, limit=0)
 
 
-    arthur = board.p1.characters[2]
-    lordy = board.p1.characters[3]
-    generic = board.p1.characters[5]
+    arthur = player.characters[2]
+    lordy = player.characters[3]
+    generic = player.characters[5]
 
     assert (arthur.attack, arthur.health) == (9, 9)
     assert (generic.attack, generic.health) == (21, 21)

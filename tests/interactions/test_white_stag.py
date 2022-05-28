@@ -1,6 +1,6 @@
 import pytest
 
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -17,12 +17,11 @@ def test_stag(golden):
     enemy = make_player(
         characters=[make_character(attack=0, health=100)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
     final_stats = (7, 7) if golden else (4, 4)
 
-    assert (board.p1.characters[2].attack, board.p1.characters[2].health) == (1, 1)
+    assert (player.characters[2].attack, player.characters[2].health) == (1, 1)
     for i in [5, 6]:
-        assert (board.p1.characters[i].attack, board.p1.characters[i].health) == final_stats
+        assert (player.characters[i].attack, player.characters[i].health) == final_stats

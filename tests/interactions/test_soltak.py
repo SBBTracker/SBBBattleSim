@@ -1,4 +1,4 @@
-from sbbbattlesim import Board
+from sbbbattlesim import fight
 from tests import make_character, make_player
 
 
@@ -13,12 +13,11 @@ def test_soltak():
         characters=[make_character(id="SBB_CHARACTER_BABYDRAGON", attack=1, health=1)],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
 
-    assert board.p1.characters[5] is not None
-    assert board.p2.characters[1] is None
+    assert player.characters[5] is not None
+    assert enemy.characters[1] is None
 
 
 def test_doombreath():
@@ -35,10 +34,9 @@ def test_doombreath():
             make_character(position=6),
         ],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight(limit=1)
+    fight(player, enemy, limit=1)
 
-    player = board.p2
+    player = enemy
 
     assert player.characters[2] is None, player.characters[2].dead
 
@@ -55,10 +53,9 @@ def test_soltak_stops_defending():
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     enemy = make_player(
+        id='ENEMY',
         characters=[make_character(attack=100, health=100)],
     )
-    board = Board({'PLAYER': player, 'ENEMY': enemy})
-    winner, loser = board.fight()
+    stats = fight(player, enemy)
 
-
-    assert winner.id == 'ENEMY'
+    assert stats.win_id == 'ENEMY'
