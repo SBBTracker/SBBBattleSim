@@ -17,12 +17,11 @@ class Treasure(EventManager):
 
     def __init__(self, player, multiplier):
         self.player = player
-
         self.multiplier = multiplier
         self.aura = None
 
     def pretty_print(self):
-        return f'{self.display_name} {self.multiplier}'
+        return self.display_name
 
     def valid(self):
         return self._level != 0
