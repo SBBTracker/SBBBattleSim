@@ -21,14 +21,15 @@ class RiverwishMermaidOnAttackAndKill(OnAttackAndKill):
 class RiverWishOnSpawn(OnSpawn):
     def handle(self, stack, *args, **kwargs):
         player = self.source.player
-        if 'SBB_TREASURE_CLOAKOFTHEASSASSIN' in player.treasures:
+        if any(treasure.id == 'SBB_TREASURE_CLOAKOFTHEASSASSIN' for treasure in player.treasures):
             target_positions = utils.get_support_targets(self.source.position, player.banner_of_command)
             logger.debug(target_positions)
             targets = player.valid_characters(_lambda=lambda char: char.position in target_positions)
             logger.debug(targets)
 
-            for cloak in player.treasures['SBB_TREASURE_CLOAKOFTHEASSASSIN']:
-                cloak.aura.execute(*targets)
+            for treasure in player.treasures:
+                if treasure.id == 'SBB_TREASURE_CLOAKOFTHEASSASSIN':
+                    treasure.aura.execute(*targets)
 
 
 class CharacterType(Character):

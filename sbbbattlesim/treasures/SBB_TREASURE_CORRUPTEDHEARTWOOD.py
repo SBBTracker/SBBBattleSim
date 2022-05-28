@@ -19,7 +19,7 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        stats = 1 * (self.mimic + 1)
+        stats = 1 * (self.multiplier + 1)
         self.aura = Aura(reason=ActionReason.CORRUPTED_HEARTWOOD, source=self, attack=stats,
                          _lambda=lambda char: Tribe.ANIMAL in char.tribes or Tribe.TREANT in char.tribes,
                          _action=_heartwood_tribe_shift)

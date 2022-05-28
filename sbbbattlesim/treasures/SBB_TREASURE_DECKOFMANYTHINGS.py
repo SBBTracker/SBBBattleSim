@@ -7,7 +7,7 @@ from sbbbattlesim.utils import random_start_combat_spell
 
 class DeckOfManyThingsOnStart(OnStart):
     def handle(self, *args, **kwargs):
-        for _ in range(bool(self.source.mimic) + 1):
+        for _ in range(bool(self.source.multiplier) + 1):
             spell = random_start_combat_spell(self.source.player.level)
             if spell:
                 self.source.player.cast_spell(spell.id)

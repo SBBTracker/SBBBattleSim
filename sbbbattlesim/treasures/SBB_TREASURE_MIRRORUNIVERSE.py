@@ -17,7 +17,7 @@ class MirrorMirrorOnDeath(OnDeath):
                 tribes=self.manager._tribes,
                 cost=self.manager.cost,
                 # TODO does this copy the tribes of the card or of the class
-            ) for _ in range(1 + self.source.mimic)
+            ) for _ in range(1 + self.source.multiplier)
         ]
 
         self.manager.player.summon(self.manager.position, copies)

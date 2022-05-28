@@ -5,7 +5,7 @@ from sbbbattlesim.treasures import Treasure
 
 class RingOfMeteorsActivation(OnStart):
     def handle(self, *args, **kwargs):
-        for _ in range(self.source.mimic + 1):
+        for _ in range(self.source.multiplier + 1):
             targets = self.source.player.valid_characters() + self.source.player.opponent.valid_characters()
             Damage(damage=1, reason=ActionReason.RING_OF_METEORS, source=self.source, targets=targets).resolve()
 

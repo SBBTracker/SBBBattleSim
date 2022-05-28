@@ -7,7 +7,7 @@ class ExplodingMittensOnDeath(OnDeath):
     last_breath = False
 
     def handle(self, stack, reason, *args, **kwargs):
-        for _ in range(bool(self.source.mimic) + 1):
+        for _ in range(bool(self.source.multiplier) + 1):
             Damage(damage=1, reason=ActionReason.EXPLODING_MITTENS_DAMAGE, source=self.source,
                    targets=self.manager.player.opponent.valid_characters()).resolve()
 

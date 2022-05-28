@@ -357,16 +357,13 @@ def test_mihri_rollback_safety(on):
 
     enemy = make_player(raw=True)
 
-    fight_event_manager = EventManager()
-
-    fight_event_manager._events['OnSetup'].update(player._events['OnSetup'])
-    fight_event_manager._events['OnSetup'].update(enemy._events['OnSetup'])
-    fight_event_manager("OnSetup")
+    fight(player, enemy, limit=-1)
 
     c1 = player.characters[1]
     player.despawn(c1, kill=False)
     player.spawn(c1, 1)
 
+    assert c1 == player.characters[1]
     assert c1.attack == 1
     assert c1.health == 30
 

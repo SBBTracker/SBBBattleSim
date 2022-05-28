@@ -15,14 +15,14 @@ class Treasure(EventManager):
 
     _level = 0
 
-    def __init__(self, player, mimic):
+    def __init__(self, player, multiplier):
         self.player = player
 
-        self.mimic = mimic
+        self.multiplier = multiplier
         self.aura = None
 
     def pretty_print(self):
-        return self.display_name
+        return f'{self.display_name} {self.multiplier}'
 
     def valid(self):
         return self._level != 0

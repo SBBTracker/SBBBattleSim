@@ -16,7 +16,7 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        attack = 5 * (self.mimic + 1)
+        attack = 5 * (self.multiplier + 1)
         self.aura = Aura(reason=ActionReason.EYE_OF_ARES_BUFF, source=self, attack=attack)
         self.player.register(EyeOfAresOnSetup, priority=100, source=self)
 

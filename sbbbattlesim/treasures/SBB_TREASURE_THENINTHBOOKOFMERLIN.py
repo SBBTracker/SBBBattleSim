@@ -27,4 +27,4 @@ class TreasureType(Treasure):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.aura = Aura(event=NinthBookOnDeath, source=self, _lambda=lambda char: Tribe.MAGE in char.tribes,
-                         multiplier=self.mimic + 1)
+                         multiplier=self.multiplier + 1)

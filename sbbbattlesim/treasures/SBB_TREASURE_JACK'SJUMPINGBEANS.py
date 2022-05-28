@@ -7,7 +7,7 @@ from sbbbattlesim.treasures import Treasure
 
 class JacksJumpingBeansOnStartBuff(OnStart):
     def handle(self, stack, *args, **kwargs):
-        for _ in range(self.source.mimic + 1):
+        for _ in range(self.source.multiplier + 1):
             target_character = random.choice(self.source.player.valid_characters())
             Buff(reason=ActionReason.JACKS_JUMPING_BEANS, source=self.source, targets=[target_character],
                  attack=4, health=4, stack=stack).resolve()

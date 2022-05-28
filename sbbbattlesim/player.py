@@ -33,61 +33,95 @@ class PlayerOnSetup(OnSetup):
 
 
 class Player(EventManager):
-    def __init__(self, id, characters, treasures, hero, hand, spells, level=0, raw=False, *args, **kwargs):
-        raw=True
+    def __init__(self, id, hero, characters=[], treasures=[], hand=[], spells=[], level=0, raw=False, *args, **kwargs):
+        # DO NOT TOUCH
+        raw = True
         super().__init__()
+        # DO NOT TOUCH
 
+        # Base Values
         self.id = id
         self.__characters = OrderedDict({i: None for i in range(1, 8)})
-
-        self.register(PlayerOnSetup, source=self, priority=0, raw=raw)
-
-        self.stateful_effects = {}
-        self._attack_slot = None
-        self.graveyard = []
-        self.id = id
-        self.opponent = None
-        self.level = level
-        self._last_attacker = None
-        self._attack_chain = 0
-        self._spells_cast = kwargs.get('spells_cast', None)
+        self.treasures = []
+        self.hand = []
         self.spells = spells
-
-        # Treasure Counting
-        self.banner_of_command = 'SBB_TREASURE_BANNEROFCOMMAND' in treasures
-        evileye = 'SBB_TREASURE_HELMOFCOMMAND' in treasures
-        mimic = 'SBB_TREASURE_TREASURECHEST' in treasures
-
-        self.support_itr = 1
-        if evileye:
-            self.support_itr = 2
-            if mimic:
-                self.support_itr = 3
-        logger.debug(f'{self.id} support_itr = {self.support_itr}')
-
         self.auras = set()
+        self.level = level
 
-        self.treasures = collections.defaultdict(list)
-        for tres in treasures:
-            treasure = treasure_registry[tres]
-            mimic_count = mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0)
-            treasure = treasure(player=self, mimic=mimic_count)
-            logger.debug(f'{self.id} Registering treasure {treasure.pretty_print()}')
-            self.treasures[treasure.id].append(treasure)
+        # Hidden Counters
+        self._spells_cast = kwargs.get('spells_cast', None)
+        self._puff_puff_counter = kwargs.get('puff_puff_counter', None)
 
+        # Base Setup
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
-        if not self.hero.id:
-            self.hero.id = hero
-        logger.debug(f'{self.id} registering hero {self.hero.pretty_print()}')
+        logger.debug(f'{self.id} registering hero {self.hero.pretty_print()} {self.hero.id}')
 
-        for spl in spells:
-            if spl in utils.START_OF_FIGHT_SPELLS:
-                self.register(CastSpellOnStart, spell=spl, source=self, priority=spell_registry[spl].priority)
+        self.add_treasure(*treasures)
 
         for char_data in characters:
-            char = character_registry[char_data['id']](player=self, **char_data)
-            logger.debug(f'{self.id} registering character {char.pretty_print()}')
-            self.__characters[char.position] = char
+            self.add_character(char_data)
+
+        for char_data in hand:
+            self.add_character_to_hand(char_data)
+
+        # Combat values
+        self.opponent = None
+        self.stateful_effects = {}  # Currently only used for old puff puff logic. TODO: redo logic to use new hidden counter
+        self._attack_slot = None
+        self.graveyard = []
+        self._last_attacker = None
+        self._attack_chain = 0
+
+        self.gather_auras()
+        for aura in self.auras:
+            logger.debug(f'{self.id} found aura {aura}')
+
+    def pretty_print(self):
+        return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
+
+    def add_character(self, char_data):
+        char = character_registry[char_data['id']](player=self, **char_data)
+        logger.debug(f'{self.id} registering character {char.pretty_print()}')
+        self.__characters[char.position] = char
+
+    def add_character_to_hand(self, char_data):
+        char = character_registry[char_data['id']](player=self, **char_data)
+        logger.debug(f'{self.id} registering character {char.pretty_print()}')
+        self.hand.append(char.position)
+
+    def add_treasure(self, *treasure_ids):
+        for treasure_id in treasure_ids:
+            treasure = treasure_registry[treasure_id]
+            mimic = 'SBB_TREASURE_TREASURECHEST' in treasure_ids
+            multiplier = mimic + ((self.hero.id == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0)
+            treasure = treasure(player=self, multiplier=multiplier)
+            logger.debug(f'{self.id} Registering treasure {treasure.pretty_print()}')
+            self.treasures.append(treasure)
+
+    @property
+    def banner_of_command(self):
+        return 'SBB_TREASURE_BANNEROFCOMMAND' in [treasure.id for treasure in self.treasures]
+
+    @property
+    def support_itr(self):
+        treasure_ids = [treasure.id for treasure in self.treasures]
+        evileye = 'SBB_TREASURE_HELMOFCOMMAND' in treasure_ids
+        mimic = 'SBB_TREASURE_TREASURECHEST' in treasure_ids
+
+        support_itr = 1
+        if evileye:
+            support_itr = 2
+            if mimic:
+                support_itr = 3
+
+        return support_itr
+
+    def gather_auras(self):
+        if self.hero.aura:
+            try:
+                self.auras.update(set(self.hero.aura))
+            except TypeError:
+                self.auras.add(self.hero.aura)
 
         for char in self.valid_characters():
             if char.aura:
@@ -96,27 +130,42 @@ class Player(EventManager):
                 except TypeError:
                     self.auras.add(char.aura)
 
-        for tid, tl in self.treasures.items():
-            for treasure in tl:
-                if treasure.aura and treasure.aura:
-                    try:
-                        self.auras.update(set(treasure.aura))
-                    except TypeError:
-                        self.auras.add(treasure.aura)
+        for treasure in self.treasures:
+            if treasure.aura and treasure.aura:
+                try:
+                    self.auras.update(set(treasure.aura))
+                except TypeError:
+                    self.auras.add(treasure.aura)
 
-        if self.hero.aura:
-            try:
-                self.auras.update(set(self.hero.aura))
-            except TypeError:
-                self.auras.add(self.hero.aura)
+    def prepare_combat(self):
+        self.opponent = None
+        self.stateful_effects = {}  # Currently only used for old puff puff logic. TODO: redo logic to use new hidden counter
+        self._attack_slot = None
+        self.graveyard = []
+        self._last_attacker = None
+        self._attack_chain = 0
 
-        self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand if isinstance(char_data, dict) and 'id' in char_data and char_data['id'].startswith('SBB_CHARACTER')]
+        self.register(PlayerOnSetup, source=self, priority=0, raw=True)
 
-        for aura in self.auras:
-            logger.debug(f'{self.id} found aura {aura}')
+        for spl in self.spells:
+            if spl in utils.START_OF_FIGHT_SPELLS:
+                self.register(CastSpellOnStart, spell=spl, source=self, priority=spell_registry[spl].priority)
 
-    def pretty_print(self):
-        return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
+        self.gather_auras()
+
+    def resolve_combat(self):
+        self.opponent = None
+        self.stateful_effects = {}  # Currently only used for old puff puff logic. TODO: redo logic to use new hidden counter
+        self._attack_slot = None
+        self.graveyard = []
+        self._last_attacker = None
+        self._attack_chain = 0
+
+        if 'OnSetup' in self._events:
+            self._events.pop('OnSetup')
+
+        if 'OnStart' in self._events:
+            self._events.pop('OnStart')
 
     def get_attack_slot(self):
         if self._attack_slot is None:

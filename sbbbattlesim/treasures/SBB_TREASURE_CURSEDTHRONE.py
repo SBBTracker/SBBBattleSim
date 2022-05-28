@@ -14,7 +14,7 @@ class CursedThroneOnAttackAndKill(OnAttackAndKill):
     slay = True
 
     def handle(self, killed_character, stack, *args, **kwargs):
-        stats = 2 if self.source.mimic else 1
+        stats = 2 if self.source.multiplier else 1
         Buff(reason=ActionReason.AURA_BUFF, source=self.source, targets=[self.manager], attack=stats,
              health=stats,
              stack=stack).resolve()

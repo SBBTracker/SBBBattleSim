@@ -214,8 +214,9 @@ def test_reduplicator_does_it_waste(expend):
     )
     fight(player, enemy, limit=1)
 
+    reduplicator = next(treasure for treasure in player.treasures if treasure.id == 'SBB_TREASURE_REDUPLICATOR')
 
-    triggered = player.treasures['SBB_TREASURE_REDUPLICATOR'][0].triggered
+    triggered = reduplicator.triggered
     if expend:
         assert triggered
     else:

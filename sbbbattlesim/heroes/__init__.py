@@ -44,12 +44,14 @@ class Registry(object):
 
     def autoregister(self):
         if self.auto_registered:
+            print()
             return
         self.auto_registered = True
 
         for _, name, _ in pkgutil.iter_modules(logic_path):
             hero = __import__(name, globals(), locals(), ['HeroType'], 1)
             self.register(name, hero.HeroType)
+            print(f'Registering {hero} in Hero Registry')
 
 
 registry = Registry()

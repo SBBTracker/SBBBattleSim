@@ -17,7 +17,9 @@ def test_phoenix_tempattack():
     temp_attack_char = player.characters[1]
     fight(player, enemy, limit=1)
 
-    assert player.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
+    feather = next(treasure for treasure in player.treasures if treasure.id == 'SBB_TREASURE_PHOENIXFEATHER')
+
+    assert feather.feather_used
     assert player.characters[1] is temp_attack_char
     assert player.characters[1].attack == 7
     assert player.characters[1]._action_history[-1].attack == 6

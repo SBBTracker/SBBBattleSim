@@ -7,7 +7,7 @@ class HelmOfTheUglyGoslingOnStartBuff(OnStart):
     priority = 50
 
     def handle(self, stack, *args, **kwargs):
-        for _ in range(bool(self.source.mimic) + 1):
+        for _ in range(bool(self.source.multiplier) + 1):
             weakest = sorted(self.source.player.valid_characters(), key=lambda char: char.attack)[0]
             Buff(reason=ActionReason.HELM_OF_THE_UGLY_GOSLING, source=self.source, targets=[weakest],
                  attack=15, health=15, stack=stack).resolve()

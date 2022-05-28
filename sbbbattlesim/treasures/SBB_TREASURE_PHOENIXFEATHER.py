@@ -21,7 +21,7 @@ class PhoenixFeatherOnDeath(OnDeath):
                 self.manager.player.graveyard.remove(self.manager)
                 self.manager.player.summon(self.manager.position, [self.manager])
 
-                if self.source.mimic:
+                if self.source.multiplier:
                     new_char = self.manager.copy()
                     self.manager.player.summon(self.manager.position, [new_char], *args, **kwargs)
 
