@@ -2,6 +2,7 @@ import collections
 import logging
 import random
 from collections import OrderedDict, defaultdict
+from functools import cached_property
 
 from sbbbattlesim import utils
 from sbbbattlesim.characters import registry as character_registry
@@ -131,7 +132,7 @@ class Player(EventManager):
                     self.auras.add(char.aura)
 
         for treasure in self.treasures:
-            if treasure.aura and treasure.aura:
+            if treasure.aura:
                 try:
                     self.auras.update(set(treasure.aura))
                 except TypeError:
