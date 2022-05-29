@@ -1,10 +1,12 @@
 import collections
 import logging
 import random
+import typing
 from collections import OrderedDict, defaultdict
 from functools import cached_property
 
 from sbbbattlesim import utils
+from sbbbattlesim.action import Aura, Support
 from sbbbattlesim.characters import registry as character_registry, Character
 from sbbbattlesim.events import EventManager, OnStart, OnSetup
 from sbbbattlesim.heroes import registry as hero_registry
@@ -19,22 +21,8 @@ class CastSpellOnStart(OnStart):
         self.source.cast_spell(self.kwargs['spell'], trigger_onspell=False)
 
 
-class PlayerOnSetup(OnSetup):
-    def handle(self, stack, *args, **kwargs):
-        # TODO Change setup to True when raw gets removed
-        setup = self.kwargs.get('raw', False)
-
-        for char in self.source.valid_characters():
-            # Apply existing buffs
-            support_positions = (5, 6, 7) if self.source.banner_of_command else utils.get_behind_targets(char.position)
-            support_units = self.source.valid_characters(_lambda=lambda char: (char.position in support_positions and char.support))
-            support_buffs = set([char.support for char in support_units])
-            for buff in sorted(self.source.auras | support_buffs, key=lambda b: b.priority, reverse=True):
-                buff.execute(char, setup=setup)
-
-
 class Player(EventManager):
-    def __init__(self, id, hero, characters=[], treasures=[], hand=[], spells=[], level=0, raw=False, *args, **kwargs):
+    def __init__(self, id, hero, characters=None, treasures=None, hand=None, spells=None, level=0, raw=False, *args, **kwargs):
         # DO NOT TOUCH
         raw = True
         super().__init__()
@@ -45,7 +33,7 @@ class Player(EventManager):
         self.__characters = OrderedDict({i: None for i in range(1, 8)})
         self.treasures = []
         self.hand = []
-        self.spells = spells
+        self.spells = spells or []
         self.auras = set()
         self.level = level
 
@@ -57,16 +45,19 @@ class Player(EventManager):
         self.hero = hero_registry[hero](player=self, *args, **kwargs)
         logger.debug(f'{self.id} registering hero {self.hero.pretty_print()} {self.hero.id}')
 
-        self.add_treasure(*treasures)
+        if treasures:
+            self.add_treasure(*treasures)
 
-        for char_data in characters:
-            # This does not use self.add_character as that currently uses spawn
-            char = character_registry[char_data['id']](player=self, **char_data)
-            logger.debug(f'{self.id} registering character {char.pretty_print()}')
-            self.__characters[char.position] = char
+        if characters:
+            for char_data in characters:
+                # This does not use self.add_character as that currently uses spawn
+                char = character_registry[char_data['id']](player=self, **char_data)
+                logger.debug(f'{self.id} registering character {char.pretty_print()}')
+                self.__characters[char.position] = char
 
-        for char_data in hand:
-            self.add_character_to_hand(char_data)
+        if hand:
+            for char_data in hand:
+                self.add_character_to_hand(char_data)
 
         # Combat values
         self.opponent = None
@@ -76,9 +67,44 @@ class Player(EventManager):
         self._last_attacker = None
         self._attack_chain = 0
 
-        self.gather_auras()
-        for aura in self.auras:
+        # Gather and apply auras from creatures assumed to be on the player
+        # NOTE: Aura priority is independent of Support priority and this *could* change
+        auras = set()
+        if self.hero.aura:
+            try:
+                auras.update(set(self.hero.aura))
+            except TypeError:
+                auras.add(self.hero.aura)
+
+        for char in self.valid_characters():
+            if char.aura:
+                try:
+                    auras.update(set(char.aura))
+                except TypeError:
+                    auras.add(char.aura)
+
+        for treasure in self.treasures:
+            if treasure.aura:
+                try:
+                    auras.update(set(treasure.aura))
+                except TypeError:
+                    auras.add(treasure.aura)
+
+        for aura in auras:
             logger.debug(f'{self.id} found aura {aura}')
+
+        self.add_aura(*auras, setup=raw)
+
+        # Apply support buffs from creatures assumed to be on the player
+        banner = self.banner_of_command
+        front = (1, 2, 3, 4)
+        back = (5, 6, 7)
+
+        support_characters = self.valid_characters(_lambda=lambda char: char.position in back and char.support)
+        for char in sorted(support_characters, key=lambda char: char.support.priority, reverse=True):
+            if char.support:
+                support_targets = front if banner else utils.get_support_targets(char.position)
+                char.support.execute(*self.valid_characters(_lambda=lambda char: char.position in support_targets), setup=raw)
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
@@ -138,26 +164,13 @@ class Player(EventManager):
 
         return support_itr
 
-    def gather_auras(self):
-        if self.hero.aura:
-            try:
-                self.auras.update(set(self.hero.aura))
-            except TypeError:
-                self.auras.add(self.hero.aura)
+    def add_aura(self, *auras: Aura, **kwargs):
+        auras = set(sorted(auras, key=lambda aura: aura.priority, reverse=True))
 
-        for char in self.valid_characters():
-            if char.aura:
-                try:
-                    self.auras.update(set(char.aura))
-                except TypeError:
-                    self.auras.add(char.aura)
+        for aura in auras:
+            aura.execute(*self.valid_characters(), **kwargs)
 
-        for treasure in self.treasures:
-            if treasure.aura:
-                try:
-                    self.auras.update(set(treasure.aura))
-                except TypeError:
-                    self.auras.add(treasure.aura)
+        self.auras.update(auras)
 
     def prepare_combat(self):
         self.opponent = None
@@ -167,13 +180,11 @@ class Player(EventManager):
         self._last_attacker = None
         self._attack_chain = 0
 
-        self.register(PlayerOnSetup, source=self, priority=0, raw=True)
+        # self.register(PlayerOnSetup, source=self, priority=0, raw=True)
 
         for spl in self.spells:
             if spl in utils.START_OF_FIGHT_SPELLS:
                 self.register(CastSpellOnStart, spell=spl, source=self, priority=spell_registry[spl].priority)
-
-        self.gather_auras()
 
     def resolve_combat(self):
         self.opponent = None

@@ -503,6 +503,7 @@ def test_beauty(on):
     assert t2 == tribe_set if on else t2 == set()
 
 
+@pytest.mark.skip #TODO: This interaction is not well understood atm and needs further research
 @pytest.mark.parametrize('treasure', ("SBB_TREASURE_CORRUPTEDHEARTWOOD", "SBB_TREASURE_CROWNOFATLAS"))
 def test_beauty_withtreasure(treasure):
     player = make_player(
@@ -514,13 +515,13 @@ def test_beauty_withtreasure(treasure):
             treasure
         ],
         hero='SBB_HERO_PRINCESSBELLE',
-        hand=[make_character(id=f'TEST{i}', attack=i) for i in range(4)]
     )
 
     enemy = make_player(raw=True)
 
     fight(player, enemy)
 
+    assert player.characters[1], player.characters
     assert player.characters[1].tribes == {Tribe.GOOD, Tribe.EVIL, Tribe.ANIMAL}
 
 

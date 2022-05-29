@@ -1,4 +1,4 @@
-from sbbbattlesim.action import Aura
+from sbbbattlesim.action import Aura, ActionReason
 from sbbbattlesim.characters import Character
 from sbbbattlesim.heroes import Hero
 from sbbbattlesim.utils import Tribe
@@ -17,4 +17,4 @@ class HeroType(Hero):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.aura = Aura(_action=beauty_tribe_shift, source=self, priority=-100)
+        self.aura = Aura(reason=ActionReason.BEAUTY_TRIBE_SHIFT, _action=beauty_tribe_shift, source=self, priority=-100)
