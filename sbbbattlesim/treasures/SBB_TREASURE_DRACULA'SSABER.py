@@ -20,6 +20,7 @@ class TreasureType(Treasure):
     display_name = '''Dracula's Saber'''
     _level = 5
 
+    #TODO: Rewrite this to have it listen to OnDeath in a generic manner
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.player.register(DraculasSaberOnSetup, source=self, priority=1000)

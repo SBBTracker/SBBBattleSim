@@ -5,11 +5,11 @@ from collections import OrderedDict, defaultdict
 from functools import cached_property
 
 from sbbbattlesim import utils
-from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.characters import registry as character_registry, Character
 from sbbbattlesim.events import EventManager, OnStart, OnSetup
 from sbbbattlesim.heroes import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry
-from sbbbattlesim.treasures import registry as treasure_registry
+from sbbbattlesim.treasures import registry as treasure_registry, Treasure
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +60,10 @@ class Player(EventManager):
         self.add_treasure(*treasures)
 
         for char_data in characters:
-            self.add_character(char_data)
+            # This does not use self.add_character as that currently uses spawn
+            char = character_registry[char_data['id']](player=self, **char_data)
+            logger.debug(f'{self.id} registering character {char.pretty_print()}')
+            self.__characters[char.position] = char
 
         for char_data in hand:
             self.add_character_to_hand(char_data)
@@ -80,18 +83,36 @@ class Player(EventManager):
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
 
-    def add_character(self, char_data):
-        char = character_registry[char_data['id']](player=self, **char_data)
-        logger.debug(f'{self.id} registering character {char.pretty_print()}')
-        self.__characters[char.position] = char
+    def replace_hero(self, hero_id, *args, **kwargs):
+        self.hero = hero_registry[hero_id](player=self, *args, **kwargs)
+        logger.debug(f'{self.id} registering hero {self.hero.pretty_print()} {self.hero.id}')
 
-    def add_character_to_hand(self, char_data):
-        char = character_registry[char_data['id']](player=self, **char_data)
-        logger.debug(f'{self.id} registering character {char.pretty_print()}')
-        self.hand.append(char.position)
+    def add_character(self, char: (dict, Character)):
+        if isinstance(char, dict):
+            char = character_registry[char['id']](player=self, **char)
+        #TODO This either needs to always use spawn logic or implment something else
+        self.spawn(char, char.position)
+
+    def remove_character(self, position):
+        char = self.__characters.get(position)
+        if char:
+            #TODO: This either needs to always use despawn logic or implement something else
+            self.despawn(char, kill=False)
+
+    def add_character_to_hand(self, char: (dict, Character)):
+        if isinstance(char, dict):
+            char = character_registry[char['id']](player=self, **char)
+        logger.debug(f'{self.id} adding character {char.pretty_print()} to hand')
+        self.hand.append(char)
+        return char
+
+    #TODO: Do we need a remove from hand option or should that be on the user since Player.hand is a public list?
 
     def add_treasure(self, *treasure_ids):
         for treasure_id in treasure_ids:
+            if len(self.treasures) >= 3:
+                return
+
             treasure = treasure_registry[treasure_id]
             mimic = 'SBB_TREASURE_TREASURECHEST' in treasure_ids
             multiplier = mimic + ((self.hero.id == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0)
