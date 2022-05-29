@@ -99,12 +99,10 @@ class Player(EventManager):
         banner = self.banner_of_command
         front = (1, 2, 3, 4)
         back = (5, 6, 7)
-
         support_characters = self.valid_characters(_lambda=lambda char: char.position in back and char.support)
         for char in sorted(support_characters, key=lambda char: char.support.priority, reverse=True):
-            if char.support:
-                support_targets = front if banner else utils.get_support_targets(char.position)
-                char.support.execute(*self.valid_characters(_lambda=lambda char: char.position in support_targets), setup=raw)
+            support_targets = front if banner else utils.get_support_targets(char.position)
+            char.support.execute(*self.valid_characters(_lambda=lambda char: char.position in support_targets), setup=raw)
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
@@ -258,7 +256,7 @@ class Player(EventManager):
             buff.execute(character)
 
         # Apply new support buffs
-        if character.support:
+        if character.support and character.position in (5, 6, 7):
             pos_ls = utils.get_support_targets(position, self.banner_of_command)
             character.support.execute(*self.valid_characters(_lambda=lambda char: char.position in pos_ls))
 
