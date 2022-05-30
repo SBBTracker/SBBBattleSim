@@ -15,7 +15,7 @@ class Treasure(EventManager):
 
     _level = 0
 
-    def __init__(self, player, multiplier):
+    def __init__(self, player: 'Player', multiplier: int = 0):
         self.player = player
         self.multiplier = multiplier
         self.aura = None

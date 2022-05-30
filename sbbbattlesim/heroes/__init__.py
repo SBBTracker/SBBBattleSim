@@ -12,7 +12,7 @@ class Hero:
     display_name = ''
     id = ''
 
-    def __init__(self, player):
+    def __init__(self, player: 'Player'):
         self.player = player
         self.aura = None
 

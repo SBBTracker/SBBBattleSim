@@ -72,7 +72,7 @@ class Tribe(enum.Enum):
     EVIL = 'evil'
 
 @cache
-def get_adjacent_targets(position):
+def get_adjacent_targets(position: int):
     return {
         1: (2,),
         2: (1, 3),
@@ -85,7 +85,7 @@ def get_adjacent_targets(position):
 
 
 @cache
-def get_support_targets(position, horn=False):
+def get_support_targets(position: int, horn=False):
     if horn:
         return [1, 2, 3, 4]
     return {
@@ -96,7 +96,7 @@ def get_support_targets(position, horn=False):
 
 
 @cache
-def get_behind_targets(position):
+def get_behind_targets(position: int):
     return {
         1: (5,),
         2: (5, 6),
@@ -106,7 +106,7 @@ def get_behind_targets(position):
 
 
 @cache
-def get_spawn_positions(position):
+def get_spawn_positions(position: int):
     spawn_order = {
         1: (1, 2, 3, 4, 5, 6, 7),
         2: (2, 3, 4, 1, 5, 6, 7),
@@ -120,13 +120,13 @@ def get_spawn_positions(position):
     return spawn_order.get(position, ())
 
 
-def random_combat_spell(level):
+def random_combat_spell(level: int):
     valid_spells = list(spell_registry.filter(_lambda=lambda spell_cls: (spell_cls._level <= level or spell_cls._level == 3) and spell_cls.id in COMBAT_SPELLS))
     if valid_spells:
         return random.choice(valid_spells)
 
 
-def random_start_combat_spell(level):
+def random_start_combat_spell(level: int):
     valid_spells = list(spell_registry.filter(_lambda=lambda spell_cls: (spell_cls._level <= level or spell_cls._level == 3) and spell_cls.id in START_OF_FIGHT_SPELLS))
     if valid_spells:
         return random.choice(valid_spells)
@@ -135,7 +135,7 @@ def random_start_combat_spell(level):
 # TODO are these the same across different effects (robin wood, helm of the gosling, juliets in graveyards)
 # or do they behaave differently. Set up resources with tied attack and different cost, and tied attack&cost but different
 # position and do so for both weaker and stronger style effects
-def find_stat_extreme_character(player, strongest=True):
+def find_stat_extreme_character(player: 'Player', strongest: bool = True):
     # If there are no valid characters,  return nothing
     valid_characters = player.valid_characters()
     if not valid_characters:
@@ -148,11 +148,11 @@ def find_stat_extreme_character(player, strongest=True):
     return random.choice(sub_chars)
 
 
-def find_strongest_character(player):
+def find_strongest_character(player: 'Player'):
     return find_stat_extreme_character(player, strongest=True)
 
 
-def find_weakest_character(player):
+def find_weakest_character(player: 'Player'):
     return find_stat_extreme_character(player, strongest=False)
 
 # DO NOT DO THIS

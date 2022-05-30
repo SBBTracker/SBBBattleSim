@@ -22,7 +22,19 @@ class CastSpellOnStart(OnStart):
 
 
 class Player(EventManager):
-    def __init__(self, id, hero, characters=None, treasures=None, hand=None, spells=None, level=0, raw=False, *args, **kwargs):
+    def __init__(
+            self,
+            id: str,
+            hero: str,
+            characters: (typing.List[dict], None) = None,
+            treasures: (typing.List[dict], None) = None,
+            hand: (typing.List[dict], None) = None,
+            spells: (typing.List[dict], None) = None,
+            level: int = 0,
+            raw=False,
+            *args,
+            **kwargs
+    ):
         # DO NOT TOUCH
         raw = True
         super().__init__()
@@ -107,7 +119,7 @@ class Player(EventManager):
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
 
-    def replace_hero(self, hero_id, *args, **kwargs):
+    def replace_hero(self, hero_id: str, *args, **kwargs):
         self.hero = hero_registry[hero_id](player=self, *args, **kwargs)
         logger.debug(f'{self.id} registering hero {self.hero.pretty_print()} {self.hero.id}')
 
@@ -117,13 +129,15 @@ class Player(EventManager):
         #TODO This either needs to always use spawn logic or implment something else
         self.spawn(char, char.position)
 
-    def remove_character(self, position):
+    def remove_character(self, position: int):
         char = self.__characters.get(position)
         if char:
             #TODO: This either needs to always use despawn logic or implement something else
             self.despawn(char, kill=False)
 
-    def add_character_to_hand(self, char: (dict, Character)):
+    def add_character_to_hand(self, char: (str, dict, Character)) -> Character:
+        if isinstance(char, str):
+            char = character_registry[char].new(player=self, position=0, golden=False)
         if isinstance(char, dict):
             char = character_registry[char['id']](player=self, **char)
         logger.debug(f'{self.id} adding character {char.pretty_print()} to hand')
@@ -132,7 +146,7 @@ class Player(EventManager):
 
     #TODO: Do we need a remove from hand option or should that be on the user since Player.hand is a public list?
 
-    def add_treasure(self, *treasure_ids):
+    def add_treasure(self, *treasure_ids: typing.List[str]):
         for treasure_id in treasure_ids:
             if len(self.treasures) >= 3:
                 return
@@ -198,7 +212,7 @@ class Player(EventManager):
         if 'OnStart' in self._events:
             self._events.pop('OnStart')
 
-    def get_attack_slot(self):
+    def get_attack_slot(self) -> (int, None):
         if self._attack_slot is None:
             self._attack_slot = 1
 
@@ -237,7 +251,7 @@ class Player(EventManager):
 
         return self._attack_slot
 
-    def spawn(self, character, position):
+    def spawn(self, character: 'Character', position: int):
         logger.info(f'Spawning {character.pretty_print()} in {position} position')
 
         # all my spawning homies hate temporary events
@@ -272,7 +286,7 @@ class Player(EventManager):
 
         return character
 
-    def despawn(self, *characters, **kwargs):
+    def despawn(self, *characters: 'Character', **kwargs):
         kill = kwargs.get('kill', True)
 
         # This is only false for transform effects
@@ -309,10 +323,10 @@ class Player(EventManager):
                 char.aura.roll_back()
 
     @property
-    def characters(self):
+    def characters(self) -> typing.Dict[int, 'Character']:
         return {pos: char for pos, char in self.__characters.items()}
 
-    def summon_from_different_locations(self, characters, *args, **kwargs):
+    def summon_from_different_locations(self, characters: typing.List['Character'], *args, **kwargs) -> typing.List['Character']:
         '''Pumpkin King spawns each evil unit at the location a prior one died. This means that we need to be
         able to summon from multiple points at once before running the onsummon stack. This may be useful
         for other things too'''
@@ -329,7 +343,7 @@ class Player(EventManager):
 
         return final_summoned_characters
 
-    def summon(self, pos, characters, onsummon=True, *args, **kwargs):
+    def summon(self, pos: int, characters: typing.List['Character'], onsummon: bool = True, *args, **kwargs) -> typing.List['Character']:
         summoned_characters = []
         spawn_order = utils.get_spawn_positions(pos)
         for char in characters:
@@ -345,14 +359,14 @@ class Player(EventManager):
 
         return summoned_characters
 
-    def transform(self, pos, character, *args, **kwargs):
+    def transform(self, pos: int, character: 'Character', *args, **kwargs):
         char_to_transform = self.__characters[pos]
         if char_to_transform is not None:
             character.has_attacked = char_to_transform.has_attacked
             self.despawn(char_to_transform, kill=False)
             self.spawn(character, pos)
 
-    def valid_characters(self, _lambda=lambda char: True):
+    def valid_characters(self, _lambda: typing.Callable = lambda char: True) -> typing.List['Character']:
         """
         Return a list of valid characters based on an optional lambda that is passed in as an additoinal filter
         onto the base lambda that guarantees that the character exists and is not dead
@@ -362,7 +376,7 @@ class Player(EventManager):
 
         return [char for char in self.__characters.values() if base_lambda(char) and _lambda(char)]
 
-    def cast_spell(self, spell_id, trigger_onspell=True):
+    def cast_spell(self, spell_id: str, trigger_onspell: bool = True):
         spell = spell_registry[spell_id]
         if spell is None:
             return
