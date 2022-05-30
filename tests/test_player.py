@@ -1,4 +1,5 @@
 from sbbbattlesim import configure_logging
+from sbbbattlesim.action import Aura
 from sbbbattlesim.characters import Character
 from sbbbattlesim.treasures import Treasure
 from tests import make_player, make_character
@@ -133,3 +134,13 @@ def test_player_remove_treasure():
     assert len(player.treasures) == 2
 
     player.treasures.pop(0)
+
+
+def test_player_add_aura():
+    player = make_player(hero='TEST_HERO', characters=[make_character()])
+
+    custom_aura = Aura(source=player, attack=1)
+    player.add_aura(custom_aura)
+
+    assert player.characters[1]
+    assert player.characters[1].attack == 2
