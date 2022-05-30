@@ -12,9 +12,9 @@ class BookOfHeroesOnAttackAndKillBuff(OnAttackAndKill):
     slay = False
 
     def handle(self, killed_character, stack, *args, **kwargs):
-        logger.debug(f'BOOK KILLED {killed_character.tribes} MIMIC {self.source.mimic}')
+        logger.debug(f'BOOK KILLED {killed_character.tribes} MIMIC {self.source.multiplier}')
         if Tribe.EVIL in killed_character.tribes:
-            for _ in range(self.source.mimic + 1):
+            for _ in range(self.source.multiplier + 1):
                 Buff(reason=ActionReason.BOOK_OF_HEROES, source=self.source, targets=[self.manager],
                      attack=1, health=2, stack=stack).resolve()
 

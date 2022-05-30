@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from sbbbattlesim.characters import Character
@@ -7,7 +8,7 @@ from sbbbattlesim.player import Player
 PLAYER = {
     'characters': [],
     'treasures': [],
-    'hero': '',
+    'hero': 'MISSING HERO',
     'spells': [],
     'hand': [],
     'level': 0,
@@ -25,8 +26,8 @@ CHARACTER = {
 }
 
 
-def make_player(**kwargs):
-    return Player(**(PLAYER.copy() | {'id': uuid.uuid1()} | kwargs))
+def make_player(id=None, **kwargs):
+    return Player(id=id or uuid.uuid4(), **(PLAYER.copy() | kwargs))
 
 
 def make_character(**kwargs):

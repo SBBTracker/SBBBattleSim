@@ -10,6 +10,6 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        stats = 1 * (self.mimic + 1)
+        stats = 1 * (self.multiplier + 1)
         self.aura = Aura(reason=ActionReason.NEEDLE_NOSE_DAGGERS, source=self, attack=stats, health=stats,
                          _lambda=lambda char: char._level <= 3)

@@ -129,6 +129,7 @@ class ActionReason(enum.Enum):
     MIHRI_BUFF = 311
     FALLEN_ANGEL_BUFF = 312
     PUP_BUFF = 313
+    BEAUTY_TRIBE_SHIFT = 314
 
     BLESSING_OF_ATHENA = 401
     LUNAS_GRAVE = 402
@@ -285,8 +286,9 @@ class Action:
 
     def execute(self, *characters, **kwargs):
         setup = kwargs.get('setup', False)
-        logger.debug(f'{self} execute ({characters}, {kwargs})')
         for char in characters or self.targets:
+            logger.debug(f'{self} execute ({char.pretty_print()}, {kwargs})')
+
             if not self._lambda(char) or char in self._char_buffer:
                 continue
 

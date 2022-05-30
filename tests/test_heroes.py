@@ -357,16 +357,13 @@ def test_mihri_rollback_safety(on):
 
     enemy = make_player(raw=True)
 
-    fight_event_manager = EventManager()
-
-    fight_event_manager._events['OnSetup'].update(player._events['OnSetup'])
-    fight_event_manager._events['OnSetup'].update(enemy._events['OnSetup'])
-    fight_event_manager("OnSetup")
+    fight(player, enemy, limit=-1)
 
     c1 = player.characters[1]
     player.despawn(c1, kill=False)
     player.spawn(c1, 1)
 
+    assert c1 == player.characters[1]
     assert c1.attack == 1
     assert c1.health == 30
 
@@ -506,6 +503,7 @@ def test_beauty(on):
     assert t2 == tribe_set if on else t2 == set()
 
 
+@pytest.mark.skip #TODO: This interaction is not well understood atm and needs further research
 @pytest.mark.parametrize('treasure', ("SBB_TREASURE_CORRUPTEDHEARTWOOD", "SBB_TREASURE_CROWNOFATLAS"))
 def test_beauty_withtreasure(treasure):
     player = make_player(
@@ -517,13 +515,13 @@ def test_beauty_withtreasure(treasure):
             treasure
         ],
         hero='SBB_HERO_PRINCESSBELLE',
-        hand=[make_character(id=f'TEST{i}', attack=i) for i in range(4)]
     )
 
     enemy = make_player(raw=True)
 
     fight(player, enemy)
 
+    assert player.characters[1], player.characters
     assert player.characters[1].tribes == {Tribe.GOOD, Tribe.EVIL, Tribe.ANIMAL}
 
 

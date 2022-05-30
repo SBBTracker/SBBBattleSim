@@ -5,7 +5,7 @@ from sbbbattlesim.treasures import Treasure
 
 class SpearOfAchillesAttack(OnPreAttack):
     def handle(self, stack, *args, **kwargs):
-        for _ in range(1 + bool(self.source.mimic)):
+        for _ in range(1 + bool(self.source.multiplier)):
             Buff(reason=ActionReason.SPEAR_OF_ACHILLES, source=self.source, targets=[self.manager],
                  health=7, attack=7, stack=stack).resolve()
 

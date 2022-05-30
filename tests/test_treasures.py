@@ -916,7 +916,7 @@ def test_reduplicator(mimic, full_board):
     char2 = player.characters[2]
     char3 = player.characters[3]
 
-    triggered = player.treasures['SBB_TREASURE_REDUPLICATOR'][0].triggered
+    triggered = player.treasures[0].triggered
     cat_id = 'SBB_CHARACTER_CAT'
     assert char1.id == cat_id
     if mimic and full_board:

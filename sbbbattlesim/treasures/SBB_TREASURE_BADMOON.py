@@ -5,7 +5,7 @@ from sbbbattlesim.treasures import Treasure
 
 class BadMoonSlayBuff(OnSlay):
     def handle(self, source, stack, *args, **kwargs):
-        for _ in range(self.source.mimic + 1):
+        for _ in range(self.source.multiplier + 1):
             Buff(reason=ActionReason.BAD_MOON, source=self.source, targets=[self.manager],
                  attack=1, health=2, stack=stack).resolve()
 

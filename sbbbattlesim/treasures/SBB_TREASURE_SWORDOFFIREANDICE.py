@@ -10,7 +10,7 @@ class TreasureType(Treasure):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        stats = 6 * (bool(self.mimic) + 1)
+        stats = 6 * (bool(self.multiplier) + 1)
         self.aura = {
             Aura(reason=ActionReason.SWORD_OF_FIRE_AND_ICE, source=self, health=stats,
                  _lambda=lambda char: char.position <= 4),

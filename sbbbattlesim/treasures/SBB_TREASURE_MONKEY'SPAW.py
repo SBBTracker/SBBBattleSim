@@ -19,7 +19,7 @@ class CoinOfCharonOnDeath(OnDeath):
             return  # This has already procced
         self.source.coin_trigger = True
 
-        for _ in range(self.source.mimic + 1):
+        for _ in range(self.source.multiplier + 1):
             Buff(reason=ActionReason.COIN_OF_CHARON, source=self.source, targets=[self.manager],
                  attack=4, health=4, stack=stack).execute()
 

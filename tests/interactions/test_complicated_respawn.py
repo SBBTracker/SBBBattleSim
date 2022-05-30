@@ -20,7 +20,9 @@ def test_advanced_dubly_respawn():
     )
     fight(player, enemy)
 
-    assert player.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
+    feather = next(treasure for treasure in player.treasures if treasure.id == 'SBB_TREASURE_PHOENIXFEATHER')
+
+    assert feather.feather_used
 
     assert (player.characters[1].attack, player.characters[1].health) == (3, 1)
     assert (player.characters[2].attack, player.characters[2].health) == (3, 1)
@@ -44,7 +46,8 @@ def test_advanced_respawn():
     )
     fight(player, enemy)
 
-    assert player.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
+    feather = next(treasure for treasure in player.treasures if treasure.id == 'SBB_TREASURE_PHOENIXFEATHER')
 
+    assert feather.feather_used
     assert (player.characters[1].attack, player.characters[1].health) == (3, 1)
     assert (player.characters[2].attack, player.characters[2].health) == (3, 1)

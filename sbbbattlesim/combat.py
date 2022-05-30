@@ -17,6 +17,8 @@ BACK = (5, 6, 7)
 
 
 def fight(p1: Player, p2: Player, limit=-1):
+    p1.prepare_combat()
+    p2.prepare_combat()
     p1.opponent, p2.opponent = p2, p1
 
     attacker, defender = who_goes_first(p1, p2)
@@ -164,9 +166,9 @@ def _who_goes_first(player):
     if player.hero.id == DRAC:
         cnt += 1
 
-    if player.treasures.get(HERMES_BOOTS):
+    if HERMES_BOOTS in [treasure.id for treasure in player.treasures]:
         cnt += 1
-        if player.treasures.get(MIMIC):
+        if MIMIC in [treasure.id for treasure in player.treasures]:
             cnt += 1
         if player.hero.id == TIGER:
             cnt += 1

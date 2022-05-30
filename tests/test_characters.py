@@ -76,7 +76,9 @@ def test_support(char, golden, horn):
     enemy = make_player(raw=True)
     fight(player, enemy, limit=0)
 
-    assert player.characters[1]._action_history[0].reason == ActionReason.SUPPORT_BUFF
+    assert player.characters[1], player.characters
+    assert player.characters[1]._action_history[0], player.characters[1]._action_history
+    assert player.characters[1]._action_history[0].reason == ActionReason.SUPPORT_BUFF, player.characters[1]._action_history[0]
 
 
 class FakePlayer:

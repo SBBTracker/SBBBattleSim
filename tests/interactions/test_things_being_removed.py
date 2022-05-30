@@ -168,7 +168,9 @@ def test_supported_unit_dies_and_comes_back():
     )
     fight(player, enemy, limit=1)
 
-    assert player.treasures['SBB_TREASURE_PHOENIXFEATHER'][0].feather_used
+    feather = next(treasure for treasure in player.treasures if treasure.id == 'SBB_TREASURE_PHOENIXFEATHER')
+
+    assert feather.feather_used
     assert player.characters[2] is not None
     assert (player.characters[2].attack, player.characters[2].health) == (100, 4)
     assert (player.characters[7].attack, player.characters[7].health) == (1, 4)

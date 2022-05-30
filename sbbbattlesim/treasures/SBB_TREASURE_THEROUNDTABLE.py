@@ -4,7 +4,7 @@ from sbbbattlesim.treasures import Treasure
 
 class RoundTableBuff(OnStart):
     def handle(self, stack, *args, **kwargs):
-        for _ in range(bool(self.source.mimic) + 1):
+        for _ in range(bool(self.source.multiplier) + 1):
             change_dt = {}
             for char in self.source.player.valid_characters():
                 if char.attack > char.health:

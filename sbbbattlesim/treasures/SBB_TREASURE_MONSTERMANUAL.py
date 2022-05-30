@@ -8,7 +8,7 @@ class MonsterManualOnDeath(OnDeath):
     last_breath = False
 
     def handle(self, stack, reason, *args, **kwargs):
-        for _ in range(self.source.mimic + 1):
+        for _ in range(self.source.multiplier + 1):
             Buff(reason=ActionReason.MONSTER_MANUAL_BUFF, source=self.source, targets=[self.manager],
                  attack=2, stack=stack).execute()
 

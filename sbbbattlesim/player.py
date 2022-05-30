@@ -1,14 +1,17 @@
 import collections
 import logging
 import random
+import typing
 from collections import OrderedDict, defaultdict
+from functools import cached_property
 
 from sbbbattlesim import utils
-from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.action import Aura, Support
+from sbbbattlesim.characters import registry as character_registry, Character
 from sbbbattlesim.events import EventManager, OnStart, OnSetup
 from sbbbattlesim.heroes import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry
-from sbbbattlesim.treasures import registry as treasure_registry
+from sbbbattlesim.treasures import registry as treasure_registry, Treasure
 
 logger = logging.getLogger(__name__)
 
@@ -18,105 +21,182 @@ class CastSpellOnStart(OnStart):
         self.source.cast_spell(self.kwargs['spell'], trigger_onspell=False)
 
 
-class PlayerOnSetup(OnSetup):
-    def handle(self, stack, *args, **kwargs):
-        # TODO Change setup to True when raw gets removed
-        setup = self.kwargs.get('raw', False)
-
-        for char in self.source.valid_characters():
-            # Apply existing buffs
-            support_positions = (5, 6, 7) if self.source.banner_of_command else utils.get_behind_targets(char.position)
-            support_units = self.source.valid_characters(_lambda=lambda char: (char.position in support_positions and char.support))
-            support_buffs = set([char.support for char in support_units])
-            for buff in sorted(self.source.auras | support_buffs, key=lambda b: b.priority, reverse=True):
-                buff.execute(char, setup=setup)
-
-
 class Player(EventManager):
-    def __init__(self, id, characters, treasures, hero, hand, spells, level=0, raw=False, *args, **kwargs):
-        raw=True
+    def __init__(self, id, hero, characters=None, treasures=None, hand=None, spells=None, level=0, raw=False, *args, **kwargs):
+        # DO NOT TOUCH
+        raw = True
         super().__init__()
+        # DO NOT TOUCH
 
+        # Base Values
         self.id = id
         self.__characters = OrderedDict({i: None for i in range(1, 8)})
+        self.treasures = []
+        self.hand = []
+        self.spells = spells or []
+        self.auras = set()
+        self.level = level
 
-        self.register(PlayerOnSetup, source=self, priority=0, raw=raw)
+        # Hidden Counters
+        self._spells_cast = kwargs.get('spells_cast', None)
+        self._puff_puff_counter = kwargs.get('puff_puff_counter', None)
 
-        self.stateful_effects = {}
+        # Base Setup
+        self.hero = hero_registry[hero](player=self, *args, **kwargs)
+        logger.debug(f'{self.id} registering hero {self.hero.pretty_print()} {self.hero.id}')
+
+        if treasures:
+            self.add_treasure(*treasures)
+
+        if characters:
+            for char_data in characters:
+                # This does not use self.add_character as that currently uses spawn
+                char = character_registry[char_data['id']](player=self, **char_data)
+                logger.debug(f'{self.id} registering character {char.pretty_print()}')
+                self.__characters[char.position] = char
+
+        if hand:
+            for char_data in hand:
+                self.add_character_to_hand(char_data)
+
+        # Combat values
+        self.opponent = None
+        self.stateful_effects = {}  # Currently only used for old puff puff logic. TODO: redo logic to use new hidden counter
         self._attack_slot = None
         self.graveyard = []
-        self.id = id
-        self.opponent = None
-        self.level = level
         self._last_attacker = None
         self._attack_chain = 0
-        self._spells_cast = kwargs.get('spells_cast', None)
-        self.spells = spells
 
-        # Treasure Counting
-        self.banner_of_command = 'SBB_TREASURE_BANNEROFCOMMAND' in treasures
-        evileye = 'SBB_TREASURE_HELMOFCOMMAND' in treasures
-        mimic = 'SBB_TREASURE_TREASURECHEST' in treasures
-
-        self.support_itr = 1
-        if evileye:
-            self.support_itr = 2
-            if mimic:
-                self.support_itr = 3
-        logger.debug(f'{self.id} support_itr = {self.support_itr}')
-
-        self.auras = set()
-
-        self.treasures = collections.defaultdict(list)
-        for tres in treasures:
-            treasure = treasure_registry[tres]
-            mimic_count = mimic + ((hero == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0)
-            treasure = treasure(player=self, mimic=mimic_count)
-            logger.debug(f'{self.id} Registering treasure {treasure.pretty_print()}')
-            self.treasures[treasure.id].append(treasure)
-
-        self.hero = hero_registry[hero](player=self, *args, **kwargs)
-        if not self.hero.id:
-            self.hero.id = hero
-        logger.debug(f'{self.id} registering hero {self.hero.pretty_print()}')
-
-        for spl in spells:
-            if spl in utils.START_OF_FIGHT_SPELLS:
-                self.register(CastSpellOnStart, spell=spl, source=self, priority=spell_registry[spl].priority)
-
-        for char_data in characters:
-            char = character_registry[char_data['id']](player=self, **char_data)
-            logger.debug(f'{self.id} registering character {char.pretty_print()}')
-            self.__characters[char.position] = char
+        # Gather and apply auras from creatures assumed to be on the player
+        # NOTE: Aura priority is independent of Support priority and this *could* change
+        auras = set()
+        if self.hero.aura:
+            try:
+                auras.update(set(self.hero.aura))
+            except TypeError:
+                auras.add(self.hero.aura)
 
         for char in self.valid_characters():
             if char.aura:
                 try:
-                    self.auras.update(set(char.aura))
+                    auras.update(set(char.aura))
                 except TypeError:
-                    self.auras.add(char.aura)
+                    auras.add(char.aura)
 
-        for tid, tl in self.treasures.items():
-            for treasure in tl:
-                if treasure.aura and treasure.aura:
-                    try:
-                        self.auras.update(set(treasure.aura))
-                    except TypeError:
-                        self.auras.add(treasure.aura)
+        for treasure in self.treasures:
+            if treasure.aura:
+                try:
+                    auras.update(set(treasure.aura))
+                except TypeError:
+                    auras.add(treasure.aura)
 
-        if self.hero.aura:
-            try:
-                self.auras.update(set(self.hero.aura))
-            except TypeError:
-                self.auras.add(self.hero.aura)
-
-        self.hand = [character_registry[char_data['id']](player=self, **char_data) for char_data in hand if isinstance(char_data, dict) and 'id' in char_data and char_data['id'].startswith('SBB_CHARACTER')]
-
-        for aura in self.auras:
+        for aura in auras:
             logger.debug(f'{self.id} found aura {aura}')
+
+        self.add_aura(*auras, setup=raw)
+
+        # Apply support buffs from creatures assumed to be on the player
+        banner = self.banner_of_command
+        front = (1, 2, 3, 4)
+        back = (5, 6, 7)
+        support_characters = self.valid_characters(_lambda=lambda char: char.position in back and char.support)
+        for char in sorted(support_characters, key=lambda char: char.support.priority, reverse=True):
+            support_targets = front if banner else utils.get_support_targets(char.position)
+            char.support.execute(*self.valid_characters(_lambda=lambda char: char.position in support_targets), setup=raw)
 
     def pretty_print(self):
         return f'{self.id} {", ".join([char.pretty_print() if char else "_" for char in self.characters.values()])}'
+
+    def replace_hero(self, hero_id, *args, **kwargs):
+        self.hero = hero_registry[hero_id](player=self, *args, **kwargs)
+        logger.debug(f'{self.id} registering hero {self.hero.pretty_print()} {self.hero.id}')
+
+    def add_character(self, char: (dict, Character)):
+        if isinstance(char, dict):
+            char = character_registry[char['id']](player=self, **char)
+        #TODO This either needs to always use spawn logic or implment something else
+        self.spawn(char, char.position)
+
+    def remove_character(self, position):
+        char = self.__characters.get(position)
+        if char:
+            #TODO: This either needs to always use despawn logic or implement something else
+            self.despawn(char, kill=False)
+
+    def add_character_to_hand(self, char: (dict, Character)):
+        if isinstance(char, dict):
+            char = character_registry[char['id']](player=self, **char)
+        logger.debug(f'{self.id} adding character {char.pretty_print()} to hand')
+        self.hand.append(char)
+        return char
+
+    #TODO: Do we need a remove from hand option or should that be on the user since Player.hand is a public list?
+
+    def add_treasure(self, *treasure_ids):
+        for treasure_id in treasure_ids:
+            if len(self.treasures) >= 3:
+                return
+
+            treasure = treasure_registry[treasure_id]
+            mimic = 'SBB_TREASURE_TREASURECHEST' in treasure_ids
+            multiplier = mimic + ((self.hero.id == 'SBB_HERO_THECOLLECTOR') if treasure._level <= 3 else 0)
+            treasure = treasure(player=self, multiplier=multiplier)
+            logger.debug(f'{self.id} Registering treasure {treasure.pretty_print()}')
+            self.treasures.append(treasure)
+
+    @property
+    def banner_of_command(self):
+        return 'SBB_TREASURE_BANNEROFCOMMAND' in [treasure.id for treasure in self.treasures]
+
+    @property
+    def support_itr(self):
+        treasure_ids = [treasure.id for treasure in self.treasures]
+        evileye = 'SBB_TREASURE_HELMOFCOMMAND' in treasure_ids
+        mimic = 'SBB_TREASURE_TREASURECHEST' in treasure_ids
+
+        support_itr = 1
+        if evileye:
+            support_itr = 2
+            if mimic:
+                support_itr = 3
+
+        return support_itr
+
+    def add_aura(self, *auras: Aura, **kwargs):
+        auras = set(sorted(auras, key=lambda aura: aura.priority, reverse=True))
+
+        for aura in auras:
+            aura.execute(*self.valid_characters(), **kwargs)
+
+        self.auras.update(auras)
+
+    def prepare_combat(self):
+        self.opponent = None
+        self.stateful_effects = {}  # Currently only used for old puff puff logic. TODO: redo logic to use new hidden counter
+        self._attack_slot = None
+        self.graveyard = []
+        self._last_attacker = None
+        self._attack_chain = 0
+
+        # self.register(PlayerOnSetup, source=self, priority=0, raw=True)
+
+        for spl in self.spells:
+            if spl in utils.START_OF_FIGHT_SPELLS:
+                self.register(CastSpellOnStart, spell=spl, source=self, priority=spell_registry[spl].priority)
+
+    def resolve_combat(self):
+        self.opponent = None
+        self.stateful_effects = {}  # Currently only used for old puff puff logic. TODO: redo logic to use new hidden counter
+        self._attack_slot = None
+        self.graveyard = []
+        self._last_attacker = None
+        self._attack_chain = 0
+
+        if 'OnSetup' in self._events:
+            self._events.pop('OnSetup')
+
+        if 'OnStart' in self._events:
+            self._events.pop('OnStart')
 
     def get_attack_slot(self):
         if self._attack_slot is None:
@@ -176,7 +256,7 @@ class Player(EventManager):
             buff.execute(character)
 
         # Apply new support buffs
-        if character.support:
+        if character.support and character.position in (5, 6, 7):
             pos_ls = utils.get_support_targets(position, self.banner_of_command)
             character.support.execute(*self.valid_characters(_lambda=lambda char: char.position in pos_ls))
 
