@@ -12,7 +12,7 @@ import json
 
 from sbbbattlesim import fight
 from sbbbattlesim.player import Player
-from sbbbattlesim.stats import calculate_stats, CombatStats
+from sbbbattlesim.stats import CombatStats
 
 logger = logging.getLogger(__name__)
 
