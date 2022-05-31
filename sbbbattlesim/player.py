@@ -123,11 +123,14 @@ class Player(EventManager):
         self.hero = hero_registry[hero_id](player=self, *args, **kwargs)
         logger.debug(f'{self.id} registering hero {self.hero.pretty_print()} {self.hero.id}')
 
-    def add_character(self, char: (dict, Character)):
-        if isinstance(char, dict):
+    def add_character(self, char: (str, dict, Character)) -> Character:
+        if isinstance(char, str):
+            char = character_registry[char].new(player=self, position=0, golden=False)
+        elif isinstance(char, dict):
             char = character_registry[char['id']](player=self, **char)
         #TODO This either needs to always use spawn logic or implment something else
         self.spawn(char, char.position)
+        return char
 
     def remove_character(self, position: int):
         char = self.__characters.get(position)
@@ -138,7 +141,7 @@ class Player(EventManager):
     def add_character_to_hand(self, char: (str, dict, Character)) -> Character:
         if isinstance(char, str):
             char = character_registry[char].new(player=self, position=0, golden=False)
-        if isinstance(char, dict):
+        elif isinstance(char, dict):
             char = character_registry[char['id']](player=self, **char)
         logger.debug(f'{self.id} adding character {char.pretty_print()} to hand')
         self.hand.append(char)
@@ -366,7 +369,7 @@ class Player(EventManager):
             self.despawn(char_to_transform, kill=False)
             self.spawn(character, pos)
 
-    def valid_characters(self, _lambda: typing.Callable = lambda char: True) -> typing.List['Character']:
+    def valid_characters(self, _lambda: typing.Callable[[Character], bool] = lambda char: True) -> typing.List['Character']:
         """
         Return a list of valid characters based on an optional lambda that is passed in as an additoinal filter
         onto the base lambda that guarantees that the character exists and is not dead
