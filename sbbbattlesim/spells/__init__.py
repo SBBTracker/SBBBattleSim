@@ -1,5 +1,6 @@
 import logging
 import pkgutil
+import typing
 from collections import OrderedDict
 
 logger = logging.getLogger(__name__)
@@ -52,7 +53,7 @@ class Registry(object):
         self.spells[name] = spell
         logger.debug(f'Registered {name} - {spell}')
 
-    def filter(self, _lambda=lambda spell_cls: True):
+    def filter(self, _lambda: typing.Callable[[type], bool] = lambda spell_cls: True):
         return (spell_cls for spell_cls in self.spells.values() if _lambda(spell_cls))
 
     def autoregister(self):

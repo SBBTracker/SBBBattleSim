@@ -165,7 +165,7 @@ class Registry(object):
         self.characters[name] = character
         logger.debug(f'Registered {name} - {character}')
 
-    def filter(self, _lambda=lambda char_cls: True):
+    def filter(self, _lambda: typing.Callable[[type], bool] = lambda char_cls: True):
         return (
             char_cls for id, char_cls in self.characters.items()
             if id not in CHARACTER_EXCLUSION and _lambda(char_cls)
