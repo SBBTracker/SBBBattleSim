@@ -19,11 +19,6 @@ def test_bossy(golden):
     enemy = make_player(raw=True)
     fight(player, enemy, limit=2)
 
-    if golden:
-        final_stats = (7, 7)
-    else:
-        final_stats = (4, 4)
-
     char = player.characters[6]
     buffs = [
         r for r in char._action_history
@@ -32,8 +27,8 @@ def test_bossy(golden):
     healthbuffs = sum([b.health for b in buffs])
     attackbuffs = sum([b.attack for b in buffs])
 
-    assert attackbuffs == (6 if golden else 3)
-    assert healthbuffs == (6 if golden else 3)
+    assert attackbuffs == (2 if golden else 1)
+    assert healthbuffs == (2 if golden else 1)
 
     char = player.characters[7]
     buffs = [

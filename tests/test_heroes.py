@@ -412,7 +412,7 @@ def test_trophy_hunter2():
     blackcat = player.characters[1]
     assert blackcat
     assert blackcat.id == "SBB_CHARACTER_BLACKCAT"
-    assert blackcat.attack == 4
+    assert blackcat.attack == 6
     assert blackcat.health == 4
 
 
@@ -478,6 +478,26 @@ def test_trophy_hunter_friendlyspirit(limit):
 
     assert (ghost.attack, ghost.health) == (5, 10)
     assert (ally.attack, ally.health) == final_stats
+
+def test_trophy_hunter_attack_aura():
+    player = make_player(
+        raw=True,
+        characters=[
+            make_character(id='SBB_CHARACTER_BABYBEAR')
+        ],
+        hero='SBB_HERO_MILITARYLEADER',
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+
+    enemy = make_player(
+        raw=True,
+        characters=[make_character(id='GENERIC', position=1, attack=2)],
+    )
+    fight(player, enemy)
+
+    assert player.characters[1].id == 'SBB_CHARACTER_PAPABEAR'
+    assert player.characters[1].attack == 6
+
 
 
 @pytest.mark.parametrize('on', (True, False))

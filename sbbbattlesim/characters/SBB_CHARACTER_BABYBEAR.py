@@ -8,7 +8,7 @@ class BabyBearOnDeath(OnDeath):
     last_breath = True
 
     def handle(self, stack, reason, *args, **kwargs):
-        stat = 4 if self.manager.golden else 2
+        stat = 8 if self.manager.golden else 4
         papa_bear = character_registry['SBB_CHARACTER_PAPABEAR'](
             player=self.manager.player,
             position=self.manager.position,

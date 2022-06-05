@@ -143,7 +143,7 @@ def test_aura_dies():
     )
     fight(player, enemy, limit=1)
 
-    final_stats = (2, 2)
+    final_stats = (4, 4)
     assert player.characters[6] is None
     assert (player.characters[2].attack, player.characters[2].health) == final_stats
 
