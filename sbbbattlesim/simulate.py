@@ -111,6 +111,7 @@ def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> Simulati
     start = time.perf_counter()
     results = _process(data, t, k, timeout)
     return SimulationStats(
+        _id=hashlib.sha256(str(data).encode('utf-8')),
         run_time=time.perf_counter() - start,
         results=results,
         raw=data
