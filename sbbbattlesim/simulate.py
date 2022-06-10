@@ -12,7 +12,7 @@ import json
 
 from sbbbattlesim import fight
 from sbbbattlesim.player import Player
-from sbbbattlesim.stats import calculate_stats, CombatStats
+from sbbbattlesim.stats import CombatStats
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +84,7 @@ def from_state(state: dict):
 
 def simulate_brawl(data: dict, k: int) -> List[CombatStats]:
     logger.debug(f'Simulation Process Starting (k={k})')
-    return [fight(*(Player(id=i, **d) for i, d in deepcopy(data).items()), limit=1) for _ in range(k)]
+    return [fight(*(Player(id=i, **d) for i, d in deepcopy(data).items())) for _ in range(k)]
 
 
 def _process(data: dict, t: int = 1, k: int = 1, timeout: int = 30) -> list:
