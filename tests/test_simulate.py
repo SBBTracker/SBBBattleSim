@@ -81,26 +81,16 @@ STATE_DATA = (
             MockLogObject(
                 zone='Character',
                 content_id='SBB_CHARACTER_NIGHTSTALKER',
-                cardattack='2',
-                cardhealth='2',
+                cardattack='0',
+                cardhealth='1',
                 is_golden=True,
                 cost='2',
                 slot='0',  # This is to make sure it does the proper correction
                 subtypes=['evil', 'monster']
             ),
             MockLogObject(
-                zone='Character',
-                content_id='SBB_CHARACTER_BABYROOT',
-                cardattack='0',
-                cardhealth='6',
-                is_golden=False,
-                cost='2',
-                slot='4',  # This is to make sure it does the proper correction
-                subtypes=['good', 'treant']
-            ),
-            MockLogObject(
                 zone='Hero',
-                content_id='SBB_HERO_GANDALF',
+                content_id='SBB_HERO_THECOLLECTOR',
             ),
         ]
     },
@@ -109,4 +99,11 @@ STATE_DATA = (
 
 @pytest.mark.parametrize('data', STATE_DATA)
 def test_simulate(data):
-    simulate(data)
+    threads, simulations = 1, 2
+    sim_stats = simulate(data, t=threads, k=simulations)
+
+    assert sim_stats.results
+    assert len(sim_stats.results) == threads * simulations
+
+    for combat_stat in sim_stats.results:
+        assert combat_stat.win_id == 'Player 1 ID HERE'
