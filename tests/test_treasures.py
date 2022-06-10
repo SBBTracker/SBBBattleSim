@@ -236,8 +236,8 @@ def test_fountain_of_youth(mimic, tiger):
     char = player.characters[1]
 
     assert char
-    assert char.health == 2 + 1 + mimic_multiplyer
-    assert char.attack == 2 + 1 + mimic_multiplyer
+    assert char.health == 4 + 1 + mimic_multiplyer
+    assert char.attack == 4 + 1 + mimic_multiplyer
 
 
 @pytest.mark.parametrize('mimic', (True, False))
@@ -1669,3 +1669,24 @@ def test_spear_of_achilles2(mimic):
     fight(player, enemy)
 
     assert (player.characters[1].attack, player.characters[1].health) == (15, 15) if mimic else (8, 8)
+
+
+@pytest.mark.parametrize('hasopp', (True, False))
+def test_radiantprism(hasopp):
+    player = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_BLACKCAT")
+        ],
+        treasures=[
+            'SBB_TREASURE_RADIANTPRISM'
+        ]
+    )
+
+    enemy = make_player(
+        characters= [make_character(id='Enemy', attack=1)] if hasopp else []
+    )
+    fight(player, enemy)
+
+    animal = player.characters[1]
+
+    assert {tribe for tribe in Tribe} == animal.tribes
