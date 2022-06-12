@@ -6,7 +6,7 @@ from functools import lru_cache
 from sbbbattlesim.action import ActionReason
 from sbbbattlesim.events import EventManager, EventStack
 from sbbbattlesim.player import Player
-from sbbbattlesim.stats import CombatStats, calculate_damage
+from sbbbattlesim.stats import CombatStats, calculate_damage, clean_action_counters
 
 sys.setrecursionlimit(500)
 
@@ -129,16 +129,23 @@ def fight(p1: Player, p2: Player, limit=-1):
 
     p1.opponent, p2.opponent = None, None
 
+    action_counters = {
+        p1.id: clean_action_counters(p1.action_counters),
+        p2.id: clean_action_counters(p2.action_counters)
+    }
+
     if winner:
         return CombatStats(
             win_id=winner.id,
             damage=calculate_damage(winner),
+            action_counters=action_counters,
             first_attacker=first_attacker
         )
     else:
         return CombatStats(
             win_id=None,
             damage=0,
+            action_counters=action_counters,
             first_attacker=first_attacker
         )
 
@@ -210,8 +217,8 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     # Pre Damage Event
     # These functions can change the characters in given positions like Medusa
-    attacker.characters.get(attack_position)('OnPreAttack', attack_position=attack_position, defend_position=defend_position, defend_player=defender, **kwargs)
-    defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position, defend_position=defend_position, attack_player=attacker, **kwargs)
+    attacker.characters.get(attack_position)('OnPreAttack', attack_position=attack_position, defend_position=defend_position, defend_player=defender, reason=ActionReason.PRE_ATTACK, **kwargs)
+    defender.characters.get(defend_position)('OnPreDefend', attack_position=attack_position, defend_position=defend_position, attack_player=attacker, reason=ActionReason.PRE_DEFEND, **kwargs)
 
     # We are pulling the latest attack_character and defend character incase they changed
     attack_character = attacker.characters.get(attack_position)
@@ -233,12 +240,12 @@ def attack(attack_position, attacker, defender, **kwargs):
     # SLAY TRIGGER
     for _dc in defender_damage.targets:
         if _dc.dead:
-            attack_character('OnAttackAndKill', killed_character=_dc, **kwargs)
+            attack_character('OnAttackAndKill', reason=ActionReason.SLAY, killed_character=_dc, **kwargs)
 
     # for copycat to work properly
-    attack_character('OnPostAttack', attack_position=attack_position, defend_position=defend_position, **kwargs)
+    attack_character('OnPostAttack', attack_position=attack_position, defend_position=defend_position, reason=ActionReason.POST_ATTACK, **kwargs)
 
     defender_damage.resolve()
 
     # for cupid to work properly
-    defend_character('OnPostDefend', attack_position=attack_position, defend_position=defend_position, **kwargs)
+    defend_character('OnPostDefend', attack_position=attack_position, defend_position=defend_position, reason=ActionReason.POST_DEFEND, **kwargs)

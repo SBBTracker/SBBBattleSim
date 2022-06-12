@@ -32,8 +32,6 @@ def test_charon(is_real):
     )
     fight(player, enemy)
 
-
-
     dead = player.graveyard[0]
     assert dead
     assert dead.attack == 1 and dead.health + dead._damage == 1
@@ -60,10 +58,6 @@ def test_evella(on, evil_back):
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
     fight(player, enemy)
-
-
-
-    logger.debug(player.pretty_print())
 
     buffed_animal = player.characters.get(5)
     buffed_cat = player.characters.get(1)
