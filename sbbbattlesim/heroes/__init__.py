@@ -1,6 +1,7 @@
 import logging
 import pkgutil
 import traceback
+import typing
 from collections import OrderedDict
 
 logger = logging.getLogger(__name__)
@@ -12,7 +13,7 @@ class Hero:
     display_name = ''
     id = ''
 
-    def __init__(self, player):
+    def __init__(self, player: 'Player'):
         self.player = player
         self.aura = None
 
@@ -39,7 +40,7 @@ class Registry(object):
         self.heroes[name] = hero
         logger.debug(f'Registered {name} - {hero}')
 
-    def filter(self, _lambda=lambda hero_cls: True):
+    def filter(self, _lambda: typing.Callable[[type], bool] = lambda hero_cls: True):
         return (hero_cls for id, hero_cls in self.heroes.items() if _lambda(hero_cls))
 
     def autoregister(self):

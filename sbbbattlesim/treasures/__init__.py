@@ -1,5 +1,6 @@
 import logging
 import pkgutil
+import typing
 from collections import OrderedDict
 
 from sbbbattlesim.events import EventManager
@@ -15,7 +16,7 @@ class Treasure(EventManager):
 
     _level = 0
 
-    def __init__(self, player, multiplier):
+    def __init__(self, player: 'Player', multiplier: int = 0):
         self.player = player
         self.multiplier = multiplier
         self.aura = None
@@ -46,7 +47,7 @@ class Registry(object):
         self.treasures[name] = treasure
         logger.debug(f'Registered {name} - {treasure}')
 
-    def filter(self, _lambda=lambda treasure_cls: True):
+    def filter(self, _lambda: typing.Callable[[type], bool] =lambda treasure_cls: True):
         return (treasure_cls for treasure_cls in self.values() if _lambda(treasure_cls))
 
     def autoregister(self):

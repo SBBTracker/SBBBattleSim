@@ -1,6 +1,4 @@
-import collections
 from dataclasses import dataclass
-from typing import Dict, List
 
 from sbbbattlesim.player import Player
 

@@ -1,6 +1,7 @@
 import logging
 import pkgutil
 import traceback
+import typing
 from collections import OrderedDict
 
 from sbbbattlesim.action import Damage
@@ -30,7 +31,18 @@ class Character(EventManager):
 
     deactivated = False
 
-    def __init__(self, player, position, attack, health, golden, tribes, cost, *args, **kwargs):
+    def __init__(
+            self,
+            player: 'Player',
+            position: int,
+            attack: int,
+            health: int,
+            golden: bool,
+            tribes: typing.Iterable[typing.Union[str, Tribe]],
+            cost: int,
+            *args,
+            **kwargs
+    ):
         super().__init__()
         self.player = player
 
@@ -55,7 +67,7 @@ class Character(EventManager):
         self.has_attacked = False
 
     @classmethod
-    def new(cls, player, position, golden):
+    def new(cls, player: 'Player', position: int, golden: bool) -> 'Character':
         return cls(
             player=player,
             position=position,
@@ -109,7 +121,13 @@ class Character(EventManager):
     def max_health(self):
         return max(self._base_health, 0)
 
-    def generate_attack(self, source, target, reason, attacking=False):
+    def generate_attack(
+            self,
+            source: ('Character', 'Hero', 'Spell', 'Treasure', 'Player'),
+            target: 'Character',
+            reason: 'ActionReason',
+            attacking: bool = False
+    ) -> Damage:
         return Damage(
             reason=reason,
             source=source,
@@ -147,7 +165,7 @@ class Registry(object):
         self.characters[name] = character
         logger.debug(f'Registered {name} - {character}')
 
-    def filter(self, _lambda=lambda char_cls: True):
+    def filter(self, _lambda: typing.Callable[[type], bool] = lambda char_cls: True):
         return (
             char_cls for id, char_cls in self.characters.items()
             if id not in CHARACTER_EXCLUSION and _lambda(char_cls)
