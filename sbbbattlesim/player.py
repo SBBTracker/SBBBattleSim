@@ -140,8 +140,12 @@ class Player(EventManager):
 
     def add_character_to_hand(self, char: (str, dict, Character)) -> Character:
         if isinstance(char, str):
+            if char.startswith('SBB_SPELL'):
+                return
             char = character_registry[char].new(player=self, position=0, golden=False)
         elif isinstance(char, dict):
+            if char['id'].startswith('SBB_SPELL'):
+                return
             char = character_registry[char['id']](player=self, **char)
         logger.debug(f'{self.id} adding character {char.pretty_print()} to hand')
         self.hand.append(char)
