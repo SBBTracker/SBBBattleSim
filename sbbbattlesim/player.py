@@ -69,6 +69,14 @@ class Player(EventManager):
 
         if hand:
             for char_data in hand:
+                try:
+                    char_id = char_data['id']
+                except KeyError:
+                    char_id = char_data
+
+                if not char_id.startswith('SBB_CHARACTER'):
+                    continue
+
                 self.add_character_to_hand(char_data)
 
         # Combat values
