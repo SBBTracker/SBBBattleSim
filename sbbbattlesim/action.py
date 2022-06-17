@@ -27,7 +27,11 @@ class ActionReason(enum.Enum):
     SUPPORT_BUFF = 3
     AURA_BUFF = 4
     PLAYER_AURA = 5
-    SLAY = 6
+    PRE_ATTACK = 6
+    PRE_DEFEND = 7
+    SLAY = 8
+    POST_ATTACK = 9
+    POST_DEFEND = 10
 
     ANGRY_BUFF = 101
     DOUBLEY_BUFF = 102
@@ -68,6 +72,11 @@ class ActionReason(enum.Enum):
     JORM_ON_SLAY_BUFF = 148
     BURNING_TREE_BUFF = 149
     WATER_WRAITH_BUFF = 150
+    LANCELOT_SLAY = 151
+    VAINPIRE_SLAY = 152
+    CHUPACABRA_SLAY = 153
+    JORMUNGANDR_SLAY = 154
+    GRIMSOUL_SLAY_TRIGGER = 155
 
     ANCIENT_SARCOPHAGUS = 201
     BAD_MOON = 202
@@ -160,6 +169,9 @@ class ActionReason(enum.Enum):
     COPYCAT_PROC = 501
     MEURTE_PROC = 502
     TROPHY_HUNTER_PROC = 503
+
+    def pretty_print(self):
+        return ' '.join([word.capitalize() for word in self.name.split('_')])
 
 
 class Action:
@@ -289,6 +301,8 @@ class Action:
         setup = kwargs.get('setup', False)
         for char in characters or self.targets:
             logger.debug(f'{self} execute ({char.pretty_print()}, {kwargs})')
+
+            self.source.player.action_counters[self.reason] += 1
 
             if not self._lambda(char) or char in self._char_buffer:
                 continue

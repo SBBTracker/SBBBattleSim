@@ -45,7 +45,7 @@ class Event:
         # TODO Add more logging???
         return self.handle(*args, **kwargs)
 
-    def handle(self, stack, *args, **kwargs):
+    def handle(self, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -67,7 +67,7 @@ class OnDespawn(Event):
 
 class OnSummon(Event):
     '''A unit is summoned'''
-    def handle(self, summoned_characters, stack, *args, **kwargs):
+    def handle(self, summoned_characters, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -93,31 +93,31 @@ class OnDeath(Event):
 
 class OnLastBreath(Event):
     '''A character last a last breath'''
-    def handle(self, source, stack, *args, **kwargs):
+    def handle(self, source, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPreAttack(Event):
     '''An attacking character attacks'''
-    def handle(self, attack_position, defend_position, defend_player, stack, *args, **kwargs):
+    def handle(self, attack_position, defend_position, defend_player, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPostAttack(Event):
     '''An attacking character attacks'''
-    def handle(self, attack_position, defend_position, stack, *args, **kwargs):
+    def handle(self, attack_position, defend_position, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPreDefend(Event):
     '''A defending character is attacked'''
-    def handle(self, attack_position, defend_position, defender, stack, *args, **kwargs):
+    def handle(self, attack_position, defend_position, defender, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnPostDefend(Event):
     '''A defending character is attacked'''
-    def handle(self, attack_position, defend_position, stack, *args, **kwargs):
+    def handle(self, attack_position, defend_position, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -141,19 +141,19 @@ class OnAttackAndKill(Event):
 
         return response
 
-    def handle(self, killed_character, stack, *args, **kwargs):
+    def handle(self, killed_character, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnSlay(Event):
     '''A character has triggered a slay'''
-    def handle(self, source, stack, *args, **kwargs):
+    def handle(self, source, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
 class OnSpellCast(Event):
     '''A player cast a spell'''
-    def handle(self, caster, spell, target, stack, *args, **kwargs):
+    def handle(self, caster, spell, target, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -165,7 +165,7 @@ class OnBuff(Event):
 
 class OnSupport(Event):
     '''Triggered when something '''
-    def handle(self, buffed, support, stack, *args, **kwargs):
+    def handle(self, buffed, support, stack, reason, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -239,6 +239,10 @@ class EventManager:
 
         if not self._events[event]:
             return stack
+
+        reason = kwargs.get('reason')
+        if reason and hasattr(self, 'player'):
+            self.player.action_counters[(self.display_name, reason)] += 1
 
         with stack.open(*args, **kwargs) as executor:
             for evt in self.get(event):

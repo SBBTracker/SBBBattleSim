@@ -7,14 +7,14 @@ from sbbbattlesim.utils import Tribe
 class JormungandrOnAttackAndKill(OnAttackAndKill):
     slay = True
 
-    def handle(self, killed_character, stack, *args, **kwargs):
+    def handle(self, killed_character, stack, reason, *args, **kwargs):
         modifier = 40 if self.manager.golden else 20
-        Buff(reason=ActionReason.SLAY, source=self.manager, targets=[self.manager],
+        Buff(reason=ActionReason.JORMUNGANDR_SLAY, source=self.manager, targets=[self.manager],
              attack=modifier, health=modifier, temp=False, stack=stack).resolve()
 
 
 class JormungandrOnSlay(OnSlay):
-    def handle(self, source, stack, *args, **kwargs):
+    def handle(self, source, stack, reason, *args, **kwargs):
         if source.source is not self.source:
             modifier = 40 if self.source.golden else 20
             Buff(reason=ActionReason.JORM_ON_SLAY_BUFF, source=self.source, targets=[self.source],

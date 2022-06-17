@@ -38,6 +38,7 @@ class Player(EventManager):
         # DO NOT TOUCH
         raw = True
         super().__init__()
+        self.player = self
         # DO NOT TOUCH
 
         # Base Values
@@ -86,6 +87,7 @@ class Player(EventManager):
         self.graveyard = []
         self._last_attacker = None
         self._attack_chain = 0
+        self.action_counters = collections.defaultdict(int)
 
         # Gather and apply auras from creatures assumed to be on the player
         # NOTE: Aura priority is independent of Support priority and this *could* change
@@ -136,14 +138,14 @@ class Player(EventManager):
             char = character_registry[char].new(player=self, position=0, golden=False)
         elif isinstance(char, dict):
             char = character_registry[char['id']](player=self, **char)
-        #TODO This either needs to always use spawn logic or implment something else
+        # TODO This either needs to always use spawn logic or implment something else
         self.spawn(char, char.position)
         return char
 
     def remove_character(self, position: int):
         char = self.__characters.get(position)
         if char:
-            #TODO: This either needs to always use despawn logic or implement something else
+            # TODO: This either needs to always use despawn logic or implement something else
             self.despawn(char, kill=False)
 
     def add_character_to_hand(self, char: (str, dict, Character)) -> Character:
@@ -155,7 +157,7 @@ class Player(EventManager):
         self.hand.append(char)
         return char
 
-    #TODO: Do we need a remove from hand option or should that be on the user since Player.hand is a public list?
+    # TODO: Do we need a remove from hand option or should that be on the user since Player.hand is a public list?
 
     def add_treasure(self, *treasure_ids: typing.List[str]):
         for treasure_id in treasure_ids:
@@ -202,8 +204,7 @@ class Player(EventManager):
         self.graveyard = []
         self._last_attacker = None
         self._attack_chain = 0
-
-        # self.register(PlayerOnSetup, source=self, priority=0, raw=True)
+        self.action_counters = collections.defaultdict(int)
 
         for spl in self.spells:
             if spl in utils.START_OF_FIGHT_SPELLS:

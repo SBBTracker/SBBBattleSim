@@ -13,7 +13,7 @@ class ChupacabraSlay(OnAttackAndKill):
 
         modifier = 4 if self.manager.golden else 2
 
-        Buff(reason=ActionReason.SLAY, source=self.manager, targets=[self.manager, *targetted_chars],
+        Buff(reason=ActionReason.CHUPACABRA_SLAY, source=self.manager, targets=[self.manager, *targetted_chars],
              attack=modifier, temp=False, stack=stack).resolve()
 
 

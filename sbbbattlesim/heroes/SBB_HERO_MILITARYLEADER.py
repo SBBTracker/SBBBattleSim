@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class LastBreathConvertedToOnAttackAndKillEvent(OnAttackAndKill):
     slay = True
 
-    def handle(self, killed_character, stack, *args, **kwargs):
+    def handle(self, killed_character, stack, reason, *args, **kwargs):
         with stack.open() as executor:
             executor.execute(self.source, reason=ActionReason.TROPHY_HUNTER_PROC, *args, **kwargs)
 
