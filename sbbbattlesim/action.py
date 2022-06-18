@@ -302,7 +302,15 @@ class Action:
         for char in characters or self.targets:
             logger.debug(f'{self} execute ({char.pretty_print()}, {kwargs})')
 
-            self.source.player.action_counters[self.reason] += 1
+            self.source.player.combat_records.append(Record(
+                reason=self.reason,
+                source=self.source,
+                target=char,
+                attack=self.attack,
+                health=self.health,
+                damage=self.damage,
+                heal=self.heal,
+            ))
 
             if not self._lambda(char) or char in self._char_buffer:
                 continue

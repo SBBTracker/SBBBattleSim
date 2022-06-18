@@ -10,9 +10,8 @@ from dataclasses import dataclass
 from typing import Dict, List
 import json
 
-from sbbbattlesim import fight
+from sbbbattlesim.combat import CombatStats, fight
 from sbbbattlesim.player import Player
-from sbbbattlesim.stats import CombatStats
 
 logger = logging.getLogger(__name__)
 

@@ -7,14 +7,20 @@ ACTION_COUNTER_TESTS = (
     (
         make_player(characters=[make_character(id='SBB_CHARACTER_POLYWOGGLE')]),
         make_player(characters=[make_character(id='SHEEEEEEEEEEEEEEEEEEEEEP', attack=0)]),
-        'Polywoggle Slay',
+        'Poly Woggle Slay Chance',
         1
     ),
     (
-        make_player(characters=[make_character(id='SBB_CHARACTER_WRETCHEDMUMMY', attack=0)]),
-        make_player(characters=[make_character(id='SHEEEEEEEEEEEEEEEEEEEEEP')]),
-        'Wretched Mummy Explosion',
-        1
+        make_player(characters=[make_character(id='SBB_CHARACTER_WRETCHEDMUMMY', attack=15)]),
+        make_player(
+            characters=[
+                make_character(id='SHEEEEEEEEEEEEEEEEEEEEEP'),
+                make_character(id='SHEEEEEEEEEEEEEEEEEEEEEP', position=2)
+            ],
+            treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+        ),
+        'Wretched Mummy Explosion Damage',
+        15
     ),
 )
 
@@ -23,10 +29,10 @@ ACTION_COUNTER_TESTS = (
 def test_stats(p1, p2, key, counter):
     stats = fight(p1, p2)
 
-    for pid, counters in stats.action_counters.items():
-        print(pid, counters)
+    for stat_id, counters in stats.adv_stats.items():
+        print(stat_id, counters)
 
-    assert stats.action_counters[p1.id][key] == counter
+    assert stats.adv_stats[p1.id][key] == counter
 
 
 if __name__ == '__main__':

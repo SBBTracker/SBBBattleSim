@@ -2,10 +2,10 @@ from dataclasses import dataclass
 
 @dataclass
 class Record:
-    reason: ('ActionReason', None) = None
-    source: ('Character', 'Hero', 'Spell', 'Treasure', None) = None
-    target: ('Character', 'Hero', 'Spell', 'Treasure', None) = None
-    event: ('Event', None) = None
+    reason: 'ActionReason' = None
+    source: ('Character', 'Hero', 'Spell', 'Treasure') = None
+    target: ('Character', 'Hero', 'Spell', 'Treasure') = None
+    event: 'Event' = None
     attack: int = 0
     health: int = 0
     damage: int = 0

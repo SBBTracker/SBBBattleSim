@@ -87,7 +87,7 @@ class Player(EventManager):
         self.graveyard = []
         self._last_attacker = None
         self._attack_chain = 0
-        self.action_counters = collections.defaultdict(int)
+        self.combat_records = []
 
         # Gather and apply auras from creatures assumed to be on the player
         # NOTE: Aura priority is independent of Support priority and this *could* change
@@ -204,7 +204,7 @@ class Player(EventManager):
         self.graveyard = []
         self._last_attacker = None
         self._attack_chain = 0
-        self.action_counters = collections.defaultdict(int)
+        self.combat_records = []
 
         for spl in self.spells:
             if spl in utils.START_OF_FIGHT_SPELLS:
