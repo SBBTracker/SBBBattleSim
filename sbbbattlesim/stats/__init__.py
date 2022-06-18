@@ -1,9 +1,9 @@
+import collections
 import logging
 import pkgutil
 import typing
 from collections import OrderedDict
 
-from sbbbattlesim.characters import Character
 from sbbbattlesim.player import Player
 
 logger = logging.getLogger(__name__)
@@ -12,22 +12,60 @@ logic_path = __path__
 
 
 def calculate_adv_stats(player: Player):
-    adv_stats = {}
+    calculated_stats = {}
 
-    for slug, stat in registry.stats.items():
-        value = stat.calculate(player)
+    for slug, stat_cls in registry.stats.items():
+        value = stat_cls.calculate(player)
         if value:
-            adv_stats[stat.display_name] = value
+            calculated_stats[slug] = value
 
-    return adv_stats
+    return calculated_stats
+
+
+def finalize_adv_stats(results: typing.List['CombatStats']) -> typing.Dict[str, typing.Dict[str, str]]:
+    merged_stats = {}  # {pid: {sid: StatType}}
+    for combat_result in results:
+        for pid, stats in combat_result.adv_stats.items():
+            if pid not in merged_stats:
+                merged_stats[pid] = collections.defaultdict(list)
+            for sid, s in stats.items():
+                merged_stats[pid][sid].append(s)
+
+    finalize_stats = {}  # {pid: {stat display name: stat pretty print}}
+    for pid, stats in merged_stats.items():
+        player_stats = {}
+        for sid, stat_list in sorted(stats.items(), key=lambda sids: sids[1]):
+            stat_cls = registry.stats[sid]
+            player_stats[stat_cls.display_name] = stat_cls.pretty_print(stat_cls.merge(stat_list))
+        finalize_stats[pid] = player_stats
+
+    return finalize_stats
 
 
 class StatBase:
+    id: str = ''
     display_name: str = ''
+    display_format: str = ''
+
+    @staticmethod
+    def calculate(player: Player) -> int:
+        raise NotImplementedError
+
+    @staticmethod
+    def merge(stats: typing.List['StatBase']):
+        raise NotImplementedError
 
     @classmethod
-    def calculate(cls, player: Player) -> int:
-        raise NotImplementedError
+    def pretty_print(cls, value):
+        return cls.display_format.format(value)
+
+    @classmethod
+    def valid(cls):
+        if not all((
+            isinstance(cls.display_name, str), cls.display_name,
+            isinstance(cls.display_format, str), cls.display_format
+        )):
+            raise ValueError
 
 
 class Registry(object):
@@ -35,7 +73,7 @@ class Registry(object):
     auto_registered = False
 
     def __getitem__(self, item):
-        return self.stats.get(item, Character)
+        return self.stats.get(item)
 
     def __getattr__(self, item):
         return getattr(self.stats, item)
@@ -56,6 +94,8 @@ class Registry(object):
 
         for _, name, _ in pkgutil.iter_modules(logic_path):
             stat = __import__(name, globals(), locals(), ['StatType'], 1)
+            if name in self.stats or not stat.StatType.valid():
+                raise NotImplementedError
             self.register(name, stat.StatType)
 
 

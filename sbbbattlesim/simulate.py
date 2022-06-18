@@ -1,10 +1,7 @@
-import collections
 import concurrent.futures
 import hashlib
 import logging
-import multiprocessing
 import time
-import traceback
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import Dict, List
@@ -12,6 +9,7 @@ import json
 
 from sbbbattlesim.combat import CombatStats, fight
 from sbbbattlesim.player import Player
+from sbbbattlesim.stats import finalize_adv_stats
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +84,7 @@ def simulate_brawl(data: dict, k: int) -> List[CombatStats]:
     return [fight(*(Player(id=i, **d) for i, d in deepcopy(data).items())) for _ in range(k)]
 
 
-def _process(data: dict, t: int = 1, k: int = 1, timeout: int = 30) -> list:
+def _process(data: dict, t: int = 1, k: int = 1, timeout: int = 30) -> List[CombatStats]:
     raw = []
     with concurrent.futures.ProcessPoolExecutor(max_workers=t) as executor:
         futures = [executor.submit(simulate_brawl, data, k) for _ in range(t)]
@@ -102,6 +100,7 @@ class SimulationStats:
     run_time: float
     # starting_board: Board
     results: List[CombatStats]
+    adv_stats: Dict[str, Dict[str, str]]
     raw: dict
 
 
@@ -113,5 +112,6 @@ def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> Simulati
         _id=hashlib.sha256(str(data).encode('utf-8')),
         run_time=time.perf_counter() - start,
         results=results,
+        adv_stats=finalize_adv_stats(results),
         raw=data
     )

@@ -8,7 +8,7 @@ from functools import lru_cache
 from sbbbattlesim.action import ActionReason
 from sbbbattlesim.events import EventManager, EventStack
 from sbbbattlesim.player import Player
-from sbbbattlesim.stats import calculate_adv_stats
+from sbbbattlesim.stats import calculate_adv_stats, StatBase
 
 sys.setrecursionlimit(500)
 
