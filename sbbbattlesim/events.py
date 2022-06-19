@@ -45,7 +45,7 @@ class Event:
         # TODO Add more logging???
         return self.handle(*args, **kwargs)
 
-    def handle(self, stack, reason, *args, **kwargs):
+    def handle(self, stack, reason=None, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -153,7 +153,7 @@ class OnSlay(Event):
 
 class OnSpellCast(Event):
     '''A player cast a spell'''
-    def handle(self, caster, spell, target, stack, reason, *args, **kwargs):
+    def handle(self, caster, spell, target, stack, reason=None, *args, **kwargs):
         raise NotImplementedError
 
 

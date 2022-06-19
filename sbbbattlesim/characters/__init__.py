@@ -28,6 +28,8 @@ class Character(EventManager):
     _health = 0
     _level = 0
     _tribes = set()
+    _quest_counter = 0
+    _quest_event = None
 
     deactivated = False
 
@@ -40,6 +42,7 @@ class Character(EventManager):
             golden: bool,
             tribes: typing.Iterable[typing.Union[str, Tribe]],
             cost: int,
+            quest_counter: int = 0,
             *args,
             **kwargs
     ):
@@ -52,6 +55,7 @@ class Character(EventManager):
         self.golden = golden
         self.tribes = {Tribe(tribe) for tribe in tribes}
         self.cost = cost
+        self.quest_counter = quest_counter
 
         self._damage = 0
         self.slay_counter = 0
@@ -75,7 +79,8 @@ class Character(EventManager):
             attack=cls._attack * (2 if golden else 1),
             health=cls._health * (2 if golden else 1),
             tribes=cls._tribes,
-            cost=cls._level
+            cost=cls._level,
+            quest_counter=cls._quest_counter
         )
 
     def copy(self):
@@ -87,6 +92,7 @@ class Character(EventManager):
             health=self._base_health,
             tribes=self._tribes,
             cost=self._level,
+            quest_counter=self.quest_counter
         )
 
         for action in self._action_history:
@@ -134,6 +140,12 @@ class Character(EventManager):
             targets=[target],
             damage=self.attack,
         )
+
+    def progress_quest(self, amount):
+        if self not in self.player.completed_quests:
+            self.quest_counter -= amount
+            if self.quest_counter <= 0:
+                self.player.completed_quests.append(self)
 
 
 CHARACTER_EXCLUSION = (

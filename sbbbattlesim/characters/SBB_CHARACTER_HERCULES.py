@@ -10,3 +10,4 @@ class CharacterType(Character):
     _health = 20
     _level = 6
     _tribes = {Tribe.GOOD, Tribe.ROYAL}
+    _quest_counter = 100

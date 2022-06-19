@@ -5,6 +5,9 @@ class Record:
     reason: 'ActionReason' = None
     source: ('Character', 'Hero', 'Spell', 'Treasure') = None
     target: ('Character', 'Hero', 'Spell', 'Treasure') = None
+    target_id: str = None
+    target_attack: int = None
+    target_health: int = None
     event: 'Event' = None
     attack: int = 0
     health: int = 0

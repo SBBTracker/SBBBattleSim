@@ -24,7 +24,7 @@ def from_state(state: dict):
         spells = []
         level = 0
         hand = []
-        counter = 0
+        mirhi_counter = 0
 
         for data in player_data:
             if data.zone == 'Character':
@@ -38,12 +38,13 @@ def from_state(state: dict):
                     'cost': int(data.cost),
                     'position': int(data.slot) + 1,  # This is done to match slot to normal board positions
                     'tribes': [subtype.lower() for subtype in data.subtypes],
+                    'quest_counter': int(data.counter)
                 })
             elif data.zone == 'Treasure':
                 treasures.append(data.content_id)
             elif data.zone == 'Hero':
                 hero = data.content_id
-                counter = data.counter
+                mirhi_counter = data.counter
                 level = int(data.level) if hasattr(data, "level") else 0
             elif data.zone == 'Spell':
                 spells.append(data.content_id)
@@ -57,6 +58,7 @@ def from_state(state: dict):
                     'cost': int(data.cost),
                     'position': int(data.slot) + 1,  # This is done to match slot to normal board positions
                     'tribes': [subtype.lower() for subtype in data.subtypes],
+                    'quest_counter': int(data.counter)
                 })
             elif data.zone == 'None' and 'SBB_SPELL' in data.content_id:
                 spells.append(data.content_id)
@@ -70,7 +72,7 @@ def from_state(state: dict):
             'hand': hand
         }
         if hero == "SBB_HERO_KINGLION":
-            sim_data[player]['mihri_buff'] = int(counter)
+            sim_data[player]['mihri_buff'] = int(mirhi_counter)
 
     assert isinstance(sim_data, dict)
 

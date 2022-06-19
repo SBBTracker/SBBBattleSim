@@ -32,6 +32,7 @@ class ActionReason(enum.Enum):
     SLAY = 8
     POST_ATTACK = 9
     POST_DEFEND = 10
+    DAMAGE_AND_SURVIVE = 11
 
     ANGRY_BUFF = 101
     DOUBLEY_BUFF = 102
@@ -252,7 +253,7 @@ class Action:
                 char.dead = True
                 logger.debug(f'{char.pretty_print()} marked for death in execution')
             elif self.damage > 0:
-                char('OnDamagedAndSurvived', damage=self.damage, *args, **kwargs)
+                char('OnDamagedAndSurvived', damage=self.damage, reason=ActionReason.DAMAGE_AND_SURVIVE, *args, **kwargs)
 
     def _clear(self, char, *args, **kwargs):
         '''
@@ -302,15 +303,20 @@ class Action:
         for char in characters or self.targets:
             logger.debug(f'{self} execute ({char.pretty_print()}, {kwargs})')
 
-            self.source.player.combat_records.append(Record(
+            record = Record(
                 reason=self.reason,
                 source=self.source,
                 target=char,
+                target_id=char.id,
+                target_attack=char.attack,
+                target_health=char.health,
                 attack=self.attack,
                 health=self.health,
                 damage=self.damage,
                 heal=self.heal,
-            ))
+            )
+            self.source.player.combat_records.append(record)
+            char.player.combat_records.append(record)
 
             if not self._lambda(char) or char in self._char_buffer:
                 continue
