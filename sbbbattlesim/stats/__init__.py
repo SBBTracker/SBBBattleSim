@@ -94,7 +94,7 @@ class Registry(object):
 
         for _, name, _ in pkgutil.iter_modules(logic_path):
             stat = __import__(name, globals(), locals(), ['StatType'], 1)
-            if name in self.stats or not stat.StatType.valid():
+            if name in self.stats or stat.StatType.valid():
                 raise NotImplementedError
             self.register(name, stat.StatType)
 

@@ -100,7 +100,7 @@ class SimulationStats:
     run_time: float
     # starting_board: Board
     results: List[CombatStats]
-    adv_stats: Dict[str, Dict[str, str]]
+    adv_stats: Dict[str, Dict[str, str]]  # {player_id: {stat_name: stat_value}
     raw: dict
 
 
