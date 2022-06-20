@@ -36,7 +36,7 @@ def finalize_adv_stats(results: typing.List['CombatStats']) -> typing.Dict[str, 
         player_stats = {}
         for sid, stat_list in sorted(stats.items(), key=lambda sids: sids[1]):
             stat_cls = registry.stats[sid]
-            player_stats[stat_cls.display_name] = stat_cls.pretty_print(stat_cls.merge(stat_list))
+            player_stats[stat_cls.display_name] = stat_cls.display_format.format(stat_cls.merge(stat_list))
         finalize_stats[pid] = player_stats
 
     return finalize_stats
@@ -54,10 +54,6 @@ class StatBase:
     @staticmethod
     def merge(stats: typing.List['StatBase']):
         raise NotImplementedError
-
-    @classmethod
-    def pretty_print(cls, value):
-        return cls.display_format.format(value)
 
     @classmethod
     def valid(cls):
