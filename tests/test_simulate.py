@@ -1,3 +1,4 @@
+import collections
 import typing
 
 import pytest
@@ -107,3 +108,4 @@ def test_simulate(data):
 
     for combat_stat in sim_stats.results:
         assert combat_stat.win_id == 'Player 1 ID HERE'
+

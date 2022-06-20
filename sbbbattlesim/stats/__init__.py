@@ -36,7 +36,8 @@ def finalize_adv_stats(results: typing.List['CombatStats']) -> typing.Dict[str, 
         player_stats = {}
         for sid, stat_list in sorted(stats.items(), key=lambda sids: sids[1]):
             stat_cls = registry.stats[sid]
-            player_stats[stat_cls.display_name] = stat_cls.display_format.format(stat_cls.merge(stat_list))
+            if not stat_cls.hidden:
+                player_stats[stat_cls.display_name] = stat_cls.display_format.format(stat_cls.merge(stat_list))
         finalize_stats[pid] = player_stats
 
     return finalize_stats
@@ -47,6 +48,9 @@ class StatBase:
     display_name: str = ''
     display_format: str = ''
 
+    # This is used to prevent a stat from being grouped together for display purposes
+    hidden = False
+
     @staticmethod
     def calculate(player: Player) -> int:
         raise NotImplementedError
@@ -56,11 +60,10 @@ class StatBase:
         raise NotImplementedError
 
     @classmethod
-    def valid(cls):
-        if not all((
-            isinstance(cls.display_name, str), cls.display_name,
-            isinstance(cls.display_format, str), cls.display_format
-        )):
+    def valid(cls, fake_player):
+        if not (isinstance(cls.display_name, str) and cls.display_name):
+            raise ValueError
+        if not (cls.hidden and isinstance(cls.display_format, str) and cls.display_format):
             raise ValueError
 
 
