@@ -45,7 +45,7 @@ class Event:
         # TODO Add more logging???
         return self.handle(*args, **kwargs)
 
-    def handle(self, stack, reason, *args, **kwargs):
+    def handle(self, stack, reason=None, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -153,7 +153,7 @@ class OnSlay(Event):
 
 class OnSpellCast(Event):
     '''A player cast a spell'''
-    def handle(self, caster, spell, target, stack, reason, *args, **kwargs):
+    def handle(self, caster, spell, target, stack, reason=None, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -240,14 +240,11 @@ class EventManager:
         if not self._events[event]:
             return stack
 
-        reason = kwargs.get('reason')
-        if reason and hasattr(self, 'player'):
-            self.player.action_counters[(self.display_name, reason)] += 1
-
         with stack.open(*args, **kwargs) as executor:
             for evt in self.get(event):
                 logger.debug(f'Firing {evt} with {args} {kwargs}')
                 executor.execute(evt, *args, **kwargs)
+                self.player.combat_records.append(Record(event=evt))
 
         return stack
 

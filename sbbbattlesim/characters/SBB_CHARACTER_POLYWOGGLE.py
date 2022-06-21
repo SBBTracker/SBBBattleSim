@@ -6,7 +6,7 @@ from sbbbattlesim.events import OnAttackAndKill
 from sbbbattlesim.utils import Tribe
 
 
-class PolywoggleSlay(OnAttackAndKill):
+class PolyWoggleSlay(OnAttackAndKill):
     slay = True
 
     def handle(self, killed_character, stack, *args, **kwargs):
@@ -39,4 +39,4 @@ class CharacterType(Character):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register(PolywoggleSlay)
+        self.register(PolyWoggleSlay)

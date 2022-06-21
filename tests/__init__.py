@@ -22,7 +22,8 @@ CHARACTER = {
     "cost": 0,
     "position": 1,
     "keywords": [],
-    "tribes": []
+    "tribes": [],
+    "quest_counter": 0,
 }
 
 

@@ -12,8 +12,10 @@ from sbbbattlesim.heroes import registry as hero_registry
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry
 from sbbbattlesim.characters import registry as character_registry
+from sbbbattlesim.stats import registry as stats_registry
 
 hero_registry.autoregister()
 spell_registry.autoregister()
 treasure_registry.autoregister()
 character_registry.autoregister()
+stats_registry.autoregister()

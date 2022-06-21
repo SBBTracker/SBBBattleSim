@@ -1,12 +1,14 @@
 import logging
 import random
 import sys
+import typing
+from dataclasses import dataclass
 from functools import lru_cache
 
 from sbbbattlesim.action import ActionReason
 from sbbbattlesim.events import EventManager, EventStack
 from sbbbattlesim.player import Player
-from sbbbattlesim.stats import CombatStats, calculate_damage, clean_action_counters
+from sbbbattlesim.stats import calculate_adv_stats, StatBase
 
 sys.setrecursionlimit(500)
 
@@ -14,6 +16,25 @@ logger = logging.getLogger(__name__)
 
 FRONT = (1, 2, 3, 4)
 BACK = (5, 6, 7)
+
+
+@dataclass
+class CombatStats:
+    win_id: (str, None)
+    damage: int
+    adv_stats: typing.Dict[str, typing.Dict[str, int]]  # {player.id: {stats_display_name: stats_value}}
+    first_attacker: (str, None)
+
+
+def calculate_damage(player: Player) -> int:
+    if player is None:
+        return 0
+
+    damage = player.level
+    for char in player.valid_characters():
+        damage += 3 if char.golden else 1
+
+    return damage
 
 
 def fight(p1: Player, p2: Player, limit=-1):
@@ -129,23 +150,23 @@ def fight(p1: Player, p2: Player, limit=-1):
 
     p1.opponent, p2.opponent = None, None
 
-    action_counters = {
-        p1.id: clean_action_counters(p1.action_counters),
-        p2.id: clean_action_counters(p2.action_counters)
+    adv_stats = {
+        p1.id: calculate_adv_stats(p1),
+        p2.id: calculate_adv_stats(p2)
     }
 
     if winner:
         return CombatStats(
             win_id=winner.id,
             damage=calculate_damage(winner),
-            action_counters=action_counters,
+            adv_stats=adv_stats,
             first_attacker=first_attacker
         )
     else:
         return CombatStats(
             win_id=None,
             damage=0,
-            action_counters=action_counters,
+            adv_stats=adv_stats,
             first_attacker=first_attacker
         )
 
