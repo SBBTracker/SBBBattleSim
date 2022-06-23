@@ -11,7 +11,6 @@ front_row_lambda = lambda char: char.position in (1, 2, 3, 4)
 
 class CatsCallOnDeath(OnDeath):
     last_breath = False
-    priority = 1000
 
     def handle(self, stack, reason, *args, **kwargs):
         if len(self.source.player.valid_characters(_lambda=front_row_lambda)) == 0:
@@ -27,4 +26,4 @@ class SpellType(Spell):
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         for char in self.player.valid_characters(_lambda=front_row_lambda):
-            char.register(CatsCallOnDeath, temp=False, source=self)
+            char.register(CatsCallOnDeath, temp=False, source=self, priority=-100)
