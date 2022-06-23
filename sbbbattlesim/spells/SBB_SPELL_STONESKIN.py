@@ -1,5 +1,5 @@
 from sbbbattlesim.spells import Spell
-from sbbbattlesim.action import ActionReason
+from sbbbattlesim.action import ActionReason, Buff
 
 
 class SpellType(Spell):

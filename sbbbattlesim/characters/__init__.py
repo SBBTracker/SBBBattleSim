@@ -25,7 +25,7 @@ class Character(EventManager):
 
     # TEMPLATE STATS
     _attack = 0
-    _health = 0
+    _health = 1
     _level = 0
     _tribes = set()
     _quest_counter = 0
