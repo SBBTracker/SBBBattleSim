@@ -60,11 +60,11 @@ class StatBase:
         raise NotImplementedError
 
     @classmethod
-    def valid(cls, fake_player):
+    def valid(cls):
         if not (isinstance(cls.display_name, str) and cls.display_name):
-            raise ValueError
-        if not (cls.hidden and isinstance(cls.display_format, str) and cls.display_format):
-            raise ValueError
+            raise ValueError('Display Name Not Set')
+        if not cls.hidden and not isinstance(cls.display_format, str) and not cls.display_format:
+            raise ValueError(f'Display Format Not Set')
 
 
 class Registry(object):
@@ -93,8 +93,10 @@ class Registry(object):
 
         for _, name, _ in pkgutil.iter_modules(logic_path):
             stat = __import__(name, globals(), locals(), ['StatType'], 1)
-            if name in self.stats or stat.StatType.valid():
-                raise NotImplementedError
+            try:
+                stat.StatType.valid()
+            except ValueError as e:
+                print(name, e)
             self.register(name, stat.StatType)
 
 

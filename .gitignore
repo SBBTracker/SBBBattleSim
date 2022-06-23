@@ -6,4 +6,4 @@
 /*.egg-info
 /build
 logging.ini
-does_it_work.py
+event_priorities.json
