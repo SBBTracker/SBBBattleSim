@@ -241,7 +241,7 @@ class Action:
 
         if self.damage > 0:
             if char.invincible and self.reason != ActionReason.DAMAGE_WHILE_DEFENDING:
-                char('OnDamagedAndSurvived', damage=0, *args, **kwargs)
+                char('OnDamagedAndSurvived', damage=0, reason=ActionReason.DAMAGE_AND_SURVIVE, *args, **kwargs)
                 return
             char._damage += self.damage
 

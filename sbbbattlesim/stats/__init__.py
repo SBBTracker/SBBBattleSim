@@ -14,10 +14,26 @@ logic_path = __path__
 def calculate_adv_stats(player: Player):
     calculated_stats = {}
 
+    char_ids = []
+    quest_ids = []
+
+    for char in player.starting_board.values():
+        if char:
+            char_ids.append(char.id)
+            if char.quest_counter > 0:
+                quest_ids.append(char.id)
+
+    char_ids = [char.id for char in player.starting_board.values() if char]
+    quest_ids = [char.id for char in player.starting_board.values() if char and char.quest_counter > 0]
     for slug, stat_cls in registry.stats.items():
-        value = stat_cls.calculate(player)
-        if value:
-            calculated_stats[slug] = value
+        if stat_cls.disabled:
+            continue
+
+        id_check = quest_ids if stat_cls.quest else char_ids
+        if stat_cls.unit_id and stat_cls.unit_id not in id_check:
+            continue
+
+        calculated_stats[slug] = stat_cls.calculate(player)
 
     return calculated_stats
 
@@ -31,13 +47,14 @@ def finalize_adv_stats(results: typing.List['CombatStats']) -> typing.Dict[str, 
             for sid, s in stats.items():
                 merged_stats[pid][sid].append(s)
 
+    print(merged_stats)
     finalize_stats = {}  # {pid: {stat display name: stat pretty print}}
     for pid, stats in merged_stats.items():
         player_stats = {}
         for sid, stat_list in sorted(stats.items(), key=lambda sids: sids[1]):
             stat_cls = registry.stats[sid]
             if not stat_cls.hidden:
-                player_stats[stat_cls.display_name] = stat_cls.display_format.format(stat_cls.merge(stat_list))
+                player_stats[stat_cls.display_name] = stat_cls.display_format.format(round(stat_cls.merge(stat_list), 2))
         finalize_stats[pid] = player_stats
 
     return finalize_stats
@@ -47,16 +64,20 @@ class StatBase:
     id: str = ''
     display_name: str = ''
     display_format: str = ''
+    unit_id: str = ''
+
+    quest = False
 
     # This is used to prevent a stat from being grouped together for display purposes
     hidden = False
+    disabled = False
 
     @staticmethod
     def calculate(player: Player) -> int:
         raise NotImplementedError
 
     @staticmethod
-    def merge(stats: typing.List['StatBase']):
+    def merge(stats: typing.List[typing.Union[str, int, float]]):
         raise NotImplementedError
 
     @classmethod
