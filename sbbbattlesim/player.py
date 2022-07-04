@@ -3,6 +3,7 @@ import logging
 import random
 import typing
 from collections import OrderedDict, defaultdict
+from copy import copy
 from functools import cached_property
 
 from sbbbattlesim import utils
@@ -82,6 +83,7 @@ class Player(EventManager):
 
         # Combat values
         self.opponent = None
+        self.starting_board = copy(self.__characters)
         self.stateful_effects = {}  # Currently only used for old puff puff logic. TODO: redo logic to use new hidden counter
         self._attack_slot = None
         self.graveyard = []
@@ -200,6 +202,7 @@ class Player(EventManager):
 
     def prepare_combat(self):
         self.opponent = None
+        self.starting_board = copy(self.__characters)
         self.stateful_effects = {}  # Currently only used for old puff puff logic. TODO: redo logic to use new hidden counter
         self._attack_slot = None
         self.graveyard = []

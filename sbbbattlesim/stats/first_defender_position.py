@@ -33,5 +33,5 @@ class StatType(StatBase):
         return -1
 
     @staticmethod
-    def merge(stats: typing.List['StatBase']):
+    def merge(stats: typing.List[typing.Union[str, int, float]]):
         return
