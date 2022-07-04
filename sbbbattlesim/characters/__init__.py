@@ -6,6 +6,7 @@ from collections import OrderedDict
 
 from sbbbattlesim.action import Damage
 from sbbbattlesim.events import EventManager
+from sbbbattlesim.record import Record
 from sbbbattlesim.utils import Tribe
 
 logger = logging.getLogger(__name__)
@@ -144,6 +145,7 @@ class Character(EventManager):
     def progress_quest(self, amount):
         if self not in self.player.completed_quests:
             self.quest_counter -= amount
+            self.player.combat_records.append(Record(source=self, quest_progress=amount))
             if self.quest_counter <= 0:
                 self.player.completed_quests.append(self)
 

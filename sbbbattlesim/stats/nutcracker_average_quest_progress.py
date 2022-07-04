@@ -16,7 +16,6 @@ class StatType(StatBase):
 
     @staticmethod
     def calculate(player: Player) -> int:
-
         return sum(
             1 for record in player.combat_records
             if isinstance(record.event, NutCrackerOnDamageAndSurvive)
