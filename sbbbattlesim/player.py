@@ -91,6 +91,7 @@ class Player(EventManager):
         self._attack_chain = 0
         self.combat_records = []
         self.completed_quests = []
+        self.available_quests = set([char.id for char in self.valid_characters() if char.quest_counter > 0])
 
         # Gather and apply auras from creatures assumed to be on the player
         # NOTE: Aura priority is independent of Support priority and this *could* change
@@ -210,6 +211,7 @@ class Player(EventManager):
         self._attack_chain = 0
         self.combat_records = []
         self.completed_quests = []
+        self.available_quests = set([char.id for char in self.valid_characters() if char.quest_counter > 0])
 
         for spl in self.spells:
             if spl in utils.START_OF_FIGHT_SPELLS:

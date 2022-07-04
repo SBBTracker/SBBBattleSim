@@ -86,7 +86,7 @@ def test_nutcracker_quest_progression():
 def test_brave_princess_slays():
     player = make_player(
         characters=[
-            make_character(id='SBB_CHARACTER_QUESTINGPRINCESS', health=15),
+            make_character(id='SBB_CHARACTER_QUESTINGPRINCESS', health=15, quest_counter=2),
         ]
     )
     enemy = make_player(

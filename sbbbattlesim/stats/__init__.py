@@ -14,22 +14,12 @@ logic_path = __path__
 def calculate_adv_stats(player: Player):
     calculated_stats = {}
 
-    char_ids = []
-    quest_ids = []
-
-    for char in player.starting_board.values():
-        if char:
-            char_ids.append(char.id)
-            if char.quest_counter > 0:
-                quest_ids.append(char.id)
-
     char_ids = [char.id for char in player.starting_board.values() if char]
-    quest_ids = [char.id for char in player.starting_board.values() if char and char.quest_counter > 0]
     for slug, stat_cls in registry.stats.items():
         if stat_cls.disabled:
             continue
 
-        id_check = quest_ids if stat_cls.quest else char_ids
+        id_check = player.available_quests if stat_cls.quest else char_ids
         if stat_cls.unit_id and stat_cls.unit_id not in id_check:
             continue
 
