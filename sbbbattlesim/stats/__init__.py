@@ -47,7 +47,6 @@ def finalize_adv_stats(results: typing.List['CombatStats']) -> typing.Dict[str, 
             for sid, s in stats.items():
                 merged_stats[pid][sid].append(s)
 
-    print(merged_stats)
     finalize_stats = {}  # {pid: {stat display name: stat pretty print}}
     for pid, stats in merged_stats.items():
         player_stats = {}
