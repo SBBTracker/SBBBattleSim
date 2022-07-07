@@ -15,7 +15,7 @@ class FeastingDragonSlay(OnAttackAndKill):
 class CharacterType(Character):
     display_name = 'Feasting Dragon'
 
-    _attack = 5
+    _attack = 6
     _health = 8
     _level = 4
     _tribes = {Tribe.DRAGON}
