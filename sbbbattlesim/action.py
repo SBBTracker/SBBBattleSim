@@ -33,6 +33,7 @@ class ActionReason(enum.Enum):
     POST_ATTACK = 9
     POST_DEFEND = 10
     DAMAGE_AND_SURVIVE = 11
+    SUMMON = 12
 
     ANGRY_BUFF = 101
     DOUBLEY_BUFF = 102

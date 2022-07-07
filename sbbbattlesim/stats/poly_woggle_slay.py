@@ -8,7 +8,7 @@ from sbbbattlesim.stats import StatBase
 class StatType(StatBase):
     display_name = 'Poly Woggle Slay'
     display_format = '{}%'
-    unit_id = 'SBB_CHARACTER_POLYWOGGLE'
+    unit_ids = ('SBB_CHARACTER_POLYWOGGLE',)
 
     @staticmethod
     def calculate(player: Player) -> int:
@@ -18,5 +18,5 @@ class StatType(StatBase):
         )
 
     @staticmethod
-    def merge(stats: typing.List[typing.Union[str, int, float]]):
-        return (sum(stats)/len(stats)) * 100
+    def merge(stats: typing.List['StatBase']):
+        return (sum(stats) / len(stats)) * 100

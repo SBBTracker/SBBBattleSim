@@ -19,8 +19,8 @@ def calculate_adv_stats(player: Player):
         if stat_cls.disabled:
             continue
 
-        id_check = player.available_quests if stat_cls.quest else char_ids
-        if stat_cls.unit_id and stat_cls.unit_id not in id_check:
+        id_check = set(player.available_quests if stat_cls.quest else char_ids)
+        if not set(stat_cls.unit_ids).intersection(id_check):
             continue
 
         calculated_stats[slug] = stat_cls.calculate(player)
@@ -43,7 +43,7 @@ def finalize_adv_stats(results: typing.List['CombatStats']) -> typing.Dict[str, 
         for sid, stat_list in sorted(stats.items(), key=lambda sids: sids[1]):
             stat_cls = registry.stats[sid]
             if not stat_cls.hidden:
-                player_stats[stat_cls.display_name] = stat_cls.display_format.format(round(stat_cls.merge(stat_list), 2))
+                player_stats[stat_cls.display_name] = stat_cls.display_format.format(stat_cls.merge(stat_list))
         finalize_stats[pid] = player_stats
 
     return finalize_stats
@@ -53,7 +53,7 @@ class StatBase:
     id: str = ''
     display_name: str = ''
     display_format: str = ''
-    unit_id: str = ''
+    unit_ids: set = set()
 
     quest = False
 

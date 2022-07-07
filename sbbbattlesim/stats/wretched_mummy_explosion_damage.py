@@ -8,7 +8,7 @@ from sbbbattlesim.stats import StatBase
 class StatType(StatBase):
     display_name = 'Average Wretched Mummy Explosion Damage'
     display_format = '{}'
-    unit_id = 'SBB_CHARACTER_WRETCHEDMUMMY'
+    unit_ids = ('SBB_CHARACTER_WRETCHEDMUMMY',)
     disabled = True
 
     @staticmethod
@@ -19,5 +19,5 @@ class StatType(StatBase):
         )
 
     @staticmethod
-    def merge(stats: typing.List[typing.Union[str, int, float]]):
-        return sum(stats)/len(stats)
+    def merge(stats: typing.List['StatBase']):
+        return sum(stats) / len(stats)

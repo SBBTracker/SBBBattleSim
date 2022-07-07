@@ -158,3 +158,37 @@ def test_cinderella_quest_completion():
 
     stats = fight(player, enemy)
     assert stats.adv_stats[player.id]['cinderella_quest_completion_chance'] == 1
+
+
+def test_average_number_of_summons():
+    player = make_player(
+        level=6,
+        characters=[
+            make_character(id='SBB_CHARACTER_THREEBIGPIGS', attack=0, health=1, position=5),
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(id='SHEEEEEEEEEEEEEEEEEEEEEP'),
+        ],
+    )
+
+    stats = fight(player, enemy)
+    assert stats.adv_stats[player.id]['average_number_of_summons'] == 3
+
+
+def test_average_number_of_summons():
+    player = make_player(
+        level=6,
+        characters=[
+            make_character(id='SBB_CHARACTER_HUMPTYDUMPTY', attack=0, health=1, position=5),
+        ]
+    )
+    enemy = make_player(
+        characters=[
+            make_character(id='SHEEEEEEEEEEEEEEEEEEEEEP'),
+        ],
+    )
+
+    stats = fight(player, enemy)
+    assert stats.adv_stats[player.id]['scrambled_eggs'] == 1
