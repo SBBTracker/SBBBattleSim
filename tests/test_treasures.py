@@ -1686,7 +1686,7 @@ def test_radiantprism(hasopp):
     )
 
     enemy = make_player(
-        characters= [make_character(id='SBB_CHARACTER_FOXTAILARCHER', attack=10)] if hasopp else [],
+        characters=[make_character(id='SBB_CHARACTER_FOXTAILARCHER', attack=10)] if hasopp else [],
         treasures=[
             '''SBB_TREASURE_HERMES'BOOTS'''
         ]

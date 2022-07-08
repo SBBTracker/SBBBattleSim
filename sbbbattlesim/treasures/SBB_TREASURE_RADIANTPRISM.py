@@ -3,6 +3,7 @@ from sbbbattlesim.characters import Character
 from sbbbattlesim.treasures import Treasure
 from sbbbattlesim.utils import Tribe
 
+
 def _changeling(char: Character):
     for tribe in Tribe:
         char.tribes.add(tribe)
