@@ -194,7 +194,7 @@ class Player(EventManager):
         return support_itr
 
     def add_aura(self, *auras: Aura, **kwargs):
-        auras = set(sorted(auras, key=lambda aura: aura.priority, reverse=True))
+        auras = sorted(set(auras), key=lambda aura: aura.priority, reverse=True)
 
         for aura in auras:
             aura.execute(*self.valid_characters(), **kwargs)
