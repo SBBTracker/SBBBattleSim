@@ -1675,7 +1675,10 @@ def test_spear_of_achilles2(mimic):
 def test_radiantprism(hasopp):
     player = make_player(
         characters=[
-            make_character(id="SBB_CHARACTER_BLACKCAT")
+            make_character(id="SBB_CHARACTER_BLACKCAT", position=6),
+            make_character(id="SBB_CHARACTER_KINGTREE", health=1, position=1),
+            make_character(id="SBB_CHARACTER_MONSTERLORD", health=1, position=7),
+            make_character(id="SBB_CHARACTER_COURTWIZARD", health=1, position=5)
         ],
         treasures=[
             'SBB_TREASURE_RADIANTPRISM'
@@ -1683,10 +1686,17 @@ def test_radiantprism(hasopp):
     )
 
     enemy = make_player(
-        characters= [make_character(id='Enemy', attack=1)] if hasopp else []
+        characters= [make_character(id='SBB_CHARACTER_FOXTAILARCHER', attack=10)] if hasopp else [],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
     )
     fight(player, enemy)
 
-    animal = player.characters[1]
+    animal = player.characters[6]
+    courtwizard = player.characters[5]
 
+    assert animal.attack == 2
+    assert courtwizard.attack == (12 if hasopp else 2)
     assert {tribe for tribe in Tribe} == animal.tribes
+    assert enemy.characters[1] is None
