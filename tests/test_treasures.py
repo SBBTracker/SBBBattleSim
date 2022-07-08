@@ -1131,10 +1131,10 @@ def test_draculas_saber(mimic):
     assert char
 
     if mimic:
-        assert char.attack == 5
+        assert char.attack == 3
         assert char.health == 3
     else:
-        assert char.attack == 3
+        assert char.attack == 2
         assert char.health == 2
 
 
@@ -1430,7 +1430,7 @@ def test_fairy_queens_wand(mimic):
 
     char = player.characters[1]
 
-    buff = 10 if mimic else 5
+    buff = 14 if mimic else 7
 
     assert char
     assert char.attack == 1 + buff

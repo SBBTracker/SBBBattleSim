@@ -40,3 +40,23 @@ def test_cupid_ranged():
 
 
     assert (player.characters[6].attack, player.characters[6].health) == (3, 6)
+
+def test_cupid_soltak():
+    player = make_player(
+        raw=True,
+        characters=[
+            make_character(id="SBB_CHARACTER_CUPID", position=1),
+            make_character(position=2)
+        ],
+        treasures=['''SBB_TREASURE_HERMES'BOOTS''']
+    )
+    enemy = make_player(
+        characters=[
+            make_character(id="SBB_CHARACTER_SOLTAKANCIENT", position=1),
+            make_character(position=5, health=2)
+        ],
+    )
+    fight(player, enemy, limit=1)
+
+    assert enemy.characters[5] is not None
+    assert enemy.characters[1] is not None

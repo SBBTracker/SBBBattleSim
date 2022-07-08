@@ -8,7 +8,7 @@ class DraculasSaberOnDeath(OnDeath):
 
     def handle(self, stack, reason, *args, **kwargs):
         for _ in range(self.source.multiplier + 1):
-            Buff(reason=ActionReason.DRACULAS_SABER_BUFF, source=self.source, attack=2, health=1,).execute(*self.source.player.valid_characters())
+            Buff(reason=ActionReason.DRACULAS_SABER_BUFF, source=self.source, attack=1, health=1,).execute(*self.source.player.valid_characters())
 
 
 class DraculasSaberOnSetup(OnSetup):

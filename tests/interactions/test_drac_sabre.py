@@ -27,7 +27,7 @@ def test_simple_drac_sabre(mimic):
     )
     fight(player, enemy, limit=3)
 
-    final_stats = (9, 5) if mimic else (5, 3)
+    final_stats = (5, 5) if mimic else (3, 3)
 
     assert (player.characters[6].attack, player.characters[6].health) == final_stats
 
@@ -55,4 +55,4 @@ def test_proc_order_drac_sabre(direction):
     )
     fight(player, enemy, limit=1)
 
-    assert (player.characters[1].attack, player.characters[1].health) == (4, 1)
+    assert (player.characters[1].attack, player.characters[1].health) == (3, 1)

@@ -27,7 +27,7 @@ class CupidOnPostDefend(OnPostDefend):
 class CupidOnPreAttack(OnPreAttack):
     def handle(self, attack_position, defend_position, defend_player, *args, **kwargs):
         defend_character = defend_player.characters.get(defend_position)
-        if defend_character is not None:
+        if defend_character is not None and not defend_character.invincible:
             defend_character.register(CupidOnPostDefend)
 
 

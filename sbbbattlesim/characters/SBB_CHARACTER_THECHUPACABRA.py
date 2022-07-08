@@ -20,8 +20,8 @@ class ChupacabraSlay(OnAttackAndKill):
 class CharacterType(Character):
     display_name = 'The Chupacabra'
 
-    _attack = 7
-    _health = 5
+    _attack = 8
+    _health = 6
     _level = 4
     _tribes = {Tribe.EVIL, Tribe.MONSTER}
 
