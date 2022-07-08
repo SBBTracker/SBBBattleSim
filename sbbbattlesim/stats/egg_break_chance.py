@@ -9,7 +9,7 @@ from sbbbattlesim.stats import StatBase
 
 
 class StatType(StatBase):
-    display_name = 'Scrambled Eggs Chance'
+    display_name = 'Scrambled Egg Chance'
     display_format = '{}%'
     unit_ids = (
         'SBB_CHARACTER_HUMPTYDUMPTY',

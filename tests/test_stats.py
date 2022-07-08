@@ -191,4 +191,4 @@ def test_average_number_of_summons():
     )
 
     stats = fight(player, enemy)
-    assert stats.adv_stats[player.id]['scrambled_eggs'] == 1
+    assert stats.adv_stats[player.id]['egg_break_chance'] == 1
