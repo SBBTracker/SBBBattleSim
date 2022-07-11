@@ -7,7 +7,7 @@ from sbbbattlesim.stats import StatBase
 class StatType(StatBase):
     display_name = 'Prized Pig Survival'
     display_format = '{}%'
-    unit_id = 'SBB_CHARACTER_PRIZEDPIG'
+    unit_ids = ('SBB_CHARACTER_PRIZEDPIG',)
 
     @staticmethod
     def calculate(player: Player) -> int:
@@ -17,4 +17,4 @@ class StatType(StatBase):
 
     @staticmethod
     def merge(stats: typing.List[typing.Union[str, int, float]]):
-        return (sum(stats)/len(stats)) * 100
+        return (sum(stats) / len(stats)) * 100

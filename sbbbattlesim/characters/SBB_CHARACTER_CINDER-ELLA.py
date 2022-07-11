@@ -3,7 +3,7 @@ from sbbbattlesim.events import OnSpellCast
 from sbbbattlesim.utils import Tribe
 
 
-class CinderelalOnSpellCast(OnSpellCast):
+class CinderellaOnSpellCast(OnSpellCast):
     def handle(self, caster, spell, target, stack, reason=None, *args, **kwargs):
         self.source.progress_quest(1)
 
@@ -22,8 +22,9 @@ class CharacterType(Character):
         super().__init__(*args, **kwargs)
         self.cinderella_on_spell_cast_event = None
         if not self.golden:
-            self.cinderella_on_spell_cast_event = self.player.register(CinderelalOnSpellCast, source=self)
+            self.cinderella_on_spell_cast_event = self.player.register(CinderellaOnSpellCast, source=self)
 
     def progress_quest(self, amount):
         super().progress_quest(amount)
-        self.player.unregister(self.cinderella_on_spell_cast_event)
+        if self.quest_counter <= 0:
+            self.player.unregister(self.cinderella_on_spell_cast_event)

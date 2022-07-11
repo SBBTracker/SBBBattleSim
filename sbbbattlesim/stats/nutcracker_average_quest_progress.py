@@ -10,7 +10,7 @@ from sbbbattlesim.stats import StatBase
 class StatType(StatBase):
     display_name = 'Nutcracker Quest Progress'
     display_format = '{}'
-    unit_id = 'SBB_CHARACTER_VENGEFULGODMOTHER'
+    unit_ids = ('SBB_CHARACTER_VENGEFULGODMOTHER',)
 
     quest = True
 
@@ -23,4 +23,4 @@ class StatType(StatBase):
 
     @staticmethod
     def merge(stats: typing.List[typing.Union[str, int, float]]):
-        return (sum(stats)/len(stats))
+        return (sum(stats) // len(stats))

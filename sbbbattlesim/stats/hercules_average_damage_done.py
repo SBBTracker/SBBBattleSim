@@ -9,7 +9,7 @@ from sbbbattlesim.stats import StatBase
 class StatType(StatBase):
     display_name = 'Hercules Average Damage'
     display_format = '{}'
-    unit_id = 'SBB_CHARACTER_HERCULES'
+    unit_ids = ('SBB_CHARACTER_HERCULES',)
 
     quest = True
 
@@ -22,4 +22,4 @@ class StatType(StatBase):
 
     @staticmethod
     def merge(stats: typing.List[typing.Union[str, int, float]]):
-        return (sum(stats)/len(stats))
+        return (sum(stats) // len(stats))

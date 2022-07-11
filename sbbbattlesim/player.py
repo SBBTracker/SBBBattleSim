@@ -7,10 +7,11 @@ from copy import copy
 from functools import cached_property
 
 from sbbbattlesim import utils
-from sbbbattlesim.action import Aura, Support
+from sbbbattlesim.action import Aura, Support, ActionReason
 from sbbbattlesim.characters import registry as character_registry, Character
 from sbbbattlesim.events import EventManager, OnStart, OnSetup
 from sbbbattlesim.heroes import registry as hero_registry
+from sbbbattlesim.record import Record
 from sbbbattlesim.spells import registry as spell_registry
 from sbbbattlesim.treasures import registry as treasure_registry, Treasure
 
@@ -302,6 +303,10 @@ class Player(EventManager):
             character.aura.execute(*self.valid_characters())
 
         character('OnSpawn')
+        self.combat_records.append(Record(
+            target=character,
+            reason=ActionReason.SUMMON
+        ))
 
         return character
 
