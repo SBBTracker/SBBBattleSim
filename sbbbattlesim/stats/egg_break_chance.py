@@ -1,9 +1,6 @@
 import typing
 
-from sbbbattlesim.action import ActionReason
 from sbbbattlesim.characters.SBB_CHARACTER_HUMPTYDUMPTY import HumptyDumptyOnDeath
-from sbbbattlesim.characters.SBB_CHARACTER_POLYWOGGLE import PolyWoggleSlay
-from sbbbattlesim.characters.SBB_CHARACTER_QUESTINGPRINCESS import BravePrincessSlay
 from sbbbattlesim.player import Player
 from sbbbattlesim.stats import StatBase
 

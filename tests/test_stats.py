@@ -146,18 +146,19 @@ def test_hercules_average_damage_done():
 def test_cinderella_quest_completion():
     player = make_player(
         characters=[
-            make_character(id='SBB_CHARACTER_CINDER-ELLA', attack=0, health=5, quest_counter=1, position=5),
-            make_character(id='SBB_CHARACTER_MONSTERBOOK', attack=0, health=1, position=1),
+            make_character(id='SBB_CHARACTER_CINDER-ELLA', attack=0, health=5, quest_counter=2, position=5),
+            make_character(id='SBB_CHARACTER_MONSTERBOOK', attack=1, health=1, position=1),
+            make_character(id='SBB_CHARACTER_MONSTERBOOK', attack=1, health=1, position=2),
         ]
     )
     enemy = make_player(
         characters=[
-            make_character(id='SHEEEEEEEEEEEEEEEEEEEEEP'),
+            make_character(id='SHEEEEEEEEEEEEEEEEEEEEEP', health=9999),
         ],
     )
 
     stats = fight(player, enemy)
-    assert stats.adv_stats[player.id]['cinderella_quest_completion_chance'] == 1
+    assert stats.adv_stats[player.id]['cinderella_quest_completion_chance'] == 2
 
 
 def test_average_number_of_summons():
@@ -175,20 +176,3 @@ def test_average_number_of_summons():
 
     stats = fight(player, enemy)
     assert stats.adv_stats[player.id]['average_number_of_summons'] == 3
-
-
-def test_average_number_of_summons():
-    player = make_player(
-        level=6,
-        characters=[
-            make_character(id='SBB_CHARACTER_HUMPTYDUMPTY', attack=0, health=1, position=5),
-        ]
-    )
-    enemy = make_player(
-        characters=[
-            make_character(id='SHEEEEEEEEEEEEEEEEEEEEEP'),
-        ],
-    )
-
-    stats = fight(player, enemy)
-    assert stats.adv_stats[player.id]['egg_break_chance'] == 1
