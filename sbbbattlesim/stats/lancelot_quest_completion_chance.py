@@ -16,5 +16,5 @@ class StatType(StatBase):
         return sum(1 for char in player.completed_quests if char.id == 'SBB_CHARACTER_LANCELOT')
 
     @staticmethod
-    def merge(stats: typing.List['StatBase']):
+    def merge(stats: typing.List[typing.Union[str, int, float]]):
         return (sum(stats) / len(stats)) * 100

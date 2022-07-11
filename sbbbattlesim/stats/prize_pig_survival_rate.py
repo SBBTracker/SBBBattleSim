@@ -16,5 +16,5 @@ class StatType(StatBase):
         )
 
     @staticmethod
-    def merge(stats: typing.List['StatBase']):
+    def merge(stats: typing.List[typing.Union[str, int, float]]):
         return (sum(stats) / len(stats)) * 100
