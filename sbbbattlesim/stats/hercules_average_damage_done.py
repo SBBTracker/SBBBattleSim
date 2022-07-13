@@ -22,4 +22,4 @@ class StatType(StatBase):
 
     @staticmethod
     def merge(stats: typing.List[typing.Union[str, int, float]]):
-        return (sum(stats) // len(stats))
+        return (sum(stats) / len(stats))
