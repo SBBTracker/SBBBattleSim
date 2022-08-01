@@ -10,7 +10,7 @@ def _changeling(char: Character):
 
 
 class TreasureType(Treasure):
-    display_name = 'Radiant Prism'
+    display_name = 'The World Tree'
     aura = True
 
     _level = 7

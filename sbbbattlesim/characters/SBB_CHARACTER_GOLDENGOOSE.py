@@ -5,7 +5,7 @@ from sbbbattlesim.utils import Tribe
 class CharacterType(Character):
     display_name = 'Greedy'
 
-    _attack = 4
-    _health = 8
+    _attack = 5
+    _health = 9
     _level = 4
     _tribes = {Tribe.DWARF}

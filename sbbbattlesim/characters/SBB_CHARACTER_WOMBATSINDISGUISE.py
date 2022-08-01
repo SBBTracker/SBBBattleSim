@@ -33,8 +33,8 @@ class WombatsInDisguiseOnDeath(OnDeath):
 class CharacterType(Character):
     display_name = 'Wombats In Disguise'
 
-    _attack = 4
-    _health = 4
+    _attack = 5
+    _health = 5
     _level = 5
     _tribes = {Tribe.ANIMAL}
 

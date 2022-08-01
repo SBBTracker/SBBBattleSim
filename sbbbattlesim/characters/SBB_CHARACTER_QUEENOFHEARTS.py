@@ -18,8 +18,8 @@ class CharacterType(Character):
     aura = True
 
     _attack = 1
-    _health = 3
-    _level = 3
+    _health = 1
+    _level = 1
     _tribes = {Tribe.EVIL, Tribe.QUEEN}
 
     def __init__(self, *args, **kwargs):

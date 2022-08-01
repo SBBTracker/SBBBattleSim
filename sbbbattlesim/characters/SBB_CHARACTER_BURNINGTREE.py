@@ -17,7 +17,7 @@ class BurningTreeOnBuff(OnBuff):
 
 
 class CharacterType(Character):
-    display_name = 'Burning Tree'
+    display_name = 'Burn Beard'
 
     _attack = 4
     _health = 20

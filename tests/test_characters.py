@@ -251,3 +251,19 @@ def test_doombreath():
     assert len(buffs) == 3
     assert sum([b.attack for b in buffs]) == 3
     assert sum([b.health for b in buffs]) == 3
+
+@pytest.mark.parametrize('golden', (True, False))
+def test_princesspea(golden):
+    player = make_player(
+        characters=[
+            make_character(id="SPK_CHARACTER_PRINCESSPEA", position=1, golden=golden, health=4),
+            make_character(id="SBB_CHARACTER_BABYROOT", position=5, health=3)
+        ],
+        treasures=[
+            '''SBB_TREASURE_HERMES'BOOTS'''
+        ]
+    )
+    enemy = make_player(characters=[make_character(attack=5, health=1)])
+    fight(player, enemy, limit=1)
+
+    assert player.characters[5].health == 3 + 4;

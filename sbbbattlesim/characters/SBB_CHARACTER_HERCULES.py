@@ -6,8 +6,8 @@ class CharacterType(Character):
     display_name = 'Hercules'
     quest = True
 
-    _attack = 20
-    _health = 20
+    _attack = 25
+    _health = 25
     _level = 6
     _tribes = {Tribe.GOOD, Tribe.ROYAL}
     _quest_counter = 100
