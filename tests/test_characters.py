@@ -265,5 +265,5 @@ def test_princesspea(golden):
     )
     enemy = make_player(characters=[make_character(attack=5, health=1)])
     fight(player, enemy, limit=1)
-
-    assert player.characters[5].health == 3 + 4;
+    multi = 2 if golden else 1
+    assert player.characters[5].health == 3 + 4 * multi;

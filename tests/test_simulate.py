@@ -46,7 +46,7 @@ STATE_DATA = (
     {
         'Player 1 ID HERE': [
             MockLogObject(
-                zone='Character',
+                zone='Char',
                 content_id='SBB_CHARACTER_BLACKCAT',
                 cardattack='4',
                 cardhealth='4',
