@@ -14,11 +14,11 @@ class FriendlySpiritLastBreath(OnDeath):
         if not chars:
             return
 
-        golden_multiplyer = 2 if self.manager.golden else 1
+        golden_multiplier = 2 if self.manager.golden else 1
 
         char = random.choice(chars)
         Buff(reason=ActionReason.FRIENDLY_SPIRIT_BUFF, source=self.manager, targets=[char],
-             attack=self.manager.attack * golden_multiplyer, health=self.manager.max_health * golden_multiplyer,
+             attack=self.manager.attack * golden_multiplier, health=self.manager.max_health * golden_multiplier,
              stack=stack).execute()
 
 

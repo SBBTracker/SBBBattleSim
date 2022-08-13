@@ -25,8 +25,9 @@ class PrincessPeaLastBreath(OnDeath):
         if not chars:
             return
 
+        golden_multiplier = 2 if self.manager.golden else 1
         Buff(reason=ActionReason.PRINCESS_PEA_BUFF, source=self.manager, targets=[*chars],
-             attack=self.manager.attack, health=self.manager.max_health,
+             attack=self.manager.attack * golden_multiplier, health=self.manager.max_health * golden_multiplier,
              stack=stack).execute()
 
 

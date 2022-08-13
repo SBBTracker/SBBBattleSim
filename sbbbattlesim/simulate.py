@@ -27,7 +27,7 @@ def from_state(state: dict):
         mirhi_counter = 0
 
         for data in player_data:
-            if data.zone == 'Character':
+            if data.zone == 'Char':
                 content_id = data.content_id.replace('GOLDEN_', '')
 
                 characters.append({
@@ -38,7 +38,7 @@ def from_state(state: dict):
                     'cost': int(data.cost),
                     'position': int(data.slot) + 1,  # This is done to match slot to normal board positions
                     'tribes': [subtype.lower() for subtype in data.subtypes],
-                    'quest_counter': int(data.counter)
+                    'quest_counter': int(data.counter) if data.counter else 0
                 })
             elif data.zone == 'Treasure':
                 treasures.append(data.content_id)
@@ -58,7 +58,7 @@ def from_state(state: dict):
                     'cost': int(data.cost),
                     'position': int(data.slot) + 1,  # This is done to match slot to normal board positions
                     'tribes': [subtype.lower() for subtype in data.subtypes],
-                    'quest_counter': int(data.counter)
+                    'quest_counter': int(data.counter) if data.counter else 0
                 })
             elif data.zone == 'None' and 'SBB_SPELL' in data.content_id:
                 spells.append(data.content_id)
@@ -108,6 +108,7 @@ class SimulationStats:
 
 def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> SimulationStats:
     data = from_state(state)
+    print(data)
     start = time.perf_counter()
     results = _process(data, t, k, timeout)
     return SimulationStats(
