@@ -28,7 +28,7 @@ class CharacterType(Character):
     display_name = 'Copycat'
 
     _attack = 2
-    _health = 8
+    _health = 10
     _level = 4
     _tribes = {Tribe.ANIMAL, Tribe.MAGE}
 

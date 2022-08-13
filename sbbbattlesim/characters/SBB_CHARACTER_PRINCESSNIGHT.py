@@ -8,8 +8,8 @@ class CharacterType(Character):
     aura = True
     quest = True
 
-    _attack = 2
-    _health = 4
+    _attack = 3
+    _health = 5
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.ROYAL}
 

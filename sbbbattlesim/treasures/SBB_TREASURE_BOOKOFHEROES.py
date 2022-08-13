@@ -16,7 +16,7 @@ class BookOfHeroesOnAttackAndKillBuff(OnAttackAndKill):
         if Tribe.EVIL in killed_character.tribes:
             for _ in range(self.source.multiplier + 1):
                 Buff(reason=ActionReason.BOOK_OF_HEROES, source=self.source, targets=[self.manager],
-                     attack=1, health=2, stack=stack).resolve()
+                     attack=2, health=2, stack=stack).resolve()
 
 
 class TreasureType(Treasure):

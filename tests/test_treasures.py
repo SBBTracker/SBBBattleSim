@@ -104,7 +104,7 @@ def test_book_of_heroes(mimic, tiger, good, evil):
     good_character = player.characters[1]
 
     mimic_multiplyer = [mimic, tiger].count(True) + 1
-    attack_bonus, health_bonus = 1 * mimic_multiplyer, 2 * mimic_multiplyer
+    attack_bonus, health_bonus = 2 * mimic_multiplyer, 2 * mimic_multiplyer
 
     assert good_character
     assert good_character.attack == ((starting_attack + attack_bonus) if good and evil else starting_attack)
