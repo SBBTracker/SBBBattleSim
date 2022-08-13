@@ -63,6 +63,7 @@ class Character(EventManager):
         self.dead = False
         self.invincible = False
         self.attack_multiplier = 1
+        self.support_multiplier = 1
 
         self.support = None
         self.aura = None

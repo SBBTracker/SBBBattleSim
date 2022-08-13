@@ -207,8 +207,8 @@ class Action:
         self.multiplier = multiplier
         self.temp = temp
 
-        self.attack = attack * self.multiplier
-        self.health = health * self.multiplier
+        self.attack = attack
+        self.health = health
         self.damage = damage
         self.heal = heal
 
@@ -219,6 +219,7 @@ class Action:
 
         self.state = ActionState.CREATED
         self._char_buffer = set()
+        self._damaged_and_survived_char_buffer = set()
         self._killed_char_buffer = set()
         self._event_buffer = collections.defaultdict(list)
 
@@ -235,17 +236,41 @@ class Action:
         This is the core of any Action class and should not be touched unless you are making changes to ALL effects
         This should never be accessed outside an Action class or subclass
         '''
+
+        multiplier = self.multiplier
+        if isinstance(self, Support) and char.support_multiplier:
+            multiplier = self.multiplier + char.support_multiplier
+
+        attack = self.attack * multiplier
+        health = self.health * multiplier
+
+        record = Record(
+            reason=self.reason,
+            source=self.source,
+            target=char,
+            target_id=char.id,
+            target_attack=char.attack,
+            target_health=char.health,
+            attack=attack,
+            health=health,
+            damage=self.damage,
+            heal=self.heal,
+        )
+        self.source.player.combat_records.append(record)
+        if char.player != self.source.player:
+            char.player.combat_records.append(record)
+
         if self.attack != 0 or self.health != 0:
-            char._base_attack += self.attack
-            char._base_health += self.health
+            char._base_attack += attack
+            char._base_health += health
 
             # TRIGGER ON BUFF
-            char('OnBuff', reason=self.reason, source=self.source, attack=self.attack * char.attack_multiplier,
-                 health=self.health, *args, **kwargs)
+            char('OnBuff', reason=self.reason, source=self.source, attack=attack,
+                 health=health, *args, **kwargs)
 
         if self.damage > 0:
             if char.invincible and self.reason != ActionReason.DAMAGE_WHILE_DEFENDING:
-                char('OnDamagedAndSurvived', damage=0, reason=ActionReason.DAMAGE_AND_SURVIVE, *args, **kwargs)
+                self._damaged_and_survived_char_buffer.add((char, 0))
                 return
             char._damage += self.damage
 
@@ -257,7 +282,7 @@ class Action:
                 char.dead = True
                 logger.debug(f'{char.pretty_print()} marked for death in execution')
             elif self.damage > 0:
-                char('OnDamagedAndSurvived', damage=self.damage, reason=ActionReason.DAMAGE_AND_SURVIVE, *args, **kwargs)
+                self._damaged_and_survived_char_buffer.add((char, self.damage))
 
     def _clear(self, char, *args, **kwargs):
         '''
@@ -265,11 +290,17 @@ class Action:
         This should never be accessed outside an Action class or subclass
         '''
         logger.debug(f'Clearing char {char.pretty_print()}')
+
+        multiplier = self.multiplier
+        if isinstance(self, Support) and char.support_multiplier:
+            multiplier = self.multiplier + char.support_multiplier
+
+        attack = self.attack * multiplier
+        health = self.health * multiplier
+
         if self.health != 0:
-            logger.debug(f'health to clear: {self.health} ; damage {char._damage} ; health {char._base_health}')
-            char._damage -= min(char._damage, self.health)
-            char._base_health -= self.health
-            logger.debug(f'health after clear: {self.health} ; damage {char._damage} ; health {char._base_health}')
+            char._damage -= min(char._damage, health)
+            char._base_health -= health
 
             if char.health <= 0:
                 char.dead = True
@@ -277,10 +308,10 @@ class Action:
                 self._killed_char_buffer.add(char)
 
         if self.attack != 0:
-            char._base_attack -= self.attack
+            char._base_attack -= attack
 
-        char('OnBuff', reason=self.reason, source=self.source, attack=-1*self.attack,
-             health=-1*self.health)
+        char('OnBuff', reason=self.reason, source=self.source, attack=-1*attack,
+             health=-1*health)
 
         logger.debug(f'finished clearing char {char.pretty_print()}')
 
@@ -306,21 +337,6 @@ class Action:
         setup = kwargs.get('setup', False)
         for char in characters or self.targets:
             logger.debug(f'{self} execute ({char.pretty_print()}, {kwargs})')
-
-            record = Record(
-                reason=self.reason,
-                source=self.source,
-                target=char,
-                target_id=char.id,
-                target_attack=char.attack,
-                target_health=char.health,
-                attack=self.attack,
-                health=self.health,
-                damage=self.damage,
-                heal=self.heal,
-            )
-            self.source.player.combat_records.append(record)
-            char.player.combat_records.append(record)
 
             if not self._lambda(char) or char in self._char_buffer:
                 continue
@@ -351,10 +367,19 @@ class Action:
 
         if attack != 0 or health != 0:
             for char in self._char_buffer:
-                char._base_attack += attack
-                char._base_health += health
-                char('OnBuff', reason=self.reason, source=self.source, attack=attack * char.attack_multiplier,
-                     health=health, *args, **kwargs)
+
+                multiplier = self.multiplier
+                if isinstance(self, Support) and char.support_multiplier:
+                    multiplier = self.multiplier + char.support_multiplier
+
+                char_attack_buff = attack * multiplier
+                char_health_buff = health * multiplier
+
+                char._base_attack += char_attack_buff
+                char._base_health += char_health_buff
+
+                char('OnBuff', reason=self.reason, source=self.source, attack=char_attack_buff,
+                     health=char_health_buff, *args, **kwargs)
 
         return self
 
@@ -378,7 +403,7 @@ class Action:
         self.handle_deaths(*characters)
         self.state = ActionState.ROLLED_BACK
 
-    def resolve(self):
+    def resolve(self, *args, **kwargs):
         if self.state in (ActionState.CREATED, ActionState.ROLLED_BACK):
             self.execute()
         elif self.state in (ActionState.RESOLVED,):
@@ -387,6 +412,10 @@ class Action:
 
         logger.debug(f'RESOLVING DAMAGE FOR {self}')
         self.handle_deaths()
+
+        for (char, damage) in self._damaged_and_survived_char_buffer:
+            char('OnDamagedAndSurvived', damage=damage, reason=ActionReason.DAMAGE_AND_SURVIVE, *args, **kwargs)
+
         self.state = ActionState.RESOLVED
 
     def handle_deaths(self, *characters):
