@@ -400,38 +400,11 @@ class Action:
             if any(v != 0 for v in (self.attack, self.health, self.damage, self.heal)):
                 self._clear(char, *args, **kwargs)
 
-        self.handle_deaths(*characters)
+        self.resolve(*characters)
         self.state = ActionState.ROLLED_BACK
 
-    def resolve(self, *args, **kwargs):
-        if self.state in (ActionState.CREATED, ActionState.ROLLED_BACK):
-            self.execute()
-        elif self.state in (ActionState.RESOLVED,):
-            logger.debug(f'{self} ALREADY RESOLVED')
-            return
-
-        logger.debug(f'RESOLVING DAMAGE FOR {self}')
-        self.handle_deaths()
-
-        for (char, damage) in self._damaged_and_survived_char_buffer:
-            char('OnDamagedAndSurvived', damage=damage, reason=ActionReason.DAMAGE_AND_SURVIVE, *args, **kwargs)
-
-        self.state = ActionState.RESOLVED
-
-    def handle_deaths(self, *characters):
-        char_iter = set(characters) or self._char_buffer.copy()
-        dead_character_dict = collections.defaultdict(list)
-        for char in char_iter | self._killed_char_buffer:
-            if char.dead and char not in char.player.graveyard:
-                dead_character_dict[char.player].append(char)
-        self._char_buffer = self._char_buffer - char_iter
-
-        if dead_character_dict:
-            char_ls = [self.source.player, self.source.player.opponent]
-            for player in char_ls:
-                if player in dead_character_dict:
-                    dead_characters = dead_character_dict[player]
-                    player.despawn(*sorted(dead_characters, key=lambda _char: _char.position, reverse=True), reason=self.reason)
+    def resolve(self, *characters, **kwargs):
+        return resolve_actions(self)
 
 
 class Damage(Action):
@@ -467,3 +440,30 @@ class Aura(Buff):
 
         super().__init__(*args, **kwargs)
 
+
+def resolve_actions(*actions, **kwargs):
+    for action in actions:
+        if action.state in (ActionState.CREATED, ActionState.ROLLED_BACK):
+            action.execute()
+        elif action.state in (ActionState.RESOLVED,):
+            logger.debug(f'{action} ALREADY RESOLVED')
+            return
+
+    killed_char_iter = set().union(*[action._killed_char_buffer.copy() for action in actions])
+
+    for char in killed_char_iter:
+        char.player.despawn(char)
+
+    for char in killed_char_iter:
+        if char.dead:
+            char.player.graveyard.append(char)
+            logger.info(f'{char.pretty_print()} died')
+            char('OnDeath', **kwargs)
+
+    char_iter = {char: (action, {}) for char in action._char_buffer.copy() for action in actions}
+    for char, (action, akwargs) in char_iter.items():
+        if (action.damage or action.health) and not char.dead:
+            char('OnDamagedAndSurvived', **(akwargs | kwargs))
+
+    for action in actions:
+        action.state = ActionState.RESOLVED

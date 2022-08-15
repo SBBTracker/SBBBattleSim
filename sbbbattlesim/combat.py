@@ -5,7 +5,7 @@ import typing
 from dataclasses import dataclass
 from functools import lru_cache
 
-from sbbbattlesim.action import ActionReason
+from sbbbattlesim.action import ActionReason, resolve_actions
 from sbbbattlesim.events import EventManager, EventStack
 from sbbbattlesim.player import Player
 from sbbbattlesim.stats import calculate_adv_stats, StatBase
@@ -251,12 +251,10 @@ def attack(attack_position, attacker, defender, **kwargs):
     attacker_damage = defend_character.generate_attack(target=attack_character, source=defend_character, reason=ActionReason.DAMAGE_WHILE_DEFENDING, attacking=False)
     defender_damage = attack_character.generate_attack(target=defend_character, source=attack_character, reason=ActionReason.DAMAGE_WHILE_ATTACKING, attacking=True)
 
-    if not attack_character.ranged:
-        attacker_damage.execute()
-    defender_damage.execute()
-
-    if not attack_character.ranged:
-        attacker_damage.resolve()
+    if attack_character.ranged:
+        resolve_actions(defender_damage)
+    else:
+        resolve_actions(attacker_damage, defender_damage)
 
     # SLAY TRIGGER
     for _dc in defender_damage.targets:
@@ -265,8 +263,5 @@ def attack(attack_position, attacker, defender, **kwargs):
 
     # for copycat to work properly
     attack_character('OnPostAttack', attack_position=attack_position, defend_position=defend_position, reason=ActionReason.POST_ATTACK, **kwargs)
-
-    defender_damage.resolve()
-
     # for cupid to work properly
     defend_character('OnPostDefend', attack_position=attack_position, defend_position=defend_position, reason=ActionReason.POST_DEFEND, **kwargs)

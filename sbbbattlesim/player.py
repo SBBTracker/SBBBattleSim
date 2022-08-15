@@ -311,24 +311,14 @@ class Player(EventManager):
         return character
 
     def despawn(self, *characters: 'Character', **kwargs):
-        kill = kwargs.get('kill', True)
-
         # This is only false for transform effects
         for char in characters:
             logger.info(f'Despawning {char.pretty_print()}')
             position = char.position
             self.__characters[position] = None
-
-            if kill:
-                self.graveyard.append(char)
-                logger.info(f'{char.pretty_print()} died')
-
             char('Despawn', **kwargs)
 
-        if kill:
-            for char in characters:
-                char('OnDeath', **kwargs)
-
+        # TODO does this happen with despawn or should it be part of resolve_actions
         for char in characters:
             if char.support:
                 char.support.roll_back()
