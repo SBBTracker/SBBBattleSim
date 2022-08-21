@@ -52,8 +52,8 @@ def from_state(state: dict):
                 content_id = data.content_id.replace('GOLDEN_', '')
                 hand.append({
                     'id': content_id,
-                    'attack': int(data.cardattack),
-                    'health': int(data.cardhealth),
+                    'attack': int(data.cardattack) if data.cardattack else 0,
+                    'health': int(data.cardhealth) if data.cardhealth else 0,
                     'golden': data.is_golden if isinstance(data.is_golden, bool) else data.is_golden.lower() == "true",
                     'cost': int(data.cost),
                     'position': int(data.slot) + 1,  # This is done to match slot to normal board positions
@@ -108,7 +108,6 @@ class SimulationStats:
 
 def simulate(state: dict, t: int = 1, k: int = 1, timeout: int = 30) -> SimulationStats:
     data = from_state(state)
-    print(data)
     start = time.perf_counter()
     results = _process(data, t, k, timeout)
     return SimulationStats(
