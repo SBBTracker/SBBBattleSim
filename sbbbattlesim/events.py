@@ -249,31 +249,6 @@ class EventManager:
         return stack
 
 
-class EventExecutor:
-    def __init__(self, stack: 'EventStack', *args, **kwargs):
-        self.stack = stack
-        self.args = args
-        self.kwargs = kwargs
-
-        self._react_buffer = []
-
-    def __enter__(self):
-        # logger.info(f'Opening Executor with ({self.args} {self.kwargs})')
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        for (react, rargs, rkwargs, source) in reversed(self._react_buffer):
-            logger.info(f'{source} reaction {react} ({rargs} {rkwargs})')
-            source.manager(react, *rargs, **(rkwargs | {'source': source, 'stack': self.stack} | self.kwargs))
-
-    def execute(self, event, *args, **kwargs):
-        response = event(stack=self.stack, *args, **kwargs)
-        self.stack.stack.append(event)
-
-        if response:
-            self._react_buffer.append((*response, event))
-
-
 class EventStack(list):
     def __init__(self):
         super().__init__()
