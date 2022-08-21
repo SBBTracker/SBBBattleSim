@@ -274,18 +274,49 @@ class EventExecutor:
             self._react_buffer.append((*response, event))
 
 
-@dataclass
-class EventStack:
-    stack: List[Event] = field(default_factory=list)
-
-    def __repr__(self):
-        return f'{[evt.__class__.__name__ for evt in self.stack]}'
-
-    def __iter__(self):
-        return self.stack.__iter__()
+class EventStack(list):
+    def __init__(self):
+        super().__init__()
+        self.args = []
+        self.kwargs = {}
+        self._react_buffer = []
 
     def open(self, *args, **kwargs):
-        return EventExecutor(stack=self, *args, **kwargs)
+        self.args = args
+        self.kwargs = kwargs
+        self._react_buffer = []
+        return self
 
-    def find(self, _lambda=lambda event: True):
-        return (event for event in self.stack if _lambda(event))
+    def __enter__(self):
+        # logger.info(f'Opening Executor with ({self.args} {self.kwargs})')
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        for (react, rargs, rkwargs, source) in reversed(self._react_buffer):
+            logger.info(f'{source} reaction {react} ({rargs} {rkwargs})')
+            source.manager(react, *rargs, **(rkwargs | {'source': source, 'stack': self.stack} | self.kwargs))
+
+    def execute(self, event, *args, **kwargs):
+        response = event(stack=self, *args, **kwargs)
+        self.append(event)
+
+        if response:
+            self._react_buffer.append((*response, event))
+
+
+def execute_event(event, stack=None, *handlers, **kwargs):
+    logger.debug(f'{event} triggered')
+
+    # If an event stack already exists use it otherwise make a new stack
+    stack = stack or EventStack()
+
+    if not any(h._events[event] for h in handlers):
+        return stack
+
+    with stack.open(**kwargs) as executor:
+        for evt in self.get(event):
+            logger.debug(f'Firing {evt} with {args} {kwargs}')
+            executor.execute(evt, *args, **kwargs)
+            self.player.combat_records.append(Record(event=evt))
+
+    return stack

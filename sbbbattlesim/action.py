@@ -460,7 +460,11 @@ def resolve_actions(*actions, **kwargs):
             logger.info(f'{char.pretty_print()} died')
             char('OnDeath', **kwargs)
 
-    char_iter = {char: (action, {}) for char in action._char_buffer.copy() for action in actions}
+    char_iter = {
+        char: (action, {})
+        for char in action._char_buffer.copy()
+        for action in actions
+    }
     for char, (action, akwargs) in char_iter.items():
         if (action.damage or action.health) and not char.dead:
             char('OnDamagedAndSurvived', **(akwargs | kwargs))
