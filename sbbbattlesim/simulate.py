@@ -60,7 +60,7 @@ def from_state(state: dict):
                     'tribes': [subtype.lower() for subtype in data.subtypes],
                     'quest_counter': int(data.counter) if data.counter else 0
                 })
-            elif data.zone == 'None' and 'SBB_SPELL' in data.content_id:
+            elif data.zone == 'NONE' and '_SPELL_' in data.content_id:
                 spells.append(data.content_id)
 
         sim_data[player] = {
