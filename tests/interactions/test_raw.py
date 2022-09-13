@@ -12,7 +12,7 @@ def test_raw_fanny(golden):
         raw=True,
         characters=[
             make_character(id="SBB_CHARACTER_ANGRYDWARF",position=5, attack=1, health=1, golden=golden),
-            make_character(position=1, attack=5, health=5, tribes=[Tribe.DWARF]),
+            make_character(position=1, attack=9, health=9, tribes=[Tribe.DWARF]),
             make_character(position=2, attack=1, health=1)
         ]
     )
@@ -30,7 +30,7 @@ def test_raw_fanny(golden):
     if golden:
         final_stats = (1, 1)
     else:
-        final_stats = (3, 3)
+        final_stats = (5, 5)
 
     assert (player.characters[1].attack, player.characters[1].health) == final_stats
     assert (player.characters[2].attack, player.characters[2].health) == (1, 1)

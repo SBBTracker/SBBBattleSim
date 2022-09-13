@@ -6,9 +6,8 @@ from tests import make_character, make_player
 
 def test_raw_doubly():
     player = make_player(
-        raw=True,
         characters=[
-            make_character(id='SBB_CHARACTER_DUMBLEDWARF', position=1, attack=5, health=5, tribes=[Tribe.DWARF]),
+            make_character(id='SBB_CHARACTER_DUMBLEDWARF', position=1, attack=9, health=9, tribes=[Tribe.DWARF]),
             make_character(id='SBB_CHARACTER_ANGRYDWARF', position=5, attack=5, health=5),
         ],
     )
@@ -23,11 +22,11 @@ def test_raw_doubly():
             break
 
     assert angry_buff
-    assert angry_buff.attack == 2
-    assert angry_buff.health == 2
+    assert angry_buff.attack == 4
+    assert angry_buff.health == 4
 
-    assert dubly.attack == 5
-    assert dubly.health == 5
+    assert dubly.attack == 9
+    assert dubly.health == 9
     angry_buff.roll_back()
     assert dubly.attack == 1
     assert dubly.health == 1

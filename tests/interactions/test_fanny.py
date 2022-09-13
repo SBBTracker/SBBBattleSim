@@ -29,8 +29,8 @@ def test_fanny(golden):
     healthbuffs = sum([b.health for b in buffs])
     attackbuffs = sum([b.attack for b in buffs])
 
-    assert attackbuffs == (4 if golden else 2)
-    assert healthbuffs == (4 if golden else 2)
+    assert attackbuffs == (8 if golden else 4)
+    assert healthbuffs == (8 if golden else 4)
 
     char = player.characters[2]
     buffs = [

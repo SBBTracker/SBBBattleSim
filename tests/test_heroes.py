@@ -699,23 +699,21 @@ def test_pup_shouldntbuff():
 
 def test_pup_shouldbuff():
     player = make_player(
-        raw=True,
         characters=[
-            make_character(tribes=[Tribe.DWARF], attack=5, health=4, position=1),
-            make_character(id="SBB_CHARACTER_ANGRYDWARF", position=5)
+            make_character(tribes=[Tribe.DWARF], attack=7, health=6, position=1),
+            make_character(id="SBB_CHARACTER_ANGRYDWARF", position=5, health=1)
         ],
         hero='SBB_HERO_GANDALF',
     )
 
     enemy = make_player(
-        raw=True,
         characters=[
             make_character(id="SBB_CHARACTER_BABYDRAGON")
         ],
         treasures=['''SBB_TREASURE_HERMES'BOOTS''']
     )
 
-    fight(player, enemy)
+    fight(player, enemy, limit=1)
 
     assert player.characters[1].attack == 1
     assert player.characters[1].health == 1
