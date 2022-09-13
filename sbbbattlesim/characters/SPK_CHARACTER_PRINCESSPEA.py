@@ -32,11 +32,11 @@ class PrincessPeaLastBreath(OnDeath):
 
 
 class CharacterType(Character):
-    display_name = 'Princess Pea'
+    display_name = 'Empress Pea'
     last_breath = True
 
-    _attack = 10
-    _health = 10
+    _attack = 5
+    _health = 5
     _level = 6
     _tribes = {Tribe.ROYAL}
 

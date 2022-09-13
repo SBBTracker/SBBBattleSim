@@ -7,13 +7,13 @@ class CharacterType(Character):
     display_name = 'Fanny'
     support = True
 
-    _attack = 2
-    _health = 2
-    _level = 2
-    _tribes = {Tribe.DWARF, }
+    _attack = 4
+    _health = 4
+    _level = 4
+    _tribes = {Tribe.DWARF}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        stat_change = 4 if self.golden else 2
+        stat_change = 8 if self.golden else 4
         self.support = Support(source=self, _lambda=lambda char: Tribe.DWARF in char.tribes,
                                health=stat_change, attack=stat_change)
