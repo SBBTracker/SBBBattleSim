@@ -25,7 +25,7 @@ def test_lady(golden):
     attackbuffs = sum([b.attack for b in buffs])
 
     assert attackbuffs == 0
-    assert healthbuffs == (10 if golden else 5)
+    assert healthbuffs == (8 if golden else 4)
 
     char = player.characters[2]
     buffs = [
@@ -36,7 +36,7 @@ def test_lady(golden):
     attackbuffs = sum([b.attack for b in buffs])
 
     assert attackbuffs == 0
-    assert healthbuffs == (10 if golden else 5)
+    assert healthbuffs == (8 if golden else 4)
 
 
 def test_lady_ranged():

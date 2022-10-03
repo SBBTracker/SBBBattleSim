@@ -25,7 +25,7 @@ def test_sporko(golden):
     healthbuffs = sum([b.health for b in buffs])
     attackbuffs = sum([b.attack for b in buffs])
 
-    assert attackbuffs == (10 if golden else 5)
+    assert attackbuffs == (8 if golden else 4)
     assert healthbuffs == 0
 
     char = player.characters[2]
@@ -36,7 +36,7 @@ def test_sporko(golden):
     healthbuffs = sum([b.health for b in buffs])
     attackbuffs = sum([b.attack for b in buffs])
 
-    assert attackbuffs == (10 if golden else 5)
+    assert attackbuffs == (8 if golden else 4)
     assert healthbuffs == 0
 
 

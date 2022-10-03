@@ -1697,6 +1697,6 @@ def test_radiantprism(hasopp):
     courtwizard = player.characters[5]
 
     assert animal.attack == 2
-    assert courtwizard.attack == (12 if hasopp else 2)
+    assert courtwizard.attack == (15 if hasopp else 2)
     assert {tribe for tribe in Tribe} == animal.tribes
     assert enemy.characters[1] is None
