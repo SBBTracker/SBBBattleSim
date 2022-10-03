@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class OniKingOnMonsterAttack(OnPreAttack):
     def handle(self, stack, *args, **kwargs):
-        stat_change = 20 if self.source.golden else 10
+        stat_change = 26 if self.source.golden else 13
         Buff(source=self.source, reason=ActionReason.ONIKING_BUFF, targets=[self.manager],
              attack=stat_change, health=stat_change, temp=False, stack=stack).resolve()
 
