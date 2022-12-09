@@ -11,13 +11,13 @@ class SummoningPortalBuff(OnSummon):
     def handle(self, summoned_characters, stack, *args, **kwargs):
         for char in summoned_characters:
             self.source.buff_count += 1
-            buff = self.source.buff_count * (1 + self.source.multiplier)
+            buff = self.source.buff_count * (2 + self.source.multiplier)
             Buff(reason=ActionReason.SUMMONING_PORTA, source=self.source, attack=buff, health=buff, stack=stack).execute(char)
 
 
 class TreasureType(Treasure):
     display_name = 'Summoning Portal'
-    _level = 4
+    _level = 5
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

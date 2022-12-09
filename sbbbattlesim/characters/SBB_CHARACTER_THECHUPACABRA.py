@@ -8,12 +8,10 @@ class ChupacabraSlay(OnAttackAndKill):
     slay = True
 
     def handle(self, killed_character, stack, *args, **kwargs):
-        behind_targets = get_behind_targets(self.manager.position)
-        targetted_chars = [c for c in self.manager.player.valid_characters() if c.position in behind_targets]
+        modifier = 2 if self.manager.golden else 1
 
-        modifier = 4 if self.manager.golden else 2
-
-        Buff(reason=ActionReason.CHUPACABRA_SLAY, source=self.manager, targets=[self.manager, *targetted_chars],
+        Buff(reason=ActionReason.CHUPACABRA_SLAY, source=self.manager,
+             targets=self.manager.player.valid_characters(_lambda=lambda char: Tribe.MONSTER in char.tribes),
              attack=modifier, temp=False, stack=stack).resolve()
 
 

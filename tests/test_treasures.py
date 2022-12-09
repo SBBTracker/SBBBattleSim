@@ -1008,8 +1008,8 @@ def test_six_of_shields(mimic):
 
 
 @pytest.mark.parametrize('mimic', (True, False))
-@pytest.mark.parametrize('r', range(30))
-def test_summoning_portal(mimic, r):
+# @pytest.mark.parametrize('r', range(30))
+def test_summoning_portal(mimic):
     player = make_player(
         raw=True,
         characters=[
@@ -1033,9 +1033,9 @@ def test_summoning_portal(mimic, r):
 
     assert first_cat
 
-    final = 3
+    final = 5
     if mimic:
-        final = 5
+        final = 7
 
     assert first_cat.attack == final
     assert first_cat.health == final
@@ -1044,9 +1044,9 @@ def test_summoning_portal(mimic, r):
 
     assert second_cat
 
-    final = 2
+    final = 3
     if mimic:
-        final = 3
+        final = 4
 
     assert second_cat.attack == final
     assert second_cat.health == final
@@ -1184,14 +1184,14 @@ def test_helm_of_the_ugly_gosling(mimic):
 
     assert char
 
-    assert char.attack == 16
-    assert char.health == 16
+    assert char.attack == 11
+    assert char.health == 11
 
     if mimic:
         char = player.characters[2]
 
-        assert char.attack == 16
-        assert char.health == 16
+        assert char.attack == 11
+        assert char.health == 11
 
 
 @pytest.mark.parametrize('mimic', (True, False))

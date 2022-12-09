@@ -96,8 +96,8 @@ def test_echowood_evil_queen():
     assert (player.characters[7].attack, player.characters[7].health) == (5, 5)
 
 
-@pytest.mark.parametrize('r', range(30))
-def test_echowood_pumpkin(r):
+# @pytest.mark.parametrize('r', range(30))
+def test_echowood_pumpkin():
     player = make_player(
         raw=True,
         characters=[
@@ -117,8 +117,7 @@ def test_echowood_pumpkin(r):
     )
     fight(player, enemy, limit=1)
 
-
-    assert (player.characters[7].attack, player.characters[7].health) == (2, 2) if player.characters[2].id != 'SBB_CHARACTER_BURNINGTREE' else (2, 3)
+    assert (player.characters[7].attack, player.characters[7].health) == (3, 3) if player.characters[2].id != 'SBB_CHARACTER_BURNINGTREE' else (3, 5)
 
 
 def test_echowood_pumpkin_support():
@@ -467,13 +466,13 @@ def test_multiple_echowoods_with_summoningportal():
 
     fight(player, enemy, limit=1)
 
-    assert (player.characters[3].attack, player.characters[3].health) == (2, 2)
-    assert (player.characters[4].attack, player.characters[4].health) == (2, 2)
-    assert (player.characters[2].attack, player.characters[2].health) == (2, 2)
+    assert (player.characters[3].attack, player.characters[3].health) == (3, 3)
+    assert (player.characters[4].attack, player.characters[4].health) == (3, 3)
+    assert (player.characters[2].attack, player.characters[2].health) == (3, 3)
 
 
-@pytest.mark.parametrize('r', range(8))
-def test_multiple_echowoods_with_summoningportal_summontwo(r):
+# @pytest.mark.parametrize('r', range(8))
+def test_multiple_echowoods_with_summoningportal_summontwo():
     player = make_player(
         raw=True,
         characters=[
@@ -512,14 +511,13 @@ def test_multiple_echowoods_with_summoningportal_summontwo(r):
 
     fight(player, enemy, limit=2)
 
-    assert (player.characters[3].attack, player.characters[3].health) == (4, 4)
-    assert (player.characters[4].attack, player.characters[4].health) == (3, 3)
-    assert (player.characters[6].attack, player.characters[6].health) == (4, 4)
-    assert (player.characters[7].attack, player.characters[7].health) == (4, 4)
+    assert (player.characters[3].attack, player.characters[3].health) == (7, 7)
+    assert (player.characters[4].attack, player.characters[4].health) == (5, 5)
+    assert (player.characters[6].attack, player.characters[6].health) == (7, 7)
+    assert (player.characters[7].attack, player.characters[7].health) == (7, 7)
 
 
-@pytest.mark.parametrize('r', range(8))
-def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood(r):
+def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood():
     player = make_player(
         raw=True,
         characters=[
@@ -558,14 +556,13 @@ def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood(r):
 
     fight(player, enemy, limit=2)
 
-    assert (player.characters[3].attack, player.characters[3].health) == (2, 2)
-    assert (player.characters[4].attack, player.characters[4].health) == (3, 3)
-    assert (player.characters[6].attack, player.characters[6].health) == (4, 4)
-    assert (player.characters[7].attack, player.characters[7].health) == (4, 4)
+    assert (player.characters[3].attack, player.characters[3].health) == (3, 3)
+    assert (player.characters[4].attack, player.characters[4].health) == (5, 5)
+    assert (player.characters[6].attack, player.characters[6].health) == (7, 7)
+    assert (player.characters[7].attack, player.characters[7].health) == (7, 7)
 
 
-@pytest.mark.parametrize('r', range(8))
-def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood_onspawn(r):
+def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood_onspawn():
     player = make_player(
         raw=True,
         characters=[
@@ -616,10 +613,10 @@ def test_multiple_echowoods_with_summoningportal_summontwo_nonechowood_onspawn(r
 
     fight(player, enemy, limit=1)
 
-    assert (player.characters[3].attack, player.characters[3].health) == (3, 3)
-    assert (player.characters[4].attack, player.characters[4].health) == (2, 2)
-    assert (player.characters[6].attack, player.characters[6].health) == (4, 4)
-    assert (player.characters[7].attack, player.characters[7].health) == (4, 4)
+    assert (player.characters[3].attack, player.characters[3].health) == (5, 5)
+    assert (player.characters[4].attack, player.characters[4].health) == (3, 3)
+    assert (player.characters[6].attack, player.characters[6].health) == (7, 7)
+    assert (player.characters[7].attack, player.characters[7].health) == (7, 7)
 
 
 def test_medusa_echowood():

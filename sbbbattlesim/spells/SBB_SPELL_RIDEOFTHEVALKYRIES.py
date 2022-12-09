@@ -9,4 +9,4 @@ class SpellType(Spell):
 
     def cast(self, target: 'Character' = None, *args, **kwargs):
         Buff(reason=ActionReason.RIDE_OF_THE_VALKYRIES, source=self, targets=self.player.valid_characters(),
-             attack=3, temp=False, *args, **kwargs).resolve()
+             attack=4, temp=False, *args, **kwargs).resolve()

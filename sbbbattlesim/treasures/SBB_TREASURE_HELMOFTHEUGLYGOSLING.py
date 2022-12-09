@@ -10,13 +10,13 @@ class HelmOfTheUglyGoslingOnStartBuff(OnStart):
         for _ in range(bool(self.source.multiplier) + 1):
             weakest = sorted(self.source.player.valid_characters(), key=lambda char: char.attack)[0]
             Buff(reason=ActionReason.HELM_OF_THE_UGLY_GOSLING, source=self.source, targets=[weakest],
-                 attack=15, health=15, stack=stack).resolve()
+                 attack=10, health=10, stack=stack).resolve()
 
 
 class TreasureType(Treasure):
     display_name = 'Helm of the Ugly Gosling'
 
-    _level = 5
+    _level = 4
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

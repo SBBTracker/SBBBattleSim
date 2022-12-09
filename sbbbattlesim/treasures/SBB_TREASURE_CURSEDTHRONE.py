@@ -31,7 +31,7 @@ class TreasureType(Treasure):
     display_name = 'Cursed Throne'
     aura = True
 
-    _level = 3
+    _level = 2
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

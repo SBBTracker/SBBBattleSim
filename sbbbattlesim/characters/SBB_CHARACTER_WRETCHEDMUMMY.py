@@ -24,7 +24,7 @@ class CharacterType(Character):
     display_name = 'Wretched Mummy'
     last_breath = True
 
-    _attack = 2
+    _attack = 3
     _health = 1
     _level = 3
     _tribes = {Tribe.EVIL, Tribe.MONSTER}

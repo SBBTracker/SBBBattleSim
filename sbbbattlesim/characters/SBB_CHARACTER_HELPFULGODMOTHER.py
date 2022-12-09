@@ -4,7 +4,7 @@ from sbbbattlesim.utils import Tribe
 
 
 class CharacterType(Character):
-    display_name = 'Rainbow Unicorn'
+    display_name = 'Zebracorn'
     aura = True
 
     _attack = 1

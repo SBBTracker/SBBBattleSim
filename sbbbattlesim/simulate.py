@@ -37,7 +37,7 @@ def from_state(state: dict):
                     'golden': data.is_golden if isinstance(data.is_golden, bool) else data.is_golden.lower() == "true",
                     'cost': int(data.cost),
                     'position': int(data.slot) + 1,  # This is done to match slot to normal board positions
-                    'tribes': [subtype.lower() for subtype in data.subtypes],
+                    'tribes': [subtype.lower() for subtype in data.subtypes] if data.subtypes is not None else [],
                     'quest_counter': int(data.counter) if data.counter else 0
                 })
             elif data.zone == 'Treasure':

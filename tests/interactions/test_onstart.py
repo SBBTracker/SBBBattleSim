@@ -35,10 +35,10 @@ def test_onstart_trees(roundtable):
 
     if roundtable:
         assert (ashwood.attack, ashwood.health) == (109, 109)
-        assert (elderwood.attack, elderwood.health) == (121, 121)
+        assert (elderwood.attack, elderwood.health) == (116, 116)
     else:
         assert (ashwood.attack, ashwood.health) == (109, 104)
-        assert (elderwood.attack, elderwood.health) == (121, 24)
+        assert (elderwood.attack, elderwood.health) == (116, 19)
 
 
 def test_onstart_arthur_and_lordy():
@@ -69,4 +69,4 @@ def test_onstart_arthur_and_lordy():
     generic = player.characters[5]
 
     assert (arthur.attack, arthur.health) == (9, 9)
-    assert (generic.attack, generic.health) == (21, 21)
+    assert (generic.attack, generic.health) == (16, 16)
